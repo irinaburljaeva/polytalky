@@ -1,1 +1,201 @@
+<!doctype html>
 
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PolyTalky — Языки легко и с удовольствием</title>
+  <meta name="description" content="PolyTalky — практичные курсы иностранных языков: испанский, английский, немецкий, китайский. Уроки, треки, разговорные клубы, полезные материалы." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --brand-1: #CF2C02; /* coral red */
+      --brand-2: #FFBA08; /* yellow */
+      --brand-3: #E85D04; /* orange */
+      --gray-1: #0f1115;
+      --gray-2: #161a22;
+    }
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+    .grad {
+      background: radial-gradient(1200px 600px at 10% 0%, rgba(255,186,8,.18), transparent 60%),
+                  radial-gradient(800px 400px at 90% 10%, rgba(232,93,4,.15), transparent 60%),
+                  linear-gradient(180deg, #0f1115 0%, #0f1115 60%, #161a22 100%);
+    }
+    .card:hover { transform: translateY(-4px); }
+  </style>
+</head>
+<body class="min-h-screen grad text-white selection:bg-white/20">
+  <!-- Header -->
+  <header class="sticky top-0 z-30 backdrop-blur bg-gray-900/40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 font-semibold">
+        <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-1)] items-center justify-center">🏷️</span>
+        <span class="text-lg">PolyTalky</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#programs" class="opacity-80 hover:opacity-100">Программы</a>
+        <a href="#how" class="opacity-80 hover:opacity-100">Как это работает</a>
+        <a href="#faq" class="opacity-80 hover:opacity-100">FAQ</a>
+      </nav>
+      <a href="#start" class="inline-flex items-center gap-2 bg-[var(--brand-1)] hover:bg-[var(--brand-3)] px-4 py-2 rounded-xl text-sm font-semibold">Начать</a>
+    </div>
+  </header>  <!-- Hero -->  <section class="relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight">
+          Изучайте языки <span class="text-[var(--brand-2)]">для жизни</span>, а не только для тестов
+        </h1>
+        <p class="mt-5 text-lg text-white/80 max-w-xl">
+          Короткие уроки, понятные объяснения и практические задания. Испанский, английский, немецкий и китайский — с нуля до уверенного общения.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#languages" class="px-5 py-3 rounded-xl bg-white text-gray-900 font-semibold hover:bg-white/90">Выбрать язык</a>
+          <a href="#demo" class="px-5 py-3 rounded-xl border border-white/20 hover:bg-white/10">Смотреть демо-урок</a>
+        </div>
+        <ul class="mt-8 grid sm:grid-cols-3 gap-3 text-sm text-white/80">
+          <li class="p-3 rounded-lg bg-white/5 border border-white/10">⚡ Уроки по 10–15 минут</li>
+          <li class="p-3 rounded-lg bg-white/5 border border-white/10">🎧 Аудио + карточки</li>
+          <li class="p-3 rounded-lg bg-white/5 border border-white/10">🧭 Реальные сценарии</li>
+        </ul>
+      </div>
+      <div class="relative">
+        <div class="absolute -inset-6 rounded-3xl bg-[var(--brand-1)]/10 blur-2xl"></div>
+        <div class="relative rounded-3xl border border-white/10 bg-gray-900/40 p-6">
+          <div class="aspect-video rounded-2xl bg-black/40 grid place-items-center text-white/60">
+            <div class="text-center text-sm">
+              <div class="text-6xl mb-2">🎓</div>
+              <p>Здесь будет видео-демо урока</p>
+            </div>
+          </div>
+          <p class="mt-3 text-sm text-white/60">Демо-ролик покажет, как выглядят объяснения, тренажёры и домашние задания.</p>
+        </div>
+      </div>
+    </div>
+  </section>  <!-- Languages -->  <section id="languages" class="py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between gap-4 mb-6">
+        <h2 class="text-2xl sm:text-3xl font-bold">Выберите язык</h2>
+        <a href="#programs" class="text-sm opacity-80 hover:opacity-100">Смотреть программы →</a>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Spanish -->
+        <a href="languages/spanish.html" class="card block p-5 rounded-2xl border border-white/10 bg-white/5 transition">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🇪🇸</span>
+            <div>
+              <div class="font-semibold">Испанский</div>
+              <div class="text-sm text-white/70">A0 → B1 | разговорная база</div>
+            </div>
+          </div>
+          <ul class="mt-4 space-y-2 text-sm text-white/80">
+            <li>• 8 практических модулей</li>
+            <li>• Карточки и аудио-трекер</li>
+            <li>• Темы: путешествия, жизнь, работа</li>
+          </ul>
+        </a>
+        <!-- English -->
+        <a href="languages/english.html" class="card block p-5 rounded-2xl border border-white/10 bg-white/5 transition">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🇬🇧</span>
+            <div>
+              <div class="font-semibold">Английский</div>
+              <div class="text-sm text-white/70">A0 → B2 | базовые и продвинутые треки</div>
+            </div>
+          </div>
+          <ul class="mt-4 space-y-2 text-sm text-white/80">
+            <li>• Грамматика без перегруза</li>
+            <li>• Разговорные шаблоны</li>
+            <li>• Подготовка к собеседованию</li>
+          </ul>
+        </a>
+        <!-- German -->
+        <a href="languages/german.html" class="card block p-5 rounded-2xl border border-white/10 bg-white/5 transition">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🇩🇪</span>
+            <div>
+              <div class="font-semibold">Немецкий</div>
+              <div class="text-sm text-white/70">A0 → B1 | логика и практика</div>
+            </div>
+          </div>
+          <ul class="mt-4 space-y-2 text-sm text-white/80">
+            <li>• Структурные уроки</li>
+            <li>• Сценарии реальной жизни</li>
+            <li>• Разбор частых ошибок</li>
+          </ul>
+        </a>
+        <!-- Chinese -->
+        <a href="languages/chinese.html" class="card block p-5 rounded-2xl border border-white/10 bg-white/5 transition">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🇨🇳</span>
+            <div>
+              <div class="font-semibold">Китайский</div>
+              <div class="text-sm text-white/70">A0 → A2 | тоны, иероглифы, речь</div>
+            </div>
+          </div>
+          <ul class="mt-4 space-y-2 text-sm text-white/80">
+            <li>• Пошаговая фонетика</li>
+            <li>• 300 ключевых слов</li>
+            <li>• Диалоги и короткие видео</li>
+          </ul>
+        </a>
+      </div>
+    </div>
+  </section>  <!-- Programs (shared structure) -->  <section id="programs" class="py-12 sm:py-16 border-t border-white/10 bg-black/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-6">Как устроены программы</h2>
+      <div class="grid lg:grid-cols-3 gap-4">
+        <div class="p-5 rounded-2xl border border-white/10 bg-white/5">
+          <h3 class="font-semibold mb-2">Модули и уроки</h3>
+          <p class="text-white/80 text-sm">Каждый курс поделен на модули (по 6–8 уроков). В уроке: объяснение, практика, карточки и мини‑квиз.</p>
+        </div>
+        <div class="p-5 rounded-2xl border border-white/10 bg-white/5">
+          <h3 class="font-semibold mb-2">Трекер и мотивация</h3>
+          <p class="text-white/80 text-sm">Прогресс‑бар, чек‑листы и недельные челленджи помогают сохранять регулярность, даже при занятости.</p>
+        </div>
+        <div class="p-5 rounded-2xl border border-white/10 bg-white/5">
+          <h3 class="font-semibold mb-2">Материалы</h3>
+          <p class="text-white/80 text-sm">PDF‑шпаргалки, аудио MP3 и набор карточек для Anki/Quizlet. Всё доступно офлайн.</p>
+        </div>
+      </div>
+    </div>
+  </section>  <!-- How it works -->  <section id="how" class="py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 items-start">
+      <div class="space-y-4">
+        <h2 class="text-2xl sm:text-3xl font-bold">Как начать</h2>
+        <ol class="list-decimal pl-5 space-y-2 text-white/80">
+          <li>Выберите язык на этой странице.</li>
+          <li>Откройте страницу курса — там программа, демо и файл‑примеры.</li>
+          <li>Добавьте сайт в закладки; материалы можно скачать для офлайна.</li>
+        </ol>
+      </div>
+      <div class="p-5 rounded-2xl border border-white/10 bg-white/5">
+        <h3 class="font-semibold mb-2">Технически (GitHub Pages)</h3>
+        <ul class="text-sm text-white/80 space-y-2">
+          <li>• Статический сайт — работает быстро, без серверов.</li>
+          <li>• Можно добавлять уроки как обычные HTML/Markdown‑страницы.</li>
+          <li>• При желании подключим Jekyll или Eleventy для генерации.</li>
+        </ul>
+      </div>
+    </div>
+  </section>  <!-- CTA -->  <section id="start" class="py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl sm:text-3xl font-bold">Готовы начать?</h2>
+      <p class="mt-2 text-white/80">Выберите язык и откройте программу курса. Первые уроки — бесплатно.</p>
+      <div class="mt-6 flex justify-center">
+        <a href="#languages" class="px-6 py-3 rounded-xl bg-[var(--brand-2)] text-gray-900 font-semibold hover:bg-yellow-400">Перейти к языкам</a>
+      </div>
+    </div>
+  </section>  <!-- Footer -->  <footer class="border-t border-white/10 py-8 text-sm text-white/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+      <p>© <span id="y"></span> PolyTalky. Все права защищены.</p>
+      <div class="flex gap-4">
+        <a href="#faq" class="hover:opacity-100 opacity-80">Политика конфиденциальности</a>
+        <a href="mailto:hello@polytalky.example" class="hover:opacity-100 opacity-80">Связаться</a>
+      </div>
+    </div>
+  </footer>  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script></body>
+</html>
