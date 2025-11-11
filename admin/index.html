@@ -75,11 +75,18 @@
 
     <!-- Preview -->
     <section class="min-h-screen">
-      <iframe id="frame" class="w-full h-screen" src="/" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+      <iframe id="frame" class="w-full h-screen" src="" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
     </section>
   </main>
 
   <script>
+// БАЗОВЫЙ ПУТЬ РЕПО (работает на GitHub Pages проектного типа)
+const base = location.pathname.replace(/\/admin\/.*$/, '/'); 
+// например, '/polytalky/'
+function pageUrl(slug){
+  // slug: '/', '/courses/', '/shop/', '/student/'
+  return base + (slug === '/' ? '' : slug.replace(/^\//,''));
+}
     // --- helpers for GitHub API ---
     const E = s => document.querySelector(s);
     const store = {
@@ -129,9 +136,10 @@
     // load page into iframe
     E('#load').onclick = () => {
       const url = E('#page').value;
-      E('#frame').src = url;
+      E('#frame').src = pageUrl(url);
     };
-
+// сразу откроем главную
+E('#frame').src = pageUrl('/');
     // make editable
     let editOn = false;
     E('#toggle-edit').onclick = () => {
