@@ -1,0 +1,467 @@
+<!doctype html>
+
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PolyTalky — Языки легко и с удовольствием</title>
+  <meta name="description" content="Короткие уроки, понятные объяснения и практические задания. Испанский, английский, немецкий, китайский и другие языки — с нуля до уверенного общения." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --brand-yellow:#FFDE59; /* основной жёлтый как у Duolingo-палитры */
+      --brand-yellow-deep:#FFBA08; /* акцент/hover */
+      --brand-orange:#E85D04;      /* тёплый оранжевый для акцентов */
+      --ink:#0F172A;               /* тёмный текст */
+      --ink-2:#334155;             /* вторичный текст */
+      --card:#FFFFFF;              /* белые карточки */
+      --bg:#FFF8D6;               /* пастельно-жёлтый фон страницы */
+    }
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--ink)}/* мягкие тени + движение */
+.shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.card{transition:transform .25s ease, box-shadow .25s ease}
+.card:hover{transform:translateY(-6px)}
+
+/* вау‑фон: светящиеся пятна */
+.wow-bg{position:relative;overflow:hidden}
+.wow-bg:before,.wow-bg:after{content:"";position:absolute;inset:auto;filter:blur(70px);opacity:.75;animation:float 12s ease-in-out infinite}
+.wow-bg:before{width:560px;height:560px;left:-140px;top:-140px;background:radial-gradient(closest-side,rgba(255,222,89,.9),transparent)}
+.wow-bg:after{width:520px;height:520px;right:-120px;top:-60px;background:radial-gradient(closest-side,rgba(232,93,4,.35),transparent);animation-delay:2.2s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(14px)}}
+
+.badge{background:#fff;border:1px solid rgba(0,0,0,.06);padding:.45rem .75rem;border-radius:999px;font-size:.8rem;color:var(--ink-2)}
+
+/* анимации при прокрутке (без библиотек) */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease}
+.reveal.reveal--visible{opacity:1;transform:translateY(0)}
+
+  </style>
+</head>
+<body><!-- Override из JSON: оставляю data-ct / data-ct-img для админки --><script>
+fetch('data/content.json').then(r=>r.ok?r.json():null).then(cfg=>{
+  if(!cfg||!cfg.index) return;
+  document.querySelectorAll('[data-ct]').forEach(el=>{
+    const k=el.getAttribute('data-ct'); const v=cfg.index[k];
+    if(typeof v==='string'){ /</.test(v)?el.innerHTML=v:el.textContent=v }
+  });
+  document.querySelectorAll('[data-ct-img]').forEach(img=>{
+    const k=img.getAttribute('data-ct-img'); if(cfg.index[k]) img.src=cfg.index[k];
+  });
+}).catch(()=>{});
+
+// IntersectionObserver для анимаций
+const onReady=()=>{
+  const obs=new IntersectionObserver((ents)=>{
+    ents.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('reveal--visible'); });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+};
+if(document.readyState!=='loading') onReady(); else document.addEventListener('DOMContentLoaded', onReady);
+</script><!-- ==================== HEADER ==================== --><header class="sticky top-0 z-30 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 font-semibold text-lg">
+      <img data-ct-img="logo" src="assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl">
+      PolyTalky
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
+      <a href="/courses/" class="hover:opacity-80">Курсы</a>
+      <a href="/shop/" class="hover:opacity-80">Магазин</a>
+      <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
+    </nav>
+    <a href="/courses/spanish-a0/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">
+      Начать с испанского
+    </a>
+  </div>
+</header><!-- ==================== HERO (WOW) ==================== --><section class="wow-bg">
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-24 grid lg:grid-cols-[1.05fr,0.95fr] gap-12 items-center">
+    <div class="reveal">
+      <span class="badge">10–15 минут в день • Реальные сценарии</span>
+      <h1 data-ct="hero-title" class="mt-4 text-4xl sm:text-5xl font-extrabold leading-tight">
+        Изучайте языки <span class="text-[var(--brand-orange)]">для жизни</span>, а не только для тестов
+      </h1>
+      <p data-ct="hero-sub" class="mt-4 text-lg text-[var(--ink-2)] max-w-xl">
+        Короткие уроки, понятные объяснения и практические задания. Испанский, английский, немецкий, китайский и другие языки с нуля до уверенного общения.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a data-ct="cta-1" href="/courses/" class="px-5 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">Посмотреть все курсы</a>
+        <a data-ct="cta-2" href="/courses/spanish-a0/" class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft">Демо: Испанский A0</a>
+      </div>
+      <ul class="mt-6 grid sm:grid-cols-3 gap-3 text-sm text-[#333]">
+        <li class="p-3 rounded-lg bg-white border border-black/10 shadow-soft card">⚡ Уроки по 10–15 минут</li>
+        <li class="p-3 rounded-lg bg-white border border-black/10 shadow-soft card">🎧 Аудио, диалоги, карточки</li>
+        <li class="p-3 rounded-lg bg-white border border-black/10 shadow-soft card">🧭 Практика для реальной жизни</li>
+      </ul>
+    </div>
+    <div class="relative reveal">
+      <div class="absolute -inset-6 rounded-3xl bg-[var(--brand-yellow)]/40 blur-2xl"></div>
+      <div class="relative rounded-3xl border border-black/10 bg-white p-5 shadow-soft">
+        <img data-ct-img="hero" src="assets/hero-3d.png" alt="3D‑иллюстрация PolyTalky" class="rounded-2xl w-full aspect-video object-cover"/>
+        <p class="mt-3 text-sm text-[var(--ink-2)]">Демо покажет, как устроены объяснения, практика и мини‑квизы.</p>
+      </div>
+    </div>
+  </div>
+</section><!-- ==================== FREEMIUM: БЕСПЛАТНО И PRO ==================== --><section class="py-12 sm:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl sm:text-3xl font-extrabold reveal">Попробуйте бесплатно</h2>
+      <a href="/courses/" class="text-sm underline text-[var(--ink-2)] reveal">Посмотреть все курсы →</a>
+    </div><!-- FREE COURSES GRID -->
+<div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <!-- Каждая карточка: БЕСПЛАТНО -->
+  <a href="/courses/spanish-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3">
+      <span class="text-2xl">🇪🇸</span>
+      <div class="grow">
+        <div class="font-semibold">Испанский язык с 0</div>
+        <div class="text-xs text-[var(--ink-2)]">A0 → A1 • 64 урока</div>
+      </div>
+      <span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span>
+    </div>
+  </a>
+  <a href="/courses/italian-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇮🇹</span><div class="grow"><div class="font-semibold">Итальянский с 0</div><div class="text-xs text-[var(--ink-2)]">A0 → A1</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/spanish-vamos/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇪🇸</span><div class="grow"><div class="font-semibold">¡Vamos a España! (продолжающие)</div><div class="text-xs text-[var(--ink-2)]">A1+ → A2</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/english-intro/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇬🇧</span><div class="grow"><div class="font-semibold">Интенсив по английскому (начинающие)</div><div class="text-xs text-[var(--ink-2)]">Starter</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/finnish-intro/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇫🇮</span><div class="grow"><div class="font-semibold">Вводный курс по финскому</div><div class="text-xs text-[var(--ink-2)]">Intro</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/german-intro/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇩🇪</span><div class="grow"><div class="font-semibold">Вводный курс по немецкому</div><div class="text-xs text-[var(--ink-2)]">Intro</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/dutch-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇳🇱</span><div class="grow"><div class="font-semibold">Нидерландский с нуля</div><div class="text-xs text-[var(--ink-2)]">A0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/french-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇫🇷</span><div class="grow"><div class="font-semibold">Французский с 0</div><div class="text-xs text-[var(--ink-2)]">A0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/japanese-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇯🇵</span><div class="grow"><div class="font-semibold">Японский с 0</div><div class="text-xs text-[var(--ink-2)]">A0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/chinese-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇨🇳</span><div class="grow"><div class="font-semibold">Китайский с 0</div><div class="text-xs text-[var(--ink-2)]">A0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/hindi-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇮🇳</span><div class="grow"><div class="font-semibold">Хинди с 0</div><div class="text-xs text-[var(--ink-2)]">A0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/arabic-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇸🇦</span><div class="grow"><div class="font-semibold">Арабский с 0</div><div class="text-xs text-[var(--ink-2)]">A0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/turkish-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇹🇷</span><div class="grow"><div class="font-semibold">Турецкий с 0</div><div class="text-xs text-[var(--ink-2)]">A0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+  <a href="/courses/korean-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🇰🇷</span><div class="grow"><div class="font-semibold">Корейский с 0</div><div class="text-xs text-[var(--ink-2)]">A0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#e8ffe3] border border-[#a7f3d0] text-[#065f46]">БЕСПЛАТНО</span></div>
+  </a>
+</div>
+
+<!-- PRO COURSES -->
+<h3 class="text-xl sm:text-2xl font-extrabold mt-10 reveal">Premium / PRO</h3>
+<div class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <a href="/courses/english-with-harry/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+    <div class="flex items-center gap-3"><span class="text-2xl">🪄</span><div class="grow"><div class="font-semibold">English with Harry</div><div class="text-xs text-[var(--ink-2)]">по мотивам Гарри Поттера</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div>
+  </a>
+  <a href="/courses/visual-spanish/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🖼️</span><div class="grow"><div class="font-semibold">Визуальный испанский</div><div class="text-xs text-[var(--ink-2)]">образами, ассоциациями</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/italian-songs/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🎵</span><div class="grow"><div class="font-semibold">Итальянский по песням</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/pro-espanol/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🇪🇸</span><div class="grow"><div class="font-semibold">Pro Español</div><div class="text-xs text-[var(--ink-2)]">от носителя, A2–B2</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/english-irregular-verbs/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">📚</span><div class="grow"><div class="font-semibold">Неправильные глаголы (EN)</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/30-days-english/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🔥</span><div class="grow"><div class="font-semibold">30 days of English challenge</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/english-for-translators/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">📝</span><div class="grow"><div class="font-semibold">Английский для переводчиков</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/polytalky-polyglot-pack-starter/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🎒</span><div class="grow"><div class="font-semibold">PolyTalky Polyglot Pack. Starter</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/polyglot-pack-cook-it/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🍳</span><div class="grow"><div class="font-semibold">Polyglot Pack. Cook it!</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/polyglot-pack-mchny/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🎄</span><div class="grow"><div class="font-semibold">Polyglot Pack. MCHNY</div><div class="text-xs text-[var(--ink-2)]">новогодний</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/finnish-travel/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">✈️🇫🇮</span><div class="grow"><div class="font-semibold">Финский для путешествий</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/finnish-continue/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">📈🇫🇮</span><div class="grow"><div class="font-semibold">Финский для продолжающих</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/german-continue/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">📈🇩🇪</span><div class="grow"><div class="font-semibold">Немецкий для продолжающих</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/italian-continue/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">📈🇮🇹</span><div class="grow"><div class="font-semibold">Итальянский для продолжающих</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/afrikaans-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🇿🇦</span><div class="grow"><div class="font-semibold">Африкаанс с 0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/dutch-continue/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">📈🇳🇱</span><div class="grow"><div class="font-semibold">Нидерландский для продолжающих</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/swedish-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🇸🇪</span><div class="grow"><div class="font-semibold">Шведский с 0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/lithuanian-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🇱🇹</span><div class="grow"><div class="font-semibold">Литовский с 0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/romanian-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🇷🇴</span><div class="grow"><div class="font-semibold">Румынский с 0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+  <a href="/courses/norwegian-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="flex items-center gap-3"><span class="text-2xl">🇳🇴</span><div class="grow"><div class="font-semibold">Норвежский с 0</div></div><span class="px-2 py-1 text-[11px] rounded-lg bg-[#fff0f0] border border-[#fecaca] text-[#7f1d1d]">PRO</span></div></a>
+</div>
+
+<!-- Микро-CTA для freemium -->
+<div class="mt-8 flex flex-wrap gap-3 reveal">
+  <a href="/student/" class="px-5 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">Войти / Зарегистрироваться</a>
+  <a href="/shop/" class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft">Купить PRO‑доступ</a>
+</div>
+
+  </div>
+</section><!-- ==================== ЛОГО‑БАР / СОЦДОКАЗАТЕЛЬСТВО ==================== --><section class="py-6 border-t border-black/10 bg-[#fffef7]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid sm:grid-cols-4 gap-4 items-center opacity-80 reveal">
+    <img src="assets/press-1.svg" alt="Лого" class="h-9 object-contain">
+    <img src="assets/press-2.svg" alt="Лого" class="h-9 object-contain">
+    <img src="assets/press-3.svg" alt="Лого" class="h-9 object-contain">
+    <img src="assets/press-4.svg" alt="Лого" class="h-9 object-contain">
+  </div>
+</section><!-- ==================== КАК ПРОХОДИТ УРОК ==================== --><section class="py-12 sm:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl sm:text-3xl font-extrabold mb-6 reveal">Как проходят уроки</h2>
+    <div class="grid md:grid-cols-4 gap-4">
+      <div class="p-5 rounded-2xl bg-[var(--card)] border border-black/10 shadow-soft card reveal"><div class="text-2xl">🎯</div><div class="font-semibold mt-1">1) Объяснение</div><p class="text-sm text-[var(--ink-2)] mt-1">5–7 минут простым языком</p></div>
+      <div class="p-5 rounded-2xl bg-[var(--card)] border border-black/10 shadow-soft card reveal"><div class="text-2xl">🗣️</div><div class="font-semibold mt-1">2) Практика</div><p class="text-sm text-[var(--ink-2)] mt-1">Жизненные ситуации</p></div>
+      <div class="p-5 rounded-2xl bg-[var(--card)] border border-black/10 shadow-soft card reveal"><div class="text-2xl">🎧</div><div class="font-semibold mt-1">3) Аудио/диалоги</div><p class="text-sm text-[var(--ink-2)] mt-1">Слушаете и повторяете</p></div>
+      <div class="p-5 rounded-2xl bg-[var(--card)] border border-black/10 shadow-soft card reveal"><div class="text-2xl">🧩</div><div class="font-semibold mt-1">4) Карточки + квиз</div><p class="text-sm text-[var(--ink-2)] mt-1">Закрепление и прогресс</p></div>
+    </div>
+  </div>
+</section><!-- ==================== ПОЧЕМУ POLYTALKY (4 преимущества) ==================== --><section class="py-12 sm:py-16 bg-[#fff3bf] border-y border-black/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl sm:text-3xl font-extrabold mb-6 reveal">Почему PolyTalky работает</h2>
+    <div class="grid md:grid-cols-4 gap-4">
+      <div class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="text-xl font-semibold">Короткие уроки</div><p class="text-sm text-[var(--ink-2)] mt-2">10–15 минут — легко держать ритм.</p></div>
+      <div class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="text-xl font-semibold">Понятные объяснения</div><p class="text-sm text-[var(--ink-2)] mt-2">Сложное — простым языком.</p></div>
+      <div class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="text-xl font-semibold">Реальные диалоги</div><p class="text-sm text-[var(--ink-2)] mt-2">Кафе, город, путешествия.</p></div>
+      <div class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal"><div class="text-xl font-semibold">Материалы и треки</div><p class="text-sm text-[var(--ink-2)] mt-2">PDF, MP3, карточки Anki/Quizlet.</p></div>
+    </div>
+  </div>
+</section><!-- ==================== ОТЗЫВЫ (3 карточки) ==================== --><section class="py-12 sm:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl sm:text-3xl font-extrabold mb-6 reveal">Что говорят студенты</h2>
+    <div class="grid md:grid-cols-3 gap-4">
+      <figure class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+        <img src="assets/av1.jpg" alt="Анна" class="h-10 w-10 rounded-full object-cover">
+        <blockquote class="text-[var(--ink)] text-sm mt-3">«С первого урока появилось ощущение, что я реально смогу говорить. Очень понятные объяснения!»</blockquote>
+        <figcaption class="mt-2 text-xs text-[var(--ink-2)]">Анна, Мадрид</figcaption>
+      </figure>
+      <figure class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+        <img src="assets/av2.jpg" alt="Игорь" class="h-10 w-10 rounded-full object-cover">
+        <blockquote class="text-[var(--ink)] text-sm mt-3">«10–15 минут — и есть результат. В поездке выручило на 100%.»</blockquote>
+        <figcaption class="mt-2 text-xs text-[var(--ink-2)]">Игорь, Барселона</figcaption>
+      </figure>
+      <figure class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+        <img src="assets/av3.jpg" alt="Елена" class="h-10 w-10 rounded-full object-cover">
+        <blockquote class="text-[var(--ink)] text-sm mt-3">«Наконец-то без зубрёжки: диалоги и карточки делают своё дело.»</blockquote>
+        <figcaption class="mt-2 text-xs text-[var(--ink-2)]">Елена, Берлин</figcaption>
+      </figure>
+    </div>
+  </div>
+</section><!-- ==================== CTA (большой финал) ==================== --><section class="py-16 bg-gradient-to-b from-[#fff0b4] to-[#ffe27a] border-y border-black/10 text-center">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+    <h2 class="text-3xl sm:text-4xl font-extrabold">Выучи свой язык мечты</h2>
+    <p class="mt-2 text-[var(--ink-2)]">Начните с бесплатного демо‑урока — через 10 минут у вас будут первые фразы.</p>
+    <div class="mt-6 flex justify-center gap-3">
+      <a href="/courses/" class="px-6 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">Посмотреть все курсы</a>
+      <a href="/courses/spanish-a0/" class="px-6 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft">Демо: Испанский A0</a>
+    </div>
+  </div>
+</section><!-- ==================== FAQ ==================== --><section class="py-12 sm:py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl sm:text-3xl font-extrabold mb-6 reveal">Частые вопросы</h2>
+    <div class="space-y-3">
+      <details class="p-4 bg-white rounded-2xl border border-black/10 shadow-soft reveal"><summary class="font-semibold cursor-pointer">Подойдёт ли, если я с нуля?</summary><p class="text-sm text-[var(--ink-2)] mt-2">Да. Стартуем с базовых фраз и произношения.</p></details>
+      <details class="p-4 bg-white rounded-2xl border border-black/10 shadow-soft reveal"><summary class="font-semibold cursor-pointer">Сколько времени нужно?</summary><p class="text-sm text-[var(--ink-2)] mt-2">10–15 минут в день достаточно, чтобы держать прогресс.</p></details>
+      <details class="p-4 bg-white rounded-2xl border border-black/10 shadow-soft reveal"><summary class="font-semibold cursor-pointer">Какие материалы я получу?</summary><p class="text-sm text-[var(--ink-2)] mt-2">Видео, диалоги, аудио MP3, карточки и PDF‑шпаргалки.</p></details>
+    </div>
+  </div>
+</section><!-- ==================== FOOTER ==================== --><footer class="border-t border-black/10 py-8 text-sm text-[var(--ink-2)] bg-[#fffef7]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+    <p>© <span id="y"></span> PolyTalky. Все права защищены.</p>
+    <div class="flex gap-4">
+      <a class="hover:opacity-80" href="/courses/">Курсы</a>
+      <a class="hover:opacity-80" href="/shop/">Магазин</a>
+      <a class="hover:opacity-80" href="/student/">Личный кабинет</a>
+    </div>
+  </div>
+</footer>
+<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
+</html><!-- ===================== /courses/index.html ===================== --><!doctype html>
+
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PolyTalky — Все курсы</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --brand-yellow:#FFDE59; --brand-yellow-deep:#FFBA08; --brand-orange:#E85D04;
+      --ink:#0F172A; --ink-2:#334155; --card:#FFFFFF; --bg:#FFF8D6;
+    }
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--ink)}
+    .shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.08)}
+    .card{transition:transform .25s ease, box-shadow .25s ease}
+    .card:hover{transform:translateY(-6px)}
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease}
+    .reveal.reveal--visible{opacity:1;transform:translateY(0)}
+    .badge-free{background:#e8ffe3;border:1px solid #a7f3d0;color:#065f46}
+    .badge-pro{background:#fff0f0;border:1px solid #fecaca;color:#7f1d1d}
+  </style>
+</head>
+<body>
+<header class="sticky top-0 z-30 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 font-semibold text-lg">
+      <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl"> PolyTalky
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
+      <a href="/courses/" class="hover:opacity-80 font-semibold">Курсы</a>
+      <a href="/shop/" class="hover:opacity-80">Магазин</a>
+      <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
+    </nav>
+    <a href="/student/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">Войти</a>
+  </div>
+</header><main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="reveal">
+    <h1 class="text-3xl sm:text-4xl font-extrabold">Каталог курсов</h1>
+    <p class="mt-2 text-[var(--ink-2)]">Выбирайте бесплатные курсы, начинайте сразу и переходите на PRO, когда будете готовы.</p>
+  </div>  <!-- ФИЛЬТРЫ -->  <section class="mt-6 grid gap-3 sm:grid-cols-[1fr,1fr,auto] items-end reveal">
+    <div>
+      <label class="block text-xs text-[var(--ink-2)] mb-1">Тип курса</label>
+      <div class="flex gap-2">
+        <button data-type="all" class="filter-type px-3 py-2 rounded-xl bg-white border border-black/10 shadow-soft text-sm font-medium">Все</button>
+        <button data-type="free" class="filter-type px-3 py-2 rounded-xl bg-white border border-black/10 shadow-soft text-sm">Бесплатные</button>
+        <button data-type="pro"  class="filter-type px-3 py-2 rounded-xl bg-white border border-black/10 shadow-soft text-sm">PRO</button>
+      </div>
+    </div>
+    <div>
+      <label class="block text-xs text-[var(--ink-2)] mb-1">Язык</label>
+      <select id="lang" class="w-full px-3 py-2 rounded-xl bg-white border border-black/10 shadow-soft text-sm">
+        <option value="all">Все языки</option>
+        <option value="es">Испанский</option>
+        <option value="en">Английский</option>
+        <option value="it">Итальянский</option>
+        <option value="de">Немецкий</option>
+        <option value="fi">Финский</option>
+        <option value="nl">Нидерландский</option>
+        <option value="fr">Французский</option>
+        <option value="jp">Японский</option>
+        <option value="cn">Китайский</option>
+        <option value="hi">Хинди</option>
+        <option value="ar">Арабский</option>
+        <option value="tr">Турецкий</option>
+        <option value="kr">Корейский</option>
+        <option value="sv">Шведский</option>
+        <option value="lt">Литовский</option>
+        <option value="ro">Румынский</option>
+        <option value="no">Норвежский</option>
+        <option value="af">Африкаанс</option>
+      </select>
+    </div>
+    <div class="justify-self-end">
+      <a href="/student/" class="px-4 py-2 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-[#1a1a1a] font-semibold shadow-soft">Войти и начать</a>
+    </div>
+  </section>  <!-- БЕСПЛАТНЫЕ -->  <section class="mt-8 reveal">
+    <div class="flex items-end justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl sm:text-3xl font-extrabold">Бесплатные курсы</h2>
+      <span class="text-sm text-[var(--ink-2)]">Стартуйте без оплаты</span>
+    </div>
+    <div id="grid-free" class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </section>  <!-- PRO -->  <section class="mt-10 reveal">
+    <div class="flex items-end justify-between gap-4 flex-wrap">
+      <h2 class="text-2xl sm:text-3xl font-extrabold">PRO / Premium</h2>
+      <a href="/shop/" class="text-sm underline text-[var(--ink-2)]">Тарифы и оплата →</a>
+    </div>
+    <div id="grid-pro" class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </section>
+</main><footer class="border-t border-black/10 py-8 text-sm text-[var(--ink-2)] bg-[#fffef7]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+    <p>© <span id="y"></span> PolyTalky. Все права защищены.</p>
+    <div class="flex gap-4">
+      <a class="hover:opacity-80" href="/courses/">Курсы</a>
+      <a class="hover:opacity-80" href="/shop/">Магазин</a>
+      <a class="hover:opacity-80" href="/student/">Личный кабинет</a>
+    </div>
+  </div>
+</footer><script>
+// Reveal on scroll
+const onReady=()=>{
+  const obs=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting)e.target.classList.add('reveal--visible');});},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+};
+if(document.readyState!=='loading') onReady(); else document.addEventListener('DOMContentLoaded', onReady);
+
+// Каталог (free + pro)
+const FREE=[
+  {slug:'/courses/spanish-a0/', title:'Испанский язык с 0', flag:'🇪🇸', lang:'es', level:'A0 → A1'},
+  {slug:'/courses/italian-a0/', title:'Итальянский с 0', flag:'🇮🇹', lang:'it', level:'A0 → A1'},
+  {slug:'/courses/spanish-vamos/', title:'¡Vamos a España! (продолжающие)', flag:'🇪🇸', lang:'es', level:'A1+ → A2'},
+  {slug:'/courses/english-intro/', title:'Интенсив по английскому (начинающие)', flag:'🇬🇧', lang:'en', level:'Starter'},
+  {slug:'/courses/finnish-intro/', title:'Вводный курс по финскому', flag:'🇫🇮', lang:'fi', level:'Intro'},
+  {slug:'/courses/german-intro/', title:'Вводный курс по немецкому', flag:'🇩🇪', lang:'de', level:'Intro'},
+  {slug:'/courses/dutch-a0/', title:'Нидерландский с нуля', flag:'🇳🇱', lang:'nl', level:'A0'},
+  {slug:'/courses/french-a0/', title:'Французский с 0', flag:'🇫🇷', lang:'fr', level:'A0'},
+  {slug:'/courses/japanese-a0/', title:'Японский с 0', flag:'🇯🇵', lang:'jp', level:'A0'},
+  {slug:'/courses/chinese-a0/', title:'Китайский с 0', flag:'🇨🇳', lang:'cn', level:'A0'},
+  {slug:'/courses/hindi-a0/', title:'Хинди с 0', flag:'🇮🇳', lang:'hi', level:'A0'},
+  {slug:'/courses/arabic-a0/', title:'Арабский с 0', flag:'🇸🇦', lang:'ar', level:'A0'},
+  {slug:'/courses/turkish-a0/', title:'Турецкий с 0', flag:'🇹🇷', lang:'tr', level:'A0'},
+  {slug:'/courses/korean-a0/', title:'Корейский с 0', flag:'🇰🇷', lang:'kr', level:'A0'}
+];
+
+const PRO=[
+  {slug:'/courses/english-with-harry/', title:'English with Harry', icon:'🪄', lang:'en'},
+  {slug:'/courses/visual-spanish/', title:'Визуальный испанский', icon:'🖼️', lang:'es'},
+  {slug:'/courses/italian-songs/', title:'Итальянский по песням', icon:'🎵', lang:'it'},
+  {slug:'/courses/pro-espanol/', title:'Pro Español (A2–B2)', icon:'🇪🇸', lang:'es'},
+  {slug:'/courses/english-irregular-verbs/', title:'Неправильные глаголы (EN)', icon:'📚', lang:'en'},
+  {slug:'/courses/30-days-english/', title:'30 days of English challenge', icon:'🔥', lang:'en'},
+  {slug:'/courses/english-for-translators/', title:'Английский для переводчиков', icon:'📝', lang:'en'},
+  {slug:'/courses/polytalky-polyglot-pack-starter/', title:'PolyTalky Polyglot Pack. Starter', icon:'🎒', lang:'multi'},
+  {slug:'/courses/polyglot-pack-cook-it/', title:'Polyglot Pack. Cook it!', icon:'🍳', lang:'multi'},
+  {slug:'/courses/polyglot-pack-mchny/', title:'Polyglot Pack. MCHNY', icon:'🎄', lang:'multi'},
+  {slug:'/courses/finnish-travel/', title:'Финский для путешествий', icon:'✈️🇫🇮', lang:'fi'},
+  {slug:'/courses/finnish-continue/', title:'Финский для продолжающих', icon:'📈🇫🇮', lang:'fi'},
+  {slug:'/courses/german-continue/', title:'Немецкий для продолжающих', icon:'📈🇩🇪', lang:'de'},
+  {slug:'/courses/italian-continue/', title:'Итальянский для продолжающих', icon:'📈🇮🇹', lang:'it'},
+  {slug:'/courses/afrikaans-a0/', title:'Африкаанс с 0', icon:'🇿🇦', lang:'af'},
+  {slug:'/courses/dutch-continue/', title:'Нидерландский для продолжающих', icon:'📈🇳🇱', lang:'nl'},
+  {slug:'/courses/swedish-a0/', title:'Шведский с 0', icon:'🇸🇪', lang:'sv'},
+  {slug:'/courses/lithuanian-a0/', title:'Литовский с 0', icon:'🇱🇹', lang:'lt'},
+  {slug:'/courses/romanian-a0/', title:'Румынский с 0', icon:'🇷🇴', lang:'ro'},
+  {slug:'/courses/norwegian-a0/', title:'Норвежский с 0', icon:'🇳🇴', lang:'no'}
+];
+
+let TYPE='all';
+let LANG='all';
+
+function render(){
+  const gf=document.getElementById('grid-free');
+  const gp=document.getElementById('grid-pro');
+  const f1=FREE.filter(c=> (LANG==='all'||c.lang===LANG) && (TYPE==='all'||TYPE==='free'));
+  const f2=PRO.filter(c=> (LANG==='all'||c.lang===LANG) && (TYPE==='all'||TYPE==='pro'));
+
+  gf.innerHTML=f1.map(c=>`<a href="${c.slug}" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">${c.flag||'🌍'}</span>
+        <div class="grow">
+          <div class="font-semibold">${c.title}</div>
+          <div class="text-xs text-[var(--ink-2)]">${c.level||''}</div>
+        </div>
+        <span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>
+      </div>
+    </a>`).join('');
+
+  gp.innerHTML=f2.map(c=>`<a href="${c.slug}" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">${c.icon||'⭐'}</span>
+        <div class="grow">
+          <div class="font-semibold">${c.title}</div>
+        </div>
+        <span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PRO</span>
+      </div>
+    </a>`).join('');
+}
+
+// Фильтры
+Array.from(document.querySelectorAll('.filter-type')).forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    Array.from(document.querySelectorAll('.filter-type')).forEach(b=>b.classList.remove('font-medium','bg-[var(--brand-yellow)]'));
+    btn.classList.add('font-medium');
+    TYPE=btn.dataset.type; render();
+  });
+});
+
+document.getElementById('lang').addEventListener('change',e=>{LANG=e.target.value; render();});
+
+render();
+
+document.getElementById('y').textContent=new Date().getFullYear?.()||new Date().getFullYear();
+</script></body>
+</html>
