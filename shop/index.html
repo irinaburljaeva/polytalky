@@ -3,193 +3,166 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PolyTalky — Магазин</title>
-  <meta name="description" content="Платные курсы PolyTalky: спецпрограммы, челленджи и уровни для продолжающих. Оплата из РФ (СБП/ЮMoney) и из-за рубежа (PayPal/Stripe)." />
+  <title>PolyTalky — Магазин курсов</title>
+  <meta name="description" content="Магазин языковых курсов PolyTalky. Челленджи, спецпрограммы и курсы для продолжающих: английский, испанский, итальянский, немецкий, финский и редкие языки." />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root{--brand-1:#CF2C02;--brand-2:#FFBA08;--brand-3:#E85D04}
+    :root{
+      --brand-1:#FFBA08; /* жёлтый */
+      --brand-2:#CF2C02; /* кораллово-красный */
+    }
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#fafafa;color:#111}
-    .badge{font-size:.72rem;padding:.15rem .45rem;border-radius:.5rem;background:#fff3c6;border:1px solid #ffe39a}
-    .card{transition:transform .2s ease, box-shadow .2s ease}
-    .card:hover{transform:translateY(-3px)}
-    .price{font-weight:800;letter-spacing:.2px}
-    .chip{font-size:.7rem;padding:.15rem .4rem;border-radius:.5rem;background:#eef2ff;color:#3730a3}
-    .soon{opacity:.55;filter:grayscale(20%)}
-    .btn{background:#111;color:#fff;border-radius:.8rem;padding:.55rem 1rem;font-weight:600}
-    .btn:hover{background:#222}
-    .btn-brand{background:var(--brand-1)}
-    .btn-brand:hover{background:var(--brand-3)}
+    .btn-brand{background:var(--brand-1);padding:6px 14px;border-radius:10px;font-weight:600;color:#111;transition:all .2s}
+    .btn-brand:hover{background:var(--brand-2);color:#fff}
+    .card{transition:transform .25s,box-shadow .25s}
+    .card:hover{transform:translateY(-4px);box-shadow:0 8px 16px rgba(0,0,0,.1)}
+    .chip{display:inline-block;background:#eee;padding:2px 6px;border-radius:8px;font-size:12px;color:#333}
+    .price{font-weight:700}
   </style>
 </head>
-<body>
+
+<body class="min-h-screen flex flex-col">
 
   <!-- Header -->
-  <header class="sticky top-0 z-30 backdrop-blur bg-white/70 border-b border-gray-200">
+  <header class="sticky top-0 z-30 backdrop-blur bg-white/80 border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-      <a href="/polytalky/" class="flex items-center gap-2 font-semibold text-gray-900">
-        <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-2)] items-center justify-center">🏷️</span>
-        <span class="text-lg">PolyTalky</span>
+      <a href="/polytalky/" class="flex items-center gap-2 font-semibold text-lg">
+        🏷️ PolyTalky
       </a>
       <nav class="hidden md:flex items-center gap-6 text-sm">
         <a href="/polytalky/courses/" class="opacity-80 hover:opacity-100">Курсы</a>
-        <span class="opacity-100 font-semibold">Магазин</span>
+        <a href="/polytalky/shop/" class="opacity-100 font-semibold text-[var(--brand-2)]">Магазин</a>
         <a href="/polytalky/student/" class="opacity-80 hover:opacity-100">Личный кабинет</a>
       </nav>
-      <a href="/polytalky/courses/" class="inline-flex items-center gap-2 btn-brand text-white px-4 py-2">Начать бесплатно</a>
+      <a href="/polytalky/courses/spanish-a0/" class="btn-brand">Начать бесплатно</a>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-3xl font-extrabold tracking-tight">Магазин PolyTalky</h1>
-    <p class="mt-2 text-gray-600">Доступ к платным курсам и спецпрограммам. Выберите способ оплаты: для РФ (СБП/ЮMoney) или для зарубежа (PayPal/Stripe).</p>
+  <main class="flex-grow">
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <h1 class="text-3xl font-bold mb-2">Магазин курсов PolyTalky</h1>
+      <p class="text-gray-600 mb-10">Выберите спецпрограммы, челленджи и курсы для продолжающих.</p>
 
-    <!-- SECTION: Спецпрограммы и челленджи -->
-    <section class="mt-10">
-      <div class="flex items-end justify-between mb-3">
-        <h2 class="text-2xl font-bold">💫 Спецпрограммы и челленджи</h2>
-      </div>
-      <div id="grid-special" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <h2 class="text-2xl font-bold mb-4">💫 Спецпрограммы и челленджи</h2>
+      <div id="grid-special" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
+
+      <h2 class="text-2xl font-bold mb-4">🎓 Курсы по языкам</h2>
+      <div id="grid-langs" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
-
-    <!-- SECTION: Курсы по языкам -->
-    <section class="mt-12">
-      <div class="flex items-end justify-between mb-3">
-        <h2 class="text-2xl font-bold">🎓 Курсы по языкам</h2>
-      </div>
-      <div id="grid-langs" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-    </section>
-
-    <!-- Info -->
-    <div class="mt-10 p-4 rounded-2xl border border-gray-200 bg-white">
-      <h3 class="font-semibold mb-2">Оплата и доступ</h3>
-      <ul class="list-disc pl-5 text-gray-700 space-y-1 text-sm">
-        <li>Оплата в РФ — через <strong>СБП</strong> или <strong>ЮMoney</strong>. Доступ активируется сразу после оплаты.</li>
-        <li>Оплата из-за рубежа — через <strong>PayPal</strong> или <strong>Stripe</strong>. Доступ активируется автоматически.</li>
-        <li>Данные банковских карт <strong>не хранятся</strong> на стороне PolyTalky. Обработку выполняют платёжные провайдеры.</li>
-      </ul>
-    </div>
   </main>
 
-  <!-- Footer (как на остальных страницах) -->
-  <footer class="border-t border-gray-200 bg-white/70 backdrop-blur py-10 text-sm text-gray-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div>
-        <a href="/polytalky/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
-          <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-2)] items-center justify-center">🏷️</span>
-          PolyTalky
-        </a>
-        <p class="mt-3 text-gray-500">Изучайте языки для жизни, а не только для тестов.</p>
-        <p class="mt-4 text-gray-400">© 2025 PolyTalky. Все права защищены.</p>
-      </div>
-      <div>
-        <h3 class="font-semibold text-gray-900 mb-3">Навигация</h3>
-        <ul class="space-y-2">
-          <li><a href="/polytalky/courses/" class="hover:underline">Курсы</a></li>
-          <li><a href="/polytalky/shop/" class="hover:underline">Магазин</a></li>
-          <li><a href="/polytalky/student/" class="hover:underline">Личный кабинет</a></li>
-          <li><a href="/polytalky/contact.html" class="hover:underline">Контакты</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="font-semibold text-gray-900 mb-3">Юридическая информация</h3>
-        <ul class="space-y-2">
-          <li><a href="/polytalky/legal/privacy.html" class="hover:underline">Политика конфиденциальности</a></li>
-          <li><a href="/polytalky/legal/offer.html" class="hover:underline">Публичная оферта</a></li>
-          <li><a href="/polytalky/legal/cookies.html" class="hover:underline">Cookies</a></li>
-          <li><a href="/polytalky/legal/consent.html" class="hover:underline">Согласие на обработку данных</a></li>
-        </ul>
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 py-8 text-sm text-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+      <p>© 2025 PolyTalky. Все права защищены.</p>
+      <div class="flex flex-wrap gap-4">
+        <a href="/polytalky/contact.html" class="opacity-80 hover:opacity-100">Контакты</a>
+        <a href="/polytalky/legal/privacy.html" class="opacity-80 hover:opacity-100">Политика конфиденциальности</a>
+        <a href="/polytalky/legal/offer.html" class="opacity-80 hover:opacity-100">Публичная оферта</a>
+        <a href="/polytalky/legal/cookies.html" class="opacity-80 hover:opacity-100">Cookies</a>
+        <a href="/polytalky/legal/consent.html" class="opacity-80 hover:opacity-100">Согласие</a>
       </div>
     </div>
   </footer>
 
-  <!-- MODAL: выбор способа оплаты -->
-  <div id="payModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
-    <div class="bg-white rounded-2xl w-[92vw] max-w-xl p-5">
-      <div class="flex items-start justify-between">
-        <h3 class="text-lg font-bold">Оплата: <span id="pm-title"></span></h3>
-        <button class="text-gray-500 hover:text-gray-900" onclick="closePay()">✕</button>
-      </div>
+  <!-- Cookie баннер -->
+  <div id="cookie-banner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white shadow-md rounded-xl px-4 py-3 text-sm flex items-center gap-3 hidden">
+    <span>Мы используем cookies для улучшения работы сайта.</span>
+    <button id="cookie-accept" class="bg-[var(--brand-1)] text-black px-3 py-1 rounded-lg text-sm">Понятно</button>
+  </div>
 
-      <div class="mt-4 grid sm:grid-cols-2 gap-4">
-        <div class="p-4 rounded-xl border border-gray-200">
-          <div class="font-semibold">Для РФ</div>
-          <p class="text-sm text-gray-600 mt-1">СБП или ЮMoney</p>
-          <div class="mt-3 flex items-center justify-between">
-            <div class="price" id="pm-price-rub">—</div>
-            <button class="btn-brand px-4 py-2 text-white" onclick="pay('ru')">Оплатить</button>
-          </div>
-        </div>
-        <div class="p-4 rounded-xl border border-gray-200">
-          <div class="font-semibold">Для зарубежа</div>
-          <p class="text-sm text-gray-600 mt-1">PayPal или Stripe</p>
-          <div class="mt-3 flex items-center justify-between">
-            <div class="price" id="pm-price-usd">—</div>
-            <button class="btn px-4 py-2" onclick="pay('intl')">Pay</button>
-          </div>
-        </div>
+  <!-- Модалка оплаты -->
+  <div id="payModal" class="hidden fixed inset-0 bg-black/60 items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full text-gray-900">
+      <h3 class="text-xl font-bold mb-3" id="pm-title">Курс</h3>
+      <p class="mb-4 text-gray-600">Стоимость: <span id="pm-price-rub"></span> / <span id="pm-price-usd"></span></p>
+      <div class="space-y-3">
+        <button class="w-full btn-brand" onclick="pay('ru')">Оплата для РФ (ЮKassa / СБП)</button>
+        <button class="w-full btn-brand" onclick="pay('int')">Оплата для других стран (Stripe / PayPal)</button>
+        <button class="w-full bg-gray-200 hover:bg-gray-300 py-2 rounded-lg" onclick="closePay()">Отмена</button>
       </div>
-
-      <p class="mt-4 text-xs text-gray-500">Данные карт обрабатываются платёжным провайдером. На стороне PolyTalky они не сохраняются.</p>
     </div>
   </div>
 
   <script>
-    // ====== Каталог (платные курсы) ======
-    // картинки должны лежать в /polytalky/images/ (как ты делала ранее)
+    // ====== Папка с обложками ======
+    const IMG_BASE = '/polytalky/assets/courses/';
+    const img = (name) => IMG_BASE + name;
+
+    // 💫 Спецпрограммы и челленджи
     const special = [
-      {id:'polyglotpack-mchny', title:'PolyglotPack MCHNY', img:'/polytalky/images/mchny.jpg', tag:'SEASONAL', note:'Старт 25 декабря', priceRub:'1 490 ₽', priceUsd:'€19'},
-      {id:'polyglotpack-starter', title:'Polyglot Pack. Starter', img:'/polytalky/images/polyglotpack.jpg', tag:'PACK', priceRub:'1 290 ₽', priceUsd:'€15'},
-      {id:'cook-it', title:'Polyglot Pack. Cook it!', img:'/polytalky/images/cookit.jpg', tag:'PACK', priceRub:'1 290 ₽', priceUsd:'€15'},
-      {id:'30days-english', title:'30 Days of English (Challenge)', img:'/polytalky/images/30daysofenglish.jpg', tag:'EN', priceRub:'990 ₽', priceUsd:'€12'},
-      {id:'irregular-verbs', title:'Irregular Verbs (Challenge)', img:'/polytalky/images/irregularverbs.jpg', tag:'EN', priceRub:'790 ₽', priceUsd:'€10'},
-      {id:'english-translators', title:'Английский для переводчиков', img:'/polytalky/images/englishtranslate.jpg', tag:'EN', priceRub:'1 490 ₽', priceUsd:'€19'},
+      { id:'polyglotpack-mchny', title:'PolyglotPack MCHNY', img:img('mchny.jpg'),
+        tag:'SEASONAL', note:'Старт 25 декабря', priceRub:'1 490 ₽', priceUsd:'€19' },
+      { id:'polyglotpack-starter', title:'Polyglot Pack. Starter', img:img('polyglotpack.jpg'),
+        tag:'PACK', priceRub:'1 290 ₽', priceUsd:'€15' },
+      { id:'cook-it', title:'Polyglot Pack. Cook it!', img:img('cookit.jpg'),
+        tag:'PACK', priceRub:'1 290 ₽', priceUsd:'€15' },
+      { id:'30days-english', title:'30 Days of English (Challenge)', img:img('30daysofenglish.jpg'),
+        tag:'EN', priceRub:'990 ₽', priceUsd:'€12' },
+      { id:'irregular-verbs', title:'Irregular Verbs (Challenge)', img:img('irregularverbs.jpg'),
+        tag:'EN', priceRub:'790 ₽', priceUsd:'€10' },
+      { id:'english-translators', title:'Английский для переводчиков', img:img('englishtranslate.jpg'),
+        tag:'EN', priceRub:'1 490 ₽', priceUsd:'€19' },
     ];
 
+    // 🎓 Платные языковые курсы
     const langs = [
-      {id:'english-with-harry', title:'English with Harry', img:'/polytalky/images/englishwithharry.jpg', tag:'EN', level:'A0–A2', priceRub:'1 490 ₽', priceUsd:'€19'},
-      {id:'visual-spanish', title:'Визуальный испанский', img:'/polytalky/images/visualspanish.jpg', tag:'ES', level:'A1–A2', priceRub:'1 290 ₽', priceUsd:'€15'},
-      {id:'italian-songs', title:'Итальянский по песням', img:'/polytalky/images/italiansongs.jpg', tag:'IT', level:'A1–A2', priceRub:'1 290 ₽', priceUsd:'€15'},
-      {id:'pro-espanol', title:'Pro Español (от носителя)', img:'/polytalky/images/proespanol.jpg', tag:'ES', level:'B1–B2', priceRub:'1 990 ₽', priceUsd:'€24'},
-
-      {id:'finnish-travel', title:'Финский для путешествий', img:'/polytalky/images/finishtravel.jpg', tag:'FI', level:'A1', priceRub:'1 290 ₽', priceUsd:'€15'},
-      {id:'finnish-a2', title:'Финский для продолжающих', img:'/polytalky/images/finisha2.jpg', tag:'FI', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19'},
-      {id:'german-a2', title:'Немецкий для продолжающих', img:'/polytalky/images/germana2.jpg', tag:'DE', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19'},
-      {id:'italian-a2', title:'Итальянский для продолжающих', img:'/polytalky/images/italiana2.jpg', tag:'IT', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19'},
-
-      {id:'afrikaans-a0', title:'Африкаанс с нуля', img:'/polytalky/images/afrikaans.jpg', tag:'AF', level:'A0', priceRub:'990 ₽', priceUsd:'€12'},
-      {id:'dutch-a2', title:'Нидерландский для продолжающих', img:'/polytalky/images/nederlandsa2.jpg', tag:'NL', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19'},
-      {id:'swedish-a0', title:'Шведский с нуля', img:'/polytalky/images/swedish.jpg', tag:'SV', level:'A0', priceRub:'990 ₽', priceUsd:'€12'},
-      {id:'lithuanian-a0', title:'Литовский с нуля', img:'/polytalky/images/lithuanian.jpg', tag:'LT', level:'A0', priceRub:'990 ₽', priceUsd:'€12'},
-      {id:'romanian-a0', title:'Румынский с нуля', img:'/polytalky/images/romanian.jpg', tag:'RO', level:'A0', priceRub:'990 ₽', priceUsd:'€12'},
-      {id:'norwegian-a0', title:'Норвежский с нуля', img:'/polytalky/images/norwegian.jpg', tag:'NO', level:'A0', priceRub:'990 ₽', priceUsd:'€12', soon:true}
+      { id:'english-with-harry', title:'English with Harry', img:img('englishwithharry.jpg'),
+        tag:'EN', level:'A0–A2', priceRub:'1 490 ₽', priceUsd:'€19' },
+      { id:'visual-spanish', title:'Визуальный испанский', img:img('visualspanish.jpg'),
+        tag:'ES', level:'A1–A2', priceRub:'1 290 ₽', priceUsd:'€15' },
+      { id:'italian-songs', title:'Итальянский по песням', img:img('italiansongs.jpg'),
+        tag:'IT', level:'A1–A2', priceRub:'1 290 ₽', priceUsd:'€15' },
+      { id:'pro-espanol', title:'Pro Español (от носителя)', img:img('proespanol.jpg'),
+        tag:'ES', level:'B1–B2', priceRub:'1 990 ₽', priceUsd:'€24' },
+      { id:'finnish-travel', title:'Финский для путешествий', img:img('finishtravel.jpg'),
+        tag:'FI', level:'A1', priceRub:'1 290 ₽', priceUsd:'€15' },
+      { id:'finnish-a2', title:'Финский для продолжающих', img:img('finisha2.jpg'),
+        tag:'FI', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19' },
+      { id:'german-a2', title:'Немецкий для продолжающих', img:img('germana2.jpg'),
+        tag:'DE', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19' },
+      { id:'italian-a2', title:'Итальянский для продолжающих', img:img('italiana2.jpg'),
+        tag:'IT', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19' },
+      { id:'afrikaans-a0', title:'Африкаанс с нуля', img:img('afrikaans.jpg'),
+        tag:'AF', level:'A0', priceRub:'990 ₽', priceUsd:'€12' },
+      { id:'dutch-a2', title:'Нидерландский для продолжающих', img:img('nederlandsa2.jpg'),
+        tag:'NL', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19' },
+      { id:'swedish-a0', title:'Шведский с нуля', img:img('swedish.jpg'),
+        tag:'SV', level:'A0', priceRub:'990 ₽', priceUsd:'€12' },
+      { id:'lithuanian-a0', title:'Литовский с нуля', img:img('lithuanian.jpg'),
+        tag:'LT', level:'A0', priceRub:'990 ₽', priceUsd:'€12' },
+      { id:'romanian-a0', title:'Румынский с нуля', img:img('romanian.jpg'),
+        tag:'RO', level:'A0', priceRub:'990 ₽', priceUsd:'€12' },
     ];
 
+    // ====== Генерация карточек ======
     function cardHTML(c){
-      const soon = c.soon ? 'soon pointer-events-none' : '';
-      const soonBadge = c.soon ? `<span class="absolute top-2 right-2 bg-gray-900/80 text-white text-xs px-2 py-1 rounded">Скоро</span>` : '';
+      const soon = c.soon ? 'soon pointer-events-none opacity-60' : '';
+      const soonBadge = c.soon ? `<span class="absolute top-2 right-2 bg-gray-800 text-white text-xs px-2 py-1 rounded">Скоро</span>` : '';
       const level = c.level ? `<span class="chip">${c.level}</span>` : '';
       const tag = c.tag ? `<span class="chip">${c.tag}</span>` : '';
       return `
-      <div class="card rounded-2xl border border-gray-200 bg-white overflow-hidden ${soon}">
-        <div class="relative">
-          <img src="${c.img}" alt="${c.title}" class="w-full aspect-[4/3] object-cover">
-          ${soonBadge}
-        </div>
-        <div class="p-4">
-          <div class="flex items-center gap-2 mb-1">${tag}${level?` ${level}`:''}</div>
-          <h3 class="font-semibold">${c.title}</h3>
-          <div class="mt-3 flex items-center justify-between">
-            <div class="price">${c.priceRub} <span class="text-gray-400 text-xs">/ ${c.priceUsd}</span></div>
-            <button class="btn-brand text-white" onclick="openPay('${c.id}','${c.title}','${c.priceRub}','${c.priceUsd}')" ${c.soon?'disabled':''}>Купить</button>
+        <div class="card rounded-2xl border border-gray-200 bg-white overflow-hidden ${soon}">
+          <div class="relative">
+            <img src="${c.img}" alt="${c.title}" class="w-full aspect-[4/3] object-cover">
+            ${soonBadge}
           </div>
-        </div>
-      </div>`;
+          <div class="p-4">
+            <div class="flex items-center gap-2 mb-1">${tag}${level?` ${level}`:''}</div>
+            <h3 class="font-semibold">${c.title}</h3>
+            ${c.note ? `<p class="text-xs text-[var(--brand-2)] mt-1">${c.note}</p>` : ''}
+            <div class="mt-3 flex items-center justify-between">
+              <div class="price">${c.priceRub} <span class="text-gray-400 text-xs">/ ${c.priceUsd}</span></div>
+              <button class="btn-brand" onclick="openPay('${c.id}','${c.title}','${c.priceRub}','${c.priceUsd}')" ${c.soon?'disabled':''}>Купить</button>
+            </div>
+          </div>
+        </div>`;
     }
 
     document.getElementById('grid-special').innerHTML = special.map(cardHTML).join('');
     document.getElementById('grid-langs').innerHTML = langs.map(cardHTML).join('');
 
-    // ====== Модалка оплаты (демо) ======
+    // ====== Модалка оплаты ======
     let currentCourse = null;
     function openPay(id,title,priceRub,priceUsd){
       currentCourse = {id,title,priceRub,priceUsd};
@@ -204,18 +177,22 @@
       document.getElementById('payModal').classList.remove('flex');
     }
     function pay(channel){
-      // Здесь позже вставишь реальные ссылки на оплату
-      // Пока — демо: активируем доступ и закрываем модалку
       const key = 'pt_enrollments';
       const data = JSON.parse(localStorage.getItem(key)||'{}');
       data[currentCourse.id] = { access:true, purchasedAt:new Date().toISOString(), channel };
       localStorage.setItem(key, JSON.stringify(data));
       closePay();
       alert('Оплата оформлена (демо). Доступ активирован в «Личном кабинете».');
-      // Пример куда вести:
-      // if(channel==='ru') location.href='https://yoomoney.ru/quickpay/....';
-      // if(channel==='intl') location.href='https://paypal.me/... или Stripe Checkout';
     }
+
+    // ====== Cookie баннер ======
+    const banner = document.getElementById('cookie-banner');
+    if (!localStorage.getItem('cookieConsent')) banner.classList.remove('hidden');
+    document.getElementById('cookie-accept').onclick = () => {
+      localStorage.setItem('cookieConsent', 'true');
+      banner.classList.add('hidden');
+    };
   </script>
+
 </body>
 </html>
