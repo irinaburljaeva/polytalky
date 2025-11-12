@@ -4,14 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PolyTalky — Каталог курсов</title>
-  <meta name="description" content="Каталог курсов PolyTalky: бесплатные и PRO-программы по испанскому, английскому, итальянскому, немецкому и другим языкам. Фильтры, поиск и удобная навигация." />
-  <!-- Если сайт живёт по адресу username.github.io/polytalky/ — base оставляем. Если в корне домена — удали строку ниже. -->
+  <meta name="description" content="Каталог курсов PolyTalky: бесплатные и PRO-программы по испанскому, английскому, итальянскому и другим языкам. Фильтры, поиск и удобная навигация." />
   <base href="/polytalky/">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root{
-      --brand-yellow:#FFDE59; --brand-yellow-deep:#FFBA08; --brand-orange:#E85D04;
-      --ink:#0F172A; --ink-2:#334155; --card:#FFFFFF; --bg:#FFF8D6;
+      --brand-yellow:#FFDE59; --brand-yellow-deep:#FFBA08;
+      --ink:#0F172A; --ink-2:#334155; --bg:#FFF8D6;
     }
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--ink)}
     .shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.08)}
@@ -19,32 +18,16 @@
     .card:hover{transform:translateY(-6px)}
     .badge-free{background:#e8ffe3;border:1px solid #a7f3d0;color:#065f46}
     .badge-pro{background:#fff0f0;border:1px solid #fecaca;color:#7f1d1d}
-    .chip{border:1px solid #00000014;background:#fff;border-radius:999px;padding:.5rem .9rem;font-size:.9rem}
-    .chip.active{background:var(--brand-yellow);border-color:#0000001f}
-    .reveal{opacity:0;transform:translateY(12px);transition:.5s}
-    .reveal.reveal--visible{opacity:1;transform:none}
-    .soon-overlay{
-      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-      background:rgba(255,255,255,.6); backdrop-filter:blur(2px); border-radius:1.25rem;
-      font-weight:800; color:#1a1a1a; letter-spacing:.3px;
-    }
-    .seasonal{
-      position:relative;
-      border:2px dashed #ffc107 !important;
-      background:linear-gradient(180deg,#fff 0%,#fff8e1 100%);
-      box-shadow:0 12px 40px rgba(255,193,7,.25);
-    }
-    .ribbon{
-      position:absolute; top:10px; right:-8px; background:var(--brand-yellow);
-      color:#1a1a1a; font-weight:700; padding:.35rem .6rem; border-radius:.5rem;
-      border:1px solid #00000014; transform:rotate(3deg);
-    }
-    .ratio-square{ aspect-ratio: 1 / 1; }
+    .chip{border:1px solid #0001;background:#fff;border-radius:999px;padding:.5rem .9rem;font-size:.9rem}
+    .chip.active{background:var(--brand-yellow)}
+    .soon-overlay{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.6); backdrop-filter:blur(2px); border-radius:1.25rem; font-weight:800; color:#1a1a1a; letter-spacing:.3px;}
+    .seasonal{position:relative; border:2px dashed #ffc107 !important; background:linear-gradient(180deg,#fff 0%,#fff8e1 100%); box-shadow:0 12px 40px rgba(255,193,7,.25);}
+    .ribbon{position:absolute; top:10px; right:-8px; background:var(--brand-yellow); color:#1a1a1a; font-weight:700; padding:.35rem .6rem; border-radius:.5rem; border:1px solid #00000014; transform:rotate(3deg);}
+    .ratio-square{aspect-ratio:1/1}
   </style>
 </head>
 <body>
 
-<!-- Header -->
 <header class="sticky top-0 z-50 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
     <a href="/polytalky/" class="flex items-center gap-3 font-semibold text-lg">
@@ -67,13 +50,9 @@
     </div>
   </div>
 </header>
-<script>
-  const b=document.getElementById('burger'), m=document.getElementById('mnav');
-  if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
-</script>
+<script>const b=document.getElementById('burger'),m=document.getElementById('mnav'); if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));</script>
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-  <!-- Заголовок + счётчик -->
   <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
       <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">Каталог курсов</h1>
@@ -82,31 +61,26 @@
     <div class="text-sm text-[var(--ink-2)]"><span id="count">0</span> курсов</div>
   </div>
 
-  <!-- Фильтры -->
   <section class="mt-6 p-4 sm:p-5 rounded-2xl bg-white border border-black/10 shadow-soft">
     <div class="grid gap-3 items-center lg:grid-cols-[1fr,auto,auto,auto,auto]">
-      <!-- Поиск -->
       <label class="relative flex items-center">
         <input id="q" type="search" placeholder="Поиск: язык, курс, тема…"
                class="w-full rounded-xl border border-black/10 bg-white px-4 py-3 pr-10 outline-none focus:ring-2 focus:ring-[#ffd54a]">
         <span class="absolute right-3 text-[var(--ink-2)]">🔎</span>
       </label>
 
-      <!-- Тип -->
       <div class="flex gap-2 justify-start flex-wrap">
         <button data-type="all" class="chip active" type="button">Все</button>
         <button data-type="free" class="chip" type="button">Бесплатные</button>
         <button data-type="pro"  class="chip" type="button">PRO</button>
       </div>
 
-      <!-- Язык -->
       <label class="flex">
         <select id="lang" class="rounded-xl border border-black/10 bg-white px-3 py-3 outline-none focus:ring-2 focus:ring-[#ffd54a]">
           <option value="">Язык: любой</option>
         </select>
       </label>
 
-      <!-- Уровень -->
       <div class="flex gap-2">
         <select id="level" class="rounded-xl border border-black/10 bg-white px-3 py-3 outline-none focus:ring-2 focus:ring-[#ffd54a]">
           <option value="">Уровень: любой</option>
@@ -115,20 +89,15 @@
         </select>
       </div>
 
-      <!-- Семья + Редкие -->
       <div class="flex gap-2 flex-wrap">
         <select id="family" class="rounded-xl border border-black/10 bg-white px-3 py-3 outline-none focus:ring-2 focus:ring-[#ffd54a]">
           <option value="">Семья: любая</option>
         </select>
-
-        <button id="rare" class="chip" type="button" title="Литовский, Африкаанс, Румынский, Хинди, Финский, Шведский">
-          Редкие языки
-        </button>
+        <button id="rare" class="chip" type="button" title="Литовский, Африкаанс, Румынский, Хинди, Финский, Шведский">Редкие языки</button>
       </div>
     </div>
   </section>
 
-  <!-- Быстрые теги -->
   <div class="mt-3 flex flex-wrap gap-2 text-sm">
     <button class="chip" data-tag="travel" type="button">Путешествия</button>
     <button class="chip" data-tag="grammar" type="button">Грамматика</button>
@@ -136,7 +105,6 @@
     <button class="chip" data-tag="challenge" type="button">Челлендж</button>
   </div>
 
-  <!-- Сетка карточек -->
   <section class="mt-6">
     <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
     <div id="empty" class="hidden mt-10 p-6 rounded-2xl bg-white border border-black/10 text-center text-[var(--ink-2)]">
@@ -158,9 +126,8 @@
 <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 
 <script>
-/* ======= ДАННЫЕ КАТАЛОГА ======= */
+/* ======= ДАННЫЕ ======= */
 const courses = [
-  // FREE
   {slug:'spanish-a0',      title:'Испанский с нуля',            type:'free', lang:'es', flag:'🇪🇸', level:'A0',    tags:['grammar','vocab'],       img:'spanish.jpg'},
   {slug:'italian-a0',      title:'Итальянский с нуля',          type:'free', lang:'it', flag:'🇮🇹', level:'A0',    tags:['vocab'],                 img:'italian.jpg'},
   {slug:'vamos-espana',    title:'¡Vamos a España! (А2–B1)',    type:'free', lang:'es', flag:'🇪🇸', level:'A2-B1', tags:['travel','dialog'],       img:'vamosaespana.jpg'},
@@ -176,7 +143,6 @@ const courses = [
   {slug:'turkish-a0',      title:'Турецкий с нуля',             type:'free', lang:'tr', flag:'🇹🇷', level:'A0',    tags:['vocab'],                 img:'turkish.jpg',  soon:true},
   {slug:'korean-a0',       title:'Корейский с нуля',            type:'free', lang:'ko', flag:'🇰🇷', level:'A0',    tags:['vocab'],                 img:'korean.jpg',   soon:true},
 
-  // PRO
   {slug:'english-with-harry',  title:'English with Harry',                 type:'pro', lang:'en', flag:'🪄',  level:'A1-B1', tags:['reading','fun'],         img:'englishwithharry.jpg'},
   {slug:'visual-spanish',      title:'Визуальный испанский',               type:'pro', lang:'es', flag:'🖼️',  level:'A1',    tags:['vocab','visual'],       img:'visualspanish.jpg'},
   {slug:'italian-songs',       title:'Итальянский по песням',              type:'pro', lang:'it', flag:'🎵',  level:'A1',    tags:['listening','fun'],      img:'italiansongs.jpg'},
@@ -198,154 +164,61 @@ const courses = [
   {slug:'norwegian-a0',        title:'Норвежский с нуля',                   type:'pro', lang:'no', flag:'🇳🇴', level:'A0',    tags:['vocab'],                 img:'norwegian.jpg', soon:true}
 ];
 
-/* ======= МАППИНГ ======= */
-const langMap = {
-  multi:'Много языков', es:'Испанский', en:'Английский', it:'Итальянский', de:'Немецкий', fi:'Финский', nl:'Нидерландский',
-  fr:'Французский', ja:'Японский', zh:'Китайский', hi:'Хинди', ar:'Арабский', tr:'Турецкий', ko:'Корейский',
-  af:'Африкаанс', sv:'Шведский', lt:'Литовский', ro:'Румынский', no:'Норвежский'
-};
-const familyByLang = {
-  es:'romance', it:'romance', fr:'romance', ro:'romance',
-  en:'germanic', de:'germanic', nl:'germanic', sv:'germanic', no:'germanic', af:'germanic',
-  fi:'uralic', tr:'turkic', ar:'semitic', zh:'sinitic', hi:'indo-aryan', lt:'baltic', ko:'koreanic', ja:'japonic', multi:'multi'
-};
+const langMap = {multi:'Много языков', es:'Испанский', en:'Английский', it:'Итальянский', de:'Немецкий', fi:'Финский', nl:'Нидерландский', fr:'Французский', ja:'Японский', zh:'Китайский', hi:'Хинди', ar:'Арабский', tr:'Турецкий', ko:'Корейский', af:'Африкаанс', sv:'Шведский', lt:'Литовский', ro:'Румынский', no:'Норвежский'};
+const familyByLang = {es:'romance', it:'romance', fr:'romance', ro:'romance', en:'germanic', de:'germanic', nl:'germanic', sv:'germanic', no:'germanic', af:'germanic', fi:'uralic', tr:'turkic', ar:'semitic', zh:'sinitic', hi:'indo-aryan', lt:'baltic', ko:'koreanic', ja:'japonic', multi:'multi'};
+const familyName = {romance:'Романские', germanic:'Германские', uralic:'Уральские', turkic:'Тюркские', semitic:'Семитские', sinitic:'Китайско-тибетские', 'indo-aryan':'Индоарийская', baltic:'Балтийские', koreanic:'Корейская', japonic:'Японская', multi:'Мульти'};
 const rareSet = new Set(['lt','af','ro','hi','fi','sv']);
-const familyName = {
-  romance:'Романские', germanic:'Германские', uralic:'Уральские', turkic:'Тюркские', semitic:'Семитские',
-  sinitic:'Китайско-тибетские', 'indo-aryan':'Индоарийская', baltic:'Балтийские', koreanic:'Корейская', japonic:'Японская', multi:'Мульти'
-};
 
-/* ======= РЕНДЕР/ФИЛЬТРЫ ======= */
-const grid    = document.getElementById('grid');
-const empty   = document.getElementById('empty');
-const count   = document.getElementById('count');
-const q       = document.getElementById('q');
-const level   = document.getElementById('level');
-const chips   = document.querySelectorAll('.chip');
-const typeChips = document.querySelectorAll('[data-type]');
-const langSel = document.getElementById('lang');
-const familySel = document.getElementById('family');
-const rareBtn = document.getElementById('rare');
+const grid=document.getElementById('grid'), empty=document.getElementById('empty'), count=document.getElementById('count');
+const q=document.getElementById('q'), level=document.getElementById('level'), langSel=document.getElementById('lang'), familySel=document.getElementById('family'), rareBtn=document.getElementById('rare');
+const typeChips=document.querySelectorAll('[data-type]'); const chips=document.querySelectorAll('.chip');
 
-// селект языков
-(function fillLang(){
-  const langs = [...new Set(courses.map(c=>c.lang))].filter(Boolean);
-  const byName = langs.sort((a,b)=>(langMap[a]||a).localeCompare(langMap[b]||b,'ru'));
-  byName.forEach(k=>{
-    const opt=document.createElement('option');
-    opt.value=k; opt.textContent=langMap[k]||k;
-    langSel.appendChild(opt);
-  });
-})();
-// селект семей
-(function fillFamilies(){
-  const famsUsed = new Set(courses.map(c=>familyByLang[c.lang]||'').filter(Boolean));
-  [...famsUsed].sort((a,b)=>(familyName[a]||a).localeCompare(familyName[b]||b,'ru'))
-    .forEach(f=>{
-      const opt=document.createElement('option');
-      opt.value=f; opt.textContent=familyName[f]||f;
-      familySel.appendChild(opt);
-    });
-})();
+(function fillLang(){[...new Set(courses.map(c=>c.lang))].sort((a,b)=>(langMap[a]||a).localeCompare(langMap[b]||b,'ru')).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=langMap[k]||k;langSel.appendChild(o);});})();
+(function fillFamilies(){const fams=new Set(courses.map(c=>familyByLang[c.lang]||'').filter(Boolean));[...fams].sort((a,b)=>(familyName[a]||a).localeCompare(familyName[b]||b,'ru')).forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=familyName[f]||f;familySel.appendChild(o);});})();
 
-// состояние
-let state = { type:'all', lang:'', level:'', tag:'', q:'', sort:'pop', family:'', rare:false };
+let state={type:'all',lang:'',level:'',tag:'',q:'',family:'',rare:false};
+q.addEventListener('input',()=>{state.q=q.value.trim().toLowerCase();render();});
+level.addEventListener('change',()=>{state.level=level.value;render();});
+langSel.addEventListener('change',()=>{state.lang=langSel.value;render();});
+familySel.addEventListener('change',()=>{state.family=familySel.value;render();});
+rareBtn.addEventListener('click',()=>{rareBtn.classList.toggle('active');state.rare=rareBtn.classList.contains('active');render();});
+typeChips.forEach(b=>b.addEventListener('click',()=>{typeChips.forEach(x=>x.classList.remove('active'));b.classList.add('active');state.type=b.dataset.type;render();}));
+chips.forEach(c=>{if(!c.dataset.tag)return;c.addEventListener('click',()=>{const on=c.classList.toggle('active');chips.forEach(x=>{if(x!==c&&x.dataset.tag)x.classList.remove('active');});state.tag=on?c.dataset.tag:'';render();});});
 
-// обработчики
-q.addEventListener('input',()=>{ state.q=q.value.trim().toLowerCase(); render(); });
-level.addEventListener('change',()=>{ state.level=level.value; render(); });
-langSel.addEventListener('change',()=>{ state.lang=langSel.value; render(); });
-familySel.addEventListener('change',()=>{ state.family=familySel.value; render(); });
-rareBtn.addEventListener('click',()=>{ rareBtn.classList.toggle('active'); state.rare = rareBtn.classList.contains('active'); render(); });
-
-typeChips.forEach(b=>{
-  b.addEventListener('click',()=>{
-    typeChips.forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    state.type=b.dataset.type; render();
-  });
-});
-chips.forEach(c=>{
-  if(!c.dataset.tag) return;
-  c.addEventListener('click',()=>{
-    const on = c.classList.toggle('active');
-    chips.forEach(x=>{ if(x!==c && x.dataset.tag) x.classList.remove('active'); });
-    state.tag = on ? c.dataset.tag : '';
-    render();
-  });
-});
-
-// сортировка/фильтрация
-function parseSeason(s){
-  const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-  const [d, m] = s.toLowerCase().split(' ');
-  const day = parseInt(d,10);
-  const month = months.indexOf(m);
-  if (month < 0 || !day) return null;
-  const now = new Date();
-  let dt = new Date(now.getFullYear(), month, day);
-  if (dt < now) dt = new Date(now.getFullYear()+1, month, day);
-  return dt;
-}
-
+function parseSeason(s){const months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];const[d,m]=s.toLowerCase().split(' ');const day=parseInt(d,10);const month=months.indexOf(m);if(month<0||!day)return null;const now=new Date();let dt=new Date(now.getFullYear(),month,day);if(dt<now)dt=new Date(now.getFullYear()+1,month,day);return dt;}
 function applyFilters(list){
   return list.filter(c=>{
-    if(state.type!=='all' && c.type!==state.type) return false;
+    if(state.type!=='all'&&c.type!==state.type) return false;
     if(state.lang && c.lang!==state.lang) return false;
     if(state.level && !(c.level||'').toUpperCase().includes(state.level.toUpperCase())) return false;
     if(state.tag && !(c.tags||[]).includes(state.tag)) return false;
-    if(state.family){
-      const fam = familyByLang[c.lang] || '';
-      if(fam !== state.family) return false;
-    }
+    if(state.family){const fam=familyByLang[c.lang]||''; if(fam!==state.family) return false;}
     if(state.rare && !rareSet.has(c.lang)) return false;
-    if(state.q){
-      const s=(c.title+' '+(langMap[c.lang]||'')+' '+(c.level||'')+' '+(c.type)).toLowerCase();
-      if(!s.includes(state.q)) return false;
-    }
+    if(state.q){const s=(c.title+' '+(langMap[c.lang]||'')+' '+(c.level||'')+' '+(c.type)).toLowerCase(); if(!s.includes(state.q)) return false;}
     return true;
   }).sort((a,b)=>{
-    // 1) Featured — первыми
-    if (!!a.featured !== !!b.featured) return a.featured ? -1 : 1;
-
-    // 2) Сезонные по ближайшей дате
-    const da = a.seasonalStart ? parseSeason(a.seasonalStart) : null;
-    const db = b.seasonalStart ? parseSeason(b.seasonalStart) : null;
-    if (da && db) return da - db;
-    if (da && !db) return -1;
-    if (!da && db) return 1;
-
-    // 3) Free выше Pro
-    if (a.type !== b.type) return a.type === 'free' ? -1 : 1;
-
-    // 4) По алфавиту
+    if(!!a.featured!==!!b.featured) return a.featured?-1:1;
+    const da=a.seasonalStart?parseSeason(a.seasonalStart):null; const db=b.seasonalStart?parseSeason(b.seasonalStart):null;
+    if(da&&db) return da-db; if(da&&!db) return -1; if(!da&&db) return 1;
+    if(a.type!==b.type) return a.type==='free'?-1:1;
     return a.title.localeCompare(b.title,'ru');
   });
 }
 
-/* Карточка (квадратная обложка + плейсхолдер при 404) */
-const PLACEHOLDER = 'assets/courses/placeholder.jpg';
+const PLACEHOLDER='assets/courses/placeholder.jpg';
 function courseCard(c){
-  const isSoon = !!c.soon;
-  const isSeasonal = !!c.seasonalStart;
+  const isSoon=!!c.soon, isSeasonal=!!c.seasonalStart;
+  const badge=c.type==='free'?`<span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>`:`<span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PRO</span>`;
+  const lang=langMap[c.lang]||'Язык'; const lvl=c.level?`<div class="text-xs text-[var(--ink-2)] mt-1">${c.level}</div>`:'';
+  const href=`courses/${c.slug}/`;
 
-  const badge = c.type==='free'
-    ? `<span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>`
-    : `<span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PRO</span>`;
-
-  const lang = langMap[c.lang]||'Язык';
-  const lvl  = c.level?`<div class="text-xs text-[var(--ink-2)] mt-1">${c.level}</div>`:'';
-  const href = `courses/${c.slug}/`;
-
-  const imgHTML = `
+  const imgHTML=`
     <div class="ratio-square rounded-2xl border border-black/10 overflow-hidden bg-[#f6f6f6]">
-      <img src="assets/courses/${c.img}" alt="${c.title}"
-           class="w-full h-full object-cover"
+      <img src="assets/courses/${c.img}" alt="${c.title}" class="w-full h-full object-cover"
            onerror="this.onerror=null; this.src='${PLACEHOLDER}';">
-    </div>
-  `;
+    </div>`;
 
-  const inner = `
+  const inner=`
     <div class="flex items-center gap-3">
       <span class="text-2xl">${c.flag||'🌍'}</span>
       <div class="grow">
@@ -355,55 +228,30 @@ function courseCard(c){
       </div>
       ${badge}
     </div>
-
-    <div class="mt-3 relative">
-      ${imgHTML}
-    </div>
-
+    <div class="mt-3 relative">${imgHTML}</div>
     <div class="mt-4">
       ${isSoon
         ? `<span class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-black/10 bg-white text-sm opacity-70 select-none">Скоро</span>`
         : `<a href="${href}" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] text-sm">Открыть →</a>`
       }
-    </div>
-  `;
+    </div>`;
 
   if(isSoon){
-    return `
-      <div class="relative p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        ${inner}
-        <div class="soon-overlay rounded-2xl">Скоро</div>
-      </div>
-    `;
+    return `<div class="relative p-5 rounded-2xl bg-white border border-black/10 shadow-soft card">${inner}<div class="soon-overlay rounded-2xl">Скоро</div></div>`;
   } else {
-    const cls = `block p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal ${isSeasonal?'seasonal':''}`;
-    const ribbon = isSeasonal ? `<div class="ribbon">Старт ${c.seasonalStart}</div>` : '';
-    return `
-      <a href="${href}" class="${cls}">
-        ${ribbon}
-        ${inner}
-      </a>
-    `;
+    const cls=`p-5 rounded-2xl bg-white border border-black/10 shadow-soft card ${isSeasonal?'seasonal':''}`;
+    const ribbon=isSeasonal?`<div class="ribbon">Старт ${c.seasonalStart}</div>`:'';
+    return `<div class="${cls}">${ribbon}${inner}</div>`;
   }
-}
-
-function revealInit(){
-  const obs=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting)e.target.classList.add('reveal--visible');});},{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 }
 
 function render(){
-  const list = applyFilters(courses);
-  count.textContent = list.length;
-  if(list.length===0){
-    grid.innerHTML=''; empty.classList.remove('hidden'); return;
-  }
+  const list=applyFilters(courses);
+  count.textContent=list.length;
+  if(list.length===0){grid.innerHTML=''; empty.classList.remove('hidden'); return;}
   empty.classList.add('hidden');
-  grid.innerHTML = list.map(courseCard).join('');
-  revealInit();
+  grid.innerHTML=list.map(courseCard).join('');
 }
-
-// Первый рендер
 render();
 </script>
 
