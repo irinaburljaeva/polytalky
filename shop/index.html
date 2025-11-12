@@ -4,44 +4,45 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PolyTalky — Магазин курсов</title>
-  <meta name="description" content="Магазин языковых курсов PolyTalky. Челленджи, спецпрограммы и курсы для продолжающих: английский, испанский, итальянский, немецкий, финский и редкие языки." />
+  <meta name="description" content="Магазин языковых курсов PolyTalky. Спецпрограммы, челленджи и курсы для продолжающих с оплатой для РФ и из-за рубежа." />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root{
-      --brand-1:#FFBA08; /* жёлтый */
-      --brand-2:#CF2C02; /* кораллово-красный */
-    }
+    :root{--brand-1:#FFBA08;--brand-2:#CF2C02}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#fafafa;color:#111}
-    .btn-brand{background:var(--brand-1);padding:6px 14px;border-radius:10px;font-weight:600;color:#111;transition:all .2s}
+    .btn-brand{background:var(--brand-1);padding:8px 14px;border-radius:12px;font-weight:700;color:#111;transition:all .2s}
     .btn-brand:hover{background:var(--brand-2);color:#fff}
+    .btn-ghost{background:#eee;padding:8px 14px;border-radius:12px}
     .card{transition:transform .25s,box-shadow .25s}
     .card:hover{transform:translateY(-4px);box-shadow:0 8px 16px rgba(0,0,0,.1)}
     .chip{display:inline-block;background:#eee;padding:2px 6px;border-radius:8px;font-size:12px;color:#333}
-    .price{font-weight:700}
+    .price{font-weight:800}
+    .badge{background:#000;color:#fff;border-radius:999px;padding:0 8px;font-size:12px;line-height:22px;height:22px}
   </style>
 </head>
-
 <body class="min-h-screen flex flex-col">
 
   <!-- Header -->
   <header class="sticky top-0 z-30 backdrop-blur bg-white/80 border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-      <a href="/polytalky/" class="flex items-center gap-2 font-semibold text-lg">
-        🏷️ PolyTalky
-      </a>
+      <a href="/polytalky/" class="flex items-center gap-2 font-semibold text-lg">🏷️ PolyTalky</a>
       <nav class="hidden md:flex items-center gap-6 text-sm">
         <a href="/polytalky/courses/" class="opacity-80 hover:opacity-100">Курсы</a>
         <a href="/polytalky/shop/" class="opacity-100 font-semibold text-[var(--brand-2)]">Магазин</a>
         <a href="/polytalky/student/" class="opacity-80 hover:opacity-100">Личный кабинет</a>
       </nav>
-      <a href="/polytalky/courses/spanish-a0/" class="btn-brand">Начать бесплатно</a>
+
+      <!-- Cart button -->
+      <button id="cartBtn" class="relative btn-ghost">
+        Корзина
+        <span id="cartCount" class="badge absolute -right-2 -top-2">0</span>
+      </button>
     </div>
   </header>
 
   <main class="flex-grow">
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 class="text-3xl font-bold mb-2">Магазин курсов PolyTalky</h1>
-      <p class="text-gray-600 mb-10">Выберите спецпрограммы, челленджи и курсы для продолжающих.</p>
+      <p class="text-gray-600 mb-10">Выберите спецпрограммы, челленджи и курсы для продолжающих. Я выдаю чеки — укажите email при оформлении.</p>
 
       <h2 class="text-2xl font-bold mb-4">💫 Спецпрограммы и челленджи</h2>
       <div id="grid-special" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
@@ -71,89 +72,182 @@
     <button id="cookie-accept" class="bg-[var(--brand-1)] text-black px-3 py-1 rounded-lg text-sm">Понятно</button>
   </div>
 
-  <!-- Модалка оплаты -->
+  <!-- Product modal (single buy) -->
+  <div id="buyModal" class="hidden fixed inset-0 bg-black/60 items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-6 max-w-lg w-full text-gray-900">
+      <h3 class="text-xl font-bold mb-3" id="bm-title">Курс</h3>
+      <p class="mb-2 text-gray-600">Стоимость: <span id="bm-price-rub"></span> / <span id="bm-price-eur"></span></p>
+      <div class="mb-4">
+        <label class="text-sm text-gray-600">Ваш email для чека и доступа</label>
+        <input id="bm-email" type="email" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="you@example.com">
+      </div>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <button class="btn-brand w-full" onclick="openPayWindow('ru')">Оплата для РФ</button>
+        <button class="btn-brand w-full" onclick="openPayWindow('int')">Оплата из других стран</button>
+      </div>
+      <div class="mt-4">
+        <button class="w-full bg-gray-200 hover:bg-gray-300 py-2 rounded-lg" onclick="closeBuy()">Отмена</button>
+      </div>
+      <p class="text-xs text-gray-500 mt-3">После оплаты нажмите «Я оплатил(а)» — доступ активируется, а письмо со сведениями об оплате откроется в вашей почтовой программе.</p>
+      <div class="mt-3 flex gap-8">
+        <button class="underline text-sm" onclick="iPaid('single')">Я оплатил(а)</button>
+        <button class="underline text-sm" onclick="addToCart(currentProduct)">Добавить в корзину</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart drawer -->
+  <div id="cartDrawer" class="fixed top-0 right-0 h-full w-[360px] max-w-[92vw] bg-white shadow-2xl translate-x-full transition-transform z-50">
+    <div class="p-4 border-b flex items-center justify-between">
+      <h3 class="text-lg font-bold">Корзина</h3>
+      <button class="text-sm underline" onclick="toggleCart(false)">Закрыть</button>
+    </div>
+    <div id="cartList" class="p-4 space-y-3"></div>
+    <div class="p-4 border-t">
+      <div class="mb-3">
+        <label class="text-sm text-gray-600">Ваш email для чека и доступа</label>
+        <input id="cartEmail" type="email" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="you@example.com">
+      </div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="font-semibold">Итого: <span id="cartTotalRub">0 ₽</span> / <span id="cartTotalEur">€0</span></div>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn-brand w-1/2" onclick="openCartCheckout('ru')">Оплата РФ</button>
+        <button class="btn-brand w-1/2" onclick="openCartCheckout('int')">Оплата из-за рубежа</button>
+      </div>
+      <button class="w-full mt-3 bg-gray-200 hover:bg-gray-300 py-2 rounded-lg" onclick="iPaid('cart')">Я оплатил(а) и отправил(а) письмо</button>
+    </div>
+  </div>
+
+  <!-- Checkout modal (shows QR & links) -->
   <div id="payModal" class="hidden fixed inset-0 bg-black/60 items-center justify-center z-50">
-    <div class="bg-white rounded-2xl p-6 max-w-md w-full text-gray-900">
-      <h3 class="text-xl font-bold mb-3" id="pm-title">Курс</h3>
-      <p class="mb-4 text-gray-600">Стоимость: <span id="pm-price-rub"></span> / <span id="pm-price-usd"></span></p>
-      <div class="space-y-3">
-        <button class="w-full btn-brand" onclick="pay('ru')">Оплата для РФ (ЮKassa / СБП)</button>
-        <button class="w-full btn-brand" onclick="pay('int')">Оплата для других стран (Stripe / PayPal)</button>
-        <button class="w-full bg-gray-200 hover:bg-gray-300 py-2 rounded-lg" onclick="closePay()">Отмена</button>
+    <div class="bg-white rounded-2xl p-6 max-w-2xl w-full text-gray-900">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-bold">Оплата</h3>
+        <button class="text-sm underline" onclick="closePay()">Закрыть</button>
+      </div>
+      <p class="text-sm text-gray-600 mt-1">Сначала совершите оплату, затем нажмите «Я оплатил(а)» — мы активируем доступ и отправим подтверждение.</p>
+
+      <div id="tabRU" class="mt-4 hidden">
+        <h4 class="font-semibold mb-2">Россия</h4>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="p-3 border rounded-xl">
+            <div class="font-semibold mb-2">ЮMoney</div>
+            <img src="/polytalky/assets/pay/yoomoney-qr-black.png" alt="ЮMoney QR" class="w-full rounded-lg mb-2">
+            <a id="ymLink" class="btn-brand inline-block" target="_blank" rel="noopener">Открыть ЮMoney</a>
+            <p class="text-xs text-gray-500 mt-2">Если сумма не подставилась — введите вручную. Ссылка: yoomoney.ru/to/410013183449005</p>
+          </div>
+          <div class="p-3 border rounded-xl">
+            <div class="font-semibold mb-2">СБП (QR)</div>
+            <img src="/polytalky/assets/pay/sbp-qr-white.png" alt="СБП QR" class="w-full rounded-lg mb-2 border">
+            <p class="text-xs text-gray-500">Откройте мобильное приложение банка → Сканировать QR → введите сумму заказа.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="tabINT" class="mt-4 hidden">
+        <h4 class="font-semibold mb-2">Другие страны</h4>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="p-3 border rounded-xl">
+            <div class="font-semibold mb-2">PayPal</div>
+            <img src="/polytalky/assets/pay/paypal-qr.png" alt="PayPal QR" class="w-full rounded-lg mb-2">
+            <p class="text-sm">Email: <b>iraburljaeva@gmail.com</b></p>
+            <p class="text-xs text-gray-500">Отправьте сумму заказа как «Goods & Services».</p>
+          </div>
+          <div class="p-3 border rounded-xl">
+            <div class="font-semibold mb-2">Любая карта (Stripe)</div>
+            <div id="stripeLinks" class="space-y-2 text-sm"></div>
+            <p class="text-xs text-gray-500">Суммы по позициям: оплатите каждой кнопкой соответствующий курс.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-right">
+        <button class="btn-ghost" onclick="closePay()">Готово</button>
       </div>
     </div>
   </div>
 
   <script>
-    // ====== Папка с обложками ======
+    // ---------- DATA ----------
     const IMG_BASE = '/polytalky/assets/courses/';
-    const img = (name) => IMG_BASE + name;
+    const img = n => IMG_BASE + n;
 
-    // 💫 Спецпрограммы и челленджи
+    // спецпрограммы/челленджи
     const special = [
       { id:'polyglotpack-mchny', title:'PolyglotPack MCHNY', img:img('mchny.jpg'),
-        tag:'SEASONAL', note:'Старт 25 декабря', priceRub:'1 490 ₽', priceUsd:'€19' },
+        tag:'SEASONAL', note:'Старт 25 декабря', priceRub:1490, priceEur:19 },
       { id:'polyglotpack-starter', title:'Polyglot Pack. Starter', img:img('polyglotpack.jpg'),
-        tag:'PACK', priceRub:'1 290 ₽', priceUsd:'€15' },
+        tag:'PACK', priceRub:1290, priceEur:15 },
       { id:'cook-it', title:'Polyglot Pack. Cook it!', img:img('cookit.jpg'),
-        tag:'PACK', priceRub:'1 290 ₽', priceUsd:'€15' },
+        tag:'PACK', priceRub:1290, priceEur:15 },
       { id:'30days-english', title:'30 Days of English (Challenge)', img:img('30daysofenglish.jpg'),
-        tag:'EN', priceRub:'990 ₽', priceUsd:'€12' },
+        tag:'EN', priceRub:990, priceEur:12 },
       { id:'irregular-verbs', title:'Irregular Verbs (Challenge)', img:img('irregularverbs.jpg'),
-        tag:'EN', priceRub:'790 ₽', priceUsd:'€10' },
+        tag:'EN', priceRub:790, priceEur:10 },
       { id:'english-translators', title:'Английский для переводчиков', img:img('englishtranslate.jpg'),
-        tag:'EN', priceRub:'1 490 ₽', priceUsd:'€19' },
+        tag:'EN', priceRub:1490, priceEur:19 },
     ];
 
-    // 🎓 Платные языковые курсы
+    // платные курсы
     const langs = [
       { id:'english-with-harry', title:'English with Harry', img:img('englishwithharry.jpg'),
-        tag:'EN', level:'A0–A2', priceRub:'1 490 ₽', priceUsd:'€19' },
+        tag:'EN', level:'A0–A2', priceRub:1490, priceEur:19 },
       { id:'visual-spanish', title:'Визуальный испанский', img:img('visualspanish.jpg'),
-        tag:'ES', level:'A1–A2', priceRub:'1 290 ₽', priceUsd:'€15' },
+        tag:'ES', level:'A1–A2', priceRub:1290, priceEur:15 },
       { id:'italian-songs', title:'Итальянский по песням', img:img('italiansongs.jpg'),
-        tag:'IT', level:'A1–A2', priceRub:'1 290 ₽', priceUsd:'€15' },
+        tag:'IT', level:'A1–A2', priceRub:1290, priceEur:15 },
       { id:'pro-espanol', title:'Pro Español (от носителя)', img:img('proespanol.jpg'),
-        tag:'ES', level:'B1–B2', priceRub:'1 990 ₽', priceUsd:'€24' },
+        tag:'ES', level:'B1–B2', priceRub:1990, priceEur:24 },
       { id:'finnish-travel', title:'Финский для путешествий', img:img('finishtravel.jpg'),
-        tag:'FI', level:'A1', priceRub:'1 290 ₽', priceUsd:'€15' },
+        tag:'FI', level:'A1', priceRub:1290, priceEur:15 },
       { id:'finnish-a2', title:'Финский для продолжающих', img:img('finisha2.jpg'),
-        tag:'FI', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19' },
+        tag:'FI', level:'A2–B1', priceRub:1490, priceEur:19 },
       { id:'german-a2', title:'Немецкий для продолжающих', img:img('germana2.jpg'),
-        tag:'DE', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19' },
+        tag:'DE', level:'A2–B1', priceRub:1490, priceEur:19 },
       { id:'italian-a2', title:'Итальянский для продолжающих', img:img('italiana2.jpg'),
-        tag:'IT', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19' },
+        tag:'IT', level:'A2–B1', priceRub:1490, priceEur:19 },
       { id:'afrikaans-a0', title:'Африкаанс с нуля', img:img('afrikaans.jpg'),
-        tag:'AF', level:'A0', priceRub:'990 ₽', priceUsd:'€12' },
+        tag:'AF', level:'A0', priceRub:990, priceEur:12 },
       { id:'dutch-a2', title:'Нидерландский для продолжающих', img:img('nederlandsa2.jpg'),
-        tag:'NL', level:'A2–B1', priceRub:'1 490 ₽', priceUsd:'€19' },
+        tag:'NL', level:'A2–B1', priceRub:1490, priceEur:19 },
       { id:'swedish-a0', title:'Шведский с нуля', img:img('swedish.jpg'),
-        tag:'SV', level:'A0', priceRub:'990 ₽', priceUsd:'€12' },
+        tag:'SV', level:'A0', priceRub:990, priceEur:12 },
       { id:'lithuanian-a0', title:'Литовский с нуля', img:img('lithuanian.jpg'),
-        tag:'LT', level:'A0', priceRub:'990 ₽', priceUsd:'€12' },
+        tag:'LT', level:'A0', priceRub:990, priceEur:12 },
       { id:'romanian-a0', title:'Румынский с нуля', img:img('romanian.jpg'),
-        tag:'RO', level:'A0', priceRub:'990 ₽', priceUsd:'€12' },
+        tag:'RO', level:'A0', priceRub:990, priceEur:12 },
     ];
 
-    // ====== Генерация карточек ======
+    // Stripe «любая карта» ссылки по суммам (EUR)
+    const stripeByEur = {
+      19: 'https://buy.stripe.com/00w4gybq66YZ1vkcUWb3q0w',
+      15: 'https://buy.stripe.com/28E9AS1PwabbfmadZ0b3q0x',
+      12: 'https://buy.stripe.com/28E00ifGmabb0rg5sub3q0y',
+      10: 'https://buy.stripe.com/fZu6oGbq64QR0rg9IKb3q0z',
+      24: 'https://buy.stripe.com/8x214mbq65UVb5UcUWb3q0A'
+    };
+
+    // ---------- RENDER ----------
+    function fmtRub(n){return new Intl.NumberFormat('ru-RU').format(n)+' ₽'}
+    function fmtEur(n){return '€'+n}
+
     function cardHTML(c){
-      const soon = c.soon ? 'soon pointer-events-none opacity-60' : '';
-      const soonBadge = c.soon ? `<span class="absolute top-2 right-2 bg-gray-800 text-white text-xs px-2 py-1 rounded">Скоро</span>` : '';
       const level = c.level ? `<span class="chip">${c.level}</span>` : '';
       const tag = c.tag ? `<span class="chip">${c.tag}</span>` : '';
       return `
-        <div class="card rounded-2xl border border-gray-200 bg-white overflow-hidden ${soon}">
-          <div class="relative">
-            <img src="${c.img}" alt="${c.title}" class="w-full aspect-[4/3] object-cover">
-            ${soonBadge}
-          </div>
+        <div class="card rounded-2xl border border-gray-200 bg-white overflow-hidden">
+          <img src="${c.img}" alt="${c.title}" class="w-full aspect-[4/3] object-cover">
           <div class="p-4">
             <div class="flex items-center gap-2 mb-1">${tag}${level?` ${level}`:''}</div>
             <h3 class="font-semibold">${c.title}</h3>
             ${c.note ? `<p class="text-xs text-[var(--brand-2)] mt-1">${c.note}</p>` : ''}
             <div class="mt-3 flex items-center justify-between">
-              <div class="price">${c.priceRub} <span class="text-gray-400 text-xs">/ ${c.priceUsd}</span></div>
-              <button class="btn-brand" onclick="openPay('${c.id}','${c.title}','${c.priceRub}','${c.priceUsd}')" ${c.soon?'disabled':''}>Купить</button>
+              <div class="price">${fmtRub(c.priceRub)} <span class="text-gray-400 text-xs">/ ${fmtEur(c.priceEur)}</span></div>
+              <div class="flex gap-2">
+                <button class="btn-ghost" onclick='addToCart(${JSON.stringify(c)})'>В корзину</button>
+                <button class="btn-brand" onclick='openBuy(${JSON.stringify(c)})'>Купить</button>
+              </div>
             </div>
           </div>
         </div>`;
@@ -162,30 +256,154 @@
     document.getElementById('grid-special').innerHTML = special.map(cardHTML).join('');
     document.getElementById('grid-langs').innerHTML = langs.map(cardHTML).join('');
 
-    // ====== Модалка оплаты ======
-    let currentCourse = null;
-    function openPay(id,title,priceRub,priceUsd){
-      currentCourse = {id,title,priceRub,priceUsd};
-      document.getElementById('pm-title').textContent = title;
-      document.getElementById('pm-price-rub').textContent = priceRub;
-      document.getElementById('pm-price-usd').textContent = priceUsd;
-      document.getElementById('payModal').classList.remove('hidden');
-      document.getElementById('payModal').classList.add('flex');
+    // ---------- CART ----------
+    const CART_KEY='pt_cart';
+    const ENROLL_KEY='pt_enrollments';
+
+    function getCart(){ return JSON.parse(localStorage.getItem(CART_KEY)||'[]') }
+    function setCart(items){ localStorage.setItem(CART_KEY, JSON.stringify(items)); renderCart() }
+
+    function addToCart(item){
+      const cart = getCart();
+      if(!cart.find(x=>x.id===item.id)) cart.push(item);
+      setCart(cart);
     }
-    function closePay(){
-      document.getElementById('payModal').classList.add('hidden');
-      document.getElementById('payModal').classList.remove('flex');
-    }
-    function pay(channel){
-      const key = 'pt_enrollments';
-      const data = JSON.parse(localStorage.getItem(key)||'{}');
-      data[currentCourse.id] = { access:true, purchasedAt:new Date().toISOString(), channel };
-      localStorage.setItem(key, JSON.stringify(data));
-      closePay();
-      alert('Оплата оформлена (демо). Доступ активирован в «Личном кабинете».');
+    function removeFromCart(id){
+      setCart(getCart().filter(x=>x.id!==id));
     }
 
-    // ====== Cookie баннер ======
+    function renderCart(){
+      const cart = getCart();
+      document.getElementById('cartCount').textContent = cart.length;
+      const list = document.getElementById('cartList');
+      if(!list) return;
+      if(cart.length===0){ list.innerHTML = `<p class="text-sm text-gray-500">Пусто. Добавьте курсы в корзину.</p>`; }
+      else{
+        list.innerHTML = cart.map(c=>`
+          <div class="border rounded-xl p-3">
+            <div class="flex gap-3">
+              <img src="${c.img}" class="w-16 h-16 object-cover rounded-lg" alt="">
+              <div class="grow">
+                <div class="font-semibold text-sm">${c.title}</div>
+                <div class="text-xs text-gray-600">${fmtRub(c.priceRub)} / ${fmtEur(c.priceEur)}</div>
+                <button class="text-xs underline mt-1" onclick="removeFromCart('${c.id}')">Удалить</button>
+              </div>
+            </div>
+          </div>`).join('');
+      }
+      const totalRub = cart.reduce((a,c)=>a+c.priceRub,0);
+      const totalEur = cart.reduce((a,c)=>a+c.priceEur,0);
+      const tr = document.getElementById('cartTotalRub');
+      const te = document.getElementById('cartTotalEur');
+      if(tr) tr.textContent = fmtRub(totalRub);
+      if(te) te.textContent = '€'+totalEur;
+    }
+
+    // drawer toggle
+    const drawer = document.getElementById('cartDrawer');
+    document.getElementById('cartBtn').onclick = ()=>toggleCart();
+    function toggleCart(force){
+      const hide = (typeof force==='boolean') ? !force : drawer.classList.contains('translate-x-0');
+      drawer.classList.toggle('translate-x-0', !hide);
+    }
+    renderCart();
+
+    // ---------- SINGLE BUY MODAL ----------
+    let currentProduct = null;
+    function openBuy(c){
+      currentProduct = c;
+      document.getElementById('bm-title').textContent = c.title;
+      document.getElementById('bm-price-rub').textContent = fmtRub(c.priceRub);
+      document.getElementById('bm-price-eur').textContent = fmtEur(c.priceEur);
+      const m = document.getElementById('buyModal');
+      m.classList.remove('hidden'); m.classList.add('flex');
+    }
+    function closeBuy(){
+      const m = document.getElementById('buyModal');
+      m.classList.add('hidden'); m.classList.remove('flex');
+    }
+
+    // open payment window
+    function openPayWindow(region){
+      const email = (document.getElementById('bm-email').value||'').trim();
+      if(!email){ alert('Введите email для чека и доступа.'); return; }
+      // сохраняем email и выбранный регион на время
+      sessionStorage.setItem('pt_last_email', email);
+      const list = [currentProduct]; // single item
+      openPay(region, list);
+    }
+
+    // ---------- CART CHECKOUT ----------
+    function openCartCheckout(region){
+      const email = (document.getElementById('cartEmail').value||'').trim();
+      if(!email){ alert('Введите email для чека и доступа.'); return; }
+      sessionStorage.setItem('pt_last_email', email);
+      const list = getCart();
+      if(list.length===0){ alert('Корзина пуста'); return; }
+      openPay(region, list);
+    }
+
+    // ---------- PAY MODAL (QR & LINKS) ----------
+    function openPay(region, items){
+      // запомним состав заказа для письма/активации
+      sessionStorage.setItem('pt_last_items', JSON.stringify(items));
+      sessionStorage.setItem('pt_last_region', region);
+
+      // RU tab link
+      const totalRub = items.reduce((a,c)=>a+c.priceRub,0);
+      const ym = document.getElementById('ymLink');
+      // у ЮMoney ссылка с суммой не всегда подхватывается, но попробуем:
+      ym.href = `https://yoomoney.ru/to/410013183449005/${encodeURIComponent(totalRub)}`;
+
+      // INT tab: показать набор Stripe-ссылок по позициям
+      const wrap = document.getElementById('stripeLinks');
+      wrap.innerHTML = items.map(c=>{
+        const link = stripeByEur[c.priceEur];
+        const safeTitle = c.title.replace(/"/g,'&quot;');
+        return `<div>
+          <a href="${link}" target="_blank" rel="noopener" class="btn-brand inline-block">Оплатить «${safeTitle}» — ${fmtEur(c.priceEur)}</a>
+        </div>`;
+      }).join('');
+
+      // показать нужную вкладку
+      document.getElementById('tabRU').classList.toggle('hidden', region!=='ru');
+      document.getElementById('tabINT').classList.toggle('hidden', region!=='int');
+
+      const m = document.getElementById('payModal');
+      m.classList.remove('hidden'); m.classList.add('flex');
+    }
+    function closePay(){
+      const m = document.getElementById('payModal');
+      m.classList.add('hidden'); m.classList.remove('flex');
+    }
+
+    // ---------- CONFIRM PAID -> MAILTO + ACCESS ----------
+    function iPaid(mode){
+      const email = sessionStorage.getItem('pt_last_email') || '';
+      const items = JSON.parse(sessionStorage.getItem('pt_last_items')||'[]');
+      const region = sessionStorage.getItem('pt_last_region') || 'unknown';
+      if(!email || items.length===0){ alert('Нет данных заказа. Попробуйте снова открыть оплату.'); return; }
+
+      // 1) активируем доступ (демо) локально
+      const enroll = JSON.parse(localStorage.getItem(ENROLL_KEY)||'{}');
+      items.forEach(c => { enroll[c.id] = { access:true, purchasedAt:new Date().toISOString(), channel:region }; });
+      localStorage.setItem(ENROLL_KEY, JSON.stringify(enroll));
+
+      // 2) готовим письмо через mailto
+      const listLines = items.map(c => `• ${c.title} — ${fmtRub(c.priceRub)} / ${fmtEur(c.priceEur)}`).join('%0A');
+      const sub = encodeURIComponent('PolyTalky: подтверждение оплаты');
+      const body = `Здравствуйте!%0A%0AЯ оплатил(а) следующие курсы:%0A${listLines}%0A%0AСпособ оплаты: ${region === 'ru' ? 'Россия (ЮMoney/СБП)' : 'Другая страна (PayPal/Любая карта)'}%0AМой email для доступа и чека: ${email}%0A%0AСпасибо!`;
+      const mailto = `mailto:iraburljaeva@gmail.com?subject=${sub}&body=${body}`;
+      window.location.href = mailto;
+
+      alert('Спасибо! Доступ активирован локально. Мы свяжемся по email после проверки оплаты.');
+      // закрыть модалки/корзину
+      closeBuy(); closePay(); toggleCart(false);
+      // очистить корзину, если это была оплата корзины
+      if(mode==='cart') setCart([]);
+    }
+
+    // ---------- COOKIE BANNER ----------
     const banner = document.getElementById('cookie-banner');
     if (!localStorage.getItem('cookieConsent')) banner.classList.remove('hidden');
     document.getElementById('cookie-accept').onclick = () => {
@@ -193,6 +411,5 @@
       banner.classList.add('hidden');
     };
   </script>
-
 </body>
 </html>
