@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PolyTalky — Каталог курсов</title>
-  <meta name="description" content="Каталог курсов PolyTalky: бесплатные и PRO-программы по испанскому, английскому, итальянскому и другим языкам. Фильтры, поиск и удобная навигация." />
+  <meta name="description" content="Каталог курсов PolyTalky: бесплатные и Premium-программы по испанскому, английскому, итальянскому и другим языкам. Фильтры, поиск и удобная навигация." />
   <base href="/polytalky/">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -56,7 +56,7 @@
   <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
       <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">Каталог курсов</h1>
-      <p class="text-[var(--ink-2)] mt-1">Бесплатные и PRO — найдите курс под вашу цель.</p>
+      <p class="text-[var(--ink-2)] mt-1">Бесплатные и Premium — найдите курс под вашу цель.</p>
     </div>
     <div class="text-sm text-[var(--ink-2)]"><span id="count">0</span> курсов</div>
   </div>
@@ -72,7 +72,7 @@
       <div class="flex gap-2 justify-start flex-wrap">
         <button data-type="all" class="chip active" type="button">Все</button>
         <button data-type="free" class="chip" type="button">Бесплатные</button>
-        <button data-type="pro"  class="chip" type="button">PRO</button>
+        <button data-type="pro"  class="chip" type="button">Premium</button>
       </div>
 
       <label class="flex">
@@ -232,7 +232,7 @@ function courseCard(c){
     <div class="mt-4">
       ${isSoon
         ? `<span class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-black/10 bg-white text-sm opacity-70 select-none">Скоро</span>`
-        : `<a href="${href}" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] text-sm">Открыть →</a>`
+        : `<a href="${href}" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] text-sm">Начать →</a>`
       }
     </div>`;
 
