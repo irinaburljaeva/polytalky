@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PolyTalky — Каталог курсов</title>
   <meta name="description" content="Каталог курсов PolyTalky: бесплатные и PRO-программы по испанскому, английскому, итальянскому, немецкому и другим языкам. Фильтры, поиск и удобная навигация." />
-  <!-- Если сайт публикуется как username.github.io/polytalky/ — оставь base. Если в корне — удали строку ниже. -->
+  <!-- Если сайт живёт по адресу username.github.io/polytalky/ — base оставляем. Если в корне домена — удали строку ниже. -->
   <base href="/polytalky/">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -23,15 +23,11 @@
     .chip.active{background:var(--brand-yellow);border-color:#0000001f}
     .reveal{opacity:0;transform:translateY(12px);transition:.5s}
     .reveal.reveal--visible{opacity:1;transform:none}
-    @media (min-width:1024px){ .card:hover{transform:translateY(-8px);box-shadow:0 16px 40px rgba(0,0,0,.10)} }
-
-    /* «Скоро» — оверлей */
     .soon-overlay{
       position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
       background:rgba(255,255,255,.6); backdrop-filter:blur(2px); border-radius:1.25rem;
       font-weight:800; color:#1a1a1a; letter-spacing:.3px;
     }
-    /* MCHNY — сезонный акцент */
     .seasonal{
       position:relative;
       border:2px dashed #ffc107 !important;
@@ -43,6 +39,7 @@
       color:#1a1a1a; font-weight:700; padding:.35rem .6rem; border-radius:.5rem;
       border:1px solid #00000014; transform:rotate(3deg);
     }
+    .ratio-square{ aspect-ratio: 1 / 1; }
   </style>
 </head>
 <body>
@@ -161,14 +158,14 @@
 <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 
 <script>
-/* ======= ДАННЫЕ КАТАЛОГА (с обложками и статусами) ======= */
+/* ======= ДАННЫЕ КАТАЛОГА ======= */
 const courses = [
   // FREE
   {slug:'spanish-a0',      title:'Испанский с нуля',            type:'free', lang:'es', flag:'🇪🇸', level:'A0',    tags:['grammar','vocab'],       img:'spanish.jpg'},
   {slug:'italian-a0',      title:'Итальянский с нуля',          type:'free', lang:'it', flag:'🇮🇹', level:'A0',    tags:['vocab'],                 img:'italian.jpg'},
   {slug:'vamos-espana',    title:'¡Vamos a España! (А2–B1)',    type:'free', lang:'es', flag:'🇪🇸', level:'A2-B1', tags:['travel','dialog'],       img:'vamosaespana.jpg'},
   {slug:'english-intro',   title:'Английский для начинающих',   type:'free', lang:'en', flag:'🇬🇧', level:'Starter',tags:['challenge'],            img:'english.jpg'},
-  {slug:'finnish-intro',   title:'Финский с нуля',              type:'free', lang:'fi', flag:'🇫🇮', level:'Intro', tags:['vocab'],                 img:'finish.jpg'},
+  {slug:'finnish-intro',   title:'Финский с нуля',              type:'free', lang:'fi', flag:'🇫🇮', level:'Intro', tags:['vocab'],                 img:'finnish.jpg'},
   {slug:'german-intro',    title:'Немецкий с нуля',             type:'free', lang:'de', flag:'🇩🇪', level:'Intro', tags:['vocab'],                 img:'german.jpg'},
   {slug:'dutch-a0',        title:'Нидерландский с нуля',        type:'free', lang:'nl', flag:'🇳🇱', level:'A0',    tags:['vocab'],                 img:'nederlands.jpg'},
   {slug:'french-a0',       title:'Французский с нуля',          type:'free', lang:'fr', flag:'🇫🇷', level:'A0',    tags:['vocab'],                 img:'french.jpg'},
@@ -189,9 +186,9 @@ const courses = [
   {slug:'english-translators', title:'Английский для переводчиков',        type:'pro', lang:'en', flag:'📝',  level:'B2',    tags:['professional'],         img:'englishtranslate.jpg'},
   {slug:'polyglot-starter',    title:'PolyTalky Polyglot Pack. Starter',   type:'pro', lang:'multi', flag:'🌍', level:'A0-A1', tags:['vocab','visual'],    img:'polyglotpack.jpg'},
   {slug:'polyglot-cook',       title:'Polyglot Pack. Cook it!',            type:'pro', lang:'multi', flag:'🍳', level:'A1',  tags:['vocab','fun'],          img:'cookit.jpg'},
-  {slug:'polyglot-mchny',      title:'Polyglot Pack. MCHNY',               type:'pro', lang:'multi', flag:'🎄', level:'A1',  tags:['seasonal','fun'],       img:'mchny.jpg', seasonalStart:'25 декабря'},
-  {slug:'finnish-travel',      title:'Финский для путешествий',            type:'pro', lang:'fi', flag:'🇫🇮', level:'A1',    tags:['travel'],               img:'finishtravel.jpg'},
-  {slug:'finnish-continue',    title:'Финский для продолжающих (А2–В1)',   type:'pro', lang:'fi', flag:'🇫🇮', level:'A2-B1', tags:['conversation'],          img:'finisha2.jpg'},
+  {slug:'polyglot-mchny',      title:'Polyglot Pack. MCHNY',               type:'pro', lang:'multi', flag:'🎄', level:'A1',  tags:['seasonal','fun'],       img:'mchny.jpg', seasonalStart:'25 декабря', featured:true},
+  {slug:'finnish-travel',      title:'Финский для путешествий',            type:'pro', lang:'fi', flag:'🇫🇮', level:'A1',    tags:['travel'],               img:'finnishtravel.jpg'},
+  {slug:'finnish-continue',    title:'Финский для продолжающих (А2–В1)',   type:'pro', lang:'fi', flag:'🇫🇮', level:'A2-B1', tags:['conversation'],          img:'finnisha2.jpg'},
   {slug:'german-continue',     title:'Немецкий для продолжающих (А2–В1)',  type:'pro', lang:'de', flag:'🇩🇪', level:'A2-B1', tags:['conversation'],          img:'germana2.jpg'},
   {slug:'italian-continue',    title:'Итальянский для продолжающих',       type:'pro', lang:'it', flag:'🇮🇹', level:'A2',    tags:['conversation'],          img:'italiana2.jpg'},
   {slug:'afrikaans-a0',        title:'Африкаанс с нуля',                    type:'pro', lang:'af', flag:'🇿🇦', level:'A0',    tags:['vocab'],                 img:'afrikaans.jpg'},
@@ -201,47 +198,24 @@ const courses = [
   {slug:'norwegian-a0',        title:'Норвежский с нуля',                   type:'pro', lang:'no', flag:'🇳🇴', level:'A0',    tags:['vocab'],                 img:'norwegian.jpg', soon:true}
 ];
 
-/* ======= МАППИНГ ЯЗЫКОВЫХ СЕМЕЙ И РЕДКИХ ======= */
+/* ======= МАППИНГ ======= */
 const langMap = {
   multi:'Много языков', es:'Испанский', en:'Английский', it:'Итальянский', de:'Немецкий', fi:'Финский', nl:'Нидерландский',
   fr:'Французский', ja:'Японский', zh:'Китайский', hi:'Хинди', ar:'Арабский', tr:'Турецкий', ko:'Корейский',
   af:'Африкаанс', sv:'Шведский', lt:'Литовский', ro:'Румынский', no:'Норвежский'
 };
-
-// семья языка
 const familyByLang = {
   es:'romance', it:'romance', fr:'romance', ro:'romance',
   en:'germanic', de:'germanic', nl:'germanic', sv:'germanic', no:'germanic', af:'germanic',
-  fi:'uralic',
-  tr:'turkic',
-  ar:'semitic',
-  zh:'sinitic',
-  hi:'indo-aryan',
-  lt:'baltic',
-  ko:'koreanic',
-  ja:'japonic',
-  multi:'multi'
+  fi:'uralic', tr:'turkic', ar:'semitic', zh:'sinitic', hi:'indo-aryan', lt:'baltic', ko:'koreanic', ja:'japonic', multi:'multi'
 };
-
-// редкие (по твоему списку)
 const rareSet = new Set(['lt','af','ro','hi','fi','sv']);
-
-// человеко-читаемые названия семей
 const familyName = {
-  romance:'Романские',
-  germanic:'Германские',
-  uralic:'Уральские',
-  turkic:'Тюркские',
-  semitic:'Семитские',
-  sinitic:'Китайско-тибетские',
-  'indo-aryan':'Индоарийская',
-  baltic:'Балтийские',
-  koreanic:'Корейская',
-  japonic:'Японская',
-  multi:'Мульти'
+  romance:'Романские', germanic:'Германские', uralic:'Уральские', turkic:'Тюркские', semitic:'Семитские',
+  sinitic:'Китайско-тибетские', 'indo-aryan':'Индоарийская', baltic:'Балтийские', koreanic:'Корейская', japonic:'Японская', multi:'Мульти'
 };
 
-/* ======= РЕНДЕР И ФИЛЬТРЫ ======= */
+/* ======= РЕНДЕР/ФИЛЬТРЫ ======= */
 const grid    = document.getElementById('grid');
 const empty   = document.getElementById('empty');
 const count   = document.getElementById('count');
@@ -253,7 +227,7 @@ const langSel = document.getElementById('lang');
 const familySel = document.getElementById('family');
 const rareBtn = document.getElementById('rare');
 
-// Наполняем селект языков
+// селект языков
 (function fillLang(){
   const langs = [...new Set(courses.map(c=>c.lang))].filter(Boolean);
   const byName = langs.sort((a,b)=>(langMap[a]||a).localeCompare(langMap[b]||b,'ru'));
@@ -263,8 +237,7 @@ const rareBtn = document.getElementById('rare');
     langSel.appendChild(opt);
   });
 })();
-
-// Наполняем селект семей (только те, что реально встречаются)
+// селект семей
 (function fillFamilies(){
   const famsUsed = new Set(courses.map(c=>familyByLang[c.lang]||'').filter(Boolean));
   [...famsUsed].sort((a,b)=>(familyName[a]||a).localeCompare(familyName[b]||b,'ru'))
@@ -275,20 +248,15 @@ const rareBtn = document.getElementById('rare');
     });
 })();
 
-// Состояние фильтров
+// состояние
 let state = { type:'all', lang:'', level:'', tag:'', q:'', sort:'pop', family:'', rare:false };
 
-// Обработчики
+// обработчики
 q.addEventListener('input',()=>{ state.q=q.value.trim().toLowerCase(); render(); });
 level.addEventListener('change',()=>{ state.level=level.value; render(); });
 langSel.addEventListener('change',()=>{ state.lang=langSel.value; render(); });
 familySel.addEventListener('change',()=>{ state.family=familySel.value; render(); });
-
-rareBtn.addEventListener('click',()=>{
-  rareBtn.classList.toggle('active');
-  state.rare = rareBtn.classList.contains('active');
-  render();
-});
+rareBtn.addEventListener('click',()=>{ rareBtn.classList.toggle('active'); state.rare = rareBtn.classList.contains('active'); render(); });
 
 typeChips.forEach(b=>{
   b.addEventListener('click',()=>{
@@ -307,7 +275,19 @@ chips.forEach(c=>{
   });
 });
 
-// Алгоритм фильтрации
+// сортировка/фильтрация
+function parseSeason(s){
+  const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const [d, m] = s.toLowerCase().split(' ');
+  const day = parseInt(d,10);
+  const month = months.indexOf(m);
+  if (month < 0 || !day) return null;
+  const now = new Date();
+  let dt = new Date(now.getFullYear(), month, day);
+  if (dt < now) dt = new Date(now.getFullYear()+1, month, day);
+  return dt;
+}
+
 function applyFilters(list){
   return list.filter(c=>{
     if(state.type!=='all' && c.type!==state.type) return false;
@@ -325,15 +305,26 @@ function applyFilters(list){
     }
     return true;
   }).sort((a,b)=>{
-    if(state.sort==='az') return a.title.localeCompare(b.title,'ru');
-    if(state.sort==='za') return b.title.localeCompare(a.title,'ru');
-    // 'pop' — простая эвристика: free первыми, затем алфавит
-    if(a.type!==b.type) return a.type==='free'?-1:1;
+    // 1) Featured — первыми
+    if (!!a.featured !== !!b.featured) return a.featured ? -1 : 1;
+
+    // 2) Сезонные по ближайшей дате
+    const da = a.seasonalStart ? parseSeason(a.seasonalStart) : null;
+    const db = b.seasonalStart ? parseSeason(b.seasonalStart) : null;
+    if (da && db) return da - db;
+    if (da && !db) return -1;
+    if (!da && db) return 1;
+
+    // 3) Free выше Pro
+    if (a.type !== b.type) return a.type === 'free' ? -1 : 1;
+
+    // 4) По алфавиту
     return a.title.localeCompare(b.title,'ru');
   });
 }
 
-/* Карточка: квадратная обложка с лёгким скруглением; "Скоро" и "Старт <дата>" */
+/* Карточка (квадратная обложка + плейсхолдер при 404) */
+const PLACEHOLDER = 'assets/courses/placeholder.jpg';
 function courseCard(c){
   const isSoon = !!c.soon;
   const isSeasonal = !!c.seasonalStart;
@@ -346,11 +337,12 @@ function courseCard(c){
   const lvl  = c.level?`<div class="text-xs text-[var(--ink-2)] mt-1">${c.level}</div>`:'';
   const href = `courses/${c.slug}/`;
 
-  const src = `assets/courses/${c.img}`;
   const imgHTML = `
-    <img src="${src}" alt="${c.title}"
-         class="w-full h-48 object-cover rounded-2xl border border-black/10"
-         onerror="this.style.display='none'">
+    <div class="ratio-square rounded-2xl border border-black/10 overflow-hidden bg-[#f6f6f6]">
+      <img src="assets/courses/${c.img}" alt="${c.title}"
+           class="w-full h-full object-cover"
+           onerror="this.onerror=null; this.src='${PLACEHOLDER}';">
+    </div>
   `;
 
   const inner = `
@@ -376,7 +368,6 @@ function courseCard(c){
     </div>
   `;
 
-  // оболочка: ссылка, если не скоро; иначе — div + overlay
   if(isSoon){
     return `
       <div class="relative p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
@@ -385,7 +376,6 @@ function courseCard(c){
       </div>
     `;
   } else {
-    // сезонный класс
     const cls = `block p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal ${isSeasonal?'seasonal':''}`;
     const ribbon = isSeasonal ? `<div class="ribbon">Старт ${c.seasonalStart}</div>` : '';
     return `
