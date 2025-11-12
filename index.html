@@ -4,17 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PolyTalky — Языки легко и с удовольствием</title>
-  <meta name="description" content="Короткие уроки, понятные объяснения и практические задания. Испанский, английский, немецкий, китайский и другие языки — с нуля до уверенного общения." />
+  <meta name="description" content="Короткие уроки, понятные объяснения и практические задания. Испанский, английский, немецкий, китайский и другие языки с нуля до уверенного общения." />
+  <!-- ВАЖНО: базовый путь к подпапке репозитория на GitHub Pages -->
+  <base href="/polytalky/">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root{
-      --brand-yellow:#FFDE59;           /* основной жёлтый */
-      --brand-yellow-deep:#FFBA08;      /* hover-акцент */
-      --brand-orange:#E85D04;           /* оранжевый акцент */
-      --ink:#0F172A;                    /* тёмный текст */
-      --ink-2:#334155;                  /* вторичный текст */
-      --card:#FFFFFF;                   /* белые карточки */
-      --bg:#FFF8D6;                     /* пастельно-жёлтый фон */
+      --brand-yellow:#FFDE59;
+      --brand-yellow-deep:#FFBA08;
+      --brand-orange:#E85D04;
+      --ink:#0F172A;
+      --ink-2:#334155;
+      --card:#FFFFFF;
+      --bg:#FFF8D6;
     }
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--ink)}
     .shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.08)}
@@ -26,70 +28,84 @@
     .wow-bg:after{width:520px;height:520px;right:-120px;top:-60px;background:radial-gradient(closest-side,rgba(232,93,4,.35),transparent);animation-delay:2.2s}
     @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(14px)}}
     .badge{background:#fff;border:1px solid rgba(0,0,0,.06);padding:.45rem .75rem;border-radius:999px;font-size:.8rem;color:var(--ink-2)}
-    /* анимации при прокрутке */
     .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease}
     .reveal.reveal--visible{opacity:1;transform:translateY(0)}
-    /* плашки */
     .badge-free{background:#e8ffe3;border:1px solid #a7f3d0;color:#065f46}
     .badge-pro{background:#fff0f0;border:1px solid #fecaca;color:#7f1d1d}
+
+    /* Мобильные улучшения */
+    @media (max-width: 640px){
+      .hero-grid{display:grid;grid-template-columns:1fr;gap:16px}
+      .hero-cta{display:grid;gap:8px}
+      .card{transform:none}
+    }
   </style>
 </head>
 <body>
 
-<!-- Динамический override из JSON (оставлены data-ct / data-ct-img для админки) -->
 <script>
-fetch('data/content.json').then(r=>r.ok?r.json():null).then(cfg=>{
-  if(!cfg||!cfg.index) return;
-  document.querySelectorAll('[data-ct]').forEach(el=>{
-    const k=el.getAttribute('data-ct'); const v=cfg.index[k];
-    if(typeof v==='string'){ /</.test(v)?el.innerHTML=v:el.textContent=v }
-  });
-  document.querySelectorAll('[data-ct-img]').forEach(img=>{
-    const k=img.getAttribute('data-ct-img'); if(cfg.index[k]) img.src=cfg.index[k];
-  });
-}).catch(()=>{});
-
-const onReady=()=>{
-  const obs=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting)e.target.classList.add('reveal--visible');});},{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-};
-if(document.readyState!=='loading') onReady(); else document.addEventListener('DOMContentLoaded', onReady);
+  // Плавное появление блоков
+  const onReady=()=>{
+    const obs=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting)e.target.classList.add('reveal--visible');});},{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  };
+  if(document.readyState!=='loading') onReady(); else document.addEventListener('DOMContentLoaded', onReady);
 </script>
 
-<!-- ==================== HEADER ==================== -->
-<header class="sticky top-0 z-30 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
+<!-- ==================== HEADER (desktop + mobile) ==================== -->
+<header class="sticky top-0 z-50 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3 font-semibold text-lg">
-      <img data-ct-img="logo" src="assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl">
-      PolyTalky
+    <a href="./" class="flex items-center gap-3 font-semibold text-lg">
+      <img src="assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl"> PolyTalky
     </a>
+
+    <!-- Desktop nav -->
     <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
-      <a href="/polytalky/courses/" class="hover:opacity-80">Курсы</a>
-      <a href="/polytalky/shop/" class="hover:opacity-80">Магазин</a>
-      <a href="/polytalky/student/" class="hover:opacity-80">Личный кабинет</a>
+      <a href="courses/" class="hover:opacity-80">Курсы</a>
+      <a href="shop/" class="hover:opacity-80">Магазин</a>
+      <a href="student/" class="hover:opacity-80">Личный кабинет</a>
+      <a href="courses/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">Начать бесплатно</a>
     </nav>
-    <a href="/courses/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">
-      Начать бесплатно
-    </a>
+
+    <!-- Mobile burger -->
+    <button id="burger" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft" aria-label="Меню">
+      ☰
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mnav" class="md:hidden hidden border-t border-black/10 bg-[#fffef7]">
+    <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-[var(--ink-2)]">
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="courses/">Курсы</a>
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="shop/">Магазин</a>
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="student/">Личный кабинет</a>
+      <a class="px-3 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold shadow-soft" href="courses/">Начать бесплатно</a>
+    </div>
   </div>
 </header>
 
+<script>
+  // Тоггл мобильного меню
+  const b=document.getElementById('burger'), m=document.getElementById('mnav');
+  if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
+</script>
+
 <!-- ==================== HERO ==================== -->
 <section class="wow-bg">
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-24 grid lg:grid-cols-[1.05fr,0.95fr] gap-12 items-center">
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 hero-grid items-center">
     <div class="reveal">
       <span class="badge">10–15 минут в день • Реальные сценарии</span>
-      <h1 data-ct="hero-title" class="mt-4 text-4xl sm:text-5xl font-extrabold leading-tight">
+      <h1 class="mt-4 text-4xl sm:text-5xl font-extrabold leading-tight">
         Изучайте языки <span class="text-[var(--brand-orange)]">для жизни</span>, а не только для тестов
       </h1>
-      <p data-ct="hero-sub" class="mt-4 text-lg text-[var(--ink-2)] max-w-xl">
+      <p class="mt-4 text-lg text-[var(--ink-2)] max-w-xl">
         Короткие уроки, понятные объяснения и практические задания. Испанский, английский, немецкий, китайский и другие языки с нуля до уверенного общения.
       </p>
-      <div class="mt-6 flex flex-wrap gap-3">
-        <a data-ct="cta-1" href="/courses/" class="px-5 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">Посмотреть все курсы</a>
-        <a data-ct="cta-2" href="/courses/spanish-a0/" class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft">Демо: Испанский A0</a>
+      <div class="mt-6 flex flex-wrap gap-3 hero-cta">
+        <a href="courses/" class="px-5 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">Посмотреть все курсы</a>
+        <a href="courses/spanish-a0/" class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft">Демо: Испанский A0</a>
       </div>
-      <ul class="mt-6 grid sm:grid-cols-3 gap-3 text-sm text-[#333]">
+      <ul class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-[#333]">
         <li class="p-3 rounded-lg bg-white border border-black/10 shadow-soft card">⚡ Уроки по 10–15 минут</li>
         <li class="p-3 rounded-lg bg-white border border-black/10 shadow-soft card">🎧 Аудио, диалоги, карточки</li>
         <li class="p-3 rounded-lg bg-white border border-black/10 shadow-soft card">🧭 Практика для реальной жизни</li>
@@ -98,7 +114,7 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
     <div class="relative reveal">
       <div class="absolute -inset-6 rounded-3xl bg-[var(--brand-yellow)]/40 blur-2xl"></div>
       <div class="relative rounded-3xl border border-black/10 bg-white p-5 shadow-soft">
-        <img data-ct-img="hero" src="assets/hero-3d.png" alt="3D-иллюстрация PolyTalky" class="rounded-2xl w-full aspect-video object-cover"/>
+        <img src="assets/hero-3d.png" alt="3D-иллюстрация PolyTalky" class="rounded-2xl w-full aspect-video object-cover"/>
         <p class="mt-3 text-sm text-[var(--ink-2)]">Демо покажет, как устроены объяснения, практика и мини-квизы.</p>
       </div>
     </div>
@@ -110,10 +126,10 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-end justify-between gap-4 flex-wrap">
       <h2 class="text-2xl sm:text-3xl font-extrabold reveal">Попробуйте бесплатно</h2>
-      <a href="/courses/" class="text-sm underline text-[var(--ink-2)] reveal">Посмотреть все бесплатные курсы →</a>
+      <a href="courses/" class="text-sm underline text-[var(--ink-2)] reveal">Посмотреть все курсы →</a>
     </div>
     <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <a href="/courses/spanish-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+      <a href="courses/spanish-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
         <div class="flex items-center gap-3">
           <span class="text-2xl">🇪🇸</span>
           <div class="grow">
@@ -123,7 +139,7 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
           <span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>
         </div>
       </a>
-      <a href="/courses/italian-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+      <a href="courses/italian-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
         <div class="flex items-center gap-3">
           <span class="text-2xl">🇮🇹</span>
           <div class="grow">
@@ -133,7 +149,7 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
           <span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>
         </div>
       </a>
-      <a href="/courses/english-intro/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+      <a href="courses/english-intro/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
         <div class="flex items-center gap-3">
           <span class="text-2xl">🇬🇧</span>
           <div class="grow">
@@ -143,7 +159,7 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
           <span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>
         </div>
       </a>
-      <a href="/courses/japanese-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+      <a href="courses/japanese-a0/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
         <div class="flex items-center gap-3">
           <span class="text-2xl">🇯🇵</span>
           <div class="grow">
@@ -162,10 +178,10 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-end justify-between gap-4 flex-wrap">
       <h2 class="text-2xl sm:text-3xl font-extrabold reveal">PRO / Premium</h2>
-      <a href="/shop/" class="text-sm underline text-[var(--ink-2)] reveal">Открыть все PRO-курсы →</a>
+      <a href="shop/" class="text-sm underline text-[var(--ink-2)] reveal">Открыть все PRO-курсы →</a>
     </div>
     <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <a href="/courses/english-with-harry/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+      <a href="courses/english-with-harry/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
         <div class="flex items-center gap-3">
           <span class="text-2xl">🪄</span>
           <div class="grow">
@@ -175,7 +191,7 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
           <span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PRO</span>
         </div>
       </a>
-      <a href="/courses/visual-spanish/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+      <a href="courses/visual-spanish/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
         <div class="flex items-center gap-3">
           <span class="text-2xl">🖼️</span>
           <div class="grow">
@@ -185,7 +201,7 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
           <span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PRO</span>
         </div>
       </a>
-      <a href="/courses/italian-songs/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
+      <a href="courses/italian-songs/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
         <div class="flex items-center gap-3">
           <span class="text-2xl">🎵</span>
           <div class="grow">
@@ -196,7 +212,7 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
       </a>
     </div>
     <div class="mt-6">
-      <a href="/shop/" class="px-5 py-3 rounded-xl bg-white border border-black/10 hover:bg-[#fff3c6] shadow-soft text-sm">К тарифам и оплате</a>
+      <a href="shop/" class="px-5 py-3 rounded-xl bg-white border border-black/10 hover:bg-[#fff3c6] shadow-soft text-sm">К тарифам и оплате</a>
     </div>
   </div>
 </section>
@@ -250,14 +266,14 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
   </div>
 </section>
 
-<!-- ==================== CTA (НИЖНИЙ) ==================== -->
+<!-- ==================== CTA ==================== -->
 <section class="py-16 bg-gradient-to-b from-[#fff0b4] to-[#ffe27a] border-y border-black/10 text-center">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
     <h2 class="text-3xl sm:text-4xl font-extrabold">Выучи свой язык мечты</h2>
     <p class="mt-2 text-[var(--ink-2)]">Начните с бесплатного демо-урока — через 10 минут у вас будут первые фразы.</p>
-    <div class="mt-6 flex justify-center gap-3">
-      <a href="/courses/" class="px-6 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">Начать бесплатно</a>
-      <a href="/shop/" class="px-6 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft">Купить PRO-доступ</a>
+    <div class="mt-6 flex justify-center gap-3 flex-col sm:flex-row">
+      <a href="courses/" class="px-6 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">Начать бесплатно</a>
+      <a href="shop/" class="px-6 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft">Купить PRO-доступ</a>
     </div>
   </div>
 </section>
@@ -267,9 +283,9 @@ if(document.readyState!=='loading') onReady(); else document.addEventListener('D
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
     <p>© <span id="y"></span> PolyTalky. Все права защищены.</p>
     <div class="flex gap-4">
-      <a class="hover:opacity-80" href="/courses/">Курсы</a>
-      <a class="hover:opacity-80" href="/shop/">Магазин</a>
-      <a class="hover:opacity-80" href="/student/">Личный кабинет</a>
+      <a class="hover:opacity-80" href="courses/">Курсы</a>
+      <a class="hover:opacity-80" href="shop/">Магазин</a>
+      <a class="hover:opacity-80" href="student/">Личный кабинет</a>
     </div>
   </div>
 </footer>
