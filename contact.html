@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Контакты — PolyTalky</title>
+  <meta name="description" content="Свяжитесь с командой PolyTalky." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: #fafafa; color: #222; }
+    main { max-width: 800px; margin: auto; padding: 2rem 1rem 4rem; }
+    h1 { font-size: 1.9rem; font-weight: 800; margin-bottom: 1rem; color: #111; }
+    p { line-height: 1.65; margin-bottom: 0.75rem; }
+    a { color: #CF2C02; text-decoration: underline; }
+    .btn { background:#CF2C02; color:#fff; padding:.55rem 1.1rem; border-radius:.8rem; font-weight:600; }
+    .btn:hover { background:#E85D04; }
+    footer { border-top: 1px solid #ddd; padding: 1.5rem 1rem; text-align: center; font-size: 0.875rem; color: #666; background: #f9f9f9; }
+    form input, form textarea { width: 100%; padding: .6rem .8rem; border-radius: .5rem; border: 1px solid #ccc; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <button class="btn" onclick="history.back()">← Назад</button>
+
+    <h1 class="mt-6">Свяжитесь с PolyTalky</h1>
+    <p>Если у вас есть вопросы о курсах, оплате или сотрудничестве — напишите нам. Мы ответим в течение 1–2 рабочих дней.</p>
+
+    <form action="mailto:iraburljaeva@gmail.com" method="post" enctype="text/plain">
+      <label>Ваше имя</label>
+      <input type="text" name="name" required>
+
+      <label>Email для ответа</label>
+      <input type="email" name="email" required>
+
+      <label>Сообщение</label>
+      <textarea name="message" rows="5" required></textarea>
+
+      <button type="submit" class="btn">Отправить</button>
+    </form>
+
+    <p class="mt-4 text-sm text-gray-500">
+      Или напишите напрямую: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a><br>
+      Город Москва, Россия.
+    </p>
+  </main>
+
+  <footer>
+    © 2025 PolyTalky. Все права защищены.
+  </footer>
+</body>
+</html>
