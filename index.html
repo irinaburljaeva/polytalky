@@ -284,18 +284,36 @@
   </div>
 </section>
 
-<!-- ==================== FOOTER ==================== -->
-<footer class="border-t border-black/10 py-8 text-sm text-[var(--ink-2)] bg-[#fffef7]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-    <p>© <span id="y"></span> PolyTalky. Все права защищены.</p>
-    <div class="flex gap-4">
-      <a class="hover:opacity-80" href="courses/">Курсы</a>
-      <a class="hover:opacity-80" href="shop/">Магазин</a>
-      <a class="hover:opacity-80" href="student/">Личный кабинет</a>
+<footer class="border-t border-black/10 py-8 text-sm text-gray-600 bg-[#fffef7]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-6 md:grid-cols-3">
+    <div>
+      <div class="font-semibold text-gray-800">PolyTalky</div>
+      <p class="mt-1">© <span id="y"></span> PolyTalky. Все права защищены.</p>
+    </div>
+
+    <div>
+      <div class="font-semibold text-gray-800">Навигация</div>
+      <div class="mt-2 flex flex-wrap gap-3">
+        <a class="hover:opacity-80" href="/polytalky/">Главная</a>
+        <a class="hover:opacity-80" href="courses/">Курсы</a>
+        <a class="hover:opacity-80" href="shop/">Магазин</a>
+        <a class="hover:opacity-80" href="student/">Личный кабинет</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-semibold text-gray-800">Юридическая информация</div>
+      <div class="mt-2 flex flex-wrap gap-3">
+        <a href="legal/privacy.html" class="hover:opacity-80">Политика конфиденциальности</a>
+        <a href="legal/offer.html" class="hover:opacity-80">Публичная оферта</a>
+        <a href="legal/cookies.html" class="hover:opacity-80">Cookies</a>
+        <a href="legal/consent.html" class="hover:opacity-80">Согласие на обработку</a>
+      </div>
     </div>
   </div>
 </footer>
 <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+
 
 </body>
 </html>
