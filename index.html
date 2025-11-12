@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PolyTalky — Языки легко и с удовольствием</title>
   <meta name="description" content="Короткие уроки, понятные объяснения и практические задания. Испанский, английский, немецкий, китайский и другие языки с нуля до уверенного общения." />
-  <!-- ВАЖНО: базовый путь к подпапке репозитория на GitHub Pages -->
+  <!-- Важно: сайт в подпапке репозитория -->
   <base href="/polytalky/">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -38,6 +38,12 @@
       .hero-grid{display:grid;grid-template-columns:1fr;gap:16px}
       .hero-cta{display:grid;gap:8px}
       .card{transform:none}
+    }
+
+    /* Десктоп-усиление */
+    @media (min-width: 1024px){
+      h1{ font-size:3.25rem; line-height:1.1; }
+      .card:hover{ transform:translateY(-8px); box-shadow:0 16px 40px rgba(0,0,0,.10); }
     }
   </style>
 </head>
@@ -92,10 +98,10 @@
 
 <!-- ==================== HERO ==================== -->
 <section class="wow-bg">
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 hero-grid items-center">
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-24 grid lg:grid-cols-[1.05fr,0.95fr] gap-12 items-center hero-grid">
     <div class="reveal">
       <span class="badge">10–15 минут в день • Реальные сценарии</span>
-      <h1 class="mt-4 text-4xl sm:text-5xl font-extrabold leading-tight">
+      <h1 class="mt-4 font-extrabold leading-tight">
         Изучайте языки <span class="text-[var(--brand-orange)]">для жизни</span>, а не только для тестов
       </h1>
       <p class="mt-4 text-lg text-[var(--ink-2)] max-w-xl">
