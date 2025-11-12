@@ -284,36 +284,55 @@
   </div>
 </section>
 
-<footer class="border-t border-black/10 py-8 text-sm text-gray-600 bg-[#fffef7]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-6 md:grid-cols-3">
+<footer class="border-t border-gray-200 bg-white/70 backdrop-blur py-10 text-sm text-gray-700">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Бренд -->
     <div>
-      <div class="font-semibold text-gray-800">PolyTalky</div>
-      <p class="mt-1">© <span id="y"></span> PolyTalky. Все права защищены.</p>
+      <a href="/polytalky/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
+        <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-2)] items-center justify-center">🏷️</span>
+        PolyTalky
+      </a>
+      <p class="mt-3 text-gray-500">Изучайте языки для жизни, а не только для тестов.</p>
+      <p class="mt-4 text-gray-400">© 2025 PolyTalky. Все права защищены.</p>
     </div>
 
+    <!-- Навигация -->
     <div>
-      <div class="font-semibold text-gray-800">Навигация</div>
-      <div class="mt-2 flex flex-wrap gap-3">
-        <a class="hover:opacity-80" href="/polytalky/">Главная</a>
-        <a class="hover:opacity-80" href="courses/">Курсы</a>
-        <a class="hover:opacity-80" href="shop/">Магазин</a>
-        <a class="hover:opacity-80" href="student/">Личный кабинет</a>
-      </div>
+      <h3 class="font-semibold text-gray-900 mb-3">Навигация</h3>
+      <ul class="space-y-2">
+        <li><a href="/polytalky/courses/" class="hover:underline">Курсы</a></li>
+        <li><a href="/polytalky/shop/" class="hover:underline">Магазин</a></li>
+        <li><a href="/polytalky/student/" class="hover:underline">Личный кабинет</a></li>
+        <li><a href="/polytalky/contact.html" class="hover:underline">Контакты</a></li>
+      </ul>
     </div>
 
+    <!-- Юридическая информация -->
     <div>
-      <div class="font-semibold text-gray-800">Юридическая информация</div>
-      <div class="mt-2 flex flex-wrap gap-3">
-        <a href="legal/privacy.html" class="hover:opacity-80">Политика конфиденциальности</a>
-        <a href="legal/offer.html" class="hover:opacity-80">Публичная оферта</a>
-        <a href="legal/cookies.html" class="hover:opacity-80">Cookies</a>
-        <a href="legal/consent.html" class="hover:opacity-80">Согласие на обработку</a>
-      </div>
+      <h3 class="font-semibold text-gray-900 mb-3">Юридическая информация</h3>
+      <ul class="space-y-2">
+        <li><a href="/polytalky/legal/privacy.html" class="hover:underline">Политика конфиденциальности</a></li>
+        <li><a href="/polytalky/legal/offer.html" class="hover:underline">Публичная оферта</a></li>
+        <li><a href="/polytalky/legal/cookies.html" class="hover:underline">Cookies</a></li>
+        <li><a href="/polytalky/legal/consent.html" class="hover:underline">Согласие на обработку данных</a></li>
+      </ul>
     </div>
   </div>
 </footer>
-<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 
+<!-- Cookie баннер -->
+<div id="cookie-banner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white text-gray-900 shadow-md rounded-xl px-4 py-3 text-sm flex items-center gap-3 hidden z-50">
+  <span>Мы используем cookies для улучшения работы сайта.</span>
+  <button id="cookie-accept" class="bg-[var(--brand-1)] text-white px-3 py-1 rounded-lg text-sm">Понятно</button>
+</div>
+<script>
+  const banner = document.getElementById('cookie-banner');
+  if (!localStorage.getItem('cookieConsent')) banner.classList.remove('hidden');
+  document.getElementById('cookie-accept').onclick = () => {
+    localStorage.setItem('cookieConsent', 'true');
+    banner.classList.add('hidden');
+  };
+</script>
 
 </body>
 </html>
