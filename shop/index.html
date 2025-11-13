@@ -1424,5 +1424,58 @@
       });
     });
   </script>
+  <script type="module">
+  // Firebase SDK (ESM)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ТВОЯ конфигурация проекта
+  const firebaseConfig = {
+    apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+    authDomain: "polytalky-70999.firebaseapp.com",
+    projectId: "polytalky-70999",
+    storageBucket: "polytalky-70999.firebasestorage.app",
+    messagingSenderId: "62407152289",
+    appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+  };
+
+  // Инициализация Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Подключаемся к уже существующей форме подтверждения
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('confirmForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async () => {
+      const emailEl   = document.getElementById('cf-email');
+      const channelEl = document.getElementById('cf-channel');
+      const itemsEl   = document.getElementById('cf-items');
+      const noteEl    = document.getElementById('cf-note');
+
+      const email   = (emailEl?.value || '').trim();
+      const channel = channelEl?.value || '';
+      const items   = itemsEl?.value || '';
+      const note    = noteEl?.value || '';
+
+      // Если по какой-то причине нет email или списка курсов — просто выходим
+      if (!email || !items) return;
+
+      try {
+        await addDoc(collection(db, 'orders'), {
+          email,
+          channel,
+          items,
+          note,
+          createdAt: serverTimestamp()
+        });
+        console.log('Заказ сохранён в Firebase');
+      } catch (err) {
+        console.error('Ошибка записи в Firebase', err);
+      }
+    });
+  });
+</script>
 </body>
 </html>
