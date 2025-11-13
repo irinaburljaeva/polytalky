@@ -55,6 +55,15 @@
     .btn-ghost:hover{
       background:rgba(148,163,184,.08);
     }
+    /* honeypot (скрытое поле для ботов) */
+    .hp-field{
+      position:absolute;
+      left:-9999px;
+      opacity:0;
+      pointer-events:none;
+      height:0;
+      width:0;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -87,18 +96,35 @@
             <p class="text-sm text-slate-600 mb-4">
               Аккаунт по email сохранит ваши курсы и прогресс на всех устройствах: телефоне, планшете и ноутбуке.
             </p>
-            <form id="auth-form" class="grid sm:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_minmax(0,1.2fr)] gap-3 text-sm">
-              <input id="auth-email" type="email" required
-                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                     placeholder="email@example.com" />
-              <input id="auth-pass" type="password" required
-                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                     placeholder="Пароль" />
-              <div class="flex gap-2">
-                <button type="submit" class="btn btn-brand flex-1">Войти</button>
-                <button type="button" id="auth-register" class="btn btn-ghost flex-1">Регистрация</button>
+
+            <form id="auth-form" class="space-y-3 text-sm">
+              <!-- honeypot для ботов -->
+              <input id="auth-website" type="text" autocomplete="off" class="hp-field" aria-hidden="true" />
+
+              <div class="grid sm:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_minmax(0,1.2fr)] gap-3">
+                <input id="auth-email" type="email" required
+                       class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                       placeholder="email@example.com" />
+                <input id="auth-pass" type="password" required
+                       class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                       placeholder="Пароль" />
+                <div class="flex gap-2">
+                  <button type="submit" id="btn-login" class="btn btn-brand flex-1">Войти</button>
+                  <button type="button" id="auth-register" class="btn btn-ghost flex-1">Регистрация</button>
+                </div>
+              </div>
+
+              <!-- дополнительные поля только для регистрации -->
+              <div class="grid sm:grid-cols-2 gap-3" id="auth-extra">
+                <input id="auth-first" type="text"
+                       class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                       placeholder="Имя (для регистрации)" />
+                <input id="auth-last" type="text"
+                       class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                       placeholder="Фамилия (для регистрации)" />
               </div>
             </form>
+
             <p id="auth-error" class="mt-2 text-xs text-red-500"></p>
             <p class="mt-3 text-xs text-slate-500">
               Нажимая «Регистрация», вы соглашаетесь с
@@ -202,8 +228,12 @@
       const authBoxIn      = document.getElementById('auth-when-logged-in');
       const authEmailEl    = document.getElementById('auth-email');
       const authPassEl     = document.getElementById('auth-pass');
+      const authFirstEl    = document.getElementById('auth-first');
+      const authLastEl     = document.getElementById('auth-last');
+      const honeypotEl     = document.getElementById('auth-website');
       const authForm       = document.getElementById('auth-form');
       const authRegister   = document.getElementById('auth-register');
+      const btnLogin       = document.getElementById('btn-login');
       const authError      = document.getElementById('auth-error');
       const authLogout     = document.getElementById('auth-logout');
       const authUserEmail  = document.getElementById('auth-user-email');
@@ -217,7 +247,6 @@
       function showAuthError(code, mode) {
         let msg = 'Произошла ошибка. Попробуйте ещё раз.';
 
-        // mode: 'login' или 'register'
         switch (code) {
           case 'auth/user-not-found':
             msg = 'Аккаунт с таким email не найден. Сначала зарегистрируйтесь.';
@@ -242,7 +271,6 @@
             break;
         }
 
-        // Дополнительные подсказки по режиму
         if (mode === 'login' && code === 'auth/invalid-credential') {
           msg = 'Неверный email или пароль. Проверьте данные или зарегистрируйтесь.';
         }
@@ -267,10 +295,17 @@
         }
       }
 
-      // Вход
+      // Вход (только email + пароль)
       authForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         authError.textContent = '';
+
+        // если honeypot заполнен — бот
+        if (honeypotEl.value && honeypotEl.value.trim() !== '') {
+          authError.textContent = 'Произошла ошибка. Обновите страницу и попробуйте ещё раз.';
+          return;
+        }
+
         try {
           const email = authEmailEl.value.trim();
           const pass  = authPassEl.value.trim();
@@ -281,19 +316,35 @@
         }
       });
 
-      // Регистрация
+      // Регистрация (email+пароль+имя+фамилия)
       authRegister.addEventListener('click', async () => {
         authError.textContent = '';
+
+        if (honeypotEl.value && honeypotEl.value.trim() !== '') {
+          authError.textContent = 'Произошла ошибка. Обновите страницу и попробуйте ещё раз.';
+          return;
+        }
+
         try {
           const email = authEmailEl.value.trim();
           const pass  = authPassEl.value.trim();
+          const first = authFirstEl.value.trim();
+          const last  = authLastEl.value.trim();
+
           if (!email || !pass) {
             authError.textContent = 'Введите email и пароль.';
             return;
           }
+          if (!first || !last) {
+            authError.textContent = 'Для регистрации укажите имя и фамилию.';
+            return;
+          }
+
           const cred = await auth.createUserWithEmailAndPassword(email, pass);
           await db.collection('users').doc(cred.user.uid).set({
             email: email,
+            firstName: first,
+            lastName: last,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         } catch (err) {
@@ -369,7 +420,7 @@
                </div>`
             : `<div class="aspect-[4/3] rounded-xl bg-slate-100 mb-3 flex items-center justify-center text-3xl">📚</div>`;
 
-          const url = `/polytalky/courses/${c.id}/`; // предполагаемый путь к курсу
+          const url = `/polytalky/courses/${c.id}/`;
 
           const card = document.createElement('article');
           card.className = 'card p-4 sm:p-5 flex flex-col justify-between';
