@@ -93,7 +93,7 @@
                      placeholder="email@example.com" />
               <input id="auth-pass" type="password" required
                      class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                     placeholder="Придумайте пароль" />
+                     placeholder="Пароль" />
               <div class="flex gap-2">
                 <button type="submit" class="btn btn-brand flex-1">Войти</button>
                 <button type="button" id="auth-register" class="btn btn-ghost flex-1">Регистрация</button>
@@ -174,7 +174,7 @@
     <button id="cookie-accept" class="btn btn-brand text-xs px-3 py-1">Понятно</button>
   </div>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -190,7 +190,6 @@
       appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
     };
 
-    // Инициализация Firebase (compat-режим для работы прямо в браузере)
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db   = firebase.firestore();
@@ -213,6 +212,43 @@
       const coursesNeedAuth = document.getElementById('courses-need-auth');
       const coursesList     = document.getElementById('courses-list');
       const coursesEmpty    = document.getElementById('courses-empty');
+
+      // Переводчик ошибок Firebase → на русский
+      function showAuthError(code, mode) {
+        let msg = 'Произошла ошибка. Попробуйте ещё раз.';
+
+        // mode: 'login' или 'register'
+        switch (code) {
+          case 'auth/user-not-found':
+            msg = 'Аккаунт с таким email не найден. Сначала зарегистрируйтесь.';
+            break;
+          case 'auth/wrong-password':
+            msg = 'Неверный пароль. Проверьте раскладку клавиатуры и попробуйте ещё раз.';
+            break;
+          case 'auth/invalid-email':
+            msg = 'Некорректный email. Проверьте адрес (например, name@example.com).';
+            break;
+          case 'auth/too-many-requests':
+            msg = 'Слишком много попыток входа. Подождите пару минут и попробуйте снова.';
+            break;
+          case 'auth/email-already-in-use':
+            msg = 'Аккаунт с таким email уже зарегистрирован. Войдите через кнопку «Войти».';
+            break;
+          case 'auth/weak-password':
+            msg = 'Слишком простой пароль. Придумайте пароль не короче 6 символов.';
+            break;
+          case 'auth/operation-not-allowed':
+            msg = 'Вход по email временно недоступен. Попробуйте позже или свяжитесь с нами.';
+            break;
+        }
+
+        // Дополнительные подсказки по режиму
+        if (mode === 'login' && code === 'auth/invalid-credential') {
+          msg = 'Неверный email или пароль. Проверьте данные или зарегистрируйтесь.';
+        }
+
+        authError.textContent = msg;
+      }
 
       function setAuthState(user) {
         if (user) {
@@ -240,7 +276,8 @@
           const pass  = authPassEl.value.trim();
           await auth.signInWithEmailAndPassword(email, pass);
         } catch (err) {
-          authError.textContent = err.message || 'Ошибка входа';
+          console.error(err);
+          showAuthError(err.code, 'login');
         }
       });
 
@@ -251,17 +288,17 @@
           const email = authEmailEl.value.trim();
           const pass  = authPassEl.value.trim();
           if (!email || !pass) {
-            authError.textContent = 'Введите email и пароль';
+            authError.textContent = 'Введите email и пароль.';
             return;
           }
           const cred = await auth.createUserWithEmailAndPassword(email, pass);
-          // создаём документ в /users/{uid}
           await db.collection('users').doc(cred.user.uid).set({
             email: email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
         } catch (err) {
-          authError.textContent = err.message || 'Ошибка регистрации';
+          console.error(err);
+          showAuthError(err.code, 'register');
         }
       });
 
