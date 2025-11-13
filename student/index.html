@@ -4,25 +4,32 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PolyTalky — Личный кабинет</title>
-  <meta name="description" content="Личный кабинет PolyTalky: ваши курсы, прогресс и язык мечты." />
+  <meta name="description" content="Личный кабинет PolyTalky: ваши курсы, достижения и прогресс на всех устройствах." />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root{
       --brand-1:#FFBA08; /* жёлтый */
       --brand-2:#F97316; /* мягкий оранжевый */
-      --brand-3:#10B981; /* мятный для успеха */
+      --brand-3:#10B981; /* зелёный для успеха */
+      --brand-bg:#FEF9C3;
     }
     body{
       font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      background: radial-gradient(circle at top left, #FEF9C3 0, #FEFCE8 40%, #F9FAFB 100%);
+      background:
+        radial-gradient(circle at top left,#FEF9C3 0,#FEFCE8 40%,#F9FAFB 100%);
       color:#0f172a;
     }
-    .wrap{max-width:960px;margin:0 auto;}
+    .wrap{max-width:1040px;margin:0 auto;}
     .card{
-      border-radius:1rem;
+      border-radius:1.25rem;
       border:1px solid rgba(15,23,42,.08);
-      background-color:rgba(255,255,255,.9);
+      background-color:rgba(255,255,255,.96);
       box-shadow:0 18px 45px rgba(15,23,42,.08);
+    }
+    .soft-card{
+      border-radius:1rem;
+      border:1px solid rgba(148,163,184,.25);
+      background-color:rgba(255,255,255,.9);
     }
     .btn{
       border-radius:999px;
@@ -55,20 +62,30 @@
     .btn-ghost:hover{
       background:rgba(148,163,184,.08);
     }
-    /* honeypot (скрытое поле для ботов) */
+    .badge{
+      border-radius:999px;
+      font-size:.65rem;
+      padding:.15rem .55rem;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(249,250,251,.9);
+      color:#4b5563;
+    }
+    /* honeypot */
     .hp-field{
       position:absolute;
       left:-9999px;
       opacity:0;
       pointer-events:none;
-      height:0;
-      width:0;
+      height:0;width:0;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
   <!-- HEADER -->
-  <header class="sticky top-0 z-30 backdrop-blur bg-white/70 border-b border-slate-200/60">
+  <header class="sticky top-0 z-30 backdrop-blur bg-white/80 border-b border-slate-200/60">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
       <a href="/polytalky/" class="flex items-center gap-2">
         <span class="inline-flex h-9 w-9 rounded-2xl bg-[var(--brand-1)] items-center justify-center text-xl shadow-md">🏷️</span>
@@ -85,97 +102,142 @@
   <main class="flex-1">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6">
 
-      <!-- AUTH BOX -->
-      <section>
-        <div id="auth-box" class="card p-5 sm:p-6">
-          <!-- когда пользователь НЕ вошёл -->
-          <div id="auth-when-logged-out">
-            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 mb-1">
-              Войдите в PolyTalky
-            </h1>
-            <p class="text-sm text-slate-600 mb-4">
-              Аккаунт по email сохранит ваши курсы и прогресс на всех устройствах: телефоне, планшете и ноутбуке.
+      <!-- HERO / AUTH CARD -->
+      <section class="card p-5 sm:p-7 space-y-5">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+          <div class="space-y-2 max-w-xl">
+            <p class="text-xs font-semibold tracking-[.2em] uppercase text-amber-700">
+              Ваш уголок в PolyTalky
             </p>
-
-            <form id="auth-form" class="space-y-3 text-sm">
-              <!-- honeypot для ботов -->
-              <input id="auth-website" type="text" autocomplete="off" class="hp-field" aria-hidden="true" />
-
-              <div class="grid sm:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_minmax(0,1.2fr)] gap-3">
-                <input id="auth-email" type="email" required
-                       class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                       placeholder="email@example.com" />
-                <input id="auth-pass" type="password" required
-                       class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                       placeholder="Пароль" />
-                <div class="flex gap-2">
-                  <button type="submit" id="btn-login" class="btn btn-brand flex-1">Войти</button>
-                  <button type="button" id="auth-register" class="btn btn-ghost flex-1">Регистрация</button>
-                </div>
-              </div>
-
-              <!-- дополнительные поля только для регистрации -->
-              <div class="grid sm:grid-cols-2 gap-3" id="auth-extra">
-                <input id="auth-first" type="text"
-                       class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                       placeholder="Имя (для регистрации)" />
-                <input id="auth-last" type="text"
-                       class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                       placeholder="Фамилия (для регистрации)" />
-              </div>
-            </form>
-
-            <p id="auth-error" class="mt-2 text-xs text-red-500"></p>
-            <p class="mt-3 text-xs text-slate-500">
-              Нажимая «Регистрация», вы соглашаетесь с
-              <a class="underline" href="/polytalky/legal/offer.html" target="_blank">публичной офертой</a>
-              и
-              <a class="underline" href="/polytalky/legal/privacy.html" target="_blank">политикой конфиденциальности</a>.
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+              Личный кабинет <span class="text-amber-600">языкового героя</span>
+            </h1>
+            <p class="text-sm sm:text-base text-slate-600">
+              Здесь хранятся ваши курсы, достижения и прогресс.
+              Войдите по email, чтобы всё синхронизировалось между телефоном, планшетом и ноутбуком.
             </p>
           </div>
 
-          <!-- когда пользователь УЖЕ вошёл -->
-          <div id="auth-when-logged-in" class="hidden flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div class="flex items-center gap-3">
-              <div class="h-10 w-10 rounded-full bg-[var(--brand-1)]/40 flex items-center justify-center text-xl">
-                😊
-              </div>
-              <div>
-                <div class="text-xs uppercase tracking-wide text-slate-500">Вы вошли как</div>
-                <div id="auth-user-email" class="font-semibold text-slate-900"></div>
+          <!-- блок для состояния "вошёл" -->
+          <div id="auth-when-logged-in" class="hidden soft-card px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 min-w-[260px]">
+            <div id="profile-avatar" class="h-12 w-12 rounded-full bg-[var(--brand-1)]/60 flex items-center justify-center text-xl font-bold text-slate-900 shadow-inner">
+              😊
+            </div>
+            <div class="flex-1">
+              <div class="text-xs uppercase tracking-wide text-slate-500">Вы вошли как</div>
+              <div id="profile-name" class="font-semibold text-slate-900 text-sm"></div>
+              <div id="auth-user-email" class="text-xs text-slate-500"></div>
+            </div>
+            <button id="auth-logout" class="btn btn-ghost text-xs px-3 py-1">Выйти</button>
+          </div>
+        </div>
+
+        <!-- блок для состояния "НЕ вошёл" -->
+        <div id="auth-when-logged-out" class="soft-card p-4 sm:p-5 text-sm text-slate-700 space-y-3">
+          <p class="font-semibold text-slate-900">Войдите в PolyTalky</p>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Аккаунт по email сохранит ваши курсы и достижения. Если ещё нет аккаунта — нажмите «Регистрация».
+          </p>
+
+          <form id="auth-form" class="space-y-3 text-sm">
+            <!-- honeypot -->
+            <input id="auth-website" type="text" autocomplete="off" class="hp-field" aria-hidden="true" />
+
+            <div class="grid sm:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_minmax(0,1.2fr)] gap-3">
+              <input id="auth-email" type="email" required
+                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                     placeholder="email@example.com" />
+              <input id="auth-pass" type="password" required
+                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                     placeholder="Пароль" />
+              <div class="flex gap-2">
+                <button type="submit" id="btn-login" class="btn btn-brand flex-1">Войти</button>
+                <button type="button" id="auth-register" class="btn btn-ghost flex-1">Регистрация</button>
               </div>
             </div>
-            <button id="auth-logout" class="btn btn-ghost text-xs">Выйти</button>
-          </div>
+
+            <!-- дополнительные поля только для регистрации -->
+            <div class="grid sm:grid-cols-2 gap-3 hidden" id="auth-extra">
+              <input id="auth-first" type="text"
+                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                     placeholder="Имя (для регистрации)" />
+              <input id="auth-last" type="text"
+                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                     placeholder="Фамилия (для регистрации)" />
+            </div>
+          </form>
+
+          <p id="auth-error" class="mt-1 text-xs text-red-500 min-h-[1.25rem]"></p>
+          <p class="mt-1 text-[11px] text-slate-500 leading-relaxed">
+            Нажимая «Регистрация», вы соглашаетесь с
+            <a class="underline" href="/polytalky/legal/offer.html" target="_blank">публичной офертой</a>
+            и
+            <a class="underline" href="/polytalky/legal/privacy.html" target="_blank">политикой конфиденциальности</a>.
+          </p>
+        </div>
+
+        <!-- Мини-настройки профиля (только когда вошли) -->
+        <div id="profile-settings" class="hidden pt-4 border-t border-dashed border-amber-200 mt-2">
+          <p class="text-xs font-semibold uppercase tracking-[.18em] text-amber-700 mb-2">Профиль</p>
+          <form id="profile-form" class="grid gap-3 text-xs sm:text-sm sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1.1fr)_minmax(0,1.4fr)_auto] items-end">
+            <input id="profile-first" type="text"
+                   class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                   placeholder="Имя" />
+            <input id="profile-last" type="text"
+                   class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                   placeholder="Фамилия" />
+            <input id="profile-avatar-url" type="url"
+                   class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                   placeholder="Ссылка на картинку для аватара (необязательно)" />
+            <button type="submit" class="btn btn-ghost text-xs px-3 py-2">Сохранить профиль</button>
+          </form>
+          <p id="profile-msg" class="mt-1 text-[11px] text-slate-500"></p>
         </div>
       </section>
 
-      <!-- КУРСЫ ПОЛЬЗОВАТЕЛЯ -->
-      <section class="space-y-3" id="courses-section">
-        <div class="flex items-center justify-between gap-3">
-          <h2 class="text-lg sm:text-xl font-bold text-slate-900">
-            Ваши курсы
-          </h2>
-          <a href="/polytalky/courses/" class="text-xs sm:text-sm text-slate-600 hover:text-slate-900">
-            Открыть каталог курсов →
-          </a>
+      <!-- ОСНОВНОЙ КОНТЕНТ: КУРСЫ + ДОСТИЖЕНИЯ -->
+      <section class="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1.1fr)]">
+        <!-- КУРСЫ -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900">Ваши курсы</h2>
+              <p class="text-xs text-slate-500">
+                Покупки из магазина и активированные бесплатные курсы появятся здесь автоматически.
+              </p>
+            </div>
+            <a href="/polytalky/courses/" class="text-xs sm:text-sm text-amber-700 hover:text-amber-900 font-medium">
+              Открыть каталог →
+            </a>
+          </div>
+
+          <div id="courses-need-auth" class="soft-card p-4 text-sm text-slate-600">
+            Чтобы увидеть свои курсы, <span class="font-semibold text-slate-900">войдите в личный кабинет</span> выше.
+          </div>
+
+          <div id="courses-list" class="grid gap-4 sm:grid-cols-2"></div>
+
+          <p id="courses-empty" class="hidden text-sm text-slate-500">
+            Пока у вас нет активированных курсов. Загляните в
+            <a href="/polytalky/shop/" class="underline">магазин</a> или начните
+            <a href="/polytalky/courses/" class="underline">бесплатный курс</a>.
+          </p>
         </div>
 
-        <!-- подсказка, если не вошёл -->
-        <div id="courses-need-auth" class="card p-4 sm:p-5 text-sm text-slate-600">
-          Чтобы увидеть свои курсы, <span class="font-semibold text-slate-900">войдите в личный кабинет</span> выше.
-          После покупки или активации курса он появится здесь автоматически.
-        </div>
+        <!-- ДОСТИЖЕНИЯ -->
+        <aside class="space-y-3">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900">Достижения</h2>
+            <span class="badge bg-amber-50 border-amber-200 text-amber-700">Бета</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Медали появляются автоматически, когда вы активируете курсы и учитесь. Это маленькие поводы гордиться собой.
+          </p>
 
-        <!-- список курсов -->
-        <div id="courses-list" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
-
-        <!-- сообщение, если курсов нет -->
-        <p id="courses-empty" class="hidden text-sm text-slate-500">
-          Пока у вас нет активированных курсов. Загляните в
-          <a href="/polytalky/shop/" class="underline">магазин</a> или начните
-          <a href="/polytalky/courses/" class="underline">бесплатный курс</a>.
-        </p>
+          <div id="achievements-list" class="grid gap-3">
+            <!-- сюда рендерятся медали -->
+          </div>
+        </aside>
       </section>
     </div>
   </main>
@@ -194,7 +256,7 @@
     </div>
   </footer>
 
-  <!-- Cookie баннер -->
+  <!-- COOKIE БАННЕР -->
   <div id="cookie-banner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white shadow-lg rounded-xl px-4 py-3 text-xs sm:text-sm flex items-center gap-3 hidden">
     <span>Мы используем cookies для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с этим.</span>
     <button id="cookie-accept" class="btn btn-brand text-xs px-3 py-1">Понятно</button>
@@ -206,7 +268,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // Конфиг из твоего проекта Firebase
+    // Твой конфиг Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
       authDomain: "polytalky-70999.firebaseapp.com",
@@ -223,27 +285,52 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // --- Elements: auth ---
-      const authBoxOut     = document.getElementById('auth-when-logged-out');
-      const authBoxIn      = document.getElementById('auth-when-logged-in');
-      const authEmailEl    = document.getElementById('auth-email');
-      const authPassEl     = document.getElementById('auth-pass');
-      const authFirstEl    = document.getElementById('auth-first');
-      const authLastEl     = document.getElementById('auth-last');
-      const honeypotEl     = document.getElementById('auth-website');
-      const authForm       = document.getElementById('auth-form');
-      const authRegister   = document.getElementById('auth-register');
-      const btnLogin       = document.getElementById('btn-login');
-      const authError      = document.getElementById('auth-error');
-      const authLogout     = document.getElementById('auth-logout');
-      const authUserEmail  = document.getElementById('auth-user-email');
+      // --- DOM элементы ---
+      const authBoxOut      = document.getElementById('auth-when-logged-out');
+      const authBoxIn       = document.getElementById('auth-when-logged-in');
+      const authEmailEl     = document.getElementById('auth-email');
+      const authPassEl      = document.getElementById('auth-pass');
+      const authFirstEl     = document.getElementById('auth-first');
+      const authLastEl      = document.getElementById('auth-last');
+      const honeypotEl      = document.getElementById('auth-website');
+      const authForm        = document.getElementById('auth-form');
+      const authRegister    = document.getElementById('auth-register');
+      const btnLogin        = document.getElementById('btn-login');
+      const authError       = document.getElementById('auth-error');
+      const authLogout      = document.getElementById('auth-logout');
+      const authUserEmail   = document.getElementById('auth-user-email');
+      const authExtra       = document.getElementById('auth-extra');
 
-      // --- Elements: courses ---
+      const profileAvatar   = document.getElementById('profile-avatar');
+      const profileName     = document.getElementById('profile-name');
+      const profileSettings = document.getElementById('profile-settings');
+      const profileForm     = document.getElementById('profile-form');
+      const profileFirst    = document.getElementById('profile-first');
+      const profileLast     = document.getElementById('profile-last');
+      const profileAvatarUrl= document.getElementById('profile-avatar-url');
+      const profileMsg      = document.getElementById('profile-msg');
+
       const coursesNeedAuth = document.getElementById('courses-need-auth');
       const coursesList     = document.getElementById('courses-list');
       const coursesEmpty    = document.getElementById('courses-empty');
 
-      // Переводчик ошибок Firebase → на русский
+      const achievementsList= document.getElementById('achievements-list');
+
+      // cookie
+      const banner       = document.getElementById('cookie-banner');
+      const btnCookie    = document.getElementById('cookie-accept');
+      if (!localStorage.getItem('cookieConsent')) {
+        banner.classList.remove('hidden');
+      }
+      btnCookie.addEventListener('click', () => {
+        localStorage.setItem('cookieConsent', 'true');
+        banner.classList.add('hidden');
+      });
+
+      // режим регистрации
+      let registerMode = false;
+
+      // --- Перевод ошибок Firebase ---
       function showAuthError(code, mode) {
         let msg = 'Произошла ошибка. Попробуйте ещё раз.';
 
@@ -270,37 +357,49 @@
             msg = 'Вход по email временно недоступен. Попробуйте позже или свяжитесь с нами.';
             break;
         }
-
         if (mode === 'login' && code === 'auth/invalid-credential') {
           msg = 'Неверный email или пароль. Проверьте данные или зарегистрируйтесь.';
         }
-
         authError.textContent = msg;
       }
 
-      function setAuthState(user) {
+      // --- Обновление состояния при входе/выходе ---
+      async function setAuthState(user) {
         if (user) {
           authBoxOut.classList.add('hidden');
           authBoxIn.classList.remove('hidden');
-          authUserEmail.textContent = user.email || '';
           coursesNeedAuth.classList.add('hidden');
-          loadUserEnrollments(user);
+          authUserEmail.textContent = user.email || '';
+
+          registerMode = false;
+          authExtra.classList.add('hidden');
+          authFirstEl.value = '';
+          authLastEl.value  = '';
+
+          await loadUserProfile(user);
+          await loadUserEnrollments(user);
         } else {
           authBoxOut.classList.remove('hidden');
           authBoxIn.classList.add('hidden');
-          authUserEmail.textContent = '';
           coursesNeedAuth.classList.remove('hidden');
+          authUserEmail.textContent = '';
+          profileSettings.classList.add('hidden');
+          profileName.textContent = '';
+          profileAvatar.textContent = '😊';
+          profileAvatar.style.backgroundImage = '';
+          profileAvatar.classList.remove('overflow-hidden');
+
           coursesList.innerHTML = '';
           coursesEmpty.classList.add('hidden');
+          achievementsList.innerHTML = renderAchievements([]);
         }
       }
 
-      // Вход (только email + пароль)
+      // --- Вход ---
       authForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         authError.textContent = '';
 
-        // если honeypot заполнен — бот
         if (honeypotEl.value && honeypotEl.value.trim() !== '') {
           authError.textContent = 'Произошла ошибка. Обновите страницу и попробуйте ещё раз.';
           return;
@@ -316,12 +415,20 @@
         }
       });
 
-      // Регистрация (email+пароль+имя+фамилия)
+      // --- Регистрация (двухшаговая) ---
       authRegister.addEventListener('click', async () => {
         authError.textContent = '';
 
         if (honeypotEl.value && honeypotEl.value.trim() !== '') {
           authError.textContent = 'Произошла ошибка. Обновите страницу и попробуйте ещё раз.';
+          return;
+        }
+
+        // первый клик — показать доп. поля
+        if (!registerMode) {
+          registerMode = true;
+          authExtra.classList.remove('hidden');
+          authError.textContent = 'Заполните имя и фамилию, затем снова нажмите «Регистрация».';
           return;
         }
 
@@ -345,7 +452,8 @@
             email: email,
             firstName: first,
             lastName: last,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            avatarUrl: ''
           });
         } catch (err) {
           console.error(err);
@@ -353,48 +461,118 @@
         }
       });
 
-      // Выход
+      // --- Выход ---
       if (authLogout) {
         authLogout.addEventListener('click', async () => {
           await auth.signOut();
         });
       }
 
-      // Слежение за состоянием авторизации
-      auth.onAuthStateChanged((user) => {
-        setAuthState(user || null);
+      // --- Профиль (данные и аватар) ---
+      async function loadUserProfile(user) {
+        try {
+          const doc = await db.collection('users').doc(user.uid).get();
+          let data = doc.exists ? doc.data() : null;
+
+          const email = user.email || '';
+          const first = data?.firstName || '';
+          const last  = data?.lastName || '';
+          const avatarUrl = data?.avatarUrl || '';
+
+          const displayName = (first || last)
+            ? (first + ' ' + (last || '')).trim()
+            : email;
+
+          profileName.textContent = displayName;
+          authUserEmail.textContent = email;
+
+          profileFirst.value = first;
+          profileLast.value  = last;
+          profileAvatarUrl.value = avatarUrl || '';
+
+          // аватар
+          if (avatarUrl) {
+            profileAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+            profileAvatar.style.backgroundSize = 'cover';
+            profileAvatar.style.backgroundPosition = 'center';
+            profileAvatar.textContent = '';
+            profileAvatar.classList.add('overflow-hidden');
+          } else {
+            profileAvatar.style.backgroundImage = '';
+            profileAvatar.classList.remove('overflow-hidden');
+            const base = displayName || email || '🙂';
+            const letter = base.trim().charAt(0).toUpperCase();
+            profileAvatar.textContent = letter || '🙂';
+          }
+
+          profileSettings.classList.remove('hidden');
+          profileMsg.textContent = '';
+        } catch (err) {
+          console.error('Ошибка профиля:', err);
+        }
+      }
+
+      profileForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        profileMsg.textContent = '';
+
+        const user = auth.currentUser;
+        if (!user) return;
+
+        try {
+          const first = profileFirst.value.trim();
+          const last  = profileLast.value.trim();
+          const avatarUrl = profileAvatarUrl.value.trim();
+
+          await db.collection('users').doc(user.uid).set({
+            firstName:first,
+            lastName:last,
+            avatarUrl:avatarUrl
+          }, { merge:true });
+
+          await loadUserProfile(user);
+          profileMsg.textContent = 'Профиль обновлён ✔';
+        } catch (err) {
+          console.error(err);
+          profileMsg.textContent = 'Не удалось сохранить профиль. Попробуйте ещё раз.';
+        }
       });
 
-      // Загрузка покупок пользователя из Firestore
+      // --- Курсы / покупки ---
       async function loadUserEnrollments(user) {
         try {
           const snap = await db.collection('enrollments')
-            .where('userId', '==', user.uid)
-            .orderBy('purchasedAt', 'desc')
+            .where('userId','==',user.uid)
+            .orderBy('purchasedAt','desc')
             .get();
 
           const courses = [];
           snap.forEach(doc => {
             const d = doc.data();
             courses.push({
-              id: d.courseId,
+              id: d.courseId || 'unknown',
               title: d.title || 'Курс без названия',
               img: d.img || '',
               priceRub: d.priceRub ?? null,
               priceEur: d.priceEur ?? null,
               channel: d.channel || '',
-              purchasedAt: d.purchasedAt ? d.purchasedAt.toDate() : null
+              purchasedAt: d.purchasedAt ? d.purchasedAt.toDate() : null,
+              kind: d.kind || 'course'
             });
           });
 
           renderCourses(courses);
+          achievementsList.innerHTML = renderAchievements(courses);
         } catch (err) {
           console.error('Ошибка загрузки курсов:', err);
+          renderCourses([]);
+          achievementsList.innerHTML = renderAchievements([]);
         }
       }
 
       function renderCourses(courses) {
         coursesList.innerHTML = '';
+
         if (!courses || courses.length === 0) {
           coursesEmpty.classList.remove('hidden');
           return;
@@ -403,7 +581,7 @@
 
         courses.forEach(c => {
           const dateLabel = c.purchasedAt
-            ? c.purchasedAt.toLocaleDateString('ru-RU', {day:'2-digit',month:'short',year:'numeric'})
+            ? c.purchasedAt.toLocaleDateString('ru-RU',{day:'2-digit',month:'short',year:'numeric'})
             : 'Дата не указана';
 
           const priceLabel = (c.priceRub || c.priceEur)
@@ -423,7 +601,7 @@
           const url = `/polytalky/courses/${c.id}/`;
 
           const card = document.createElement('article');
-          card.className = 'card p-4 sm:p-5 flex flex-col justify-between';
+          card.className = 'soft-card p-4 sm:p-5 flex flex-col justify-between';
           card.innerHTML = `
             ${imgHtml}
             <div class="flex-1 flex flex-col gap-2">
@@ -439,15 +617,83 @@
         });
       }
 
-      // Cookie баннер
-      const banner = document.getElementById('cookie-banner');
-      const btnCookie = document.getElementById('cookie-accept');
-      if (!localStorage.getItem('cookieConsent')) {
-        banner.classList.remove('hidden');
+      // --- Медали / достижения ---
+      function renderAchievements(courses){
+        const total = courses.length;
+        const paid  = courses.filter(c => c.priceRub || c.priceEur).length;
+        const free  = courses.filter(c => !c.priceRub && !c.priceEur).length;
+
+        // можно дорабатывать в будущем
+        const medals = [
+          {
+            id:'first-course',
+            icon:'🥇',
+            title:'Первый шаг',
+            desc:'Вы активировали свой первый курс. Отличное начало!',
+            earned: total >= 1
+          },
+          {
+            id:'three-courses',
+            icon:'🎓',
+            title:'Мини-полиглот',
+            desc:'Три и больше активированных курса.',
+            earned: total >= 3
+          },
+          {
+            id:'five-courses',
+            icon:'🌍',
+            title:'Будущий полиглот',
+            desc:'Пять и больше курсов в кабинете.',
+            earned: total >= 5
+          },
+          {
+            id:'free-lover',
+            icon:'🎁',
+            title:'Любитель бесплатных курсов',
+            desc:'Два и более бесплатных курса.',
+            earned: free >= 2
+          },
+          {
+            id:'investor',
+            icon:'💳',
+            title:'Инвестор в знания',
+            desc:'Два и более платных курса.',
+            earned: paid >= 2
+          }
+        ];
+
+        if (medals.every(m => !m.earned)) {
+          return `
+            <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
+              Первые медали появятся, когда вы активируете курс в
+              <a href="/polytalky/shop/" class="underline">магазине</a> или начнёте бесплатную программу.
+            </div>`;
+        }
+
+        return medals.map(m => {
+          const opacity = m.earned ? '' : 'opacity-50';
+          const label   = m.earned ? 'Получено' : 'Заблокировано';
+          const badgeCl = m.earned ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                                   : 'bg-slate-50 border-slate-200 text-slate-400';
+          return `
+            <article class="soft-card p-3 sm:p-4 flex items-start gap-3 ${opacity}">
+              <div class="h-10 w-10 rounded-full bg-amber-50 flex items-center justify-center text-lg sm:text-xl">
+                ${m.icon}
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <h3 class="font-semibold text-slate-900 text-sm sm:text-base">${m.title}</h3>
+                  <span class="badge ${badgeCl}">${label}</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600">${m.desc}</p>
+              </div>
+            </article>`;
+        }).join('');
       }
-      btnCookie.addEventListener('click', () => {
-        localStorage.setItem('cookieConsent', 'true');
-        banner.classList.add('hidden');
+
+      // --- Подписка на изменения авторизации ---
+      auth.onAuthStateChanged((user) => {
+        setAuthState(user || null);
       });
     });
   </script>
