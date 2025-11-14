@@ -1107,11 +1107,19 @@
       const PROMO_KEY = 'pt_promo';
       const FORMSPREE = 'https://formspree.io/f/XXXXYYYY'; // ← замени на свой endpoint Formspree
 
+      // ссылка Stripe для теста 0,50 €
+      const STRIPE_PROMO_LINK = 'https://buy.stripe.com/6oU3cueCi0AB6PEaMOb3q0B';
+
       // Промокоды в JS
       const promoCodes = {
         'TEST100': {
           type: 'percent',
           value: 100,
+          label: ''
+        },
+        'STRIPE99': {
+          type: 'stripe99',
+          value: 99,
           label: ''
         }
       };
@@ -1123,7 +1131,7 @@
         12:'https://buy.stripe.com/28E00ifGmabb0rg5sub3q0y',
         10:'https://buy.stripe.com/fZu6oGbq64QR0rg9IKb3q0z',
         24:'https://buy.stripe.com/8x214mbq65UVb5UcUWb3q0A',
-        0:'https://buy.stripe.com/6oU3cueCi0AB6PEaMOb3q0B' // тестовая ссылка на ~0€
+        0: STRIPE_PROMO_LINK // тестовая ссылка на 0,50 €
       };
 
       const stripeQrByEur = {
@@ -1175,8 +1183,9 @@
 
       // Подсчёт сумм с учётом промокода
       function calcTotals(items) {
-        const baseRub = items.reduce((s, c) => s + c.priceRub, 0);
-        const baseEur = items.reduce((s, c) => s + c.priceEur, 0);
+        const list = items || [];
+        const baseRub = list.reduce((s, c) => s + c.priceRub, 0);
+        const baseEur = list.reduce((s, c) => s + c.priceEur, 0);
         let finalRub = baseRub;
         let finalEur = baseEur;
         let discountRub = 0;
@@ -1186,7 +1195,10 @@
           if (appliedPromo.type === 'percent') {
             finalRub = Math.round(baseRub * (100 - appliedPromo.value) / 100);
             finalEur = Math.round(baseEur * (100 - appliedPromo.value) / 100);
-         
+          } else if (appliedPromo.type === 'stripe99') {
+            // Тест Stripe: итоговая сумма заказа 0,50 € (рубли = 0)
+            finalRub = 0;
+            finalEur = list.length ? 0.5 : 0;
           }
           discountRub = baseRub - finalRub;
           discountEur = baseEur - finalEur;
@@ -1387,29 +1399,48 @@
         const payRub = t.finalRub;
         ymLink.href = 'https://yoomoney.ru/to/410013183449005/' + encodeURIComponent(Math.max(payRub, 0));
 
-        // Stripe ссылки — по каждой позиции (без учёта промо, т.к. там фиксированные продукты)
-        stripeLinks.innerHTML = items.map(c => {
-          const link = stripeByEur[c.priceEur] || '#';
-          const safeTitle = c.title.replace(/"/g, '&quot;');
-          return `
+        const isStripePromo = appliedPromo && appliedPromo.code === 'STRIPE99';
+
+        if (isStripePromo) {
+          // Один линк и один QR на 0,50 €
+          stripeLinks.innerHTML = `
             <div>
-              <a href="${link}" target="_blank" rel="noopener" class="btn btn-brand inline-block">
-                Оплатить «${safeTitle}» — €${c.priceEur}
+              <a href="${STRIPE_PROMO_LINK}" target="_blank" rel="noopener" class="btn btn-brand inline-block">
+                Оплатить заказ — €0.50
               </a>
             </div>
           `;
-        }).join('');
-
-        // Stripe QR — по уникальным ценам
-        const uniqPrices = [...new Set(items.map(i => i.priceEur))];
-        stripeQrs.innerHTML = uniqPrices
-          .filter(p => stripeQrByEur[p])
-          .map(p => `
+          stripeQrs.innerHTML = `
             <div class="text-center">
-              <img src="${stripeQrByEur[p]}" alt="QR для €${p}" class="w-full rounded-lg border border-black/10">
-              <div class="text-xs mt-1">€${p}</div>
+              <img src="/assets/pay/qr0.jpg" alt="QR для €0.50" class="w-full rounded-lg border border-black/10">
+              <div class="text-xs mt-1">€0.50</div>
             </div>
-          `).join('');
+          `;
+        } else {
+          // Stripe ссылки — по каждой позиции (без учёта промо, т.к. там фиксированные продукты)
+          stripeLinks.innerHTML = items.map(c => {
+            const link = stripeByEur[c.priceEur] || '#';
+            const safeTitle = c.title.replace(/"/g, '&quot;');
+            return `
+              <div>
+                <a href="${link}" target="_blank" rel="noopener" class="btn btn-brand inline-block">
+                  Оплатить «${safeTitle}» — €${c.priceEur}
+                </a>
+              </div>
+            `;
+          }).join('');
+
+          // Stripe QR — по уникальным ценам
+          const uniqPrices = [...new Set(items.map(i => i.priceEur))];
+          stripeQrs.innerHTML = uniqPrices
+            .filter(p => stripeQrByEur[p])
+            .map(p => `
+              <div class="text-center">
+                <img src="${stripeQrByEur[p]}" alt="QR для €${p}" class="w-full rounded-lg border border-black/10">
+                <div class="text-xs mt-1">€${p}</div>
+              </div>
+            `).join('');
+        }
 
         tabRU.classList.toggle('hidden', region !== 'ru');
         tabINT.classList.toggle('hidden', region !== 'int');
@@ -1453,7 +1484,7 @@
         const cart = getCart();
         if (!cart.length) { alert('Корзина пуста'); return; }
         const totals = calcTotals(cart);
-        
+
         openPay('int', cart, totals);
       });
 
@@ -1464,28 +1495,31 @@
       const cfChannel = document.getElementById('cf-channel');
       const cfNote = document.getElementById('cf-note');
 
-    const openConfirm = (items) => {
-  const list = items && items.length ? items : getCart();
-  cfEmail.value = bmEmailFromCartOrSession();
-  cfItems.value = list.map(c => ${c.title} — ${fmtRub(c.priceRub)} / €${c.priceEur}).join('\n');
+      const openConfirm = (items) => {
+        const list = items && items.length ? items : getCart();
+        cfEmail.value = bmEmailFromCartOrSession();
+        // FIX: корректный template literal
+        cfItems.value = list
+          .map(c => `${c.title} — ${fmtRub(c.priceRub)} / €${c.priceEur}`)
+          .join('\n');
 
-  const totals = calcTotals(list);
+        const totals = calcTotals(list);
 
-  // Если применён TEST100 и по нему итоговая сумма стала 0 —
-  // помечаем покупку как тестовую, но только на этапе подтверждения,
-  // не блокируя оплату и QR.
-  if (appliedPromo && appliedPromo.code === 'TEST100'
-      && totals.finalRub <= 0 && totals.finalEur <= 0) {
-    cfChannel.value = 'test-promo';
-    cfNote.value = 'Тестовая покупка по промокоду TEST100';
-  } else {
-    cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
-    cfNote.value = '';
-  }
+        // Если применён TEST100 и по нему итоговая сумма стала 0 —
+        // помечаем покупку как тестовую, но только на этапе подтверждения,
+        // не блокируя оплату и QR.
+        if (appliedPromo && appliedPromo.code === 'TEST100'
+            && totals.finalRub <= 0 && totals.finalEur <= 0) {
+          cfChannel.value = 'test-promo';
+          cfNote.value = 'Тестовая покупка по промокоду TEST100';
+        } else {
+          cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
+          cfNote.value = '';
+        }
 
-  confirmModal.classList.remove('hidden');
-  confirmModal.classList.add('flex');
-};
+        confirmModal.classList.remove('hidden');
+        confirmModal.classList.add('flex');
+      };
 
       const closeConfirm = () => {
         confirmModal.classList.add('hidden');
