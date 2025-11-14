@@ -87,13 +87,13 @@
   <!-- HEADER -->
   <header class="sticky top-0 z-30 backdrop-blur bg-white/80 border-b border-slate-200/60">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-      <a href="/polytalky/" class="flex items-center gap-2">
+      <a href="/" class="flex items-center gap-2">
         <span class="inline-flex h-9 w-9 rounded-2xl bg-[var(--brand-1)] items-center justify-center text-xl shadow-md">🏷️</span>
         <span class="font-semibold text-slate-900 text-lg">PolyTalky</span>
       </a>
       <nav class="hidden sm:flex items-center gap-5 text-sm text-slate-700">
-        <a href="/polytalky/courses/" class="hover:text-slate-900">Курсы</a>
-        <a href="/polytalky/shop/" class="hover:text-slate-900">Магазин</a>
+        <a href="/courses/" class="hover:text-slate-900">Курсы</a>
+        <a href="/shop/" class="hover:text-slate-900">Магазин</a>
         <span class="font-semibold text-slate-900">Личный кабинет</span>
       </nav>
     </div>
@@ -170,9 +170,9 @@
           <p id="auth-error" class="mt-1 text-xs text-red-500 min-h-[1.25rem]"></p>
           <p class="mt-1 text-[11px] text-slate-500 leading-relaxed">
             Нажимая «Регистрация», вы соглашаетесь с
-            <a class="underline" href="/polytalky/legal/offer.html" target="_blank">публичной офертой</a>
+            <a class="underline" href="/legal/offer.html" target="_blank">публичной офертой</a>
             и
-            <a class="underline" href="/polytalky/legal/privacy.html" target="_blank">политикой конфиденциальности</a>.
+            <a class="underline" href="/legal/privacy.html" target="_blank">политикой конфиденциальности</a>.
           </p>
         </div>
 
@@ -206,7 +206,7 @@
                 Покупки из магазина и активированные бесплатные курсы появятся здесь автоматически.
               </p>
             </div>
-            <a href="/polytalky/courses/" class="text-xs sm:text-sm text-amber-700 hover:text-amber-900 font-medium">
+            <a href="/courses/" class="text-xs sm:text-sm text-amber-700 hover:text-amber-900 font-medium">
               Открыть каталог →
             </a>
           </div>
@@ -219,8 +219,8 @@
 
           <p id="courses-empty" class="hidden text-sm text-slate-500">
             Пока у вас нет активированных курсов. Загляните в
-            <a href="/polytalky/shop/" class="underline">магазин</a> или начните
-            <a href="/polytalky/courses/" class="underline">бесплатный курс</a>.
+            <a href="/shop/" class="underline">магазин</a> или начните
+            <a href="/courses/" class="underline">бесплатный курс</a>.
           </p>
         </div>
 
@@ -247,11 +247,11 @@
     <div class="wrap px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
       <p>© 2025 PolyTalky. Все права защищены.</p>
       <div class="flex flex-wrap gap-4">
-        <a href="/polytalky/contact.html" class="hover:text-slate-900">Контакты</a>
-        <a href="/polytalky/legal/privacy.html" class="hover:text-slate-900">Политика конфиденциальности</a>
-        <a href="/polytalky/legal/offer.html" class="hover:text-slate-900">Публичная оферта</a>
-        <a href="/polytalky/legal/cookies.html" class="hover:text-slate-900">Cookies</a>
-        <a href="/polytalky/legal/consent.html" class="hover:text-slate-900">Согласие</a>
+        <a href="/contact.html" class="hover:text-slate-900">Контакты</a>
+        <a href="/legal/privacy.html" class="hover:text-slate-900">Политика конфиденциальности</a>
+        <a href="/legal/offer.html" class="hover:text-slate-900">Публичная оферта</a>
+        <a href="/legal/cookies.html" class="hover:text-slate-900">Cookies</a>
+        <a href="/legal/consent.html" class="hover:text-slate-900">Согласие</a>
       </div>
     </div>
   </footer>
@@ -593,12 +593,12 @@
 
           const imgHtml = c.img
             ? `<div class="aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 mb-3">
-                 <img src="/polytalky/assets/courses/${c.img}" alt="${c.title}"
+                 <img src="/assets/courses/${c.img}" alt="${c.title}"
                       class="w-full h-full object-cover" loading="lazy">
                </div>`
             : `<div class="aspect-[4/3] rounded-xl bg-slate-100 mb-3 flex items-center justify-center text-3xl">📚</div>`;
 
-          const url = `/polytalky/courses/${c.id}/`;
+          const url = `/courses/${c.id}/`;
 
           const card = document.createElement('article');
           card.className = 'soft-card p-4 sm:p-5 flex flex-col justify-between';
@@ -666,7 +666,7 @@
           return `
             <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
               Первые медали появятся, когда вы активируете курс в
-              <a href="/polytalky/shop/" class="underline">магазине</a> или начнёте бесплатную программу.
+              <a href="/shop/" class="underline">магазине</a> или начнёте бесплатную программу.
             </div>`;
         }
 
