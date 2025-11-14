@@ -1186,6 +1186,19 @@
           if (appliedPromo.type === 'percent') {
             finalRub = Math.round(baseRub * (100 - appliedPromo.value) / 100);
             finalEur = Math.round(baseEur * (100 - appliedPromo.value) / 100);
+            // Проверяем промокод
+if (appliedPromo && appliedPromo.code === "TEST100") {
+
+    // Подменяем ссылку на оплату (0.50 €)
+    paymentUrl = "https://buy.stripe.com/6oU3cueCi0AB6PEaMOb3q0B";
+
+    // Подменяем QR-код
+    qrImage = "images/qr_050.jpg";
+
+    // Помечаем как тестовую покупку
+    cfChannel.value = "test-promo";
+    cfNote.value = "Тестовая покупка по промокоду TEST100";
+}
           }
           discountRub = baseRub - finalRub;
           discountEur = baseEur - finalEur;
