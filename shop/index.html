@@ -1004,15 +1004,15 @@
         <div class="grid sm:grid-cols-2 gap-4">
           <div class="p-3 border border-black/10 rounded-xl bg-white">
             <div class="font-semibold mb-2">ЮMoney</div>
-            <img src="/polytalky/assets/pay/yoomoney.jpg" alt="ЮMoney" class="w-full rounded-lg mb-2 border border-black/10">
+            <img src="/assets/pay/yoomoney.jpg" alt="ЮMoney" class="w-full rounded-lg mb-2 border border-black/10">
             <a id="ymLink" href="https://yoomoney.ru/to/410013183449005/0" target="_blank" rel="noopener" class="btn btn-brand inline-block">Открыть ЮMoney</a>
             <p class="text-xs text-[var(--ink-2)] mt-2">
               Если сумма не подставилась автоматически — введите её вручную.
             </p>
           </div>
           <div class="p-3 border border-black/10 rounded-xl bg-white">
-            <div class="font-semibold mb-2">СБП (QR)</div>
-            <img src="/polytalky/assets/pay/sberbank.png" alt="СБП QR" class="w-full rounded-lg mb-2 border border-black/10 bg-white">
+            <div class="font-semibold mb-2">Любой картой(СБП)</div>
+            <img src="/assets/pay/sberbank.png" alt="СБП QR" class="w-full rounded-lg mb-2 border border-black/10 bg-white">
             <p class="text-xs text-[var(--ink-2)]">
               Откройте приложение банка → отсканируйте QR → введите сумму заказа.
             </p>
@@ -1025,7 +1025,7 @@
         <div class="grid sm:grid-cols-2 gap-4">
           <div class="p-3 border border-black/10 rounded-xl bg-white">
             <div class="font-semibold mb-2">PayPal</div>
-            <img src="/polytalky/assets/pay/paypal.jpg" alt="PayPal" class="w-full rounded-lg mb-2 border border-black/10">
+            <img src="/assets/pay/paypal.jpg" alt="PayPal" class="w-full rounded-lg mb-2 border border-black/10">
             <p>Email для оплаты: <b>iraburljaeva@gmail.com</b></p>
             <p class="text-xs text-[var(--ink-2)] mt-1">
               Отправьте сумму заказа как «Goods &amp; Services».
@@ -1036,8 +1036,7 @@
             <div id="stripeLinks" class="space-y-2"></div>
             <div id="stripeQrs" class="grid grid-cols-3 gap-2 mt-3"></div>
             <p class="text-xs text-[var(--ink-2)] mt-2">
-              По каждой кнопке/QR можно оплатить один или несколько курсов с одинаковой ценой.
-              Если платите одной суммой за несколько курсов — укажите это в подтверждении.
+              
             </p>
           </div>
         </div>
@@ -1080,7 +1079,7 @@
         </div>
         <button type="submit" class="btn btn-brand w-full">Отправить подтверждение</button>
         <p class="text-xs text-[var(--ink-2)] text-center">
-          Письмо придёт на <b>iraburljaeva@gmail.com</b>, а доступ — на указанный email.
+         Скоро вам придет доступ на указанный email.
         </p>
       </form>
     </div>
@@ -1101,11 +1100,11 @@
       };
 
       const stripeQrByEur = {
-        10:'/polytalky/assets/pay/qr10.jpg',
-        12:'/polytalky/assets/pay/qr12.jpg',
-        15:'/polytalky/assets/pay/qr15.jpg',
-        19:'/polytalky/assets/pay/qr19.jpg',
-        24:'/polytalky/assets/pay/qr24.jpg'
+        10:'/assets/pay/qr10.jpg',
+        12:'/assets/pay/qr12.jpg',
+        15:'/assets/pay/qr15.jpg',
+        19:'/assets/pay/qr19.jpg',
+        24:'/assets/pay/qr24.jpg'
       };
 
       const toastEl = document.getElementById('toast');
