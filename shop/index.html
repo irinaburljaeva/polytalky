@@ -1442,15 +1442,6 @@
         if (!cart.length) { alert('Корзина пуста'); return; }
         const totals = calcTotals(cart);
 
-        // Если промо даёт 100% (сумма 0) 
-        if (totals.finalRub <= 0 && totals.finalEur <= 0) {
-          lastRegion = 'ru';
-          lastItems = cart;
-          showToast('Сумма по промокоду = 0);
-          openConfirm(cart, true);
-          return;
-        }
-
         openPay('ru', cart, totals);
       });
 
