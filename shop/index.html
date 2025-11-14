@@ -976,7 +976,7 @@
       <div class="mb-3">
         <label class="text-sm text-[var(--ink-2)]">Промокод</label>
         <div class="flex gap-2 mt-1">
-          <input id="cartPromo" type="text" class="w-full bg-white border border-black/10 rounded-lg px-3 py-2" placeholder="например, TEST100">
+          <input id="cartPromo" type="text" class="w-full bg-white border border-black/10 rounded-lg px-3 py-2" placeholder="Введите полученный промо-код">
           <button id="cartPromoBtn" class="btn btn-ghost whitespace-nowrap">Применить</button>
         </div>
         <p id="cartPromoMsg" class="text-xs text-[var(--ink-2)] mt-1"></p>
@@ -1044,7 +1044,7 @@
             <img src="/assets/pay/paypal.jpg" alt="PayPal" class="w-full rounded-lg mb-2 border border-black/10">
             <p>Email для оплаты: <b>iraburljaeva@gmail.com</b></p>
             <p class="text-xs text-[var(--ink-2)] mt-1">
-              Отправьте сумму заказа как «Goods &amp; Services».
+              Введите сумму заказа.
             </p>
           </div>
           <div class="p-3 border border-black/10 rounded-xl bg-white">
@@ -1446,7 +1446,7 @@
         if (totals.finalRub <= 0 && totals.finalEur <= 0) {
           lastRegion = 'ru';
           lastItems = cart;
-          showToast('Сумма по промокоду = 0. Можно сразу подтвердить «оплату» для теста.');
+          showToast('Сумма по промокоду = 0);
           openConfirm(cart, true);
           return;
         }
@@ -1465,7 +1465,7 @@
         if (totals.finalRub <= 0 && totals.finalEur <= 0) {
           lastRegion = 'int';
           lastItems = cart;
-          showToast('Сумма по промокоду = 0. Можно сразу подтвердить «оплату» для теста.');
+          showToast('Сумма по промокоду = 0');
           openConfirm(cart, true);
           return;
         }
@@ -1487,7 +1487,7 @@
 
         if (isTest && appliedPromo && appliedPromo.code === 'TEST100') {
           cfChannel.value = 'test-promo';
-          cfNote.value = 'Тестовая покупка по промокоду TEST100 (без реальной оплаты).';
+          cfNote.value = 'Тестовая покупка по промокоду TEST100 .';
         } else {
           cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
         }
