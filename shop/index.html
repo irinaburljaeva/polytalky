@@ -1442,7 +1442,7 @@
         if (!cart.length) { alert('Корзина пуста'); return; }
         const totals = calcTotals(cart);
 
-        // Если промо даёт 100% (сумма 0) — сразу тест без оплаты
+        // Если промо даёт 100% (сумма 0) 
         if (totals.finalRub <= 0 && totals.finalEur <= 0) {
           lastRegion = 'ru';
           lastItems = cart;
@@ -1461,15 +1461,7 @@
         const cart = getCart();
         if (!cart.length) { alert('Корзина пуста'); return; }
         const totals = calcTotals(cart);
-
-        if (totals.finalRub <= 0 && totals.finalEur <= 0) {
-          lastRegion = 'int';
-          lastItems = cart;
-          showToast('Сумма по промокоду = 0');
-          openConfirm(cart, true);
-          return;
-        }
-
+        
         openPay('int', cart, totals);
       });
 
@@ -1480,21 +1472,28 @@
       const cfChannel = document.getElementById('cf-channel');
       const cfNote = document.getElementById('cf-note');
 
-      const openConfirm = (items, isTest = false) => {
-        const list = items && items.length ? items : getCart();
-        cfEmail.value = bmEmailFromCartOrSession();
-        cfItems.value = list.map(c => `${c.title} — ${fmtRub(c.priceRub)} / €${c.priceEur}`).join('\n');
+      const openConfirm = (items) => {
+  const list = items && items.length ? items : getCart();
+  cfEmail.value = bmEmailFromCartOrSession();
+  cfItems.value = list.map(c => ${c.title} — ${fmtRub(c.priceRub)} / €${c.priceEur}).join('\n');
 
-        if (isTest && appliedPromo && appliedPromo.code === 'TEST100') {
-          cfChannel.value = 'test-promo';
-          cfNote.value = 'Тестовая покупка по промокоду TEST100 .';
-        } else {
-          cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
-        }
+  const totals = calcTotals(list);
 
-        confirmModal.classList.remove('hidden');
-        confirmModal.classList.add('flex');
-      };
+  // Если применён TEST100 и по нему итоговая сумма стала 0 —
+  // помечаем покупку как тестовую, но только на этапе подтверждения,
+  // не блокируя оплату и QR.
+  if (appliedPromo && appliedPromo.code === 'TEST100'
+      && totals.finalRub <= 0 && totals.finalEur <= 0) {
+    cfChannel.value = 'test-promo';
+    cfNote.value = 'Тестовая покупка по промокоду TEST100 (без реальной оплаты).';
+  } else {
+    cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
+    cfNote.value = '';
+  }
+
+  confirmModal.classList.remove('hidden');
+  confirmModal.classList.add('flex');
+};
 
       const closeConfirm = () => {
         confirmModal.classList.add('hidden');
