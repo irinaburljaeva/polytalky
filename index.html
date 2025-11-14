@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PolyTalky — Языки легко и с удовольствием</title>
   <meta name="description" content="Короткие уроки, понятные объяснения и практические задания. Испанский, английский, немецкий, китайский и другие языки с нуля до уверенного общения." />
-  <!-- Важно: сайт в подпапке репозитория -->
-  <base href="/polytalky/">
+  <base href="/">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root{
@@ -288,7 +287,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
     <!-- Бренд -->
     <div>
-      <a href="/polytalky/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
+      <a href="/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
         <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-2)] items-center justify-center">🏷️</span>
         PolyTalky
       </a>
@@ -300,10 +299,10 @@
     <div>
       <h3 class="font-semibold text-gray-900 mb-3">Навигация</h3>
       <ul class="space-y-2">
-        <li><a href="/polytalky/courses/" class="hover:underline">Курсы</a></li>
-        <li><a href="/polytalky/shop/" class="hover:underline">Магазин</a></li>
-        <li><a href="/polytalky/student/" class="hover:underline">Личный кабинет</a></li>
-        <li><a href="/polytalky/contact.html" class="hover:underline">Контакты</a></li>
+        <li><a href="/courses/" class="hover:underline">Курсы</a></li>
+        <li><a href="/shop/" class="hover:underline">Магазин</a></li>
+        <li><a href="/student/" class="hover:underline">Личный кабинет</a></li>
+        <li><a href="/contact.html" class="hover:underline">Контакты</a></li>
       </ul>
     </div>
 
@@ -311,10 +310,10 @@
     <div>
       <h3 class="font-semibold text-gray-900 mb-3">Юридическая информация</h3>
       <ul class="space-y-2">
-        <li><a href="/polytalky/legal/privacy.html" class="hover:underline">Политика конфиденциальности</a></li>
-        <li><a href="/polytalky/legal/offer.html" class="hover:underline">Публичная оферта</a></li>
-        <li><a href="/polytalky/legal/cookies.html" class="hover:underline">Cookies</a></li>
-        <li><a href="/polytalky/legal/consent.html" class="hover:underline">Согласие на обработку данных</a></li>
+        <li><a href="/legal/privacy.html" class="hover:underline">Политика конфиденциальности</a></li>
+        <li><a href="/legal/offer.html" class="hover:underline">Публичная оферта</a></li>
+        <li><a href="/legal/cookies.html" class="hover:underline">Cookies</a></li>
+        <li><a href="/legal/consent.html" class="hover:underline">Согласие на обработку данных</a></li>
       </ul>
     </div>
   </div>
@@ -323,7 +322,7 @@
 <!-- Cookie баннер -->
 <div id="cookie-banner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white text-gray-900 shadow-md rounded-xl px-4 py-3 text-sm flex items-center gap-3 hidden z-50">
   <span>Мы используем cookies для улучшения работы сайта.</span>
-  <button id="cookie-accept" class="bg-[var(--brand-1)] text-white px-3 py-1 rounded-lg text-sm">Понятно</button>
+  <button id="cookie-accept" class="bg-[var(--brand-1)] text-gray-900 px-3 py-1 rounded-lg text-sm">Понятно</button>
 </div>
 <script>
   const banner = document.getElementById('cookie-banner');
