@@ -1466,7 +1466,7 @@
       const openConfirm = (items) => {
   const list = items && items.length ? items : getCart();
   cfEmail.value = bmEmailFromCartOrSession();
-  cfItems.value = list.map(c => ${c.title} — ${fmtRub(c.priceRub)} / €${c.priceEur}).join('\n');
+  cfItems.value = list.map(c => `${c.title} — ${fmtRub(c.priceRub)} / €${c.priceEur}`).join('\n');
 
   const totals = calcTotals(list);
 
