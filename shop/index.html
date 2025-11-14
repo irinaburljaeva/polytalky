@@ -1471,43 +1471,13 @@
 
   const totals = calcTotals(list);
 
-  // Базовые ссылки (как у тебя было раньше)
-  let paymentUrl = lastRegion === 'ru'
-    ? 'https://buy.stripe.com/ТВОЙ_РУССКИЙ_ЛИНК'
-    : 'https://buy.stripe.com/ТВОЙ_МЕЖДУНАРОДНЫЙ_ЛИНК';
-
-  let qrImage = lastRegion === 'ru'
-    ? 'images/qr_ru.jpg'
-    : 'images/qr_intl.jpg';
-
-  // --- НАША ЛОГИКА ПРОМОКОДА ---
-  if (appliedPromo && appliedPromo.code === 'TEST100'
-      && totals.finalRub === 0 && totals.finalEur === 0) {
-
-    // Ссылка на продукт за 0.50 €
-    paymentUrl = 'https://buy.stripe.com/6oU3cueCi0AB6PEaMOb3q0B';
-
-    // QR-код к этому продукту
-    qrImage = 'images/qr0.jpg';
-
-    // Помечаем как тестовую покупку
-    cfChannel.value = 'test-promo';
-    cfNote.value = 'Тестовая покупка по промокоду TEST100';
-  }
-  // --- КОНЕЦ БЛОКА ПРОМОКОДА ---
-
-  // дальше – твой код, который:
-  // 1) подставляет paymentUrl в кнопку "Оплатить из-за рубежа"
-  // 2) показывает qrImage в модалке
-};
-
   // Если применён TEST100 и по нему итоговая сумма стала 0 —
   // помечаем покупку как тестовую, но только на этапе подтверждения,
   // не блокируя оплату и QR.
   if (appliedPromo && appliedPromo.code === 'TEST100'
       && totals.finalRub <= 0 && totals.finalEur <= 0) {
     cfChannel.value = 'test-promo';
-    cfNote.value = 'Тестовая покупка по промокоду TEST100 (без реальной оплаты).';
+    cfNote.value = 'Тестовая покупка по промокоду TEST100';
   } else {
     cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
     cfNote.value = '';
