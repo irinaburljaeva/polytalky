@@ -971,11 +971,27 @@
         <label class="text-sm text-[var(--ink-2)]">Email для доступа и чека</label>
         <input id="cartEmail" type="email" class="mt-1 w-full bg-white border border-black/10 rounded-lg px-3 py-2" placeholder="you@example.com">
       </div>
-      <div class="flex items-center justify-between mb-3">
-        <div class="font-extrabold">
-          Итого: <span id="cartTotalRub">0 ₽</span> / <span id="cartTotalEur">€0</span>
+
+      <!-- ПРОМОКОД -->
+      <div class="mb-3">
+        <label class="text-sm text-[var(--ink-2)]">Промокод</label>
+        <div class="flex gap-2 mt-1">
+          <input id="cartPromo" type="text" class="w-full bg-white border border-black/10 rounded-lg px-3 py-2" placeholder="например, TEST100">
+          <button id="cartPromoBtn" class="btn btn-ghost whitespace-nowrap">Применить</button>
         </div>
+        <p id="cartPromoMsg" class="text-xs text-[var(--ink-2)] mt-1"></p>
       </div>
+
+      <div class="flex flex-col gap-1 mb-3 text-sm">
+        <div>
+          <span class="font-semibold">Итого:</span>
+          <span id="cartTotalRub">0 ₽</span>
+          <span>/</span>
+          <span id="cartTotalEur">€0</span>
+        </div>
+        <div id="cartDiscountLine" class="text-xs text-[var(--ink-2)] hidden"></div>
+      </div>
+
       <div class="flex gap-2 mb-2">
         <button class="btn btn-brand w-1/2" id="cartPayRU">Оплата РФ</button>
         <button class="btn btn-brand w-1/2" id="cartPayINT">Оплата из-за рубежа</button>
@@ -1011,7 +1027,7 @@
             </p>
           </div>
           <div class="p-3 border border-black/10 rounded-xl bg-white">
-            <div class="font-semibold mb-2">Любой картой(СБП)</div>
+            <div class="font-semibold mb-2">Любой картой (СБП)</div>
             <img src="/assets/pay/sberbank.png" alt="СБП QR" class="w-full rounded-lg mb-2 border border-black/10 bg-white">
             <p class="text-xs text-[var(--ink-2)]">
               Откройте приложение банка → отсканируйте QR → введите сумму заказа.
@@ -1035,9 +1051,7 @@
             <div class="font-semibold mb-2">Любая карта</div>
             <div id="stripeLinks" class="space-y-2"></div>
             <div id="stripeQrs" class="grid grid-cols-3 gap-2 mt-3"></div>
-            <p class="text-xs text-[var(--ink-2)] mt-2">
-              
-            </p>
+            <p class="text-xs text-[var(--ink-2)] mt-2"></p>
           </div>
         </div>
       </div>
@@ -1067,6 +1081,7 @@
             <option value="ru-sbp">Россия — СБП</option>
             <option value="int-paypal">Другие страны — PayPal</option>
             <option value="int-card">Другие страны — любая карта</option>
+            <option value="test-promo">Тест без оплаты (промокод)</option>
           </select>
         </div>
         <div>
@@ -1079,7 +1094,7 @@
         </div>
         <button type="submit" class="btn btn-brand w-full">Отправить подтверждение</button>
         <p class="text-xs text-[var(--ink-2)] text-center">
-         Скоро вам придет доступ на указанный email.
+          Скоро вам придет доступ на указанный email.
         </p>
       </form>
     </div>
@@ -1089,14 +1104,26 @@
     document.addEventListener('DOMContentLoaded', () => {
       const CART_KEY = 'pt_cart';
       const ENROLL_KEY = 'pt_enrollments';
+      const PROMO_KEY = 'pt_promo';
       const FORMSPREE = 'https://formspree.io/f/XXXXYYYY'; // ← замени на свой endpoint Formspree
+
+      // Промокоды в JS
+      const promoCodes = {
+        'TEST100': {
+          type: 'percent',
+          value: 100,
+          label: 'Тестовый промокод 100% (для проверки системы)'
+        }
+      };
+      let appliedPromo = null;
 
       const stripeByEur = {
         19:'https://buy.stripe.com/00w4gybq66YZ1vkcUWb3q0w',
         15:'https://buy.stripe.com/28E9AS1PwabbfmadZ0b3q0x',
         12:'https://buy.stripe.com/28E00ifGmabb0rg5sub3q0y',
         10:'https://buy.stripe.com/fZu6oGbq64QR0rg9IKb3q0z',
-        24:'https://buy.stripe.com/8x214mbq65UVb5UcUWb3q0A'
+        24:'https://buy.stripe.com/8x214mbq65UVb5UcUWb3q0A',
+        0:'https://buy.stripe.com/6oU3cueCi0AB6PEaMOb3q0B' // тестовая ссылка на ~0€
       };
 
       const stripeQrByEur = {
@@ -1104,7 +1131,8 @@
         12:'/assets/pay/qr12.jpg',
         15:'/assets/pay/qr15.jpg',
         19:'/assets/pay/qr19.jpg',
-        24:'/assets/pay/qr24.jpg'
+        24:'/assets/pay/qr24.jpg',
+        0:'/assets/pay/qr0.jpg'
       };
 
       const toastEl = document.getElementById('toast');
@@ -1143,6 +1171,27 @@
           outcomes: JSON.parse(card.dataset.outcomes || '[]'),
           seasonal: card.querySelector('.badge') ? true : false
         };
+      }
+
+      // Подсчёт сумм с учётом промокода
+      function calcTotals(items) {
+        const baseRub = items.reduce((s, c) => s + c.priceRub, 0);
+        const baseEur = items.reduce((s, c) => s + c.priceEur, 0);
+        let finalRub = baseRub;
+        let finalEur = baseEur;
+        let discountRub = 0;
+        let discountEur = 0;
+
+        if (appliedPromo) {
+          if (appliedPromo.type === 'percent') {
+            finalRub = Math.round(baseRub * (100 - appliedPromo.value) / 100);
+            finalEur = Math.round(baseEur * (100 - appliedPromo.value) / 100);
+          }
+          discountRub = baseRub - finalRub;
+          discountEur = baseEur - finalEur;
+        }
+
+        return { baseRub, baseEur, finalRub, finalEur, discountRub, discountEur };
       }
 
       // ----- DETAIL -----
@@ -1203,6 +1252,18 @@
       const cartList = document.getElementById('cartList');
       const cartTotalRub = document.getElementById('cartTotalRub');
       const cartTotalEur = document.getElementById('cartTotalEur');
+      const cartDiscountLine = document.getElementById('cartDiscountLine');
+
+      const promoInput = document.getElementById('cartPromo');
+      const promoBtn = document.getElementById('cartPromoBtn');
+      const promoMsg = document.getElementById('cartPromoMsg');
+
+      // восстановить промокод из localStorage
+      const savedPromoCode = (localStorage.getItem(PROMO_KEY) || '').toUpperCase();
+      if (savedPromoCode && promoCodes[savedPromoCode]) {
+        appliedPromo = { code: savedPromoCode, ...promoCodes[savedPromoCode] };
+        if (promoInput) promoInput.value = savedPromoCode;
+      }
 
       function renderCart() {
         const cart = getCart();
@@ -1222,10 +1283,24 @@
           `).join('');
         }
 
-        const totalRub = cart.reduce((s, c) => s + c.priceRub, 0);
-        const totalEur = cart.reduce((s, c) => s + c.priceEur, 0);
-        cartTotalRub.textContent = fmtRub(totalRub);
-        cartTotalEur.textContent = '€' + totalEur;
+        const totals = calcTotals(cart);
+        cartTotalRub.textContent = fmtRub(totals.finalRub);
+        cartTotalEur.textContent = '€' + totals.finalEur;
+
+        if (appliedPromo && totals.discountRub > 0) {
+          cartDiscountLine.classList.remove('hidden');
+          cartDiscountLine.textContent =
+            `Скидка по промокоду ${appliedPromo.code}: -${fmtRub(totals.discountRub)} (≈ -€${totals.discountEur})`;
+          if (promoMsg && promoInput) {
+            promoMsg.textContent = appliedPromo.label || 'Промокод применён';
+          }
+        } else {
+          cartDiscountLine.classList.add('hidden');
+          cartDiscountLine.textContent = '';
+          if (promoMsg && promoInput && !promoInput.value.trim()) {
+            promoMsg.textContent = '';
+          }
+        }
 
         cartList.querySelectorAll('.js-remove').forEach(btn => {
           btn.addEventListener('click', () => {
@@ -1236,6 +1311,35 @@
         });
       }
       renderCart();
+
+      // применение промокода
+      if (promoBtn) {
+        promoBtn.addEventListener('click', () => {
+          const code = (promoInput.value || '').trim().toUpperCase();
+          if (!code) {
+            appliedPromo = null;
+            localStorage.removeItem(PROMO_KEY);
+            if (promoMsg) promoMsg.textContent = 'Промокод очищен.';
+            renderCart();
+            return;
+          }
+          const data = promoCodes[code];
+          if (!data) {
+            appliedPromo = null;
+            localStorage.removeItem(PROMO_KEY);
+            if (promoMsg) promoMsg.textContent = 'Промокод не найден или уже не действует.';
+            renderCart();
+            return;
+          }
+          appliedPromo = { code, ...data };
+          localStorage.setItem(PROMO_KEY, code);
+          if (promoMsg) {
+            promoMsg.textContent = data.label || 'Промокод применён.';
+          }
+          renderCart();
+          showToast('Промокод применён');
+        });
+      }
 
       const addToCart = (prod) => {
         const cart = getCart();
@@ -1273,14 +1377,16 @@
       let lastRegion = 'ru';
       let lastItems = [];
 
-      const openPay = (region, items) => {
+      const openPay = (region, items, totals) => {
         lastRegion = region;
         lastItems = items;
+        const t = totals || calcTotals(items);
 
-        const totalRub = items.reduce((s, c) => s + c.priceRub, 0);
-        ymLink.href = 'https://yoomoney.ru/to/410013183449005/' + encodeURIComponent(totalRub);
+        // Итоговая сумма с учётом промокода
+        const payRub = t.finalRub;
+        ymLink.href = 'https://yoomoney.ru/to/410013183449005/' + encodeURIComponent(Math.max(payRub, 0));
 
-        // Stripe ссылки
+        // Stripe ссылки — по каждой позиции (без учёта промо, т.к. там фиксированные продукты)
         stripeLinks.innerHTML = items.map(c => {
           const link = stripeByEur[c.priceEur] || '#';
           const safeTitle = c.title.replace(/"/g, '&quot;');
@@ -1334,7 +1440,18 @@
         sessionStorage.setItem('pt_last_email', email);
         const cart = getCart();
         if (!cart.length) { alert('Корзина пуста'); return; }
-        openPay('ru', cart);
+        const totals = calcTotals(cart);
+
+        // Если промо даёт 100% (сумма 0) — сразу тест без оплаты
+        if (totals.finalRub <= 0 && totals.finalEur <= 0) {
+          lastRegion = 'ru';
+          lastItems = cart;
+          showToast('Сумма по промокоду = 0. Можно сразу подтвердить «оплату» для теста.');
+          openConfirm(cart, true);
+          return;
+        }
+
+        openPay('ru', cart, totals);
       });
 
       document.getElementById('cartPayINT').addEventListener('click', () => {
@@ -1343,7 +1460,17 @@
         sessionStorage.setItem('pt_last_email', email);
         const cart = getCart();
         if (!cart.length) { alert('Корзина пуста'); return; }
-        openPay('int', cart);
+        const totals = calcTotals(cart);
+
+        if (totals.finalRub <= 0 && totals.finalEur <= 0) {
+          lastRegion = 'int';
+          lastItems = cart;
+          showToast('Сумма по промокоду = 0. Можно сразу подтвердить «оплату» для теста.');
+          openConfirm(cart, true);
+          return;
+        }
+
+        openPay('int', cart, totals);
       });
 
       // ----- CONFIRM -----
@@ -1353,11 +1480,17 @@
       const cfChannel = document.getElementById('cf-channel');
       const cfNote = document.getElementById('cf-note');
 
-      const openConfirm = (items) => {
+      const openConfirm = (items, isTest = false) => {
         const list = items && items.length ? items : getCart();
         cfEmail.value = bmEmailFromCartOrSession();
         cfItems.value = list.map(c => `${c.title} — ${fmtRub(c.priceRub)} / €${c.priceEur}`).join('\n');
-        cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
+
+        if (isTest && appliedPromo && appliedPromo.code === 'TEST100') {
+          cfChannel.value = 'test-promo';
+          cfNote.value = 'Тестовая покупка по промокоду TEST100 (без реальной оплаты).';
+        } else {
+          cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
+        }
 
         confirmModal.classList.remove('hidden');
         confirmModal.classList.add('flex');
@@ -1400,7 +1533,8 @@
               email,
               channel: cfChannel.value,
               items: cfItems.value,
-              note: cfNote.value || ''
+              note: cfNote.value || '',
+              promo: appliedPromo ? appliedPromo.code : ''
             };
             const res = await fetch(FORMSPREE, {
               method:'POST',
@@ -1421,60 +1555,75 @@
         toggleCart(false);
         setCart([]);
       });
+
+      // Кнопки "Купить" в модалке (пока просто добавляем в корзину и открываем корзину)
+      document.getElementById('dm-add').addEventListener('click', () => {
+        if (currentProduct) {
+          addToCart(currentProduct);
+          closeDetail();
+        }
+      });
+      document.getElementById('dm-buy').addEventListener('click', () => {
+        if (currentProduct) {
+          addToCart(currentProduct);
+          closeDetail();
+          toggleCart(true);
+        }
+      });
     });
   </script>
+
   <script type="module">
-  // Firebase SDK (ESM)
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    // Firebase SDK (ESM)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  // ТВОЯ конфигурация проекта
-  const firebaseConfig = {
-    apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
-    authDomain: "polytalky-70999.firebaseapp.com",
-    projectId: "polytalky-70999",
-    storageBucket: "polytalky-70999.firebasestorage.app",
-    messagingSenderId: "62407152289",
-    appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
-  };
+    // Конфигурация проекта
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
 
-  // Инициализация Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+    // Инициализация Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  // Подключаемся к уже существующей форме подтверждения
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('confirmForm');
-    if (!form) return;
+    // Подключение к форме подтверждения для записи заказов в Firestore
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('confirmForm');
+      if (!form) return;
 
-    form.addEventListener('submit', async () => {
-      const emailEl   = document.getElementById('cf-email');
-      const channelEl = document.getElementById('cf-channel');
-      const itemsEl   = document.getElementById('cf-items');
-      const noteEl    = document.getElementById('cf-note');
+      form.addEventListener('submit', async () => {
+        const emailEl   = document.getElementById('cf-email');
+        const channelEl = document.getElementById('cf-channel');
+        const itemsEl   = document.getElementById('cf-items');
+        const noteEl    = document.getElementById('cf-note');
 
-      const email   = (emailEl?.value || '').trim();
-      const channel = channelEl?.value || '';
-      const items   = itemsEl?.value || '';
-      const note    = noteEl?.value || '';
+        const email   = (emailEl?.value || '').trim();
+        const channel = channelEl?.value || '';
+        const items   = itemsEl?.value || '';
+        const note    = noteEl?.value || '';
 
-      // Если по какой-то причине нет email или списка курсов — просто выходим
-      if (!email || !items) return;
+        if (!email || !items) return;
 
-      try {
-        await addDoc(collection(db, 'orders'), {
-          email,
-          channel,
-          items,
-          note,
-          createdAt: serverTimestamp()
-        });
-        console.log('Заказ сохранён в Firebase');
-      } catch (err) {
-        console.error('Ошибка записи в Firebase', err);
-      }
+        try {
+          await addDoc(collection(db, 'orders'), {
+            email,
+            channel,
+            items,
+            note,
+            createdAt: serverTimestamp()
+          });
+          console.log('Заказ сохранён в Firebase');
+        } catch (err) {
+          console.error('Ошибка записи в Firebase', err);
+        }
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>
