@@ -1283,7 +1283,6 @@
 
       const cartList = document.getElementById('cartList');
       const cartTotalRub = document.getElementById('cartTotalRub');
-      const cartTotalEur = document.getElementById('cartTotalEur');
       const cartDiscountLine = document.getElementById('cartDiscountLine');
 
       const promoInput = document.getElementById('cartPromo');
@@ -1311,7 +1310,6 @@
 
         const totals = calcTotals(cart);
         cartTotalRub.textContent = fmtRub(totals.finalRub);
-        cartTotalEur.textContent = '€' + totals.finalEur;
 
         if (appliedPromo && totals.discountRub > 0) {
           cartDiscountLine.classList.remove('hidden');
