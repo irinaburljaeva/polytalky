@@ -978,19 +978,72 @@
     </div>
   </div>
 
-  <!-- CART DRAWER -->
-  <div id="cartDrawer" class="fixed top-0 right-0 h-full w-[360px] max-w-[92vw] drawer translate-x-full transition-transform z-50 flex flex-col max-h-screen">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="text-lg font-extrabold">Корзина</h3>
-      <button class="text-sm underline" id="cartClose">Закрыть</button>
-    </div>
-    <div id="cartList" class="p-4 space-y-3 text-sm flex-1 min-h-0 ovevrflow-y-auto"></div>
-    <div class="p-4 border-t border-black/5 text-sm">
-      <div class="mb-3">
-        <label class="text-sm text-[var(--ink-2)]">Email для доступа и чека</label>
-        <input id="cartEmail" type="email" class="mt-1 w-full bg-white border border-black/10 rounded-lg px-3 py-2" placeholder="you@example.com">
-      </div>
+  <!-- КОРЗИНА (боковая панель) -->
+<div
+  id="cartDrawer"
+  class="fixed top-0 right-0 h-full max-h-screen w-[360px] max-w-[92vw] bg-white shadow-xl z-50 transform translate-x-full transition-transform flex flex-col"
+>
+  <!-- ШАПКА -->
+  <div class="p-4 border-b border-black/5 flex items-center justify-between">
+    <h3 class="text-lg font-extrabold">Корзина</h3>
+    <button class="text-sm underline" id="cartClose">Закрыть</button>
+  </div>
 
+  <!-- СКРОЛЛИРУЕМЫЙ СПИСОК ТОВАРОВ -->
+  <div id="cartList" class="p-4 space-y-3 text-sm flex-1 min-h-0 overflow-y-auto">
+    <!-- сюда JS рендерит товары; если корзина пустая, сюда же можешь оставить div с текстом -->
+  </div>
+
+  <!-- ФУТЕР: EMAIL + ПРОМОКОД + ИТОГО + КНОПКИ -->
+  <div class="p-4 border-t border-black/5 text-sm space-y-3">
+    <div>
+      <label for="cartEmail" class="block text-xs text-[var(--ink-2)] mb-1">
+        Email для доступа и чека
+      </label>
+      <input
+        id="cartEmail"
+        type="email"
+        class="w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+        placeholder="you@example.com"
+      />
+    </div>
+
+    <div class="flex gap-2 items-center">
+      <input
+        id="cartPromo"
+        type="text"
+        class="flex-1 rounded-xl border border-black/10 px-3 py-2 text-sm"
+        placeholder="Промокод"
+      />
+      <button
+        id="cartPromoBtn"
+        class="text-xs underline whitespace-nowrap"
+      >
+        Применить
+      </button>
+    </div>
+    <div id="cartPromoMsg" class="text-xs text-[var(--ink-2)] min-h-[1.25rem]"></div>
+
+    <div class="flex justify-between text-sm">
+      <span class="font-semibold">Итого:</span>
+      <span id="cartTotalRub">0 ₽</span>
+    </div>
+    <div id="cartDiscountLine" class="text-xs text-[var(--ink-2)] min-h-[1.25rem]"></div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <button id="cartPayRU" class="btn btn-brand w-full">
+        Оплата РФ
+      </button>
+      <button id="cartPayINT" class="btn btn-ghost w-full">
+        Оплата из-за рубежа
+      </button>
+    </div>
+
+    <div class="pt-1 text-[11px] text-[var(--ink-2)]">
+      Подтвердите оплату после перевода, чтобы мы быстрее выдали доступ.
+    </div>
+  </div>
+</div>
       <!-- ПРОМОКОД -->
       <div class="mb-3">
         <label class="text-sm text-[var(--ink-2)]">Промокод</label>
