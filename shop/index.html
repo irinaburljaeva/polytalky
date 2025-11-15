@@ -1525,11 +1525,11 @@
        cfItems.value = list
   .map(c =>
     lastRegion === 'int'
-      ? ${c.title} — €${c.priceEur}          // если "из-за рубежа" → евро
-      : ${c.title} — ${fmtRub(c.priceRub)}   // по умолчанию → рубли
+      ? `${c.title} — €${c.priceEur}`          // если "из-за рубежа" → евро
+      : `${c.title} — ${fmtRub(c.priceRub)}`   // по умолчанию → рубли
   )
   .join('\n');
-
+  
         const totals = calcTotals(list);
 
         // Если применён TEST100 и по нему итоговая сумма стала 0 —
