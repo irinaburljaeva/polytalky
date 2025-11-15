@@ -1040,9 +1040,24 @@
     </div>
 
     <div class="pt-1 text-[11px] text-[var(--ink-2)]">
-      Подтвердите оплату после перевода, чтобы мы быстрее выдали доступ.
+      После успешной оплаты вы автоматически получите доступ к приобретенному курсу.
     </div>
   </div>
+</div>
+  <!-- НОВЫЙ БЛОК ОПЛАТЫ ДЛЯ ЗАРУБЕЖА -->
+<div id="payment-int" class="mt-4 p-3 rounded-xl border border-black/10 bg-white shadow-sm">
+  <p class="text-sm text-[var(--ink-2)] mb-2">
+    Оплата банковской картой:
+  </p>
+
+  <button id="cartPayINT"
+    class="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-semibold py-2 px-4 rounded-xl transition">
+    Оплатить любой банковской картой
+  </button>
+
+  <p class="text-xs text-[var(--ink-2)] mt-2">
+    После оплаты вы будете автоматически перенаправлены на страницу подтверждения.
+  </p>
 </div>
       <!-- ПРОМОКОД -->
       <div class="mb-3">
@@ -1150,7 +1165,6 @@
           <select id="cf-channel" name="channel" class="mt-1 w-full bg-white border border-black/10 rounded-lg px-3 py-2">
             <option value="ru-yoomoney">Россия — ЮMoney</option>
             <option value="ru-sbp">Россия — СБП</option>
-            <option value="int-paypal">Другие страны — PayPal</option>
             <option value="int-card">Другие страны — любая карта</option>
             <option value="test-promo">Тест без оплаты (промокод)</option>
           </select>
@@ -1485,31 +1499,7 @@
               <div class="text-xs mt-1">€0.50</div>
             </div>
           `;
-        } else {
-          // Stripe ссылки — по каждой позиции (без учёта промо, т.к. там фиксированные продукты)
-          stripeLinks.innerHTML = items.map(c => {
-            const link = stripeByEur[c.priceEur] || '#';
-            const safeTitle = c.title.replace(/"/g, '&quot;');
-            return `
-              <div>
-                <a href="${link}" target="_blank" rel="noopener" class="btn btn-brand inline-block">
-                  Оплатить «${safeTitle}» — €${c.priceEur}
-                </a>
-              </div>
-            `;
-          }).join('');
-
-          // Stripe QR — по уникальным ценам
-          const uniqPrices = [...new Set(items.map(i => i.priceEur))];
-          stripeQrs.innerHTML = uniqPrices
-            .filter(p => stripeQrByEur[p])
-            .map(p => `
-              <div class="text-center">
-                <img src="${stripeQrByEur[p]}" alt="QR для €${p}" class="w-full rounded-lg border border-black/10">
-                <div class="text-xs mt-1">€${p}</div>
-              </div>
-            `).join('');
-        }
+        } else { 
 
         tabRU.classList.toggle('hidden', region !== 'ru');
         tabINT.classList.toggle('hidden', region !== 'int');
@@ -1551,7 +1541,7 @@
         openPay('ru', cart, totals);
       });
 
-      document.getElementById('cartPayINT').addEventListener('click', () => {
+      document.getElementById('cartPayINT').addEventListener('click', async () => {
         const email = (document.getElementById('cartEmail').value || '').trim();
         if (!email) { alert('Введите email для доступа и чека'); return; }
         sessionStorage.setItem('pt_last_email', email);
