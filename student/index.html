@@ -286,7 +286,6 @@
     const db   = firebase.firestore();
 
     // Карта курсов: id из Firestore → данные для карточки
-    // Здесь подставишь свои реальные id и пути
     const COURSE_META = {
       'spanish-a1-basics': {
         title: 'Испанский A1: Базовый старт',
@@ -297,11 +296,30 @@
         title: 'Мини-курс: Испанские глаголы',
         href: '/courses/spanish-verbs-mini/',
         cover: '/assets/courses/spanish-verbs.jpg'
+      },
+      'english-intro': {
+        title: 'English Intro: путешествия и базовый английский',
+        href: '/courses/english-intro/',
+        cover: '/assets/courses/english-intro.jpg'
       }
       // добавишь остальные по мере необходимости
     };
-  </script>
 
+    // Карта "реальных" бейджей из курсов
+    const BADGE_META = {
+      'english-intro-lesson-1': {
+        icon: '🌟',
+        title: 'Первый шаг в English Intro',
+        desc: 'Вы прошли первый урок курса English Intro.'
+      },
+      'english-intro-lesson-2': {
+        icon: '🧭',
+        title: 'Продолжаем путешествие',
+        desc: 'Вы завершили второй урок English Intro.'
+      }
+      // добавляй сюда остальные бейджи по мере появления
+    };
+  </script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // --- DOM элементы ---
@@ -385,6 +403,12 @@
       // --- Обновление состояния при входе/выходе ---
       async function setAuthState(user) {
         if (user) {
+          // 🔹 Запоминаем вход для ВСЕХ страниц
+          localStorage.setItem('pt_uid', user.uid || '');
+          if (user.email) {
+            localStorage.setItem('pt_email', user.email);
+          }
+
           authBoxOut.classList.add('hidden');
           authBoxIn.classList.remove('hidden');
           coursesNeedAuth.classList.add('hidden');
@@ -398,6 +422,10 @@
           await loadUserProfile(user);
           await loadUserEnrollments(user);
         } else {
+          // 🔹 При выходе очищаем
+          localStorage.removeItem('pt_uid');
+          localStorage.removeItem('pt_email');
+
           authBoxOut.classList.remove('hidden');
           authBoxIn.classList.add('hidden');
           coursesNeedAuth.classList.remove('hidden');
@@ -410,7 +438,7 @@
 
           coursesList.innerHTML = '';
           coursesEmpty.classList.add('hidden');
-          achievementsList.innerHTML = renderAchievements([]);
+          achievementsList.innerHTML = renderAchievements([], []);
         }
       }
 
@@ -467,7 +495,9 @@
           }
 
           const cred = await auth.createUserWithEmailAndPassword(email, pass);
-          // Документ пользователя по email, чтобы совпадать с backend (Stripe webhook)
+          const user = cred.user;
+
+          // Документ пользователя по email (совместимо с backend Stripe)
           await db.collection('users').doc(email).set({
             email: email,
             firstName: first,
@@ -475,6 +505,10 @@
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             avatarUrl: ''
           }, { merge: true });
+
+          // Локально тоже сразу сохраним
+          localStorage.setItem('pt_uid', user.uid || '');
+          localStorage.setItem('pt_email', email);
         } catch (err) {
           console.error(err);
           showAuthError(err.code, 'register');
@@ -500,13 +534,14 @@
           const first = data?.firstName || '';
           const last  = data?.lastName || '';
           const avatarUrl = data?.avatarUrl || '';
+          const displayEmail = data?.email || email;
 
           const displayName = (first || last)
             ? (first + ' ' + (last || '')).trim()
-            : email;
+            : displayEmail || 'Без имени';
 
           profileName.textContent = displayName;
-          authUserEmail.textContent = email;
+          authUserEmail.textContent = displayEmail;
 
           profileFirst.value = first;
           profileLast.value  = last;
@@ -522,7 +557,7 @@
           } else {
             profileAvatar.style.backgroundImage = '';
             profileAvatar.classList.remove('overflow-hidden');
-            const base = displayName || email || '🙂';
+            const base = displayName || displayEmail || '🙂';
             const letter = base.trim().charAt(0).toUpperCase();
             profileAvatar.textContent = letter || '🙂';
           }
@@ -538,22 +573,25 @@
         e.preventDefault();
         profileMsg.textContent = '';
 
-        const user = auth.currentUser;
-        if (!user || !user.email) return;
+        const email = localStorage.getItem('pt_email');
+        if (!email) return;
 
         try {
           const first = profileFirst.value.trim();
           const last  = profileLast.value.trim();
           const avatarUrl = profileAvatarUrl.value.trim();
 
-          await db.collection('users').doc(user.email).set({
+          await db.collection('users').doc(email).set({
             firstName:first,
             lastName:last,
             avatarUrl:avatarUrl
           }, { merge:true });
 
-          await loadUserProfile(user);
           profileMsg.textContent = 'Профиль обновлён ✔';
+          const user = auth.currentUser;
+          if (user) {
+            await loadUserProfile(user);
+          }
         } catch (err) {
           console.error(err);
           profileMsg.textContent = 'Не удалось сохранить профиль. Попробуйте ещё раз.';
@@ -569,7 +607,7 @@
           const email = user.email;
           if (!email) {
             coursesEmpty.classList.remove('hidden');
-            achievementsList.innerHTML = renderAchievements([]);
+            achievementsList.innerHTML = renderAchievements([], []);
             return;
           }
 
@@ -577,18 +615,19 @@
 
           if (!doc.exists) {
             coursesEmpty.classList.remove('hidden');
-            achievementsList.innerHTML = renderAchievements([]);
+            achievementsList.innerHTML = renderAchievements([], []);
             return;
           }
 
           const data = doc.data() || {};
           const paidIds  = Array.isArray(data.courses)     ? data.courses     : [];
           const freeIds  = Array.isArray(data.freeCourses) ? data.freeCourses : [];
-          const progress = data.progress || {}; // { [courseId]: {percent: 0–100, ...} }
+          const progress = data.progress || {}; // { [courseId]: {percent, lastLessonId} }
+          const badgeIds = Array.isArray(data.badges) ? data.badges : [];
 
           const courses = [];
 
-          // Оплаченные курсы показываем всегда
+          // Оплаченные курсы
           for (const id of paidIds) {
             courses.push({
               id,
@@ -598,7 +637,7 @@
             });
           }
 
-          // Бесплатные — только после активации (когда id занесён в freeCourses)
+          // Бесплатные курсы
           for (const id of freeIds) {
             if (paidIds.includes(id)) continue; // не дублируем
             courses.push({
@@ -610,11 +649,11 @@
           }
 
           renderCourses(courses);
-          achievementsList.innerHTML = renderAchievements(courses);
+          achievementsList.innerHTML = renderAchievements(courses, badgeIds);
         } catch (err) {
           console.error('Ошибка загрузки курсов:', err);
           renderCourses([]);
-          achievementsList.innerHTML = renderAchievements([]);
+          achievementsList.innerHTML = renderAchievements([], []);
         }
       }
 
@@ -634,10 +673,11 @@
             cover: '/assets/courses/default.jpg'
           };
 
-          const progressData = c.progress;
-          const percent = progressData && typeof progressData.percent === 'number'
+          const progressData = c.progress || {};
+          const percent = typeof progressData.percent === 'number'
             ? Math.max(0, Math.min(100, progressData.percent))
             : 0;
+          const lastLessonId = progressData.lastLessonId || null;
 
           const isFree = !!c.isFree;
           const isPaid = !!c.isPaid;
@@ -648,7 +688,9 @@
             : 'border-amber-300 bg-amber-50 text-amber-700';
 
           let statusLabel;
-          if (percent > 0) {
+          if (percent > 0 && lastLessonId) {
+            statusLabel = `Прогресс: ${percent}% · последний урок: ${lastLessonId}`;
+          } else if (percent > 0) {
             statusLabel = `Прогресс: ${percent}%`;
           } else if (isPaid) {
             statusLabel = 'Курс оплачен, можно начинать в любой момент.';
@@ -692,54 +734,70 @@
       }
 
       // --- Медали / достижения ---
-      function renderAchievements(courses){
+      function renderAchievements(courses, badgeIds){
         const total = Array.isArray(courses) ? courses.length : 0;
         const paid  = courses.filter(c => c.isPaid).length;
         const free  = courses.filter(c => c.isFree).length;
 
-        const medals = [
-          {
-            id:'first-course',
-            icon:'🥇',
-            title:'Первый шаг',
-            desc:'Вы активировали свой первый курс. Отличное начало!',
-            earned: total >= 1
-          },
-          {
-            id:'three-courses',
-            icon:'🎓',
-            title:'Мини-полиглот',
-            desc:'Три и больше активированных курсов.',
-            earned: total >= 3
-          },
-          {
-            id:'five-courses',
-            icon:'🌍',
-            title:'Будущий полиглот',
-            desc:'Пять и больше курсов в кабинете.',
-            earned: total >= 5
-          },
-          {
-            id:'free-lover',
-            icon:'🎁',
-            title:'Любитель бесплатных курсов',
-            desc:'Два и более бесплатных курса.',
-            earned: free >= 2
-          },
-          {
-            id:'investor',
-            icon:'💳',
-            title:'Инвестор в знания',
-            desc:'Два и более платных курсов.',
-            earned: paid >= 2
-          }
-        ];
+        const medals = [];
+
+        // "умные" ачивки по количеству курсов
+        medals.push({
+          id:'first-course',
+          icon:'🥇',
+          title:'Первый шаг',
+          desc:'Вы активировали свой первый курс. Отличное начало!',
+          earned: total >= 1
+        });
+        medals.push({
+          id:'three-courses',
+          icon:'🎓',
+          title:'Мини-полиглот',
+          desc:'Три и больше активированных курсов.',
+          earned: total >= 3
+        });
+        medals.push({
+          id:'five-courses',
+          icon:'🌍',
+          title:'Будущий полиглот',
+          desc:'Пять и больше курсов в кабинете.',
+          earned: total >= 5
+        });
+        medals.push({
+          id:'free-lover',
+          icon:'🎁',
+          title:'Любитель бесплатных курсов',
+          desc:'Два и более бесплатных курса.',
+          earned: free >= 2
+        });
+        medals.push({
+          id:'investor',
+          icon:'💳',
+          title:'Инвестор в знания',
+          desc:'Два и более платных курсов.',
+          earned: paid >= 2
+        });
+
+        // Реальные бейджи из курсов (из поля badges в users/{email})
+        if (Array.isArray(badgeIds)) {
+          badgeIds.forEach(bid => {
+            const meta = BADGE_META[bid] || {};
+            medals.push({
+              id: 'badge-' + bid,
+              icon: meta.icon || '🏅',
+              title: meta.title || 'Достижение',
+              desc: meta.desc || bid,
+              earned: true
+            });
+          });
+        }
 
         if (!medals.some(m => m.earned)) {
           return `
             <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
               Первые медали появятся, когда вы активируете курс в
-              <a href="/shop/" class="underline">магазине</a> или начнёте бесплатную программу.
+              <a href="/shop/" class="underline">магазине</a> или начнёте
+              <a href="/courses/" class="underline">бесплатную программу</a>.
             </div>`;
         }
 
