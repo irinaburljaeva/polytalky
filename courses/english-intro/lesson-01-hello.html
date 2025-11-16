@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>English Intro — Урок 1: Экспедиция в мир звуков</title>
+  <title>English Intro — Урок 1: Старт языкового путешествия</title>
   <base href="/">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
@@ -31,8 +31,8 @@
     }
     .step-hidden{display:none;}
 
-    /* Экспедиционная дорожка */
-    .exp-track{
+    /* Маршрут путешествия */
+    .trip-track{
       position:relative;
       display:flex;
       align-items:center;
@@ -43,7 +43,7 @@
       background:linear-gradient(90deg,#fefce8,#fffbeb);
       border:1px dashed rgba(148,163,184,.6);
     }
-    .exp-track::before{
+    .trip-track::before{
       content:"";
       position:absolute;
       left:1.5rem;
@@ -54,7 +54,7 @@
       border-top:2px dashed rgba(148,163,184,.7);
       z-index:0;
     }
-    .exp-step{
+    .trip-step{
       position:relative;
       z-index:1;
       display:flex;
@@ -65,7 +65,7 @@
       text-align:center;
       max-width:80px;
     }
-    .exp-node{
+    .trip-node{
       display:flex;
       align-items:center;
       justify-content:center;
@@ -77,26 +77,26 @@
       box-shadow:0 2px 6px rgba(0,0,0,.08);
       font-size:16px;
     }
-    .exp-step-active .exp-node{
+    .trip-step-active .trip-node{
       background:radial-gradient(circle at 30% 0%,#fef9c3,#fed7aa);
       border-color:#f97316;
       box-shadow:0 0 0 2px rgba(251,191,36,.6),0 10px 25px rgba(248,113,113,.35);
       transform:translateY(-1px);
     }
-    .exp-step-active .exp-label{
+    .trip-step-active .trip-label{
       color:#b45309;
       font-weight:600;
     }
-    .exp-step-done .exp-node{
+    .trip-step-done .trip-node{
       background:#22c55e;
       color:white;
       border-color:#15803d;
     }
-    .exp-step-done .exp-label{
+    .trip-step-done .trip-label{
       color:#16a34a;
     }
 
-    /* Карточка "полевого дневника" */
+    /* Карточка "путевого дневника" */
     .notebook{
       background:repeating-linear-gradient(
         to bottom,
@@ -110,11 +110,11 @@
     }
 
     @media (max-width:640px){
-      .exp-track{
+      .trip-track{
         flex-direction:column;
         padding-inline:0.75rem;
       }
-      .exp-track::before{
+      .trip-track::before{
         display:none;
       }
     }
@@ -129,7 +129,7 @@
       <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl">
       <div class="flex flex-col">
         <span class="font-semibold text-sm leading-tight">PolyTalky · English Intro</span>
-        <span class="text-[10px] text-[#64748b] leading-tight">Экспедиция в мир английского</span>
+        <span class="text-[10px] text-[#64748b] leading-tight">Ваше путешествие в мир английского</span>
       </div>
     </a>
 
@@ -159,34 +159,37 @@
     <header class="space-y-3">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <p class="text-[11px] text-[#64748b] uppercase tracking-[0.16em]">Day 1 · Expedition Log</p>
+          <p class="text-[11px] text-[#64748b] uppercase tracking-[0.16em]">Day 1 · Travel Log</p>
           <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">
-            Экспедиция 1: Первое приветствие и звуки английского
+            Урок 1. Старт языкового путешествия
           </h1>
+          <p class="text-xs sm:text-sm text-[#64748b] mt-1">
+            Сегодня — ваш «первый вылет»: первое приветствие, голос носителя, карта буквосочетаний и аудиозадание.
+          </p>
         </div>
         <div class="text-right text-[11px] text-[#64748b]">
           <p id="step-label">Шаг 1 из 4</p>
-          <p>+20 XP после завершения миссии</p>
+          <p>+20 XP за завершение урока</p>
         </div>
       </div>
 
-      <!-- Экспедиционная дорожка -->
-      <div class="exp-track mt-1">
-        <div class="exp-step exp-step-active" data-step-node="1">
-          <div class="exp-node">📍</div>
-          <span class="exp-label">Старт экспедиции</span>
+      <!-- Маршрут урока -->
+      <div class="trip-track mt-1">
+        <div class="trip-step trip-step-active" data-step-node="1">
+          <div class="trip-node">🛫</div>
+          <span class="trip-label">Старт</span>
         </div>
-        <div class="exp-step" data-step-node="2">
-          <div class="exp-node">🎧</div>
-          <span class="exp-label">Голос носителя</span>
+        <div class="trip-step" data-step-node="2">
+          <div class="trip-node">🎧</div>
+          <span class="trip-label">Голос английского</span>
         </div>
-        <div class="exp-step" data-step-node="3">
-          <div class="exp-node">📜</div>
-          <span class="exp-label">Таблица гласных</span>
+        <div class="trip-step" data-step-node="3">
+          <div class="trip-node">📜</div>
+          <span class="trip-label">Гласные</span>
         </div>
-        <div class="exp-step" data-step-node="4">
-          <div class="exp-node">🎤</div>
-          <span class="exp-label">Аудиомиссия</span>
+        <div class="trip-step" data-step-node="4">
+          <div class="trip-node">🎤</div>
+          <span class="trip-label">Аудио-чек</span>
         </div>
       </div>
 
@@ -207,7 +210,7 @@
     <section id="step-1" class="space-y-4">
       <div class="notebook p-4 sm:p-5 space-y-3">
         <h2 class="font-semibold text-base flex items-center gap-2">
-          <span>Глава 1. Точка отправления</span>
+          <span>Остановка 1. Первый шаг в путешествие</span>
           <span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
             Миссия: настроиться и поздороваться
           </span>
@@ -226,11 +229,11 @@
 
         <div class="mt-3 border border-amber-200 bg-amber-50/80 rounded-2xl p-3 text-xs sm:text-sm space-y-2">
           <p class="font-semibold flex items-center gap-1">
-            <span>🎯 Мини-миссия экспедиции</span>
+            <span>🎯 Мини-миссия путешественника</span>
           </p>
           <p>
-            Поздоровайтесь по-английски. Представьте, что вы только что вошли в лагерь экспедиции
-            и увидели своего проводника.
+            Поздоровайтесь по-английски. Представьте, что вы приехали в новый город
+            и заходите в отель / на ресепшн языкового клуба.
           </p>
           <input id="hello-input"
                  class="w-full border border-amber-200 rounded-xl px-3 py-2 text-sm bg-white/90"
@@ -245,7 +248,7 @@
         <button id="btn-step-1"
                 class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
                 disabled>
-          Открыть следующий лагерь → Видео от носителя
+          Дальше → Послушать английскую речь
         </button>
       </div>
     </section>
@@ -254,7 +257,7 @@
     <section id="step-2" class="space-y-4 step-hidden">
       <div class="notebook p-4 sm:p-5 space-y-3">
         <h2 class="font-semibold text-base flex items-center gap-2">
-          <span>Глава 2. Голос английского</span>
+          <span>Остановка 2. Голос английского</span>
           <span class="text-xs px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-200">
             Миссия: посмотреть видео
           </span>
@@ -300,12 +303,12 @@
 
       <div class="flex justify-between">
         <button data-back="1" class="px-3 py-2 rounded-xl border bg-white text-xs">
-          ← Вернуться к старту
+          ← Назад к первому шагу
         </button>
         <button id="btn-step-2"
                 class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
                 disabled>
-          Открыть свиток гласных →
+          Далее → Таблица гласных
         </button>
       </div>
     </section>
@@ -314,9 +317,9 @@
     <section id="step-3" class="space-y-4 step-hidden">
       <div class="notebook p-4 sm:p-5 space-y-3">
         <h2 class="font-semibold text-base flex items-center gap-2">
-          <span>Глава 3. Свиток гласных</span>
+          <span>Остановка 3. Карта гласных буквосочетаний</span>
           <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-            Миссия: познакомиться с таблицей
+            Миссия: посмотреть карту и сделать заметки
           </span>
         </h2>
 
@@ -355,12 +358,12 @@
 
       <div class="flex justify-between">
         <button data-back="2" class="px-3 py-2 rounded-xl border bg-white text-xs">
-          ← К видео
+          ← Вернуться к видео
         </button>
         <button id="btn-step-3"
                 class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
                 disabled>
-          Перейти к аудиомиссии →
+          Далее → Аудиозадание
         </button>
       </div>
     </section>
@@ -369,9 +372,9 @@
     <section id="step-4" class="space-y-4 step-hidden">
       <div class="notebook p-4 sm:p-5 space-y-3">
         <h2 class="font-semibold text-base flex items-center gap-2">
-          <span>Глава 4. Аудиомиссия экспедиции</span>
+          <span>Остановка 4. Аудио-чек перед поездкой</span>
           <span class="text-xs px-2 py-0.5 rounded-full bg-rose-50 text-rose-800 border border-rose-200">
-            Миссия: произнести свои слова
+            Миссия: произнести и записать
           </span>
         </h2>
 
@@ -385,7 +388,7 @@
           </p>
           <p>
             Поэтому сейчас наша <b>аудиомиссия</b>: произнести вслух свои примеры
-            и записать небольшой фрагмент.
+            и записать небольшой фрагмент. Представьте, что вы тренируетесь перед реальной поездкой.
           </p>
         </div>
 
@@ -423,7 +426,8 @@
           <p>
             Если вы докупите функцию проверки от куратора, ваши аудиозадания будут проверяться
             вручную опытными преподавателями английского. Вы получите комментарии, где есть акцент,
-            какие звуки уже звучат отлично, а над чем лучше поработать.
+            какие звуки уже звучат естественно, а над чем лучше поработать — чтобы в реальной поездке
+            чувствовать себя уверенно.
           </p>
           <p class="text-[11px] text-[#92400e]">
             При активной PRO-функции записи этого урока будут автоматически попадать к куратору.
@@ -493,14 +497,14 @@
   const stepLabel = document.getElementById("step-label");
   const barLabel = document.getElementById("bar-label");
   const stepBar = document.getElementById("step-bar");
-  const expNodes = document.querySelectorAll("[data-step-node]");
+  const tripNodes = document.querySelectorAll("[data-step-node]");
 
-  function updateExpTrail(active){
-    expNodes.forEach(node=>{
+  function updateTripTrail(active){
+    tripNodes.forEach(node=>{
       const step = Number(node.dataset.stepNode);
-      node.classList.remove("exp-step-active","exp-step-done");
-      if(step < active) node.classList.add("exp-step-done");
-      if(step === active) node.classList.add("exp-step-active");
+      node.classList.remove("trip-step-active","trip-step-done");
+      if(step < active) node.classList.add("trip-step-done");
+      if(step === active) node.classList.add("trip-step-active");
     });
   }
 
@@ -512,7 +516,7 @@
     const perc = n*25;
     barLabel.textContent = perc + "%";
     stepBar.style.width = perc + "%";
-    updateExpTrail(n);
+    updateTripTrail(n);
   }
 
   /* STEP 1 */
@@ -528,7 +532,7 @@
       helloStatus.classList.add("text-[#92400e]");
       next1.disabled = true;
     } else {
-      helloStatus.textContent = "Отлично! Экспедиция услышала ваше первое английское приветствие.";
+      helloStatus.textContent = "Отлично! Это ваше первое английское приветствие в новом путешествии.";
       helloStatus.classList.remove("text-[#92400e]");
       helloStatus.classList.add("text-emerald-700");
       next1.disabled = false;
@@ -543,7 +547,7 @@
   const next2 = document.getElementById("btn-step-2");
 
   videoBtn.addEventListener("click", ()=>{
-    videoStatus.textContent = "Супер! Вы услышали голос английского. Переходим к свитку гласных.";
+    videoStatus.textContent = "Супер! Вы услышали живой английский. Пора заглянуть в карту гласных.";
     videoStatus.classList.remove("text-[#0369a1]");
     videoStatus.classList.add("text-emerald-700");
     next2.disabled = false;
@@ -559,12 +563,12 @@
   vowelInput.addEventListener("input", ()=>{
     const v = (vowelInput.value || "").trim();
     if(v.length < 5){
-      vowelStatus.textContent = "Добавьте хотя бы пару сочетаний и слов — этого достаточно для миссии.";
+      vowelStatus.textContent = "Добавьте хотя бы пару сочетаний и слов — этого достаточно для шага.";
       vowelStatus.classList.remove("text-emerald-700");
       vowelStatus.classList.add("text-[#166534]");
-      next3.disabled = false; // всё равно позволяем идти дальше, чтобы не стопорить
+      next3.disabled = false; // не блокируем, чтобы не стопорить движение
     } else {
-      vowelStatus.textContent = "Отлично! Вы уже заполняете свой полевой дневник английских звуков.";
+      vowelStatus.textContent = "Отлично! Это уже заметки в вашем языковом путевом дневнике.";
       vowelStatus.classList.remove("text-[#166534]");
       vowelStatus.classList.add("text-emerald-700");
       next3.disabled = false;
@@ -605,7 +609,7 @@
         const url = URL.createObjectURL(blob);
         recPlayer.src = url;
         recPlayer.classList.remove("hidden");
-        recStatus.textContent = "Запись готова! Прослушайте себя — это уже большой шаг вперёд.";
+        recStatus.textContent = "Запись готова! Можно послушать себя — это важно перед реальными поездками.";
         recStatus.classList.remove("text-[#9f1239]");
         recStatus.classList.add("text-emerald-700");
         finishLesson.disabled = false;
@@ -644,7 +648,7 @@
       EnglishIntro.addVocab({word:w.word,translation:w.translation,lessonId:LESSON_ID});
     });
 
-    completeStatus.textContent = "Урок первого дня завершён 🎉 Экспедиция может двигаться дальше.";
+    completeStatus.textContent = "Урок первого дня завершён 🎉 Ваше языковое путешествие продолжается во 2 уроке.";
     finishLesson.disabled = true;
   });
 
