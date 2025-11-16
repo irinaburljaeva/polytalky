@@ -382,11 +382,11 @@
   const b=document.getElementById('burger'), m=document.getElementById('mnav');
   if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
 
-  // Описание уроков (id + URL) — подставь свои реальные страницы
+  // Описание уроков
   const courseLessons = [
     { id:"lesson-01-hello", title:"Урок 1 · Hello & Goodbye", minutes:10, url:"/courses/english-intro/lesson-01-hello.html" },
     { id:"lesson-02-intro", title:"Урок 2 · Как представиться", minutes:12, url:"/courses/english-intro/lesson-02-intro.html" },
-    // ...дальше твои уроки
+    // ...остальные уроки
   ];
 
   // Переключатель режимов
@@ -412,6 +412,36 @@
     });
   });
 
+  // Универсальная функция: достать текущий uid (как на странице PRO)
+  async function getCurrentUid() {
+    // 1) Пробуем из localStorage
+    let uid = localStorage.getItem('pt_uid');
+    if (uid) {
+      return uid;
+    }
+
+    // 2) Пробуем взять из Firebase Auth, если он подключён
+    try {
+      if (window.firebase && firebase.auth) {
+        uid = await new Promise(resolve => {
+          const unsub = firebase.auth().onAuthStateChanged(user => {
+            unsub();
+            resolve(user ? user.uid : null);
+          });
+        });
+        if (uid) {
+          localStorage.setItem('pt_uid', uid);
+          return uid;
+        }
+      }
+    } catch (e) {
+      console.warn('Не удалось получить uid из Firebase:', e);
+    }
+
+    // 3) Не нашли
+    return null;
+  }
+
   // Статы
   const statLevel = document.getElementById("stat-level");
   const statXp = document.getElementById("stat-xp");
@@ -420,7 +450,6 @@
   const progressBar = document.getElementById("progress-bar");
   const badgeRow = document.getElementById("badge-row");
 
-  // Текущий словарик (можно подменять данными из Firebase)
   let currentVocab = [];
 
   function updateStats(){
@@ -436,7 +465,6 @@
     progressText.textContent = `${done} / ${total}`;
     progressBar.style.width = percent + "%";
 
-    // Бейджи с визуальными значками
     badgeRow.innerHTML = "";
     const earned = [];
 
@@ -532,7 +560,6 @@
     const translation = form.translation.value.trim();
     if(!word || !translation) return;
 
-    // Пытаемся сохранить в Firestore, если он есть
     let savedToFirebase = false;
     try{
       if (window.firebase && firebase.firestore && firebase.auth) {
@@ -558,7 +585,6 @@
     }
 
     if(!savedToFirebase){
-      // Фоллбэк на локальный стейт
       EnglishIntro.addVocab({word, translation, lessonId:"user"});
       currentVocab = EnglishIntro.getVocab();
     }
@@ -638,12 +664,13 @@
     }
   });
 
-  // Кнопка "Оформить PRO" (через localStorage pt_uid)
+  // Кнопка "Оформить PRO" — как на странице pro.html
   const proBtn = document.getElementById("btn-pro");
   if (proBtn) {
     proBtn.addEventListener("click", async () => {
       try {
-        const uid = localStorage.getItem("pt_uid");
+        const uid = await getCurrentUid();
+
         if (!uid) {
           alert("Чтобы оформить PRO, сначала войдите в ваш личный кабинет, а затем вернитесь на эту страницу.");
           window.location.href = "/student/";
@@ -687,7 +714,7 @@
     });
   }
 
-  // Загрузка словаря: сначала пробуем Firebase, иначе — локальный стейт
+  // Загрузка словаря: сначала Firestore (если есть и пользователь залогинен), потом локальный стейт
   async function loadVocabFromFirebaseIfPossible() {
     try {
       if (window.firebase && firebase.firestore && firebase.auth) {
@@ -698,6 +725,8 @@
               currentVocab = EnglishIntro.getVocab();
               return resolve();
             }
+            // фиксируем uid и для других страниц
+            localStorage.setItem('pt_uid', user.uid);
             const db = firebase.firestore();
             const snap = await db
               .collection("users")
