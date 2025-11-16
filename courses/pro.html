@@ -295,7 +295,7 @@
           </div>
 
           <div class="faq-item border border-gray-200 rounded-2xl bg-white overflow-hidden">
-            <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
+            <button class="w-full flex items-center justify_between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
               <span>Сколько заданий можно отправлять на проверку?</span>
               <span class="ml-2 text-lg leading-none">+</span>
             </button>
@@ -402,11 +402,40 @@
     });
   });
 
-  // Общая функция для оформления PRO через localStorage uid
+  // Универсальная функция: достать текущий uid
+  async function getCurrentUid() {
+    // 1) Пробуем из localStorage
+    let uid = localStorage.getItem('pt_uid');
+    if (uid) {
+      return uid;
+    }
+
+    // 2) Если есть Firebase Auth — пробуем взять оттуда и сохранить
+    try {
+      if (window.firebase && firebase.auth) {
+        uid = await new Promise(resolve => {
+          const unsub = firebase.auth().onAuthStateChanged(user => {
+            unsub();
+            resolve(user ? user.uid : null);
+          });
+        });
+        if (uid) {
+          localStorage.setItem('pt_uid', uid);
+          return uid;
+        }
+      }
+    } catch (e) {
+      console.warn('Не удалось получить uid из Firebase:', e);
+    }
+
+    // 3) Ничего не нашли
+    return null;
+  }
+
+  // Общая функция для оформления PRO
   async function startProCheckout() {
     try {
-      // Берём UID из localStorage (сохраняется после логина на /student/)
-      const uid = localStorage.getItem('pt_uid');
+      const uid = await getCurrentUid();
 
       if (!uid) {
         alert("Чтобы оформить PRO, сначала войдите в ваш личный кабинет, а затем вернитесь на эту страницу.");
@@ -436,7 +465,6 @@
         return;
       }
 
-      // TODO: сюда нужно подставить твой реальный publishable key Stripe
       const STRIPE_PK = "pk_live_51HqHTmBDwT3uzr4q884SspcgqeyUSp4esf81Z6tHnTkf66WJG1Z6b90PDtyXSdiEommSFnBpHEHswX2ks5Geq9G0004uLMLbKu";
       const stripe = Stripe(STRIPE_PK);
       const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
