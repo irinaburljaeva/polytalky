@@ -1283,6 +1283,9 @@
       const totalSteps = 4;
       let badgeAwarded = false;
 
+      import { doc, setDox, updateDoc, arrayUnion }
+        from
+        "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
       async function awardFirstHelloBadge(){
         if (!currentUser || badgeAwarded) return;
 
@@ -1297,6 +1300,11 @@
           earnedAt: serverTimestamp()
         }, { merge:true });
 
+        const userRef = doc(db, "users", uid);
+        await setDoc(userRef, {
+          badges:
+        arrayUnion("english-intro-lesson-1")
+        }, { merge: true });
         badgeAwarded = true;
       }
 
@@ -1315,7 +1323,19 @@
         if (n === 4){
           awardFirstHelloBadge().catch(console.error);
         }
+if (n === 4 && currentUser) {
+  const uid = currentUser.uid;
+  const userRef = doc(db, "users", uid);
 
+  await setDoc(userRef, {
+    progress: {
+      "english-intro": {
+        percent: 25,
+        lastLessonId: "lesson-01-hello"
+      }
+    }
+  }, { merge: true });
+}
         currentStep = n;
       }
 
