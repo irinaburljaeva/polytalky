@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>PolyTalky — English Intro</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --primary: #cf2c02;
+      --primary-light: #ffba08;
+      --bg: #0f172a;
+      --bg-soft: #111827;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --card: #111827;
+      --border: #1f2937;
+      --success: #22c55e;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+    .page-wrap {
+      max-width: 1200px;
+      width: 100%;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+    }
+    .sidebar {
+      width: 280px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: conic-gradient(from 120deg, var(--primary), var(--primary-light), #e85d04, var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .brand-text-main {
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .brand-text-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .stats-card {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      font-size: 12px;
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .stat-label {
+      color: var(--muted);
+    }
+    .stat-value {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .progress-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .progress-bar-outer {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #020617;
+      overflow: hidden;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    .lesson-list {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 60vh;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .module-title {
+      margin-top: 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .lesson-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .lesson-item:hover {
+      background: rgba(148, 163, 184, 0.06);
+    }
+    .lesson-item.active {
+      background: rgba(248, 250, 252, 0.08);
+      border-color: rgba(248, 250, 252, 0.2);
+    }
+    .lesson-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .lesson-check.completed {
+      background: var(--success);
+      border-color: var(--success);
+      color: #022c22;
+    }
+    .lesson-meta {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .main {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 16px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: calc(100vh - 32px);
+      overflow: hidden;
+    }
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .hero-left {
+      max-width: 500px;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .hero-kicker span.tag {
+      background: rgba(248, 250, 252, 0.08);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: var(--primary-light);
+    }
+    .hero-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 440px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .btn {
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 14px;
+      border: 1px solid transparent;
+      background: #020617;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #111827;
+      font-weight: 600;
+      border-color: transparent;
+    }
+    .btn-ghost {
+      background: transparent;
+      border-color: rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+    }
+    .hero-right {
+      min-width: 220px;
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .streak-card {
+      min-width: 220px;
+      max-width: 270px;
+      border-radius: 18px;
+      padding: 12px;
+      background: radial-gradient(circle at top left, rgba(251, 191, 36, 0.22), transparent 50%), #020617;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .streak-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+    .streak-label {
+      color: var(--muted);
+    }
+    .streak-value {
+      font-weight: 700;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .badge {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+    }
+    .badge.highlight {
+      border-color: var(--primary-light);
+      color: var(--primary-light);
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      gap: 12px;
+      overflow: hidden;
+    }
+    .content-main {
+      flex: 2;
+      background: radial-gradient(circle at top, rgba(248, 250, 252, 0.06), transparent 55%);
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 14px 14px 18px;
+      overflow-y: auto;
+      max-height: calc(100vh - 190px);
+    }
+    .content-sidebar {
+      flex: 1;
+      min-width: 240px;
+      max-width: 320px;
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 12px;
+      overflow-y: auto;
+      max-height: calc(100vh - 190px);
+      font-size: 13px;
+    }
+    .content-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .pill-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .pill {
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: var(--muted);
+    }
+    .pill.good {
+      color: #bbf7d0;
+      border-color: #22c55e;
+    }
+    .pill.grammar {
+      color: #bfdbfe;
+      border-color: #3b82f6;
+    }
+    .pill.vocab {
+      color: #fef9c3;
+      border-color: #eab308;
+    }
+    .pill.game {
+      color: #fecaca;
+      border-color: #f97316;
+    }
+
+    .text-muted { color: var(--muted); }
+    .mb-4 { margin-bottom: 12px; }
+    .mb-2 { margin-bottom: 6px; }
+    .mb-1 { margin-bottom: 4px; }
+
+    .grammar-block,
+    .vocab-block,
+    .tips-block {
+      margin-bottom: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+    .grammar-block h3,
+    .vocab-block h3,
+    .tips-block h3 {
+      margin: 0 0 6px;
+      font-size: 14px;
+    }
+    ul {
+      padding-left: 18px;
+      margin: 4px 0;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      background: #020617;
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    .exercise {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+    .exercise-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .exercise-question {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .exercise-options {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .exercise-option {
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      font-size: 13px;
+      cursor: pointer;
+      text-align: left;
+      background: #020617;
+    }
+    .exercise-option.selected {
+      border-color: var(--primary-light);
+      background: rgba(234, 179, 8, 0.08);
+    }
+    .exercise-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      gap: 6px;
+    }
+    .exercise-status.ok { color: #4ade80; }
+    .exercise-status.err { color: #f97316; }
+    .input-small {
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: #020617;
+      color: var(--text);
+      font-size: 13px;
+      min-width: 140px;
+    }
+
+    .xp-toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.96);
+      color: #ecfdf5;
+      font-size: 13px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
+      display: none;
+      z-index: 999;
+    }
+
+    @media (max-width: 960px) {
+      .page-wrap {
+        flex-direction: column;
+        max-width: 100%;
+      }
+      .sidebar {
+        width: 100%;
+        order: 2;
+      }
+      .main {
+        order: 1;
+        max-height: none;
+      }
+      .content {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">P</div>
+      <div>
+        <div class="brand-text-main">PolyTalky</div>
+        <div class="brand-text-sub">English Intro · A1</div>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stat">
+        <div class="stat-label">Уровень</div>
+        <div class="stat-value" id="stat-level">1</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">XP</div>
+        <div class="stat-value" id="stat-xp">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Серия</div>
+        <div class="stat-value" id="stat-streak">0 дней</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Прогресс курса</span>
+        <span id="progress-text">0 / 0</span>
+      </div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progress-bar"></div>
+      </div>
+    </div>
+
+    <div class="lesson-list" id="lesson-list">
+      <!-- сюда рендерятся модули и уроки -->
+    </div>
+  </aside>
+
+  <main class="main">
+    <section class="hero">
+      <div class="hero-left">
+        <div class="hero-kicker">
+          🌍 ENGLISH INTRO
+          <span class="tag">гамифицированный старт</span>
+        </div>
+        <h1 class="hero-title">Английский для начинающих — без стресса, с эндорфинами 🎮</h1>
+        <p class="hero-subtitle">
+          Маленькие шаги, быстрые победы, понятная грамматика и живые слова. 
+          Всё на одной странице: интро, уроки, упражнения и сохранение прогресса.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="btn-start">
+            ▶ Начать с Урока 1
+          </button>
+          <button class="btn btn-ghost" id="btn-continue">
+            ⏱ Продолжить с места остановки
+          </button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="streak-card">
+          <div class="streak-row">
+            <span class="streak-label">Сегодняшний заряд эндорфинов</span>
+            <span class="streak-value" id="streak-today">0%</span>
+          </div>
+          <div class="text-muted">
+            Выполните хотя бы один урок, чтобы получить «дозу» удовольствия от прогресса.
+          </div>
+          <div class="badges" id="badge-row">
+            <!-- бейджи динамически -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="content-main" id="content-main">
+        <!-- сюда рендерится интро/выбранный урок -->
+      </div>
+      <aside class="content-sidebar" id="content-sidebar">
+        <!-- сюда рендерится грамматика/лексика/подсказки -->
+      </aside>
+    </section>
+  </main>
+</div>
+
+<div class="xp-toast" id="xp-toast">+10 XP — вы ближе к цели! 🎉</div>
+
+<script>
+  /***********************
+   * Course definition
+   ***********************/
+  const englishIntroCourse = {
+    id: "english-intro",
+    title: "English Intro A1",
+    description: "Полный вводный курс для начинающих: базовая грамматика, живые фразы, словарики и упражнения.",
+    modules: [
+      {
+        id: "m0",
+        title: "Welcome & Mindset",
+        lessons: [
+          {
+            id: "welcome-intro",
+            title: "Добро пожаловать · Как мы учим",
+            minutes: 5,
+            type: "intro",
+            grammarFocus: [],
+            vocabFocus: [],
+            goals: [
+              "Понять структуру курса и систему наград",
+              "Настроиться на короткие, но регулярные занятия",
+              "Снять страх перед ошибками"
+            ],
+            contentIntro: [
+              "Этот курс построен на принципе «маленькие шаги — большой результат».",
+              "Каждый урок сочетает грамматику, лексику и мини-игры. За выполнение уроков вы получаете XP, повышаете уровень и зарабатываете бейджи.",
+              "Ошибаться — нормально. Ошибка = сигнал мозгу, что идёт обучение."
+            ],
+            exercises: [
+              {
+                id: "welcome-choice",
+                kind: "mcq",
+                question: "Как лучше всего работать с этим курсом?",
+                options: [
+                  "Проходить сразу по 10 уроков за раз и делать длинные паузы",
+                  "Каждый день делать 1–2 коротких урока и радоваться маленьким победам",
+                  "Ждать идеального настроения и только тогда заниматься"
+                ],
+                correctIndex: 1,
+                explanation: "Регулярность + маленькие победы = устойчивый прогресс и стабильные эндорфины."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "m1",
+        title: "First Contact · Приветствия и представления",
+        lessons: [
+          {
+            id: "greetings-1",
+            title: "Урок 1 · Hello & Goodbye",
+            minutes: 10,
+            type: "core",
+            grammarFocus: ["Формальное и неформальное приветствие"],
+            vocabFocus: ["hello, hi, good morning, bye, see you"],
+            goals: [
+              "Научиться здороваться и прощаться в типичных ситуациях",
+              "Различать формальный и неформальный стиль",
+              "Связать фразы с ситуациями через мини-игру"
+            ],
+            vocabList: [
+              { en: "Hello", ru: "Здравствуйте / Привет" },
+              { en: "Hi", ru: "Привет (неформально)" },
+              { en: "Good morning", ru: "Доброе утро" },
+              { en: "Good afternoon", ru: "Добрый день" },
+              { en: "Good evening", ru: "Добрый вечер" },
+              { en: "Goodbye", ru: "До свидания" },
+              { en: "See you", ru: "Увидимся" }
+            ],
+            grammarNotes: [
+              "В английском нет отдельного «ты/вы» в форме приветствий — вежливость передаётся тоном и выбором слов.",
+              "Hi — неформальное приветствие, подходит для друзей и близких коллег.",
+              "Good morning/afternoon/evening — чуть более формальные варианты; можно использовать и с незнакомыми людьми."
+            ],
+            exercises: [
+              {
+                id: "greetings-mcq-1",
+                kind: "mcq",
+                question: "Как лучше поприветствовать коллегу утром в офисе?",
+                options: ["Hi!", "Good morning!", "Good night!"],
+                correctIndex: 1,
+                explanation: "Утро + рабочая обстановка — «Good morning!» звучит вежливо и естественно."
+              },
+              {
+                id: "greetings-mcq-2",
+                kind: "mcq",
+                question: "Как естественно попрощаться с другом после встречи?",
+                options: ["See you!", "Good evening!", "Good morning!"],
+                correctIndex: 0,
+                explanation: "See you! — живое и дружеское «Увидимся!»."
+              },
+              {
+                id: "greetings-input-1",
+                kind: "input",
+                question: "Напишите по-английски: «Доброе утро».",
+                correctAnswers: ["good morning", "goodmorning"],
+                placeholder: "ваш ответ...",
+                explanation: "Обратите внимание на написание: good morning — два слова."
+              }
+            ]
+          },
+          {
+            id: "introduce-1",
+            title: "Урок 2 · Как представиться",
+            minutes: 12,
+            type: "core",
+            grammarFocus: ["Глагол to be в Present Simple (I am, you are)"],
+            vocabFocus: ["name, I am, you are, nice to meet you"],
+            goals: [
+              "Научиться говорить, как вас зовут",
+              "Понимать вопрос «Как тебя зовут?»",
+              "Сделать мини-диалог знакомства"
+            ],
+            vocabList: [
+              { en: "My name is...", ru: "Меня зовут..." },
+              { en: "I am Irina.", ru: "Я Ирина." },
+              { en: "You are...", ru: "Ты / Вы ..." },
+              { en: "Nice to meet you.", ru: "Приятно познакомиться." }
+            ],
+            grammarNotes: [
+              "I am = я есть. В русском «есть» обычно не произносится, в английском — обязателен.",
+              "Сокращённая форма: I’m, You’re. В разговорной речи используются очень часто."
+            ],
+            exercises: [
+              {
+                id: "introduce-mcq-1",
+                kind: "mcq",
+                question: "Выберите корректную фразу:",
+                options: ["I am student.", "I am a student.", "I student."],
+                correctIndex: 1,
+                explanation: "В английском обычно нужен артикль перед исчисляемым существительным: a student."
+              },
+              {
+                id: "introduce-input-1",
+                kind: "input",
+                question: "Напишите фразу «Приятно познакомиться» по-английски.",
+                correctAnswers: ["nice to meet you", "nice 2 meet u"], // второй – немного шуточный
+                placeholder: "nice...",
+                explanation: "Классический вариант — Nice to meet you."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "m2",
+        title: "To Be · Кто я и где я",
+        lessons: [
+          {
+            id: "tobe-1",
+            title: "Урок 3 · I am / You are / We are",
+            minutes: 15,
+            type: "core",
+            grammarFocus: ["to be: утверждения"],
+            vocabFocus: ["student, teacher, from, Russia, Germany"],
+            goals: [
+              "Говорить о том, кто вы и откуда",
+              "Составлять простые предложения с to be"
+            ],
+            exercises: [] // можно заполнить позже
+          },
+          {
+            id: "tobe-2",
+            title: "Урок 4 · Вопросы и краткие ответы",
+            minutes: 15,
+            type: "core",
+            grammarFocus: ["to be: вопросы и короткие ответы"],
+            vocabFocus: ["Are you...? Yes, I am / No, I’m not"],
+            goals: [],
+            exercises: []
+          }
+        ]
+      },
+      {
+        id: "m3",
+        title: "Present Simple · Привычки и рутина",
+        lessons: [
+          {
+            id: "present-1",
+            title: "Урок 5 · I work, you play",
+            minutes: 15,
+            type: "core",
+            grammarFocus: ["Present Simple: I/you/we/they"],
+            vocabFocus: ["to work, to play, to like"],
+            goals: [],
+            exercises: []
+          },
+          {
+            id: "present-2",
+            title: "Урок 6 · He works, she plays",
+            minutes: 18,
+            type: "core",
+            grammarFocus: ["Present Simple: he/she/it + -s"],
+            vocabFocus: [],
+            goals: [],
+            exercises: []
+          }
+        ]
+      },
+      {
+        id: "m4",
+        title: "Everyday Life · Время, дом, семья",
+        lessons: [
+          { id: "time-1", title: "Урок 7 · Время и распорядок дня", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] },
+          { id: "family-1", title: "Урок 8 · Семья и дом", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] }
+        ]
+      },
+      {
+        id: "m5",
+        title: "Past & Future Lite · Вчера и завтра",
+        lessons: [
+          { id: "past-1", title: "Урок 9 · Вчера: was / were", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] },
+          { id: "future-1", title: "Урок 10 · Планы: going to", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] }
+        ]
+      },
+      {
+        id: "m6",
+        title: "Travel & Small Talk",
+        lessons: [
+          { id: "travel-1", title: "Урок 11 · В аэропорту", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] },
+          { id: "smalltalk-1", title: "Урок 12 · Небольшой разговор", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] }
+        ]
+      },
+      {
+        id: "m7",
+        title: "Revision & Endorphins",
+        lessons: [
+          { id: "review-1", title: "Финальный квест · Повторяем всё", minutes: 25, type: "revision", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] }
+        ]
+      }
+    ]
+  };
+
+  /***********************
+   * State & persistence
+   ***********************/
+  const STORAGE_KEY = "englishIntroProgress-v1";
+
+  let state = {
+    completedLessons: [],
+    xp: 0,
+    streakDays: 0,
+    lastLessonId: null,
+    lastStudyDate: null // 'YYYY-MM-DD'
+  };
+
+  function todayStr() {
+    const d = new Date();
+    return d.toISOString().slice(0, 10);
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      state = Object.assign(state, parsed);
+    } catch (e) {
+      console.warn("Cannot load state", e);
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      console.warn("Cannot save state", e);
+    }
+  }
+
+  function addXp(amount) {
+    state.xp += amount;
+    const today = todayStr();
+    if (!state.lastStudyDate) {
+      state.streakDays = 1;
+    } else if (state.lastStudyDate !== today) {
+      // очень простой подсчёт серии: новый день = +1
+      state.streakDays += 1;
+    }
+    state.lastStudyDate = today;
+    saveState();
+    updateStats();
+    showXpToast(amount);
+  }
+
+  function markLessonCompleted(lessonId) {
+    if (!state.completedLessons.includes(lessonId)) {
+      state.completedLessons.push(lessonId);
+      state.lastLessonId = lessonId;
+      addXp(10); // 10 XP за урок
+      saveState();
+      renderSidebarLessons();
+      updateProgress();
+      updateStreakCard();
+    }
+  }
+
+  function getAllLessons() {
+    return englishIntroCourse.modules.flatMap(m => m.lessons);
+  }
+
+  function findLessonById(id) {
+    return getAllLessons().find(l => l.id === id) || null;
+  }
+
+  function firstRealLessonId() {
+    const all = getAllLessons();
+    const firstCore = all.find(l => l.type !== "intro");
+    return firstCore ? firstCore.id : (all[0] && all[0].id);
+  }
+
+  /***********************
+   * UI helpers
+   ***********************/
+  const els = {
+    lessonList: document.getElementById("lesson-list"),
+    progressText: document.getElementById("progress-text"),
+    progressBar: document.getElementById("progress-bar"),
+    statLevel: document.getElementById("stat-level"),
+    statXp: document.getElementById("stat-xp"),
+    statStreak: document.getElementById("stat-streak"),
+    contentMain: document.getElementById("content-main"),
+    contentSidebar: document.getElementById("content-sidebar"),
+    btnStart: document.getElementById("btn-start"),
+    btnContinue: document.getElementById("btn-continue"),
+    xpToast: document.getElementById("xp-toast"),
+    streakToday: document.getElementById("streak-today"),
+    badgeRow: document.getElementById("badge-row")
+  };
+
+  function updateStats() {
+    const level = 1 + Math.floor(state.xp / 100);
+    els.statLevel.textContent = level;
+    els.statXp.textContent = state.xp;
+    els.statStreak.textContent = state.streakDays + " дней";
+  }
+
+  function updateProgress() {
+    const allLessons = getAllLessons().filter(l => l.type !== "intro");
+    const total = allLessons.length;
+    const done = allLessons.filter(l => state.completedLessons.includes(l.id)).length;
+    const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+    els.progressText.textContent = done + " / " + total;
+    els.progressBar.style.width = percent + "%";
+  }
+
+  function updateStreakCard() {
+    const today = todayStr();
+    const todayDone = state.lastStudyDate === today;
+    els.streakToday.textContent = todayDone ? "100%" : "0%";
+    renderBadges();
+  }
+
+  function renderBadges() {
+    const container = els.badgeRow;
+    container.innerHTML = "";
+    const badges = [];
+
+    if (state.completedLessons.length >= 1) {
+      badges.push({ label: "Первый шаг ✅", highlight: true });
+    }
+    if (state.completedLessons.length >= 5) {
+      badges.push({ label: "5 уроков — красавчик", highlight: true });
+    }
+    if (state.streakDays >= 3) {
+      badges.push({ label: "Серия 3+ дня", highlight: true });
+    }
+    if (state.xp >= 50) {
+      badges.push({ label: "50+ XP", highlight: false });
+    }
+    if (badges.length === 0) {
+      badges.push({ label: "Сделайте первый урок и получите бейдж 🎖", highlight: true });
+    }
+
+    badges.forEach(b => {
+      const span = document.createElement("span");
+      span.className = "badge" + (b.highlight ? " highlight" : "");
+      span.textContent = b.label;
+      container.appendChild(span);
+    });
+  }
+
+  function showXpToast(amount) {
+    const el = els.xpToast;
+    el.textContent = "+" + amount + " XP — вы ближе к цели! 🎉";
+    el.style.display = "block";
+    setTimeout(() => { el.style.display = "none"; }, 2000);
+  }
+
+  /***********************
+   * Render functions
+   ***********************/
+  function renderSidebarLessons(activeLessonId) {
+    const container = els.lessonList;
+    container.innerHTML = "";
+
+    englishIntroCourse.modules.forEach(module => {
+      const mt = document.createElement("div");
+      mt.className = "module-title";
+      mt.textContent = module.title;
+      container.appendChild(mt);
+
+      module.lessons.forEach(lesson => {
+        const item = document.createElement("div");
+        item.className = "lesson-item";
+        if (lesson.id === activeLessonId) {
+          item.classList.add("active");
+        }
+
+        const check = document.createElement("div");
+        check.className = "lesson-check";
+        if (state.completedLessons.includes(lesson.id)) {
+          check.classList.add("completed");
+          check.textContent = "✓";
+        }
+
+        const titleSpan = document.createElement("span");
+        titleSpan.textContent = lesson.title;
+
+        const meta = document.createElement("span");
+        meta.className = "lesson-meta";
+        meta.textContent = lesson.minutes ? lesson.minutes + " мин" : "";
+
+        item.appendChild(check);
+        item.appendChild(titleSpan);
+        item.appendChild(meta);
+
+        item.addEventListener("click", () => {
+          openLesson(lesson.id);
+        });
+
+        container.appendChild(item);
+      });
+    });
+  }
+
+  function renderIntroScreen() {
+    els.contentMain.innerHTML = `
+      <div>
+        <div class="content-section-title mb-1">Как устроен курс</div>
+        <p class="mb-2 text-muted">
+          Курс состоит из модулей. Каждый модуль — это маленький «уровень» игры, 
+          а каждый урок — отдельный шаг, за который вы получаете XP и прогресс-бар сдвигается вперёд.
+        </p>
+        <div class="pill-row mb-2">
+          <span class="pill grammar">Грамматика без перегруза</span>
+          <span class="pill vocab">Живые словарики</span>
+          <span class="pill game">Мини-игры и тренажёры</span>
+          <span class="pill good">Маленькие победы каждый день</span>
+        </div>
+
+        <div class="grammar-block">
+          <h3>Как работать с материалом</h3>
+          <ul>
+            <li><b>1 урок = 10–20 минут.</b> Столько, сколько легко встроить в день.</li>
+            <li><b>Сначала прочитайте краткое объяснение</b>, затем сделайте упражнения.</li>
+            <li><b>Ошибки — окей.</b> Это не экзамен, а тренажёр. Система показывает, что и почему верно.</li>
+          </ul>
+        </div>
+
+        <div class="vocab-block">
+          <h3>Что вы освоите</h3>
+          <ul>
+            <li>Приветствия, представления, small talk.</li>
+            <li>Глагол <code>to be</code>, Present Simple, немного прошедшего и будущего.</li>
+            <li>Базовые фразы для путешествий, переписки и общения.</li>
+          </ul>
+        </div>
+
+        <div class="tips-block">
+          <h3>Как получать больше эндорфинов от учёбы</h3>
+          <ul>
+            <li>Делайте <b>минимум один урок в день</b> — так растёт серия дней и мотивация.</li>
+            <li>Отмечайте каждую маленькую победу: «я сделал», а не «я сделал мало».</li>
+            <li>Возвращайтесь к пройденным урокам, если хочется лёгкой победы и повторения.</li>
+          </ul>
+        </div>
+      </div>
+    `;
+
+    els.contentSidebar.innerHTML = `
+      <div class="content-section-title mb-1">С чего начать?</div>
+      <p class="text-muted mb-2">
+        Нажмите «Начать с Урока 1», чтобы перейти сразу к практическим фразам. 
+        Или откройте урок «Добро пожаловать», если хотите прочитать методику подробно.
+      </p>
+      <div class="pill-row">
+        <span class="pill">1–2 урока в день</span>
+        <span class="pill">Гибкий темп</span>
+        <span class="pill">Сохранение прогресса</span>
+      </div>
+    `;
+  }
+
+  function openLesson(lessonId) {
+    const lesson = findLessonById(lessonId);
+    if (!lesson) return;
+
+    state.lastLessonId = lessonId;
+    saveState();
+    renderSidebarLessons(lessonId);
+
+    // MAIN CONTENT
+    const main = els.contentMain;
+    let goalsHtml = "";
+    if (lesson.goals && lesson.goals.length) {
+      goalsHtml = `
+        <div class="tips-block mb-2">
+          <h3>Цели урока</h3>
+          <ul>
+            ${lesson.goals.map(g => `<li>${g}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+    }
+
+    let vocabHtml = "";
+    if (lesson.vocabList && lesson.vocabList.length) {
+      vocabHtml = `
+        <div class="vocab-block">
+          <h3>Словарик урока</h3>
+          <ul>
+            ${lesson.vocabList.map(w => `<li><b>${w.en}</b> — ${w.ru}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+    }
+
+    let introTextHtml = "";
+    if (lesson.contentIntro && lesson.contentIntro.length) {
+      introTextHtml = `
+        <div class="grammar-block mb-2">
+          ${lesson.contentIntro.map(p => `<p class="mb-1">${p}</p>`).join("")}
+        </div>
+      `;
+    }
+
+    const headPills = `
+      <div class="pill-row mb-2">
+        ${(lesson.grammarFocus || []).map(g => `<span class="pill grammar">${g}</span>`).join("")}
+        ${(lesson.vocabFocus || []).map(v => `<span class="pill vocab">${v}</span>`).join("")}
+      </div>
+    `;
+
+    main.innerHTML = `
+      <div>
+        <div class="content-section-title mb-1">${lesson.title}</div>
+        <p class="text-muted mb-2">
+          Примерное время: ${lesson.minutes || 10} минут. 
+          Сконцентрируйтесь на понимании и игре, а не на идеальности.
+        </p>
+        ${headPills}
+        ${introTextHtml}
+        ${vocabHtml}
+        <div id="exercise-container"></div>
+      </div>
+    `;
+
+    // SIDEBAR: grammar / tips
+    const sidebar = els.contentSidebar;
+    let grammarHtml = "";
+    if (lesson.grammarNotes && lesson.grammarNotes.length) {
+      grammarHtml = `
+        <div class="grammar-block">
+          <h3>Грамматика коротко</h3>
+          <ul>
+            ${lesson.grammarNotes.map(n => `<li>${n}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+    }
+
+    sidebar.innerHTML = `
+      <div class="content-section-title mb-1">Подсказки к уроку</div>
+      ${grammarHtml || "<p class='text-muted'>Для этого урока пока нет отдельного блока грамматики. Сосредоточьтесь на упражнениях.</p>"}
+      <div class="tips-block">
+        <h3>Совет</h3>
+        <p class="text-muted mb-1">
+          Если чувствуете, что устали, сделайте паузу после одного упражнения и вернитесь позже.
+        </p>
+        <p class="text-muted">
+          Главное — сохранить ощущение, что уроки приносят удовольствие, а не выжимают силы.
+        </p>
+      </div>
+    `;
+
+    renderExercises(lesson);
+  }
+
+  function renderExercises(lesson) {
+    const container = document.getElementById("exercise-container");
+    container.innerHTML = "";
+
+    const exercises = lesson.exercises || [];
+
+    if (!exercises.length) {
+      container.innerHTML = `
+        <div class="exercise">
+          <div class="exercise-title mb-1">Интерактивный тренажёр</div>
+          <p class="exercise-question text-muted">
+            Для этого урока тренажёры ещё не настроены. 
+            Вы можете добавить сюда свои задания в коде (массив <code>exercises</code>).
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    let completedCount = 0;
+    const total = exercises.length;
+
+    exercises.forEach(ex => {
+      const exEl = document.createElement("div");
+      exEl.className = "exercise";
+
+      const title = document.createElement("div");
+      title.className = "exercise-title";
+      title.textContent = "Задание";
+
+      const question = document.createElement("div");
+      question.className = "exercise-question";
+      question.textContent = ex.question;
+
+      const footer = document.createElement("div");
+      footer.className = "exercise-footer";
+
+      const status = document.createElement("span");
+      status.className = "exercise-status";
+      status.textContent = "Ответьте на задание";
+
+      const btnCheck = document.createElement("button");
+      btnCheck.className = "btn btn-ghost";
+      btnCheck.style.padding = "4px 10px";
+      btnCheck.style.fontSize = "12px";
+      btnCheck.textContent = "Проверить";
+
+      footer.appendChild(status);
+      footer.appendChild(btnCheck);
+
+      exEl.appendChild(title);
+      exEl.appendChild(question);
+
+      // Different kinds
+      if (ex.kind === "mcq") {
+        const optionsWrap = document.createElement("div");
+        optionsWrap.className = "exercise-options";
+        let selectedIndex = null;
+
+        ex.options.forEach((opt, idx) => {
+          const btn = document.createElement("button");
+          btn.className = "exercise-option";
+          btn.textContent = opt;
+          btn.addEventListener("click", () => {
+            selectedIndex = idx;
+            Array.from(optionsWrap.children).forEach(ch => ch.classList.remove("selected"));
+            btn.classList.add("selected");
+          });
+          optionsWrap.appendChild(btn);
+        });
+
+        exEl.appendChild(optionsWrap);
+
+        btnCheck.addEventListener("click", () => {
+          if (selectedIndex === null) {
+            status.textContent = "Сначала выберите вариант.";
+            status.className = "exercise-status err";
+            return;
+          }
+          if (selectedIndex === ex.correctIndex) {
+            status.textContent = "Верно! " + (ex.explanation || "");
+            status.className = "exercise-status ok";
+            btnCheck.disabled = true;
+            completedCount++;
+            if (completedCount === total) {
+              // все задания выполнены
+              markLessonCompleted(lesson.id);
+            }
+          } else {
+            status.textContent = "Неверно. Попробуйте ещё. " + (ex.explanation || "");
+            status.className = "exercise-status err";
+          }
+        });
+
+      } else if (ex.kind === "input") {
+        const input = document.createElement("input");
+        input.className = "input-small";
+        input.type = "text";
+        if (ex.placeholder) input.placeholder = ex.placeholder;
+
+        exEl.appendChild(input);
+
+        btnCheck.addEventListener("click", () => {
+          const value = (input.value || "").trim().toLowerCase();
+          if (!value) {
+            status.textContent = "Введите ответ.";
+            status.className = "exercise-status err";
+            return;
+          }
+          const correct = (ex.correctAnswers || []).some(ans =>
+            value === ans.toLowerCase()
+          );
+          if (correct) {
+            status.textContent = "Отлично! " + (ex.explanation || "");
+            status.className = "exercise-status ok";
+            btnCheck.disabled = true;
+            input.disabled = true;
+            completedCount++;
+            if (completedCount === total) {
+              markLessonCompleted(lesson.id);
+            }
+          } else {
+            status.textContent = "Пока нет. Подумайте ещё. " + (ex.explanation || "");
+            status.className = "exercise-status err";
+          }
+        });
+      }
+
+      exEl.appendChild(footer);
+      container.appendChild(exEl);
+    });
+  }
+
+  /***********************
+   * Init
+   ***********************/
+  function init() {
+    loadState();
+    updateStats();
+    updateProgress();
+    updateStreakCard();
+    renderSidebarLessons(state.lastLessonId);
+    renderIntroScreen();
+
+    els.btnStart.addEventListener("click", () => {
+      const firstLesson = firstRealLessonId();
+      if (firstLesson) openLesson(firstLesson);
+    });
+
+    els.btnContinue.addEventListener("click", () => {
+      if (state.lastLessonId && findLessonById(state.lastLessonId)) {
+        openLesson(state.lastLessonId);
+      } else {
+        const firstLesson = firstRealLessonId();
+        if (firstLesson) openLesson(firstLesson);
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
