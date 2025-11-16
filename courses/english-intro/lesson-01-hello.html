@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>English Intro — Урок 1: Приветствие и звуки</title>
+  <title>English Intro — Урок 1: Экспедиция в мир звуков</title>
   <base href="/">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
@@ -18,29 +18,118 @@
     }
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:radial-gradient(circle at top,#fffef2 0,#FFF8D6 40%,#FFEFC0 100%);
+      background:
+        radial-gradient(circle at top,#fffef2 0,#FFF8D6 40%,#FFEFC0 100%);
       color:var(--ink);
     }
-    .shadow-soft{box-shadow:0 14px 40px rgba(0,0,0,.12)}
+    .shadow-soft{box-shadow:0 18px 45px rgba(0,0,0,.14)}
     .glass-card{
       background:#fffef7ee;
-      backdrop-filter:blur(10px);
+      backdrop-filter:blur(14px);
       border-radius:1.75rem;
       border:1px solid rgba(15,23,42,.08);
     }
     .step-hidden{display:none;}
+
+    /* Экспедиционная дорожка */
+    .exp-track{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:0.75rem;
+      padding:0.75rem 1rem;
+      border-radius:999px;
+      background:linear-gradient(90deg,#fefce8,#fffbeb);
+      border:1px dashed rgba(148,163,184,.6);
+    }
+    .exp-track::before{
+      content:"";
+      position:absolute;
+      left:1.5rem;
+      right:1.5rem;
+      top:50%;
+      height:2px;
+      transform:translateY(-50%);
+      border-top:2px dashed rgba(148,163,184,.7);
+      z-index:0;
+    }
+    .exp-step{
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:0.15rem;
+      font-size:10px;
+      text-align:center;
+      max-width:80px;
+    }
+    .exp-node{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      background:#e5e7eb;
+      border:1px solid rgba(15,23,42,.15);
+      box-shadow:0 2px 6px rgba(0,0,0,.08);
+      font-size:16px;
+    }
+    .exp-step-active .exp-node{
+      background:radial-gradient(circle at 30% 0%,#fef9c3,#fed7aa);
+      border-color:#f97316;
+      box-shadow:0 0 0 2px rgba(251,191,36,.6),0 10px 25px rgba(248,113,113,.35);
+      transform:translateY(-1px);
+    }
+    .exp-step-active .exp-label{
+      color:#b45309;
+      font-weight:600;
+    }
+    .exp-step-done .exp-node{
+      background:#22c55e;
+      color:white;
+      border-color:#15803d;
+    }
+    .exp-step-done .exp-label{
+      color:#16a34a;
+    }
+
+    /* Карточка "полевого дневника" */
+    .notebook{
+      background:repeating-linear-gradient(
+        to bottom,
+        #fffef7,
+        #fffef7 22px,
+        #fef3c7 23px
+      );
+      border-radius:1.25rem;
+      border:1px solid rgba(148,163,184,.5);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.7);
+    }
+
+    @media (max-width:640px){
+      .exp-track{
+        flex-direction:column;
+        padding-inline:0.75rem;
+      }
+      .exp-track::before{
+        display:none;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen">
 
 <!-- HEADER -->
 <header class="sticky top-0 z-40 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
-  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
     <a href="/courses/english-intro/" class="flex items-center gap-3">
       <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl">
       <div class="flex flex-col">
         <span class="font-semibold text-sm leading-tight">PolyTalky · English Intro</span>
-        <span class="text-[10px] text-[#64748b] leading-tight">Короткие уроки · 10–15 минут</span>
+        <span class="text-[10px] text-[#64748b] leading-tight">Экспедиция в мир английского</span>
       </div>
     </a>
 
@@ -54,231 +143,345 @@
         ← К странице курса
       </a>
     </nav>
+
+    <a href="/courses/english-intro/"
+       class="sm:hidden inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-black/10 bg-white text-xs text-[#475569] shadow-soft">
+      ← К курсу
+    </a>
   </div>
 </header>
 
-<!-- CONTENT -->
-<main class="max-w-5xl mx-auto px-4 py-8">
-<article class="glass-card shadow-soft p-6 space-y-8">
+<!-- MAIN -->
+<main class="max-w-5xl mx-auto px-4 py-6 sm:py-8">
+  <article class="glass-card shadow-soft p-5 sm:p-7 space-y-7">
 
-  <!-- HEADER OF LESSON -->
-  <header class="space-y-2">
-    <p class="text-[11px] text-[#64748b] uppercase tracking-wide">Day 1 · Lesson 1</p>
-    <h1 class="text-xl sm:text-2xl font-extrabold">Приветствие и первые звуки английского</h1>
-
-    <!-- Progress -->
-    <div class="mt-3">
-      <div class="flex justify-between text-[11px] text-[#64748b] mb-1">
-        <span>Прогресс урока</span>
-        <span id="step-label">Шаг 1 из 4</span>
-      </div>
-      <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-        <div id="step-bar" class="h-full w-1/4 rounded-full"
-             style="background:linear-gradient(90deg,var(--brand-orange),var(--brand-yellow));"></div>
-      </div>
-    </div>
-  </header>
-
-
-  <!-- STEP 1 -->
-  <section id="step-1" class="space-y-4">
-
-    <h2 class="font-semibold text-base">Шаг 1. Начало! 🎉</h2>
-
-    <div class="space-y-2 text-sm">
-      <p>Ура, ура, ура! Настал наш долгожданный курс! Вот он — первый день.  
-        День полный надежд и энтузиазма!</p>
-
-      <p>Если вдруг что-то непонятно — не стесняйтесь спросить, это нормально и очень правильно 🙂</p>
-
-      <p>Ну что же, приступим?</p>
-    </div>
-
-    <div class="border border-gray-200 rounded-2xl p-3 space-y-2 bg-white/80 text-sm">
-      <p class="font-semibold">Мини-задание</p>
-      <p>Поздоровайтесь по-английски. Достаточно короткого варианта:</p>
-      <input id="hello-input" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
-             placeholder='Например: "Hello!" или "Hi!"'>
-      <p id="hello-status" class="text-[11px] text-[#64748b]">Введите вариант приветствия.</p>
-    </div>
-
-    <div class="flex justify-end">
-      <button id="btn-step-1"
-              class="px-4 py-2 rounded-xl bg-[#22c55e] text-xs sm:text-sm text-white font-semibold disabled:opacity-50"
-              disabled>
-        Далее → Видео от носителя
-      </button>
-    </div>
-  </section>
-
-
-  <!-- STEP 2 -->
-  <section id="step-2" class="space-y-4 step-hidden">
-
-    <h2 class="font-semibold text-base">Шаг 2. Видео от носителя</h2>
-
-    <div class="text-sm space-y-2">
-      <p>Английское произношение — одно из наиболее сложных в мире,  
-      за счет десятков различных буквосочетаний, которые производят разные звуки.</p>
-
-      <p>Но помимо этого, английский славится тем, что  
-      <b>на каждое правило в нем всегда найдутся исключения!</b></p>
-
-      <p>Для начала посмотрите это видео, где носитель рассказывает, какие звуки можно встретить  
-      и как правильно их произносить.</p>
-
-      <p class="text-xs text-[#64748b]">
-        Если пока сложно понимать речь — включите субтитры и автоперевод на русский.
-      </p>
-    </div>
-
-    <div class="w-full rounded-2xl border border-dashed border-gray-300 p-4 text-xs text-[#64748b] bg-white/70">
-      Здесь будет видео. Вставьте iframe YouTube или video-плеер.
-    </div>
-
-    <div class="border border-gray-200 rounded-2xl p-3 bg-white/80 text-sm space-y-2">
-      <button id="video-done"
-              class="px-3 py-1.5 rounded-full border border-gray-200 bg-[#fffef7] text-xs font-semibold">
-        ✓ Я посмотрел(а) видео
-      </button>
-      <p id="video-status" class="text-[11px] text-[#64748b]">Нажмите кнопку, когда будете готовы идти дальше.</p>
-    </div>
-
-    <div class="flex justify-between">
-      <button data-back="1" class="px-3 py-2 rounded-xl border bg-white text-xs">← Назад</button>
-      <button id="btn-step-2"
-              class="px-4 py-2 rounded-xl bg-[#22c55e] text-xs sm:text-sm text-white font-semibold disabled:opacity-50"
-              disabled>
-        Далее → Таблица гласных
-      </button>
-    </div>
-  </section>
-
-
-  <!-- STEP 3 -->
-  <section id="step-3" class="space-y-4 step-hidden">
-
-    <h2 class="font-semibold text-base">Шаг 3. Таблица гласных буквосочетаний</h2>
-
-    <div class="text-sm space-y-2">
-      <p>Вроде с фонетикой становится немного понятнее? Что скажете?</p>
-      <p>Однако стоит еще раз всё разобрать.  
-      <b>Не забывайте читать вслух</b>, чтобы лучше запомнить.</p>
-    </div>
-
-    <div class="w-full rounded-2xl border border-dashed border-gray-300 p-4 text-xs bg-white/70">
-      Здесь будет таблица: <b>rules-table-of-combinations-of-vowels-under-stress</b>.
-    </div>
-
-    <div class="border border-gray-200 rounded-2xl p-3 bg-white/80 text-sm space-y-2">
-      <p class="font-semibold">Мини-задание №1</p>
-      <p>
-        Подберите по 3 своих примера на каждое из приведенных буквосочетаний.  
-        Если не получается — откройте любой текст на английском и ищите слова с нужными сочетаниями.
-      </p>
-      <textarea id="vowel-input" class="w-full min-h-[70px] border border-gray-200 rounded-xl px-3 py-2 text-sm"
-                placeholder="Например: ai — rain, train, Spain ..."></textarea>
-      <p id="vowel-status" class="text-[11px] text-[#64748b]">Добавьте хотя бы пару примеров.</p>
-    </div>
-
-    <div class="flex justify-between">
-      <button data-back="2" class="px-3 py-2 rounded-xl border bg-white text-xs">← Назад</button>
-      <button id="btn-step-3"
-              class="px-4 py-2 rounded-xl bg-[#22c55e] text-xs sm:text-sm text-white font-semibold disabled:opacity-50"
-              disabled>
-        Далее → Аудиозадание
-      </button>
-    </div>
-  </section>
-
-
-  <!-- STEP 4 -->
-  <section id="step-4" class="space-y-4 step-hidden">
-
-    <h2 class="font-semibold text-base">Шаг 4. Аудиозадание + обратная связь</h2>
-
-    <div class="text-sm space-y-2">
-      <p>Теперь — практика!  
-      Произнесите вслух слова, которые нашли, и запишите короткий аудиофрагмент.</p>
-    </div>
-
-    <!-- AUDIO RECORDER -->
-    <div class="border border-gray-200 rounded-2xl p-3 bg-white/80 text-sm space-y-2">
-      <p class="font-semibold">Запишите свой голос</p>
-
-      <div class="flex gap-2">
-        <button id="rec-start" class="px-3 py-1.5 rounded-full border bg-[#fee2e2] text-xs font-semibold">
-          ⏺ Начать запись
-        </button>
-        <button id="rec-stop" disabled class="px-3 py-1.5 rounded-full border bg-[#e5e7eb] text-xs font-semibold">
-          ⏹ Остановить
-        </button>
+    <!-- Заголовок + прогресс -->
+    <header class="space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <p class="text-[11px] text-[#64748b] uppercase tracking-[0.16em]">Day 1 · Expedition Log</p>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">
+            Экспедиция 1: Первое приветствие и звуки английского
+          </h1>
+        </div>
+        <div class="text-right text-[11px] text-[#64748b]">
+          <p id="step-label">Шаг 1 из 4</p>
+          <p>+20 XP после завершения миссии</p>
+        </div>
       </div>
 
-      <p id="rec-status" class="text-[11px] text-[#64748b]">Запись пока не начата.</p>
+      <!-- Экспедиционная дорожка -->
+      <div class="exp-track mt-1">
+        <div class="exp-step exp-step-active" data-step-node="1">
+          <div class="exp-node">📍</div>
+          <span class="exp-label">Старт экспедиции</span>
+        </div>
+        <div class="exp-step" data-step-node="2">
+          <div class="exp-node">🎧</div>
+          <span class="exp-label">Голос носителя</span>
+        </div>
+        <div class="exp-step" data-step-node="3">
+          <div class="exp-node">📜</div>
+          <span class="exp-label">Таблица гласных</span>
+        </div>
+        <div class="exp-step" data-step-node="4">
+          <div class="exp-node">🎤</div>
+          <span class="exp-label">Аудиомиссия</span>
+        </div>
+      </div>
 
-      <audio id="rec-player" controls class="w-full hidden"></audio>
+      <!-- Линейный прогресс -->
+      <div class="mt-3">
+        <div class="flex justify-between text-[11px] text-[#64748b] mb-1">
+          <span>Прогресс урока</span>
+          <span id="bar-label">25%</span>
+        </div>
+        <div class="w-full h-1.5 rounded-full bg-gray-200 overflow-hidden">
+          <div id="step-bar" class="h-full w-1/4 rounded-full"
+               style="background:linear-gradient(90deg,var(--brand-orange),var(--brand-yellow));"></div>
+        </div>
+      </div>
+    </header>
 
-      <p class="text-[11px] text-[#64748b]">
-        Автоматическая проверка подключается позже. Сейчас мы просто сохраняем аудио.
-      </p>
-    </div>
+    <!-- ШАГ 1 -->
+    <section id="step-1" class="space-y-4">
+      <div class="notebook p-4 sm:p-5 space-y-3">
+        <h2 class="font-semibold text-base flex items-center gap-2">
+          <span>Глава 1. Точка отправления</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
+            Миссия: настроиться и поздороваться
+          </span>
+        </h2>
 
-    <!-- PRO BLOCK -->
-    <div class="border border-amber-200 rounded-2xl p-3 bg-[#fffbeb] text-sm space-y-2">
-      <p class="font-semibold">🧑‍🏫 Хотите проверку от преподавателя?</p>
-      <p>В PRO-версии ваши аудиозаписи проверят преподаватели и дадут корректировки.</p>
-      <a href="/courses/english-intro/pro.html"
-         class="px-3 py-1.5 rounded-full border border-amber-300 bg-white text-xs font-semibold inline-block">
-        Узнать о PRO-проверке →
-      </a>
-    </div>
+        <div class="space-y-2 text-sm text-[#1f2937]">
+          <p>
+            Ура, ура, ура! Настал наш долгожданный курс! Вот он — первый день.
+            День полный надежд и энтузиазма!
+          </p>
+          <p>
+            Если вдруг что-то непонятно — не стесняйтесь спросить, это нормально и очень правильно 🙂
+          </p>
+          <p>Ну что же, приступим?</p>
+        </div>
 
-    <!-- FINISH -->
-    <section class="pt-2 border-t border-gray-100 text-sm space-y-3">
-      <h3 class="font-semibold">Слова этого урока</h3>
-      <ul class="text-xs list-disc list-inside">
-        <li><b>Hello</b> — здравствуйте</li>
-        <li><b>Hi</b> — привет</li>
-        <li><b>Good morning</b> — доброе утро</li>
-        <li><b>Goodbye</b> — до свидания</li>
-        <li><b>See you</b> — увидимся</li>
-      </ul>
+        <div class="mt-3 border border-amber-200 bg-amber-50/80 rounded-2xl p-3 text-xs sm:text-sm space-y-2">
+          <p class="font-semibold flex items-center gap-1">
+            <span>🎯 Мини-миссия экспедиции</span>
+          </p>
+          <p>
+            Поздоровайтесь по-английски. Представьте, что вы только что вошли в лагерь экспедиции
+            и увидели своего проводника.
+          </p>
+          <input id="hello-input"
+                 class="w-full border border-amber-200 rounded-xl px-3 py-2 text-sm bg-white/90"
+                 placeholder='Например: "Hello!" или "Hi, I am Anna!"'>
+          <p id="hello-status" class="text-[11px] text-[#92400e]">
+            Введите вариант приветствия.
+          </p>
+        </div>
+      </div>
 
-      <p class="text-[#64748b] text-xs" id="complete-status">
-        Завершите аудиозадание, чтобы отметить урок пройденным.
-      </p>
-
-      <div class="flex flex-wrap gap-2">
-        <button id="finish-lesson"
-                class="px-4 py-2 rounded-xl bg-[#22c55e] text-xs sm:text-sm text-white font-semibold disabled:opacity-50"
+      <div class="flex justify-end">
+        <button id="btn-step-1"
+                class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
                 disabled>
-          ✓ Отметить урок пройденным
+          Открыть следующий лагерь → Видео от носителя
         </button>
-
-        <a id="next-lesson" href="/courses/english-intro/lesson-02-phonetics.html"
-           class="px-4 py-2 rounded-xl border bg-white text-xs sm:text-sm text-[#334155] disabled:opacity-50 disabled:pointer-events-none">
-          → Следующий урок
-        </a>
-
-        <a href="/courses/english-intro/#exercises"
-           class="px-4 py-2 rounded-xl border bg-white text-xs sm:text-sm text-[#334155]">
-          🎯 Потренироваться
-        </a>
       </div>
     </section>
 
-    <button data-back="3" class="px-3 py-2 rounded-xl border bg-white text-xs">← Назад</button>
+    <!-- ШАГ 2 -->
+    <section id="step-2" class="space-y-4 step-hidden">
+      <div class="notebook p-4 sm:p-5 space-y-3">
+        <h2 class="font-semibold text-base flex items-center gap-2">
+          <span>Глава 2. Голос английского</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-200">
+            Миссия: посмотреть видео
+          </span>
+        </h2>
 
-  </section>
+        <div class="text-sm space-y-2">
+          <p>
+            Английское произношение — одно из наиболее сложных в мире, за счёт того,
+            что существуют десятки различных буквосочетаний, которые производят различные звуки.
+          </p>
+          <p>
+            Но помимо этого, английский славится тем, что на каждое правило в нём всегда найдутся исключения!
+            А значит, что порой разобраться в фонетике этого языка может оказаться очень и очень затруднительно.
+          </p>
+          <p>
+            Для начала давайте посмотрим это видео, в котором носитель языка расскажет нам,
+            какие звуки мы можем встретить в английском и как правильно что произносить.
+          </p>
+          <p class="text-xs text-[#64748b]">
+            Если пока вам сложно понять, что говорят на видео — не забудьте о функции субтитров,
+            которую можно настроить так, чтобы речь автоматически переводилась на русский.
+          </p>
+        </div>
 
-</article>
+        <!-- ВИДЕО-БЛОК -->
+        <div class="mt-3 rounded-2xl border border-dashed border-sky-300 bg-white/80 p-4 text-xs text-[#0f172a]">
+          Здесь будет плеер с видео от носителя.
+          Вставьте iframe YouTube / Vimeo или тег &lt;video&gt;.
+        </div>
+
+        <div class="mt-3 border border-sky-200 bg-sky-50/80 rounded-2xl p-3 text-xs sm:text-sm space-y-2">
+          <p class="font-semibold">Отметьте миссию выполненной</p>
+          <p>Как только вы посмотрели видео (полностью или частично), нажмите кнопку ниже.</p>
+          <button id="video-done"
+                  class="px-3 py-1.5 rounded-full border border-sky-200 bg-white text-[11px] font-semibold">
+            ✓ Я посмотрел(а) видео
+          </button>
+          <p id="video-status" class="text-[11px] text-[#0369a1]">
+            Нажмите кнопку, когда будете готовы двигаться дальше.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-between">
+        <button data-back="1" class="px-3 py-2 rounded-xl border bg-white text-xs">
+          ← Вернуться к старту
+        </button>
+        <button id="btn-step-2"
+                class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
+                disabled>
+          Открыть свиток гласных →
+        </button>
+      </div>
+    </section>
+
+    <!-- ШАГ 3 -->
+    <section id="step-3" class="space-y-4 step-hidden">
+      <div class="notebook p-4 sm:p-5 space-y-3">
+        <h2 class="font-semibold text-base flex items-center gap-2">
+          <span>Глава 3. Свиток гласных</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+            Миссия: познакомиться с таблицей
+          </span>
+        </h2>
+
+        <div class="text-sm space-y-2">
+          <p>Вроде с фонетикой становится немного понятнее? Что скажете?</p>
+          <p>
+            Однако стоит ещё раз всё разобрать. Не забывайте читать всё вслух, чтобы лучше запомнить:
+          </p>
+        </div>
+
+        <!-- ТАБЛИЦА -->
+        <div class="mt-3 rounded-2xl border border-dashed border-emerald-300 bg-white/80 p-4 text-xs text-[#0f172a]">
+          Здесь будет ваша таблица
+          <b>rules-table-of-combinations-of-vowels-under-stress</b>
+          (картинка или HTML-таблица).
+        </div>
+
+        <div class="mt-3 border border-emerald-200 bg-emerald-50/80 rounded-2xl p-3 text-xs sm:text-sm space-y-2">
+          <p class="font-semibold">Мини-задание: ваши примеры</p>
+          <p>
+            №1 Аудиозадание! Подберите по 3 своих примера на каждое из приведённых буквосочетаний.
+            Если с каким-то из них не получится ничего придумать, советуем открыть любой текст на английском
+            и найти в этом тексте слово, в котором нужное буквосочетание имеется.
+          </p>
+          <p class="text-[11px] text-[#166534]">
+            Не забудьте посмотреть значение слов в словаре и записать в свой личный словарик! 🙂
+          </p>
+          <textarea id="vowel-input"
+                    class="w-full min-h-[90px] border border-emerald-200 rounded-xl px-3 py-2 text-sm bg-white/90"
+                    placeholder="Запишите несколько сочетаний и слова. Например: ai — rain, train, Spain; ea — eat, speak, tea..."></textarea>
+          <p id="vowel-status" class="text-[11px] text-[#166534]">
+            Запишите хотя бы пару сочетаний и слов, чтобы закрепить материал.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-between">
+        <button data-back="2" class="px-3 py-2 rounded-xl border bg-white text-xs">
+          ← К видео
+        </button>
+        <button id="btn-step-3"
+                class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
+                disabled>
+          Перейти к аудиомиссии →
+        </button>
+      </div>
+    </section>
+
+    <!-- ШАГ 4 -->
+    <section id="step-4" class="space-y-4 step-hidden">
+      <div class="notebook p-4 sm:p-5 space-y-3">
+        <h2 class="font-semibold text-base flex items-center gap-2">
+          <span>Глава 4. Аудиомиссия экспедиции</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-rose-50 text-rose-800 border border-rose-200">
+            Миссия: произнести свои слова
+          </span>
+        </h2>
+
+        <div class="text-sm space-y-2">
+          <p>
+            Теперь порядок. И гласные, и их буквосочетания разобраны.
+            Осталось выучить эти сочетания — и тогда англичане вас от «своих» точно не отличат!
+          </p>
+          <p>
+            Учить это, конечно же, удобнее всего именно в практике.
+          </p>
+          <p>
+            Поэтому сейчас наша <b>аудиомиссия</b>: произнести вслух свои примеры
+            и записать небольшой фрагмент.
+          </p>
+        </div>
+
+        <!-- AUDIO RECORDER -->
+        <div class="mt-3 border border-rose-200 bg-rose-50/80 rounded-2xl p-3 text-xs sm:text-sm space-y-2">
+          <p class="font-semibold">Запишите свой голос</p>
+          <p>
+            Нажмите «Начать запись», произнесите свои примеры (можно просто список слов или пару фраз),
+            затем нажмите «Остановить».
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button id="rec-start"
+                    class="px-3 py-1.5 rounded-full border border-rose-300 bg-[#fee2e2] text-[11px] font-semibold">
+              ⏺ Начать запись
+            </button>
+            <button id="rec-stop" disabled
+                    class="px-3 py-1.5 rounded-full border border-gray-300 bg-[#e5e7eb] text-[11px] font-semibold">
+              ⏹ Остановить
+            </button>
+          </div>
+          <p id="rec-status" class="text-[11px] text-[#9f1239]">
+            Запись пока не начата.
+          </p>
+          <audio id="rec-player" controls class="w-full hidden"></audio>
+
+          <p class="text-[11px] text-[#9f1239] mt-1">
+            Автоматизированная проверка произношения появится позже (на сервере).
+            Сейчас мы сохраняем запись локально и отмечаем задание как выполненное.
+          </p>
+        </div>
+
+        <!-- PRO UPSALE -->
+        <div class="border border-amber-200 bg-[#fffbeb] rounded-2xl p-3 text-xs sm:text-sm space-y-2">
+          <p class="font-semibold">🧑‍🏫 Проверка от куратора</p>
+          <p>
+            Если вы докупите функцию проверки от куратора, ваши аудиозадания будут проверяться
+            вручную опытными преподавателями английского. Вы получите комментарии, где есть акцент,
+            какие звуки уже звучат отлично, а над чем лучше поработать.
+          </p>
+          <p class="text-[11px] text-[#92400e]">
+            При активной PRO-функции записи этого урока будут автоматически попадать к куратору.
+          </p>
+          <a href="/courses/english-intro/pro.html"
+             class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-amber-300 bg-white text-[11px] font-semibold">
+            Узнать о PRO-проверке →
+          </a>
+        </div>
+      </div>
+
+      <!-- ФИНАЛ УРОКА -->
+      <section class="space-y-3 pt-3 border-t border-gray-100 text-sm">
+        <h3 class="font-semibold flex items-center gap-2">
+          <span>Словарик этого урока</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+            Добавится в общий словарь курса
+          </span>
+        </h3>
+        <ul class="text-xs list-disc list-inside space-y-0.5">
+          <li><b>Hello</b> — здравствуйте / привет</li>
+          <li><b>Hi</b> — привет (неформально)</li>
+          <li><b>Good morning</b> — доброе утро</li>
+          <li><b>Goodbye</b> — до свидания</li>
+          <li><b>See you</b> — увидимся</li>
+        </ul>
+
+        <p id="complete-status" class="text-[11px] text-[#64748b]">
+          После записи аудио отметьте урок пройденным, чтобы получить XP и открыть следующий.
+        </p>
+
+        <div class="flex flex-wrap gap-2 items-center">
+          <button id="finish-lesson"
+                  class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
+                  disabled>
+            ✓ Отметить урок пройденным
+          </button>
+          <a id="next-lesson" href="/courses/english-intro/lesson-02-phonetics.html"
+             class="px-4 py-2 rounded-xl border bg-white text-xs sm:text-sm text-[#334155] disabled:opacity-50 disabled:pointer-events-none">
+            → Перейти ко 2 уроку (открытый / закрытый слог)
+          </a>
+          <a href="/courses/english-intro/#exercises"
+             class="px-4 py-2 rounded-xl border bg-white text-xs sm:text-sm text-[#334155]">
+            🎯 Потренироваться с этим уроком
+          </a>
+        </div>
+
+        <button data-back="3" class="mt-2 px-3 py-2 rounded-xl border bg-white text-xs">
+          ← Вернуться к таблице
+        </button>
+      </section>
+    </section>
+
+  </article>
 </main>
-
 
 <script src="/courses/english-intro/english-intro-state.js"></script>
 <script>
-  /* STATE */
   const LESSON_ID = "lesson-01-hello";
 
   const steps = {
@@ -287,16 +490,29 @@
     3: document.getElementById("step-3"),
     4: document.getElementById("step-4"),
   };
-
   const stepLabel = document.getElementById("step-label");
+  const barLabel = document.getElementById("bar-label");
   const stepBar = document.getElementById("step-bar");
+  const expNodes = document.querySelectorAll("[data-step-node]");
+
+  function updateExpTrail(active){
+    expNodes.forEach(node=>{
+      const step = Number(node.dataset.stepNode);
+      node.classList.remove("exp-step-active","exp-step-done");
+      if(step < active) node.classList.add("exp-step-done");
+      if(step === active) node.classList.add("exp-step-active");
+    });
+  }
 
   function showStep(n){
     Object.entries(steps).forEach(([i,el])=>{
       el.classList.toggle("step-hidden", Number(i)!==n);
     });
     stepLabel.textContent = `Шаг ${n} из 4`;
-    stepBar.style.width = (n*25) + "%";
+    const perc = n*25;
+    barLabel.textContent = perc + "%";
+    stepBar.style.width = perc + "%";
+    updateExpTrail(n);
   }
 
   /* STEP 1 */
@@ -305,16 +521,19 @@
   const next1 = document.getElementById("btn-step-1");
 
   helloInput.addEventListener("input", ()=>{
-    const v = (helloInput.value||"").trim().toLowerCase();
+    const v = (helloInput.value || "").trim();
     if(!v){
       helloStatus.textContent = "Введите вариант приветствия.";
+      helloStatus.classList.remove("text-emerald-700");
+      helloStatus.classList.add("text-[#92400e]");
       next1.disabled = true;
     } else {
-      helloStatus.textContent = "Отлично!";
+      helloStatus.textContent = "Отлично! Экспедиция услышала ваше первое английское приветствие.";
+      helloStatus.classList.remove("text-[#92400e]");
+      helloStatus.classList.add("text-emerald-700");
       next1.disabled = false;
     }
   });
-
   next1.addEventListener("click", ()=>showStep(2));
 
 
@@ -324,11 +543,11 @@
   const next2 = document.getElementById("btn-step-2");
 
   videoBtn.addEventListener("click", ()=>{
-    videoStatus.textContent = "Супер! Можно двигаться дальше.";
-    videoStatus.classList.add("text-emerald-600");
+    videoStatus.textContent = "Супер! Вы услышали голос английского. Переходим к свитку гласных.";
+    videoStatus.classList.remove("text-[#0369a1]");
+    videoStatus.classList.add("text-emerald-700");
     next2.disabled = false;
   });
-
   next2.addEventListener("click", ()=>showStep(3));
 
 
@@ -338,20 +557,32 @@
   const next3 = document.getElementById("btn-step-3");
 
   vowelInput.addEventListener("input", ()=>{
-    const v = (vowelInput.value||"").trim();
+    const v = (vowelInput.value || "").trim();
     if(v.length < 5){
-      vowelStatus.textContent = "Добавьте хотя бы пару примеров.";
-      next3.disabled = false; /* можно перейти дальше */
+      vowelStatus.textContent = "Добавьте хотя бы пару сочетаний и слов — этого достаточно для миссии.";
+      vowelStatus.classList.remove("text-emerald-700");
+      vowelStatus.classList.add("text-[#166534]");
+      next3.disabled = false; // всё равно позволяем идти дальше, чтобы не стопорить
     } else {
-      vowelStatus.textContent = "Отлично!";
+      vowelStatus.textContent = "Отлично! Вы уже заполняете свой полевой дневник английских звуков.";
+      vowelStatus.classList.remove("text-[#166534]");
+      vowelStatus.classList.add("text-emerald-700");
       next3.disabled = false;
     }
   });
-
   next3.addEventListener("click", ()=>showStep(4));
 
 
-  /* STEP 4 — RECORDING */
+  /* BACK BUTTONS */
+  document.querySelectorAll("[data-back]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const target = Number(btn.dataset.back);
+      showStep(target);
+    });
+  });
+
+
+  /* STEP 4 — AUDIO */
   const recStart = document.getElementById("rec-start");
   const recStop = document.getElementById("rec-stop");
   const recStatus = document.getElementById("rec-status");
@@ -362,37 +593,37 @@
 
   let mediaRecorder = null;
   let chunks = [];
-  let startedAt = null;
 
   recStart.addEventListener("click", async ()=>{
     try{
       const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
       mediaRecorder = new MediaRecorder(stream);
       chunks = [];
-      mediaRecorder.ondataavailable = e=>chunks.push(e.data);
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
       mediaRecorder.onstop = ()=>{
         const blob = new Blob(chunks,{type:"audio/webm"});
         const url = URL.createObjectURL(blob);
         recPlayer.src = url;
         recPlayer.classList.remove("hidden");
-
-        recStatus.textContent = "Запись готова!";
-        recStatus.classList.add("text-emerald-600");
+        recStatus.textContent = "Запись готова! Прослушайте себя — это уже большой шаг вперёд.";
+        recStatus.classList.remove("text-[#9f1239]");
+        recStatus.classList.add("text-emerald-700");
         finishLesson.disabled = false;
       };
       mediaRecorder.start();
-      startedAt = Date.now();
-      recStatus.textContent = "Идёт запись...";
+      recStatus.textContent = "Идёт запись... Говорите свои слова и фразы.";
+      recStatus.classList.remove("text-emerald-700");
+      recStatus.classList.add("text-[#9f1239]");
       recStart.disabled = true;
       recStop.disabled = false;
     }catch(e){
-      recStatus.textContent = "Нет доступа к микрофону.";
+      recStatus.textContent = "Не удалось получить доступ к микрофону. Проверьте разрешения.";
       recStatus.classList.add("text-red-600");
     }
   });
 
   recStop.addEventListener("click", ()=>{
-    if(mediaRecorder && mediaRecorder.state==="recording"){
+    if(mediaRecorder && mediaRecorder.state === "recording"){
       mediaRecorder.stop();
       recStart.disabled = false;
       recStop.disabled = true;
@@ -404,26 +635,21 @@
     EnglishIntro.completeLesson(LESSON_ID, 20);
 
     [
-      {word:"hello", translation:"здравствуйте"},
-      {word:"hi", translation:"привет"},
+      {word:"hello", translation:"здравствуйте / привет"},
+      {word:"hi", translation:"привет (неформально)"},
       {word:"good morning", translation:"доброе утро"},
       {word:"goodbye", translation:"до свидания"},
       {word:"see you", translation:"увидимся"}
-    ].forEach(w=>EnglishIntro.addVocab({word:w.word,translation:w.translation,lessonId:LESSON_ID}));
+    ].forEach(w=>{
+      EnglishIntro.addVocab({word:w.word,translation:w.translation,lessonId:LESSON_ID});
+    });
 
-    completeStatus.textContent = "Урок завершён! Можно переходить дальше.";
+    completeStatus.textContent = "Урок первого дня завершён 🎉 Экспедиция может двигаться дальше.";
     finishLesson.disabled = true;
   });
-
-  /* BACK BUTTONS */
-  document.querySelectorAll("[data-back]").forEach(btn=>{
-    btn.addEventListener("click", ()=>showStep(Number(btn.dataset.back)));
-  });
-
 
   /* INIT */
   showStep(1);
 </script>
-
 </body>
 </html>
