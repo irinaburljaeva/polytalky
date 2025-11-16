@@ -71,43 +71,43 @@
     .bg-letter.o{bottom:8%;right:8%;transform:rotate(-7deg);}
     .bg-letter.u{top:45%;left:45%;transform:rotate(15deg);opacity:0.4;}
 
-    .center-gif-block {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 1.2rem 0;
-}
-.center-gif-block img {
-  max-width: 220px;
-  width: 100%;
-  border-radius: 12px;
-}
-    
+    .center-gif-block{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin:1.2rem 0;
+    }
+    .center-gif-block img{
+      max-width:220px;
+      width:100%;
+      border-radius:12px;
+    }
+
     /* Верхний бар */
     .top-bar{
       backdrop-filter:blur(16px);
       background:linear-gradient(to right,rgba(255,255,255,.9),rgba(255,249,219,.9));
       border-bottom:1px solid rgba(0,0,0,.06);
     }
-.back-to-course-btn {
-  font-size: 0.85rem;
-  padding: 6px 14px;
-  border-radius: 8px;
-  background: #fff9e6;
-  border: 1px solid #facc15;
-  color: #92400e;
-  text-decoration: none;
-  margin-right: 1rem;
-  transition: 0.25s;
-  white-space: nowrap;
-}
 
-.back-to-course-btn:hover {
-  background: #fef3c7;
-  border-color: #eab308;
-  color: #78350f;
-  box-shadow: 0 4px 10px rgba(234,179,8,0.25);
-}
+    .back-to-course-btn{
+      font-size:0.85rem;
+      padding:6px 14px;
+      border-radius:8px;
+      background:#fff9e6;
+      border:1px solid #facc15;
+      color:#92400e;
+      text-decoration:none;
+      transition:0.25s;
+      white-space:nowrap;
+    }
+    .back-to-course-btn:hover{
+      background:#fef3c7;
+      border-color:#eab308;
+      color:#78350f;
+      box-shadow:0 4px 10px rgba(234,179,8,0.25);
+    }
+
     .lesson-shell{
       max-width:980px;
       margin:0 auto;
@@ -183,14 +183,12 @@
 
     .hero-bubbles-cluster{
       position:relative;
-      display:flex;
-      flex-direction:column;
-      gap:.4rem;
-      align-items:flex-end;
+      width:170px;
+      height:130px;
     }
 
     .hero-bubble{
-      position:relative;
+      position:absolute;
       border-radius:1.1rem;
       padding:.45rem .8rem;
       font-size:.78rem;
@@ -205,15 +203,18 @@
       background:linear-gradient(135deg,#FFDE59,#FFB347);
       color:#78350f;
       box-shadow:0 12px 32px rgba(248,181,48,.65);
-      transform:translate(8px,-4px);
+      top:0;
+      right:8px;
     }
     .hero-bubble--morning{
       background:#fff7ed;
-      transform:translate(-4px,2px);
+      top:46px;
+      left:0;
     }
     .hero-bubble--hi{
       background:#FFFFFF;
-      transform:translate(10px,6px);
+      bottom:4px;
+      right:26px;
     }
 
     .hero-bg-circle{
@@ -226,33 +227,6 @@
       right:-80px;
       top:-80px;
       filter:blur(10px);
-    }
-
-    /* Прогресс */
-    .progress-chip{
-      border-radius:1.2rem;
-      padding:.4rem .9rem;
-      background:rgba(255,255,255,.85);
-      border:1px solid rgba(148,163,184,.35);
-      font-size:.7rem;
-      display:inline-flex;
-      align-items:center;
-      gap:.4rem;
-      color:var(--text-muted);
-    }
-
-    .progress-bar-wrap{
-      border-radius:999px;
-      background:rgba(249,250,251,.9);
-      overflow:hidden;
-      border:1px solid rgba(226,232,240,.9);
-    }
-
-    .progress-bar-fill{
-      height:0.3rem;
-      border-radius:999px;
-      background:linear-gradient(90deg,#FF8A5C,#FFDE59);
-      transition:width .2s ease-out;
     }
 
     /* НАВИГАЦИЯ ШАГОВ — маршрут */
@@ -578,6 +552,42 @@
       border:1px solid #bbf7d0;
     }
 
+    /* Аудио-задание */
+    .audio-task-header{
+      display:flex;
+      gap:0.8rem;
+      align-items:flex-start;
+      margin-bottom:0.4rem;
+    }
+    .audio-mic-circle{
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:radial-gradient(circle,#fee2e2,#fecaca);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 10px 24px rgba(248,113,113,0.45);
+      font-size:1.2rem;
+    }
+
+    /* Бейдж */
+    .badge-icon-wrapper{
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      background:#ffffff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 6px 14px rgba(248,181,48,0.5);
+    }
+    .badge-icon-img{
+      max-width:32px;
+      max-height:32px;
+      display:block;
+    }
+
     .hidden{display:none;}
   </style>
 </head>
@@ -597,16 +607,15 @@
         <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
         PolyTalky
       </a>
-     
-        <div id="user-status" class="text-[0.78rem] text-gray-600"></div>
+
+      <div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+        <div id="user-status"></div>
         <button id="logout-btn"
                 class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
           Выйти
         </button>
-       <div class="flex items-center gap-4">
-        <a href="/courses/english-intro/" class="back-to-course-btn">← Назад к курсу</a> 
+        <a href="/courses/english-intro/" class="back-to-course-btn">← Назад к курсу</a>
       </div>
-    
     </div>
   </header>
 
@@ -648,17 +657,6 @@
 
     </section>
 
-    <!-- Прогресс -->
-    <div class="mb-6">
-      <div class="progress-chip mb-1">
-        Прогресс урока: <span id="lesson-progress-text">0%</span>
-      </div>
-
-      <div class="progress-bar-wrap w-full h-1.5">
-        <div class="progress-bar-fill" id="lesson-progress-bar" style="width:0%;"></div>
-      </div>
-    </div>
-
     <!-- Навигация шагов -->
     <nav class="step-nav">
 
@@ -698,9 +696,12 @@
         Ура, ура, ура! Вы наконец запустили курс английского от PolyTalky.  
         Вот он — первый урок. Урок полный надежд, лёгкости и энтузиазма!
       </p>
-<div class="center-gif-block">
-  <img src="https://media0.giphy.com/media/3PAL5bChWnak0WJ32x/giphy.gif?cid=790b76115d3d766c584a514d595d1389&amp;rid=giphy.gif" style="max-width:250px; width:100%; height:auto; border-radius:12px;">
-</div>
+
+      <div class="center-gif-block">
+        <img src="https://media0.giphy.com/media/3PAL5bChWnak0WJ32x/giphy.gif?cid=790b76115d3d766c584a514d595d1389&amp;rid=giphy.gif"
+             style="max-width:250px;width:100%;height:auto;border-radius:12px;" alt="Hi gif">
+      </div>
+
       <p class="step-body-text mt-3">
         Если что-то будет непонятно — не стесняйтесь задавать вопросы вашему куратору
         или общаться с другими участниками.
@@ -906,13 +907,19 @@
 
       <!-- АУДИОЗАДАНИЕ -->
       <div class="soft-block soft-block--blue mt-5">
-        <p class="text-[0.85rem] mb-2">
-          Теперь попробуйте произнести слова из таблицы вслух.
-        </p>
 
-        <p class="soft-note mb-3">
-          Нажмите «Записать», произнесите несколько слов, затем остановите запись.
-        </p>
+        <div class="audio-task-header">
+          <div class="audio-mic-circle">🎙️</div>
+          <div>
+            <p class="text-[0.85rem] mb-2">
+              Теперь попробуйте произнести слова из таблицы вслух.
+            </p>
+
+            <p class="soft-note mb-1">
+              Нажмите «Записать», произнесите несколько слов, затем остановите запись.
+            </p>
+          </div>
+        </div>
 
         <div class="mt-2 flex gap-3">
           <button class="btn-main" id="record-btn">⏺ Записать</button>
@@ -942,7 +949,7 @@
       </p>
 
       <div class="mt-3 rounded-2xl overflow-hidden border border-yellow-100 bg-white/70">
-        <!-- здесь будет твоя забавная GIF -->
+        <!-- сюда положи свою финальную gif -->
         <img src="/assets/gifs/english-lesson1-finish.gif" alt="Finish gif"
              class="w-full max-h-40 object-cover">
       </div>
@@ -953,8 +960,9 @@
       </p>
 
       <div class="soft-block soft-block--rose mt-4 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-white/85 flex items-center justify-center text-2xl">
-          🏅
+        <div class="badge-icon-wrapper">
+          <img src="/assets/badges/english-intro-lesson1.png"
+               alt="Бейдж «Первое hello»" class="badge-icon-img">
         </div>
         <div class="text-[0.82rem]">
           <b>Ваш первый бейдж: «Первое hello».</b><br>
@@ -1053,7 +1061,9 @@
         getFirestore,
         collection,
         addDoc,
-        serverTimestamp
+        serverTimestamp,
+        doc,
+        setDoc
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
       const auth = window.firebaseAuth;
@@ -1062,9 +1072,6 @@
       /* UI */
       const stepPanels = document.querySelectorAll(".step-panel");
       const stepDots   = document.querySelectorAll(".step-dot");
-
-      const progressText = document.getElementById("lesson-progress-text");
-      const progressBar  = document.getElementById("lesson-progress-bar");
 
       const userStatus = document.getElementById("user-status");
       const logoutBtn  = document.getElementById("logout-btn");
@@ -1102,6 +1109,24 @@
       /* СИСТЕМА ШАГОВ */
       let currentStep = 1;
       const totalSteps = 4;
+      let badgeAwarded = false;
+
+      async function awardFirstHelloBadge(){
+        if (!currentUser || badgeAwarded) return;
+
+        const uid = currentUser.uid;
+        const badgeRef = doc(db, `users/${uid}/badges`, "english-intro-lesson-01");
+
+        await setDoc(badgeRef, {
+          badgeId:  "english-intro-lesson-01",
+          title:    "Первое hello",
+          courseId: "english-intro",
+          lesson:   "lesson-01-hello",
+          earnedAt: serverTimestamp()
+        }, { merge:true });
+
+        badgeAwarded = true;
+      }
 
       function showStep(n){
         stepPanels.forEach(p => p.classList.remove("step-panel--visible"));
@@ -1115,9 +1140,9 @@
           if (step === n) dot.classList.add("step-dot--active");
         });
 
-        const percent = Math.round(((n - 1) / (totalSteps - 1)) * 100);
-        progressText.textContent = `${percent}%`;
-        progressBar.style.width = `${percent}%`;
+        if (n === 4){
+          awardFirstHelloBadge().catch(console.error);
+        }
 
         currentStep = n;
       }
@@ -1295,6 +1320,7 @@
             word,
             translation: translation || "",
             lesson: "lesson-01-hello",
+            courseId: "english-intro",
             category: "Гласные буквосочетания",
             addedAt: serverTimestamp()
           });
