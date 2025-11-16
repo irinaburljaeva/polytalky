@@ -589,109 +589,109 @@
     }
 
     .hidden{display:none;}
+
     /* --------- МОБИЛЬНАЯ ВЕРСТКА --------- */
-@media (max-width: 768px) {
+    @media (max-width: 768px) {
 
-  .lesson-shell{
-    padding: 1rem .9rem 2.2rem;
-  }
+      .lesson-shell{
+        padding: 1rem .9rem 2.2rem;
+      }
 
-  /* Хедер: аккуратно упаковать элементы */
-  .top-bar .max-w-7xl{
-    gap: .5rem;
-    flex-wrap: wrap;
-  }
+      /* Хедер: аккуратно упаковать элементы */
+      .top-bar .max-w-7xl{
+        gap: .5rem;
+        flex-wrap: wrap;
+      }
 
-  #user-status{
-    font-size: 0.7rem;
-    flex-basis: 100%;
-    order: 2;
-  }
+      #user-status{
+        font-size: 0.7rem;
+        flex-basis: 100%;
+        order: 2;
+      }
 
-  #logout-btn{
-    font-size: 0.7rem;
-    padding: .3rem .7rem;
-  }
+      #logout-btn{
+        font-size: 0.7rem;
+        padding: .3rem .7rem;
+      }
 
-  .back-to-course-btn{
-    order: 3;
-    margin-right: 0;
-  }
+      .back-to-course-btn{
+        order: 3;
+        margin-right: 0;
+      }
 
-  /* Герой: колонки складываем в столбик */
-  .hero-card{
-    flex-direction: column;
-    padding: 1.3rem 1.1rem 1.4rem;
-    gap: 1.1rem;
-  }
+      /* Герой: колонки складываем в столбик */
+      .hero-card{
+        flex-direction: column;
+        padding: 1.3rem 1.1rem 1.4rem;
+        gap: 1.1rem;
+      }
 
-  .hero-title{
-    font-size: 1.5rem;
-  }
+      .hero-title{
+        font-size: 1.5rem;
+      }
 
-  .hero-right{
-    width: 100%;
-    min-width: 0;
-  }
+      .hero-right{
+        width: 100%;
+        min-width: 0;
+      }
 
-  .hero-right-inner{
-    justify-content: flex-end;
-    padding-right: 0;
-  }
+      .hero-right-inner{
+        justify-content: flex-end;
+        padding-right: 0;
+      }
 
-  .hero-bg-circle{
-    width: 210px;
-    height: 210px;
-    right: -50px;
-    top: -60px;
-  }
+      .hero-bg-circle{
+        width: 210px;
+        height: 210px;
+        right: -50px;
+        top: -60px;
+      }
 
-  /* «Случайно» разбросанные пузырьки, но без налезания на текст */
-  .hero-bubbles-cluster{
-    align-items: flex-end;
-    gap: .35rem;
-  }
+      /* «Случайно» разбросанные пузырьки, но без налезания на текст */
+      .hero-bubbles-cluster{
+        align-items: flex-end;
+        gap: .35rem;
+      }
 
-  .hero-bubble{
-    font-size: .8rem;
-    padding: .4rem .7rem;
-  }
+      .hero-bubble{
+        font-size: .8rem;
+        padding: .4rem .7rem;
+      }
 
-  /* сбрасываем transform и задаём лёгкий «хаос» через margin */
-  .hero-bubble--hello{
-    transform: none;
-    margin-right: .4rem;
-    margin-bottom: .1rem;
-  }
+      .hero-bubble--hello{
+        transform: none;
+        margin-right: .4rem;
+        margin-bottom: .1rem;
+      }
 
-  .hero-bubble--morning{
-    transform: none;
-    margin-right: 1.1rem;
-  }
+      .hero-bubble--morning{
+        transform: none;
+        margin-right: 1.1rem;
+      }
 
-  .hero-bubble--hi{
-    transform: none;
-    margin-right: .2rem;
-    margin-top: .15rem;
-  }
+      .hero-bubble--hi{
+        transform: none;
+        margin-right: .2rem;
+        margin-top: .15rem;
+      }
 
-  /* Навигация по шагам — компактнее */
-  .step-nav{
-    gap: 1rem;
-    margin: 1.3rem 0 1.1rem;
-  }
+      /* Навигация по шагам — компактнее */
+      .step-nav{
+        gap: 1rem;
+        margin: 1.3rem 0 1.1rem;
+      }
 
-  .step-nav::before{
-    left: 10%;
-    right: 10%;
-    top: 22px;
-  }
+      .step-nav::before{
+        left: 10%;
+        right: 10%;
+        top: 22px;
+      }
 
-  .step-dot{
-    max-width: 80px;
-    font-size: .6rem;
-  }
-}
+      .step-dot{
+        max-width: 80px;
+        font-size: .6rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -792,7 +792,7 @@
 
       <div class="step-panel-header">
         <span class="step-pill">Шаг 1 · HELLO</span>
-        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
       </div>
 
       <p class="step-body-text step-body-text--lead">
@@ -840,7 +840,7 @@
 
       <div class="step-panel-header">
         <span class="step-pill">Шаг 2 · LISTEN</span>
-         <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
       </div>
 
       <p class="step-body-text">
@@ -880,7 +880,7 @@
 
       <div class="step-panel-header">
         <span class="step-pill">Шаг 3 · VOWELS & PRACTICE</span>
-        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
       </div>
 
       <p class="step-body-text">
@@ -1043,7 +1043,7 @@
 
       <div class="step-panel-header">
         <span class="step-pill">Шаг 4 · DONE</span>
-        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
       </div>
 
       <p class="step-body-text">
@@ -1052,7 +1052,6 @@
       </p>
 
       <div class="mt-3 rounded-2xl overflow-hidden border border-yellow-100 bg-white/70">
-        <!-- сюда положи свою финальную gif -->
         <img src="/assets/gifs/english-lesson1-finish.gif" alt="Finish gif"
              class="w-full max-h-40 object-cover">
       </div>
@@ -1084,79 +1083,75 @@
       </div>
 
     </section>
-<!-- МОДАЛКА Q&A -->
-<div id="qa-modal"
-     class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
 
-  <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
-    <!-- Декор -->
-    <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
-    <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
+    <!-- МОДАЛКА Q&A -->
+    <div id="qa-modal"
+         class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
 
-    <div class="relative p-6 space-y-4">
-      <div class="flex justify-between items-start gap-4">
-        <div>
-          <h2 class="text-lg font-semibold text-gray-800">
-            Вопросы по уроку
-          </h2>
-          <p class="text-sm text-gray-600 mt-1">
-            Напишите свой вопрос — мы ответим и ответ увидят другие участники.
-          </p>
+      <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+        <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
+        <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
+
+        <div class="relative p-6 space-y-4">
+          <div class="flex justify-between items-start gap-4">
+            <div>
+              <h2 class="text-lg font-semibold text-gray-800">
+                Вопросы по уроку
+              </h2>
+              <p class="text-sm text-gray-600 mt-1">
+                Напишите свой вопрос — мы ответим и ответ увидят другие участники.
+              </p>
+            </div>
+
+            <button id="qa-close"
+                    class="text-gray-500 text-xl leading-none">&times;</button>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+            Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
+            <b>Тариф PRO</b> даёт приоритетную обратную связь и больше внимания к вашим вопросам 💛
+          </div>
+
+          <div class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70"
+               id="qa-list">
+            <p class="text-xs text-gray-500">
+              Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+            </p>
+          </div>
+
+          <form id="qa-form" class="space-y-2">
+            <label class="block text-xs text-gray-600">
+              Ваш вопрос:
+            </label>
+            <textarea id="qa-text"
+                      class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                      rows="3"
+                      placeholder="Например: «Мне сложно произносить звук [θ], как тренироваться?»"></textarea>
+
+            <p class="text-[0.7rem] text-gray-400">
+              Чтобы задать вопрос, нужно войти в аккаунт.  
+              Если вы не авторизованы, перейдите на страницу
+              <a href="/student/" class="underline">входа / регистрации</a>.
+            </p>
+
+            <div class="flex justify-end">
+              <button type="submit"
+                      id="qa-submit"
+                      class="btn-main text-sm px-4 py-1.5">
+                Отправить вопрос →
+              </button>
+            </div>
+          </form>
         </div>
-
-        <button id="qa-close"
-                class="text-gray-500 text-xl leading-none">&times;</button>
       </div>
-
-      <!-- Напоминание про PRO-тариф -->
-      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
-        Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
-        <b>Тариф PRO</b> даёт приоритетную обратную связь и больше внимания к вашим вопросам 💛
-      </div>
-
-      <!-- Список вопросов -->
-      <div class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70"
-           id="qa-list">
-        <!-- сюда JS подставит вопросы -->
-        <p class="text-xs text-gray-500">
-          Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
-        </p>
-      </div>
-
-      <!-- Форма нового вопроса -->
-      <form id="qa-form" class="space-y-2">
-        <label class="block text-xs text-gray-600">
-          Ваш вопрос:
-        </label>
-        <textarea id="qa-text"
-                  class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
-                  rows="3"
-                  placeholder="Например: «Мне сложно произносить звук [θ], как тренироваться?»"></textarea>
-
-        <p class="text-[0.7rem] text-gray-400">
-          Чтобы задать вопрос, нужно войти в аккаунт.  
-          Если вы не авторизованы, перейдите на страницу
-          <a href="/student/" class="underline">входа / регистрации</a>.
-        </p>
-
-        <div class="flex justify-end">
-          <button type="submit"
-                  id="qa-submit"
-                  class="btn-main text-sm px-4 py-1.5">
-            Отправить вопрос →
-          </button>
-        </div>
-      </form>
     </div>
-  </div>
-</div>
+
     <!-- ВСПЛЫВАЮЩЕЕ ОКНО СЛОВАРЯ -->
     <div id="vocab-modal"
          class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
 
       <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
 
-        <!-- Декор -->
         <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-70"></div>
         <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-70"></div>
 
@@ -1174,7 +1169,6 @@
             Выберите слова, которые хотите сохранить. Они появятся в вашем словарике на аккаунте.
           </p>
 
-          <!-- Блок: пользователь не авторизован -->
           <div id="vocab-auth-warning"
                class="hidden mt-4 bg-red-50 text-red-700 border border-red-200 rounded-xl p-3 text-sm">
             Чтобы сохранять слова, нужно войти в аккаунт.
@@ -1182,23 +1176,19 @@
             <a href="/student" class="underline font-medium">Перейти к авторизации →</a>
           </div>
 
-          <!-- Список слов -->
           <div id="vocab-list" class="mt-5 space-y-5 max-h-[330px] overflow-y-auto pr-1">
 
-            <!-- Категория: гласные буквосочетания -->
             <div class="vocab-category" data-category="Гласные буквосочетания">
               <h3 class="text-[0.8rem] font-semibold text-gray-700 mb-2 flex items-center gap-1">
                 🔤 Гласные буквосочетания
               </h3>
 
               <div id="vocab-vowels" class="grid grid-cols-1 gap-2 pl-1">
-                <!-- JS заполнит -->
               </div>
             </div>
 
           </div>
 
-          <!-- КНОПКИ -->
           <div class="mt-6 flex justify-between items-center">
 
             <button id="vocab-select-all"
@@ -1232,7 +1222,9 @@
         serverTimestamp,
         getDocs,
         query,
-        orderBy
+        orderBy,
+        doc,
+        setDoc
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
       const auth = window.firebaseAuth;
@@ -1255,17 +1247,18 @@
 
       const helloFeedback   = document.getElementById("hello-feedback");
       const audioFeedback   = document.getElementById("audio-feedback");
-// Q&A
-const qaModal      = document.getElementById("qa-modal");
-const qaCloseBtn   = document.getElementById("qa-close");
-const qaList       = document.getElementById("qa-list");
-const qaForm       = document.getElementById("qa-form");
-const qaText       = document.getElementById("qa-text");
-const qaSubmitBtn  = document.getElementById("qa-submit");
-const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
 
-// ID урока для коллекции вопросов
-const LESSON_QA_ID = "english-intro-lesson-1";
+      // Q&A
+      const qaModal      = document.getElementById("qa-modal");
+      const qaCloseBtn   = document.getElementById("qa-close");
+      const qaList       = document.getElementById("qa-list");
+      const qaForm       = document.getElementById("qa-form");
+      const qaText       = document.getElementById("qa-text");
+      const qaSubmitBtn  = document.getElementById("qa-submit");
+      const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
+
+      const LESSON_QA_ID = "english-intro-lesson-1";
+
       let currentUser = null;
 
       /* АВТОРИЗАЦИЯ */
@@ -1328,7 +1321,7 @@ const LESSON_QA_ID = "english-intro-lesson-1";
 
       document.querySelectorAll(".next-step-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-          if (btn.id === "task-hello-submit") return; // отдельная логика
+          if (btn.id === "task-hello-submit") return;
           const next = Number(btn.dataset.next);
           if (next) showStep(next);
         });
@@ -1402,112 +1395,116 @@ const LESSON_QA_ID = "english-intro-lesson-1";
           });
         });
       }
-/* -----------------------------------------
-   Q&A: модалка
------------------------------------------ */
 
-qaOpenBtns.forEach(btn => {
-  btn.addEventListener("click", () => {
-    qaModal.classList.remove("hidden");
-    qaModal.classList.add("flex");
-    loadQuestions();
-  });
-});
-qaForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+      /* -----------------------------------------
+         Q&A: модалка + сохранение вопросов
+      ----------------------------------------- */
 
-  const text = qaText.value.trim();
-  if (!text){
-    alert("Напишите вопрос, пожалуйста 🙂");
-    return;
-  }
+      qaOpenBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          qaModal.classList.remove("hidden");
+          qaModal.classList.add("flex");
+          loadQuestions();
+        });
+      });
 
-  if (!currentUser){
-    alert("Чтобы задать вопрос, нужно войти в аккаунт на странице /student/.");
-    return;
-  }
+      qaForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-  qaSubmitBtn.disabled = true;
-  qaSubmitBtn.textContent = "Отправляем...";
+        const text = qaText.value.trim();
+        if (!text){
+          alert("Напишите вопрос, пожалуйста 🙂");
+          return;
+        }
 
-  try {
-    const colRef = collection(db, "lessons", LESSON_QA_ID, "questions");
+        if (!currentUser){
+          alert("Чтобы задать вопрос, нужно войти в аккаунт на странице /student/.");
+          return;
+        }
 
-    await addDoc(colRef, {
-      text,
-      userId: currentUser.uid,
-      userEmail: currentUser.email || null,
-      createdAt: serverTimestamp(),
-      answer: null
-    });
+        qaSubmitBtn.disabled = true;
+        qaSubmitBtn.textContent = "Отправляем...";
 
-    qaText.value = "";
-    await loadQuestions();
-  } catch (err) {
-    console.error(err);
-    alert("Не получилось отправить вопрос. Попробуйте ещё раз позже.");
-  } finally {
-    qaSubmitBtn.disabled = false;
-    qaSubmitBtn.textContent = "Отправить вопрос →";
-  }
-});
-qaCloseBtn.addEventListener("click", () => {
-  qaModal.classList.add("hidden");
-  qaModal.classList.remove("flex");
-});
+        try {
+          const colRef = collection(db, "lessons", LESSON_QA_ID, "questions");
 
-qaModal.addEventListener("click", (e) => {
-  // закрытие по клику на фон
-  if (e.target === qaModal) {
-    qaModal.classList.add("hidden");
-    qaModal.classList.remove("flex");
-  }
-});
+          await addDoc(colRef, {
+            text,
+            userId: currentUser.uid,
+            userEmail: currentUser.email || null,
+            createdAt: serverTimestamp(),
+            answer: null
+          });
+
+          qaText.value = "";
+          await loadQuestions();
+        } catch (err) {
+          console.error(err);
+          alert("Не получилось отправить вопрос. Попробуйте ещё раз позже.");
+        } finally {
+          qaSubmitBtn.disabled = false;
+          qaSubmitBtn.textContent = "Отправить вопрос →";
+        }
+      });
+
+      qaCloseBtn.addEventListener("click", () => {
+        qaModal.classList.add("hidden");
+        qaModal.classList.remove("flex");
+      });
+
+      qaModal.addEventListener("click", (e) => {
+        if (e.target === qaModal) {
+          qaModal.classList.add("hidden");
+          qaModal.classList.remove("flex");
+        }
+      });
+
       async function loadQuestions(){
-  const colRef = collection(db, "lessons", LESSON_QA_ID, "questions");
-  const q = query(colRef, orderBy("createdAt", "desc"));
+        const colRef = collection(db, "lessons", LESSON_QA_ID, "questions");
+        const qRef   = query(colRef, orderBy("createdAt", "desc"));
 
-  const snapshot = await getDocs(q);
+        const snapshot = await getDocs(qRef);
 
-  qaList.innerHTML = "";
+        qaList.innerHTML = "";
 
-  if (snapshot.empty){
-    qaList.innerHTML = 
-      <p class="text-xs text-gray-500">
-        Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
-      </p>
-    ;
-    return;
-  }
+        if (snapshot.empty){
+          qaList.innerHTML = `
+            <p class="text-xs text-gray-500">
+              Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+            </p>
+          `;
+          return;
+        }
 
-  snapshot.forEach(docSnap => {
-    const data = docSnap.data();
-    const item = document.createElement("div");
-    item.className = "mb-3 pb-3 border-b border-gray-200 last:border-b-0";
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          const item = document.createElement("div");
+          item.className = "mb-3 pb-3 border-b border-gray-200 last:border-b-0";
 
-    const author = data.userEmail || "Участник курса";
+          const author = data.userEmail || "Участник курса";
 
-    item.innerHTML = 
-      <p class="text-[0.8rem] text-gray-800 font-medium">
-        ❓ ${data.text}
-      </p>
-      <p class="text-[0.7rem] text-gray-400 mt-1">
-        от ${author}
-      </p>
-      ${
-        data.answer
-          ? <p class="text-[0.8rem] text-emerald-800 mt-2">
-               <span class="font-semibold">Ответ:</span> ${data.answer}
-             </p>
-          : <p class="text-[0.75rem] text-gray-400 mt-2">
-               Ответ скоро появится.
-             </p>
+          const answerHtml = data.answer
+            ? `<p class="text-[0.8rem] text-emerald-800 mt-2">
+                 <span class="font-semibold">Ответ:</span> ${data.answer}
+               </p>`
+            : `<p class="text-[0.75rem] text-gray-400 mt-2">
+                 Ответ скоро появится.
+               </p>`;
+
+          item.innerHTML = `
+            <p class="text-[0.8rem] text-gray-800 font-medium">
+              ❓ ${data.text}
+            </p>
+            <p class="text-[0.7rem] text-gray-400 mt-1">
+              от ${author}
+            </p>
+            ${answerHtml}
+          `;
+
+          qaList.appendChild(item);
+        });
       }
-    ;
 
-    qaList.appendChild(item);
-  });
-}
       /* ОЗВУЧКА СЛОВ (speechSynthesis) */
       if ("speechSynthesis" in window){
         document.querySelectorAll(".word-tip").forEach(el => {
@@ -1525,7 +1522,7 @@ qaModal.addEventListener("click", (e) => {
       /* СЛОВАРЬ — слово + перевод из таблицы */
       function extractVowelEntries(){
         const tips = document.querySelectorAll("#step-3 .word-tip");
-        const map = new Map(); // word -> ru
+        const map = new Map();
 
         tips.forEach(tip => {
           const w  = tip.textContent.trim().toLowerCase();
