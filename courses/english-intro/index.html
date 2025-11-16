@@ -3,13 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PolyTalky — Интенсив по английскому для начинающих</title>
+  <title>PolyTalky — English Intro</title>
   <meta name="description" content="Английский для новичков: короткие уроки по 10–15 минут, геймификация, словарик, тренажёры и практика.">
   <base href="/">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-  <link rel="apple-touch-icon" href="/assets/favicon.jpg">
-  <link rel="apple-touch-icon" href="/favicon.png">
 
   <style>
     :root{
@@ -18,70 +16,115 @@
       --brand-orange:#E85D04;
       --ink:#0F172A;
       --ink-2:#334155;
-      --card:#FFFFFF;
       --bg:#FFF8D6;
     }
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:var(--bg);
+      background:radial-gradient(circle at top,#fffef2 0,#FFF8D6 40%,#FFEFC0 100%);
       color:var(--ink);
     }
-    .shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.08)}
-    .wow-bg{position:relative;overflow:hidden}
-    .wow-bg:before,.wow-bg:after{
-      content:"";position:absolute;filter:blur(70px);
-      opacity:.75;animation:float 12s ease-in-out infinite
+    .shadow-soft{box-shadow:0 14px 40px rgba(0,0,0,.12)}
+    .pill{
+      border-radius:999px;
+      padding:.45rem .9rem;
+      font-size:.75rem;
+      border:1px solid rgba(0,0,0,.06);
+      background:#ffffffdd;
+      backdrop-filter:blur(8px);
     }
-    .wow-bg:before{
-      width:560px;height:560px;left:-140px;top:-140px;
-      background:radial-gradient(closest-side,rgba(255,222,89,.9),transparent)
-    }
-    .wow-bg:after{
-      width:520px;height:520px;right:-120px;top:-60px;
-      background:radial-gradient(closest-side,rgba(232,93,4,.35),transparent);
-      animation-delay:2.2s
-    }
-    @keyframes float{
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(14px)}
-    }
-    .badge{
-      background:#fff;border:1px solid rgba(0,0,0,.06);
-      padding:.45rem .75rem;border-radius:999px;
-      font-size:.8rem;color:var(--ink-2)
-    }
-    .tab-btn-active{
+    .mode-btn-active{
       background:#111827;
       color:#f9fafb;
+      box-shadow:0 10px 30px rgba(0,0,0,.18);
     }
     .pt-progress-outer{
-      border-radius:999px;background:#f3f4f6;overflow:hidden;height:10px;
+      width:100%;
+      border-radius:999px;
+      background:#f3f4f6;
+      overflow:hidden;
+      height:10px;
     }
     .pt-progress-inner{
-      height:100%;width:0%;border-radius:999px;
+      height:100%;
+      width:0%;
+      border-radius:999px;
       background:linear-gradient(90deg,var(--brand-orange),var(--brand-yellow));
       transition:width .3s ease;
+    }
+
+    /* Круглый прогресс в hero */
+    .circle-progress{
+      position:relative;
+      width:160px;
+      height:160px;
+      border-radius:999px;
+      background:conic-gradient(from 210deg, var(--brand-orange), var(--brand-yellow), #fde68a, #e5e7eb);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 18px 50px rgba(0,0,0,.18);
+    }
+    .circle-inner{
+      width:120px;
+      height:120px;
+      border-radius:999px;
+      background:#fffef7;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+
+    .glass-card{
+      background:#fffef7ee;
+      backdrop-filter:blur(10px);
+      border-radius:1.75rem;
+      border:1px solid rgba(15,23,42,.08);
+    }
+
+    @media (min-width: 1024px){
+      .hero-grid{
+        display:grid;
+        grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
+        gap:3rem;
+        align-items:center;
+      }
+    }
+
+    @media (max-width: 640px){
+      .hero-grid{
+        display:flex;
+        flex-direction:column;
+        gap:1.75rem;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER как на главной -->
+<!-- HEADER (адаптация главной) -->
 <header class="sticky top-0 z-50 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
     <a href="./" class="flex items-center gap-3 font-semibold text-lg">
-      <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl"> PolyTalky
+      <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl">
+      <span>PolyTalky</span>
     </a>
+
     <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
       <a href="/courses/" class="hover:opacity-80">Курсы</a>
       <a href="/shop/" class="hover:opacity-80">Магазин</a>
       <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
-      <a href="/courses/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">Начать бесплатно</a>
+      <a href="/courses/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">
+        Начать бесплатно
+      </a>
     </nav>
+
     <button id="burger" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft" aria-label="Меню">
       ☰
     </button>
   </div>
+
   <div id="mnav" class="md:hidden hidden border-t border-black/10 bg-[#fffef7]">
     <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-[var(--ink-2)]">
       <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/courses/">Курсы</a>
@@ -93,68 +136,57 @@
 </header>
 
 <main>
-  <!-- HERO — воздух, минимум перегруза -->
-  <section class="wow-bg">
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14 grid gap-8 lg:grid-cols-[minmax(0,1.4fr),minmax(0,1fr)]">
-      <div>
-        <span class="badge">English Intro · A1</span>
-        <h1 class="mt-4 text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight">
-          Английский для начинающих с геймификацией и маленькими уроками
+  <!-- HERO с вау-эффектом -->
+  <section class="pt-10 pb-8 sm:pt-12 sm:pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hero-grid">
+      <!-- Текст -->
+      <div class="space-y-4">
+        <span class="pill inline-flex items-center gap-2">
+          <span class="text-xs">English Intro · A1</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#ecfccb] text-[#3f6212] border border-[#bbf7d0]">
+            Бесплатный доступ
+          </span>
+        </span>
+        <h1 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold leading-tight tracking-tight">
+          Курс английского, где каждый урок — маленький победный уровень 🎮
         </h1>
-        <p class="mt-4 text-sm sm:text-base text-[var(--ink-2)] max-w-xl">
-          10–15 минут на урок, XP, серия дней и лёгкие тренажёры. Уроки, словарик, упражнения и практика — всё в одном пространстве курса.
+        <p class="text-sm sm:text-base text-[var(--ink-2)] max-w-xl">
+          Вместо тяжёлых занятий на 45 минут — короткие уроки по 10–15 минут, XP, серия дней и живые упражнения.
+          Уроки, словарик, тренажёры и практика — в одном пространстве.
         </p>
 
-        <div class="mt-5 flex flex-wrap gap-3">
+        <div class="flex flex-wrap gap-3 pt-1">
           <a href="/courses/english-intro/lesson-01-hello.html"
-             class="px-5 py-3 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-sm font-semibold text-[#1a1a1a] shadow-soft">
-            ▶ Начать с первого урока
+             class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-sm font-semibold text-[#1a1a1a] shadow-soft">
+            ▶ Начать с Урока 1
           </a>
           <button id="btn-continue"
-                  class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] text-sm text-[var(--ink-2)] shadow-soft">
+                  class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-black/10 bg-white/90 hover:bg-[#fff3c6] text-sm text-[var(--ink-2)] shadow-soft">
             ⏱ Продолжить с места остановки
           </button>
         </div>
 
-        <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs sm:text-sm text-[var(--ink-2)]">
-          <div class="p-3 rounded-2xl bg-white border border-black/5 shadow-soft">
-            <p class="font-semibold text-[var(--ink)] mb-1">Уроки</p>
-            <p>Короткие мультимедиа-блоки вместо лекций на 45 минут.</p>
-          </div>
-          <div class="p-3 rounded-2xl bg-white border border-black/5 shadow-soft">
-            <p class="font-semibold text-[var(--ink)] mb-1">Словарик</p>
-            <p>Слова из уроков + ваши собственные, всё сохраняется.</p>
-          </div>
-          <div class="p-3 rounded-2xl bg-white border border-black/5 shadow-soft">
-            <p class="font-semibold text-[var(--ink)] mb-1">Упражнения</p>
-            <p>Тренажёры на слова и фразы, когда нет сил на новый урок.</p>
-          </div>
-          <div class="p-3 rounded-2xl bg-white border border-black/5 shadow-soft">
-            <p class="font-semibold text-[var(--ink)] mb-1">Практика</p>
-            <p>Идеи реальной практики языка: голосовые, мини-диалоги, заметки.</p>
-          </div>
+        <div class="flex flex-wrap gap-2 text-[11px] text-[var(--ink-2)] pt-2">
+          <span class="pill">10–15 минут на урок</span>
+          <span class="pill">Мультимедиа: текст, видео, картинки, задания</span>
+          <span class="pill">Словарик + тренажёр внутри курса</span>
         </div>
       </div>
 
-      <!-- Карточка прогресса -->
-      <aside class="bg-white rounded-3xl border border-black/10 shadow-soft p-5 flex flex-col gap-4">
-        <div class="flex justify-between items-baseline">
-          <div>
-            <p class="text-xs text-[var(--ink-2)]">Уровень</p>
-            <p class="text-2xl font-bold" id="stat-level">1</p>
-          </div>
-          <div>
-            <p class="text-xs text-[var(--ink-2)]">XP</p>
-            <p class="text-2xl font-bold" id="stat-xp">0</p>
-          </div>
-          <div>
-            <p class="text-xs text-[var(--ink-2)]">Серия</p>
-            <p class="text-2xl font-bold" id="stat-streak">0 дней</p>
+      <!-- Круглый прогресс и мини-статы -->
+      <aside class="glass-card shadow-soft p-6 flex flex-col items-center gap-4">
+        <div class="circle-progress">
+          <div class="circle-inner">
+            <p class="text-[10px] uppercase tracking-wide text-[var(--ink-2)] mb-1">Ваш уровень</p>
+            <p class="text-3xl font-extrabold" id="stat-level">1</p>
+            <p class="text-[11px] text-[var(--ink-2)]">
+              <span id="stat-xp">0</span> XP
+            </p>
           </div>
         </div>
 
-        <div>
-          <div class="flex items-center justify-between text-xs text-[var(--ink-2)] mb-1">
+        <div class="w-full space-y-2">
+          <div class="flex items-center justify-between text-[11px] text-[var(--ink-2)]">
             <span>Прогресс по урокам</span>
             <span id="progress-text">0 / 0</span>
           </div>
@@ -163,56 +195,78 @@
           </div>
         </div>
 
-        <div>
-          <p class="text-xs text-[var(--ink-2)] mb-1">Бейджи</p>
+        <div class="w-full">
+          <p class="text-[11px] text-[var(--ink-2)] mb-1">Серия дней</p>
+          <p class="text-sm font-semibold" id="stat-streak">0 дней</p>
+        </div>
+
+        <div class="w-full">
+          <p class="text-[11px] text-[var(--ink-2)] mb-1">Бейджи</p>
           <div id="badge-row" class="flex flex-wrap gap-2 text-[10px]"></div>
         </div>
       </aside>
     </div>
   </section>
 
-  <!-- Табы: Уроки / Словарик / Упражнения / Практика -->
-  <section class="pb-12">
+  <!-- Переключатель режимов курса -->
+  <section class="pb-14" id="course-modes">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-white rounded-3xl border border-black/10 shadow-soft p-4 sm:p-6">
-        <div class="flex flex-wrap gap-2 mb-4">
-          <button data-tab="lessons" class="tab-btn px-3 py-1.5 rounded-full text-xs sm:text-sm border border-gray-200 bg-[#fffef7] tab-btn-active">
-            Уроки
+      <div class="glass-card shadow-soft px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
+        <!-- Крупный переключатель -->
+        <div class="flex flex-wrap gap-2 justify-center mb-6">
+          <button data-tab="lessons" class="mode-btn mode-btn-active inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-full border border-gray-200 bg-[#fffef7]">
+            <span>📚</span><span>Уроки</span>
           </button>
-          <button data-tab="vocab" class="tab-btn px-3 py-1.5 rounded-full text-xs sm:text-sm border border-gray-200 bg-[#fffef7]">
-            Словарик
+          <button data-tab="vocab" class="mode-btn inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-full border border-gray-200 bg-[#fffef7]">
+            <span>🧠</span><span>Словарик</span>
           </button>
-          <button data-tab="exercises" class="tab-btn px-3 py-1.5 rounded-full text-xs sm:text-sm border border-gray-200 bg-[#fffef7]">
-            Упражнения
+          <button data-tab="exercises" class="mode-btn inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-full border border-gray-200 bg-[#fffef7]">
+            <span>🎯</span><span>Упражнения</span>
           </button>
-          <button data-tab="practice" class="tab-btn px-3 py-1.5 rounded-full text-xs sm:text-sm border border-gray-200 bg-[#fffef7]">
-            Практика
+          <button data-tab="practice" class="mode-btn inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-full border border-gray-200 bg-[#fffef7]">
+            <span>💬</span><span>Практика</span>
           </button>
         </div>
 
+        <!-- Панели -->
         <div id="tab-lessons" class="tab-panel">
-          <!-- список уроков -->
-          <div id="lessons-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-[var(--ink-2)]"></div>
+          <div class="grid md:grid-cols-[2fr,1.1fr] gap-6 items-start">
+            <div>
+              <h2 class="text-base sm:text-lg font-extrabold mb-2">Уроки курса</h2>
+              <p class="text-xs sm:text-sm text-[var(--ink-2)] mb-4">
+                Каждый урок — отдельная страница с текстом, картинками, видео и заданиями. Продолжительность 10–15 минут.
+              </p>
+              <div id="lessons-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-[var(--ink-2)]"></div>
+            </div>
+            <div class="bg-[#fffef7] border border-gray-200 rounded-2xl p-4 text-xs sm:text-sm text-[var(--ink-2)]">
+              <p class="font-semibold mb-2">Как устроена структура</p>
+              <ul class="list-disc list-inside space-y-1">
+                <li>Мы разрезаем длинные уроки на короткие логичные блоки.</li>
+                <li>Каждый блок завершает маленькое упражнение и «галочка» в прогрессе.</li>
+                <li>Мультимедиа остаётся: текст, картинки, видео, таблицы и задания.</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         <div id="tab-vocab" class="tab-panel hidden">
-          <div class="grid md:grid-cols-[2fr,1fr] gap-4 text-sm text-[var(--ink-2)]">
+          <div class="grid md:grid-cols-[2fr,1fr] gap-6 items-start text-sm text-[var(--ink-2)]">
             <div>
-              <h2 class="font-semibold mb-2">Ваш словарик</h2>
-              <p class="text-xs mb-3 text-[var(--ink-2)]">
-                Сюда попадают слова из уроков (мы добавляем их в коде урока) + те, что вы введёте сами.
+              <h2 class="text-base sm:text-lg font-extrabold mb-2">Словарик курса</h2>
+              <p class="text-xs sm:text-sm text-[var(--ink-2)] mb-3">
+                В словарик попадают слова из уроков (мы добавляем их из кода) и те, что вы добавите сами. Всё сохраняется в этом браузере.
               </p>
-              <div id="vocab-list" class="divide-y divide-gray-100 text-xs sm:text-sm max-h-80 overflow-auto"></div>
+              <div id="vocab-list" class="max-h-80 overflow-auto divide-y divide-gray-100 text-xs sm:text-sm"></div>
             </div>
-            <div>
+            <div class="bg-[#fffef7] border border-gray-200 rounded-2xl p-4 text-xs sm:text-sm">
               <h3 class="font-semibold mb-2">Добавить своё слово</h3>
               <form id="vocab-form" class="space-y-2">
                 <div>
-                  <label class="block text-xs mb-1">Слово по-английски</label>
+                  <label class="block text-[11px] mb-1">Слово по-английски</label>
                   <input name="word" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm" placeholder="например, notebook">
                 </div>
                 <div>
-                  <label class="block text-xs mb-1">Перевод</label>
+                  <label class="block text-[11px] mb-1">Перевод</label>
                   <input name="translation" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm" placeholder="блокнот / ноутбук">
                 </div>
                 <button class="mt-1 px-4 py-2 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-xs font-semibold text-[#1a1a1a] shadow-soft">
@@ -220,66 +274,60 @@
                 </button>
               </form>
               <p class="mt-3 text-[11px] text-[var(--ink-2)]">
-                Слова сохраняются в этом браузере. Позже можно будет синхронизировать с личным кабинетом.
+                Позже можно будет связать словарик с личным кабинетом и тренировками в приложении.
               </p>
             </div>
           </div>
         </div>
 
         <div id="tab-exercises" class="tab-panel hidden">
-          <div class="grid md:grid-cols-2 gap-4 text-sm text-[var(--ink-2)]">
+          <div class="grid md:grid-cols-[2fr,1fr] gap-6 items-start text-sm text-[var(--ink-2)]">
             <div>
-              <h2 class="font-semibold mb-2">Мини-тренажёр по словарю</h2>
-              <p class="text-xs mb-3">
-                Когда нет ресурса на новый урок — можно «пощёлкать» слова: мозг всё равно получает дозу «я молодец».
+              <h2 class="text-base sm:text-lg font-extrabold mb-2">Мини-тренажёр</h2>
+              <p class="text-xs sm:text-sm mb-3">
+                Когда нет ресурса на новый урок — можно «пощёлкать» слова. Мозг всё равно получает маленькую дозу «я молодец».
               </p>
-              <div id="quiz-box" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs space-y-2">
-                <!-- сюда рендерится вопрос -->
-              </div>
-              <button id="quiz-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-[#fffef7] text-xs font-semibold">
+              <div id="quiz-box" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs space-y-2 bg-[#fffef7]"></div>
+              <button id="quiz-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-white text-xs font-semibold">
                 Следующее задание
               </button>
             </div>
-            <div>
-              <h3 class="font-semibold mb-2">Как лучше использовать тренажёр</h3>
-              <ul class="list-disc list-inside text-xs space-y-1">
-                <li>2–3 мини-задания = уже маленькая победа.</li>
-                <li>Используйте его как «разогрев» перед новым уроком.</li>
-                <li>Если часто ошибаетесь в слове — добавьте к нему ассоциацию прямо в конспекте урока.</li>
+            <div class="bg-[#fffef7] border border-gray-200 rounded-2xl p-4 text-xs sm:text-sm">
+              <h3 class="font-semibold mb-2">Как использовать тренажёр</h3>
+              <ul class="list-disc list-inside space-y-1">
+                <li>Сделайте 3–5 заданий — и считайте, что вы «поддержали серию».</li>
+                <li>Используйте его как разминку перед уроком или как лёгкую практику вечером.</li>
+                <li>Сложные слова пометьте в заметке или вернитесь к уроку, где они встретились.</li>
               </ul>
             </div>
           </div>
         </div>
 
         <div id="tab-practice" class="tab-panel hidden">
-          <div class="grid md:grid-cols-2 gap-4 text-sm text-[var(--ink-2)]">
+          <div class="grid md:grid-cols-[2fr,1fr] gap-6 items-start text-sm text-[var(--ink-2)]">
             <div>
-              <h2 class="font-semibold mb-2">Практика языка</h2>
-              <p class="text-xs mb-3">
-                Здесь — идеи, как использовать английский вне уроков. Вы можете делать это для себя или отправлять задания куратору (платная функция).
+              <h2 class="text-base sm:text-lg font-extrabold mb-2">Практика языка</h2>
+              <p class="text-xs sm:text-sm mb-3">
+                Здесь — идеи, как использовать английский вне уроков. Можно делать просто для себя или отправлять задания куратору (платная функция).
               </p>
-              <div id="practice-idea" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs">
-                <!-- текущая идея -->
-              </div>
-              <button id="practice-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-[#fffef7] text-xs font-semibold">
-                Другая идея
+              <div id="practice-idea" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs bg-[#fffef7]"></div>
+              <button id="practice-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-white text-xs font-semibold">
+                Другая идея практики
               </button>
             </div>
-            <div>
-              <h3 class="font-semibold mb-2">Платные функции внутри курса</h3>
-              <div class="space-y-2 text-xs">
-                <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-[#fffefa]">
-                  <p class="font-semibold mb-1">🧑‍🏫 Проверка заданий куратором (PRO)</p>
-                  <p>Вы выполняете письменные и голосовые задания, а куратор даёт обратную связь, исправляет ошибки и подсказывает, как звучать более естественно.</p>
-                </div>
-                <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-[#fffafa]">
-                  <p class="font-semibold mb-1">📅 Еженедельная «проверка прогресса» (PRO)</p>
-                  <p>Короткий отчёт по тому, что вы сделали за неделю, и конкретные рекомендации, что делать дальше.</p>
-                </div>
-                <p class="text-[11px] text-[var(--ink-2)]">
-                  Базовый доступ к урокам, словарику и тренажёрам остаётся бесплатным. Платные функции включают «человеческую» поддержку и обратную связь.
-                </p>
+            <div class="bg-[#fffef7] border border-gray-200 rounded-2xl p-4 text-xs sm:text-sm space-y-2">
+              <h3 class="font-semibold mb-1">Платные функции внутри курса</h3>
+              <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-white">
+                <p class="font-semibold mb-1">🧑‍🏫 Проверка заданий куратором (PRO)</p>
+                <p>Вы выполняете письменные и голосовые задания, а куратор присылает разбор, исправляет ошибки и даёт более естественные формулировки.</p>
               </div>
+              <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-white">
+                <p class="font-semibold mb-1">📅 Еженедельный чек-ап прогресса (PRO)</p>
+                <p>Раз в неделю вы получаете мини-отчёт: что уже получилось и на чём лучше сфокусироваться в следующих уроках.</p>
+              </div>
+              <p class="text-[11px] text-[var(--ink-2)]">
+                Базовый доступ к урокам, словарю и тренажёрам остаётся бесплатным. Платные опции добавляют «живого» человека и обратную связь.
+              </p>
             </div>
           </div>
         </div>
@@ -289,8 +337,8 @@
   </section>
 </main>
 
-<!-- FOOTER как на главной -->
-<footer class="border-t border-gray-200 bg-white/70 backdrop-blur py-10 text-sm text-gray-700 mt-10">
+<!-- FOOTER (как на главной) -->
+<footer class="border-t border-gray-200 bg-white/80 backdrop-blur py-10 text-sm text-gray-700 mt-4">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
     <div>
       <a href="/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
@@ -321,39 +369,41 @@
   </div>
 </footer>
 
+<!-- СТЕЙТ КУРСА -->
 <script src="/courses/english-intro/english-intro-state.js"></script>
 <script>
-  // бургер
+  // Бургер
   const b=document.getElementById('burger'), m=document.getElementById('mnav');
   if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
 
-  // описание уроков (id + URL). Тут ты подставляешь реальные свои страницы
+  // Описание уроков (id + URL) — подставь свои реальные страницы
   const courseLessons = [
     { id:"lesson-01-hello", title:"Урок 1 · Hello & Goodbye", minutes:10, url:"/courses/english-intro/lesson-01-hello.html" },
     { id:"lesson-02-intro", title:"Урок 2 · Как представиться", minutes:12, url:"/courses/english-intro/lesson-02-intro.html" },
-    // дальше расщеплённые уроки...
+    // ...дальше твои уроки
   ];
 
-  // вкладки
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const tabPanels = {
+  // Переключатель режимов
+  const modeButtons = document.querySelectorAll(".mode-btn");
+  const panels = {
     lessons: document.getElementById("tab-lessons"),
     vocab: document.getElementById("tab-vocab"),
     exercises: document.getElementById("tab-exercises"),
-    practice: document.getElementById("tab-practice"),
+    practice: document.getElementById("tab-practice")
   };
-  tabButtons.forEach(btn=>{
+
+  modeButtons.forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const tab = btn.dataset.tab;
-      tabButtons.forEach(b=>b.classList.remove("tab-btn-active"));
-      btn.classList.add("tab-btn-active");
-      Object.entries(tabPanels).forEach(([name,el])=>{
+      modeButtons.forEach(b=>b.classList.remove("mode-btn-active"));
+      btn.classList.add("mode-btn-active");
+      Object.entries(panels).forEach(([name,el])=>{
         el.classList.toggle("hidden", name!==tab);
       });
     });
   });
 
-  // прогресс
+  // Статы
   const statLevel = document.getElementById("stat-level");
   const statXp = document.getElementById("stat-xp");
   const statStreak = document.getElementById("stat-streak");
@@ -361,7 +411,7 @@
   const progressBar = document.getElementById("progress-bar");
   const badgeRow = document.getElementById("badge-row");
 
-  function updateStats() {
+  function updateStats(){
     const state = EnglishIntro.getState();
     const level = 1 + Math.floor(state.xp / 100);
     statLevel.textContent = level;
@@ -377,10 +427,11 @@
     badgeRow.innerHTML = "";
     const badges = [];
     if(done >= 1) badges.push({label:"Первый шаг", type:"good"});
-    if(done >= 5) badges.push({label:"5+ уроков", type:"good"});
+    if(done >= 3) badges.push({label:"3+ урока", type:"good"});
     if(state.streakDays >= 3) badges.push({label:"Серия 3+ дня", type:"good"});
     if(state.xp >= 50) badges.push({label:"50+ XP", type:"neutral"});
     if(!badges.length) badges.push({label:"Сделайте первый урок 🎖", type:"good"});
+
     badges.forEach(b=>{
       const span = document.createElement("span");
       span.className = "px-2 py-1 rounded-full border text-[10px] " +
@@ -390,8 +441,8 @@
     });
   }
 
-  // список уроков
-  function renderLessons() {
+  // Список уроков
+  function renderLessons(){
     const state = EnglishIntro.getState();
     const box = document.getElementById("lessons-list");
     box.innerHTML = "";
@@ -399,24 +450,25 @@
       const isDone = state.completedLessons.includes(lesson.id);
       const card = document.createElement("a");
       card.href = lesson.url;
-      card.className = "block border border-gray-200 rounded-2xl px-3 py-3 bg-[#fffef7] hover:bg-[#fff3c6] shadow-soft text-xs sm:text-sm";
+      card.className = "block border border-gray-200 rounded-2xl px-3 py-3 bg-white hover:bg-[#fff7ce] transition-colors text-xs sm:text-sm";
       card.innerHTML = `
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center justify-between gap-2 mb-1">
           <div class="flex items-center gap-2">
-            <span class="inline-flex h-5 w-5 rounded-full text-[10px] items-center justify-center ${isDone ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-500"}">
-              ${isDone ? "✓" : lesson.id.split("-")[1] || "•"}
+            <span class="inline-flex h-6 w-6 rounded-full text-[11px] items-center justify-center ${isDone ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-500"}">
+              ${isDone ? "✓" : (lesson.id.split("-")[1] || "•")}
             </span>
             <span class="font-semibold text-[var(--ink)] line-clamp-1">${lesson.title}</span>
           </div>
           <span class="text-[10px] text-[var(--ink-2)]">${lesson.minutes} мин</span>
         </div>
+        <p class="text-[11px] text-[var(--ink-2)]">Нажмите, чтобы открыть страницу урока.</p>
       `;
       box.appendChild(card);
     });
   }
 
-  // словарик
-  function renderVocab() {
+  // Словарик
+  function renderVocab(){
     const list = EnglishIntro.getVocab();
     const box = document.getElementById("vocab-list");
     box.innerHTML = "";
@@ -430,7 +482,7 @@
       div.innerHTML = `
         <div>
           <p><b>${item.word}</b> — ${item.translation}</p>
-          ${item.lessonId ? `<p class="text-[10px] text-[var(--ink-2)]">из урока: ${item.lessonId}</p>` : ""}
+          ${item.lessonId && item.lessonId !== "user" ? `<p class="text-[10px] text-[var(--ink-2)]">Из урока: ${item.lessonId}</p>` : ""}
         </div>
       `;
       box.appendChild(div);
@@ -438,7 +490,7 @@
   }
 
   const vocabForm = document.getElementById("vocab-form");
-  vocabForm.addEventListener("submit", (e)=>{
+  vocabForm.addEventListener("submit",(e)=>{
     e.preventDefault();
     const form = e.target;
     const word = form.word.value.trim();
@@ -449,22 +501,22 @@
     renderVocab();
   });
 
-  // мини-квиз по словарю
+  // Мини-квиз по словарю
   const quizBox = document.getElementById("quiz-box");
-  function makeQuiz() {
+  function makeQuiz(){
     const words = EnglishIntro.getVocab();
     if(words.length < 2){
       quizBox.innerHTML = `<p>В словаре пока мало слов. Добавьте ещё пару, и тренажёр заработает.</p>`;
       return;
     }
     const correct = words[Math.floor(Math.random()*words.length)];
-    const optionsPool = words.filter(w => w.id !== correct.id);
-    const shuffled = [correct];
-    while(shuffled.length < Math.min(4, words.length)){
-      const cand = optionsPool[Math.floor(Math.random()*optionsPool.length)];
-      if(!shuffled.includes(cand)) shuffled.push(cand);
+    const others = words.filter(w=>w.id!==correct.id);
+    const options = [correct];
+    while(options.length < Math.min(4, words.length)){
+      const cand = others[Math.floor(Math.random()*others.length)];
+      if(!options.includes(cand)) options.push(cand);
     }
-    shuffled.sort(()=>Math.random()-0.5);
+    options.sort(()=>Math.random()-0.5);
 
     quizBox.innerHTML = "";
     const q = document.createElement("p");
@@ -473,7 +525,7 @@
     quizBox.appendChild(q);
 
     let answered = false;
-    shuffled.forEach(item=>{
+    options.forEach(item=>{
       const btn = document.createElement("button");
       btn.className = "mt-2 block w-full text-left px-3 py-2 rounded-xl border border-gray-200 bg-white";
       btn.textContent = item.translation;
@@ -491,32 +543,33 @@
   }
   document.getElementById("quiz-next").addEventListener("click", makeQuiz);
 
-  // практика
+  // Практика
   const practiceIdeas = [
-    "Запишите голосовое (на телефон) с приветствием и коротким представлением: Name, city, one hobby.",
-    "Сделайте список из 5 людей в вашей жизни и напишите, кем они вам приходятся, по-английски.",
-    "Напишите мини-диалог знакомства из 4–6 реплик. Используйте фразы из первых уроков.",
-    "Попробуйте один день подписывать 3 предмета вокруг вас по-английски (стикерами или в заметках)."
+    "Запишите голосовое на телефон, где вы здороваетесь, представляетесь и говорите, из какого вы города.",
+    "Напишите мини-диалог знакомства из 4–6 реплик и попробуйте прочитать его вслух с разной интонацией.",
+    "Выберите 3 предмета вокруг и подпишите их по-английски (в заметках или стикерами).",
+    "Сделайте текстовую заметку «Моё утро» на английском: 3–5 простых предложений в Present Simple."
   ];
   const practiceBox = document.getElementById("practice-idea");
-  function renderPracticeIdea() {
+  function renderPracticeIdea(){
     const idea = practiceIdeas[Math.floor(Math.random()*practiceIdeas.length)];
     practiceBox.textContent = idea;
   }
   document.getElementById("practice-next").addEventListener("click", renderPracticeIdea);
 
-  // кнопка "Продолжить"
+  // Кнопка "Продолжить"
   document.getElementById("btn-continue").addEventListener("click", ()=>{
     const lastId = EnglishIntro.getLastLessonId();
     if(lastId){
       const lesson = courseLessons.find(l=>l.id===lastId);
-      if(lesson) {
+      if(lesson){
         window.location.href = lesson.url;
         return;
       }
     }
-    // если ещё не начинали
-    window.location.href = courseLessons[0].url;
+    if(courseLessons.length){
+      window.location.href = courseLessons[0].url;
+    }
   });
 
   // init
