@@ -4,10 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PolyTalky — Интенсив по английскому для начинающих</title>
-  <meta name="description" content="Английский для абсолютных новичков: короткие уроки, геймификация, XP, серия дней и интерактивные тренажёры. Всё на одной странице, с сохранением прогресса." />
+  <meta name="description" content="Английский для новичков: короткие уроки по 10–15 минут, геймификация, словарик, тренажёры и практика.">
   <base href="/">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- фавикон -->
   <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
   <link rel="apple-touch-icon" href="/assets/favicon.jpg">
   <link rel="apple-touch-icon" href="/favicon.png">
@@ -21,9 +20,6 @@
       --ink-2:#334155;
       --card:#FFFFFF;
       --bg:#FFF8D6;
-      /* чтобы не было расхождений в футере/куки */
-      --brand-1:#FFDE59;
-      --brand-2:#FFBA08;
     }
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
@@ -31,24 +27,17 @@
       color:var(--ink);
     }
     .shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.08)}
-    .card{transition:transform .25s ease, box-shadow .25s ease}
-    .card:hover{transform:translateY(-6px)}
     .wow-bg{position:relative;overflow:hidden}
     .wow-bg:before,.wow-bg:after{
-      content:"";
-      position:absolute;
-      filter:blur(70px);
-      opacity:.75;
-      animation:float 12s ease-in-out infinite
+      content:"";position:absolute;filter:blur(70px);
+      opacity:.75;animation:float 12s ease-in-out infinite
     }
     .wow-bg:before{
-      width:560px;height:560px;
-      left:-140px;top:-140px;
+      width:560px;height:560px;left:-140px;top:-140px;
       background:radial-gradient(closest-side,rgba(255,222,89,.9),transparent)
     }
     .wow-bg:after{
-      width:520px;height:520px;
-      right:-120px;top:-60px;
+      width:520px;height:520px;right:-120px;top:-60px;
       background:radial-gradient(closest-side,rgba(232,93,4,.35),transparent);
       animation-delay:2.2s
     }
@@ -61,339 +50,256 @@
       padding:.45rem .75rem;border-radius:999px;
       font-size:.8rem;color:var(--ink-2)
     }
-    .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease}
-    .reveal.reveal--visible{opacity:1;transform:translateY(0)}
-    .badge-free{background:#e8ffe3;border:1px solid #a7f3d0;color:#065f46}
-    .badge-pro{background:#fff0f0;border:1px solid #fecaca;color:#7f1d1d}
-
-    /* Мобильные улучшения */
-    @media (max-width: 640px){
-      .hero-grid{display:grid;grid-template-columns:1fr;gap:16px}
-      .hero-cta{display:grid;gap:8px}
-      .card{transform:none}
+    .tab-btn-active{
+      background:#111827;
+      color:#f9fafb;
     }
-
-    /* Десктоп-усиление */
-    @media (min-width: 1024px){
-      h1{ font-size:2.7rem; line-height:1.1; }
-      .card:hover{ transform:translateY(-8px); box-shadow:0 16px 40px rgba(0,0,0,.10); }
-    }
-
-    /* мини-стили для прогресса и тренажёра */
     .pt-progress-outer{
-      border-radius:999px;
-      background:#f3f4f6;
-      overflow:hidden;
-      height:10px;
+      border-radius:999px;background:#f3f4f6;overflow:hidden;height:10px;
     }
     .pt-progress-inner{
-      height:100%;
-      width:0%;
-      border-radius:999px;
+      height:100%;width:0%;border-radius:999px;
       background:linear-gradient(90deg,var(--brand-orange),var(--brand-yellow));
       transition:width .3s ease;
-    }
-    .pt-lesson-scroll{
-      max-height:260px;
-      overflow:auto;
-    }
-    .pt-lesson-item:hover{
-      background-color:#fff7ce;
     }
   </style>
 </head>
 <body>
 
-<script>
-  // Плавное появление блоков (как на главной)
-  const onReady=()=>{
-    const obs=new IntersectionObserver((ents)=>{
-      ents.forEach(e=>{
-        if(e.isIntersecting)e.target.classList.add('reveal--visible');
-      });
-    },{threshold:.12});
-    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-  };
-  if(document.readyState!=='loading') onReady(); else document.addEventListener('DOMContentLoaded', onReady);
-</script>
-
-<!-- ==================== HEADER (скопирован) ==================== -->
+<!-- HEADER как на главной -->
 <header class="sticky top-0 z-50 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
     <a href="./" class="flex items-center gap-3 font-semibold text-lg">
-      <img src="assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl"> PolyTalky
+      <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl"> PolyTalky
     </a>
-
-    <!-- Desktop nav -->
     <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
-      <a href="courses/" class="hover:opacity-80">Курсы</a>
-      <a href="shop/" class="hover:opacity-80">Магазин</a>
-      <a href="student/" class="hover:opacity-80">Личный кабинет</a>
-      <a href="courses/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">Начать бесплатно</a>
+      <a href="/courses/" class="hover:opacity-80">Курсы</a>
+      <a href="/shop/" class="hover:opacity-80">Магазин</a>
+      <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
+      <a href="/courses/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">Начать бесплатно</a>
     </nav>
-
-    <!-- Mobile burger -->
     <button id="burger" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft" aria-label="Меню">
       ☰
     </button>
   </div>
-
-  <!-- Mobile menu -->
   <div id="mnav" class="md:hidden hidden border-t border-black/10 bg-[#fffef7]">
     <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-[var(--ink-2)]">
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="courses/">Курсы</a>
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="shop/">Магазин</a>
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="student/">Личный кабинет</a>
-      <a class="px-3 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold shadow-soft" href="courses/">Начать бесплатно</a>
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/courses/">Курсы</a>
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/shop/">Магазин</a>
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/student/">Личный кабинет</a>
+      <a class="px-3 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold shadow-soft" href="/courses/">Начать бесплатно</a>
     </div>
   </div>
 </header>
 
-<script>
-  // Тоггл мобильного меню
-  const b=document.getElementById('burger'), m=document.getElementById('mnav');
-  if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
-</script>
-
 <main>
-  <!-- ============ HERO: воздух, минимум шума ============ -->
+  <!-- HERO — воздух, минимум перегруза -->
   <section class="wow-bg">
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 hero-grid">
-      <div class="reveal">
-        <span class="badge">Starter • Абсолютный ноль → первые фразы</span>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14 grid gap-8 lg:grid-cols-[minmax(0,1.4fr),minmax(0,1fr)]">
+      <div>
+        <span class="badge">English Intro · A1</span>
         <h1 class="mt-4 text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight">
-          Интенсив по английскому для тех, кто «с нуля» — но хочет разговаривать 💬
+          Английский для начинающих с геймификацией и маленькими уроками
         </h1>
-        <p class="mt-4 text-base sm:text-lg text-[var(--ink-2)] max-w-xl">
-          Короткие уроки, живые фразы и мини-игры. XP, серия дней и «маленькие победы», которые кормят эндорфины.
+        <p class="mt-4 text-sm sm:text-base text-[var(--ink-2)] max-w-xl">
+          10–15 минут на урок, XP, серия дней и лёгкие тренажёры. Уроки, словарик, упражнения и практика — всё в одном пространстве курса.
         </p>
 
-        <div class="mt-6 flex flex-wrap gap-3 hero-cta">
-          <button id="btn-start-course"
-                  class="px-5 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">
+        <div class="mt-5 flex flex-wrap gap-3">
+          <a href="/courses/english-intro/lesson-01-hello.html"
+             class="px-5 py-3 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-sm font-semibold text-[#1a1a1a] shadow-soft">
             ▶ Начать с первого урока
-          </button>
-          <button id="btn-continue-course"
-                  class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft text-sm text-[var(--ink-2)]">
+          </a>
+          <button id="btn-continue"
+                  class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] text-sm text-[var(--ink-2)] shadow-soft">
             ⏱ Продолжить с места остановки
           </button>
         </div>
 
-        <ul class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-[#333]">
-          <li class="p-3 rounded-xl bg-white border border-black/10 shadow-soft">⚡ 10–15 минут на урок</li>
-          <li class="p-3 rounded-xl bg-white border border-black/10 shadow-soft">🎮 XP, серия дней и бейджи</li>
-          <li class="p-3 rounded-xl bg-white border border-black/10 shadow-soft">📱 Удобно с телефона</li>
-        </ul>
+        <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs sm:text-sm text-[var(--ink-2)]">
+          <div class="p-3 rounded-2xl bg-white border border-black/5 shadow-soft">
+            <p class="font-semibold text-[var(--ink)] mb-1">Уроки</p>
+            <p>Короткие мультимедиа-блоки вместо лекций на 45 минут.</p>
+          </div>
+          <div class="p-3 rounded-2xl bg-white border border-black/5 shadow-soft">
+            <p class="font-semibold text-[var(--ink)] mb-1">Словарик</p>
+            <p>Слова из уроков + ваши собственные, всё сохраняется.</p>
+          </div>
+          <div class="p-3 rounded-2xl bg-white border border-black/5 shadow-soft">
+            <p class="font-semibold text-[var(--ink)] mb-1">Упражнения</p>
+            <p>Тренажёры на слова и фразы, когда нет сил на новый урок.</p>
+          </div>
+          <div class="p-3 rounded-2xl bg-white border border-black/5 shadow-soft">
+            <p class="font-semibold text-[var(--ink)] mb-1">Практика</p>
+            <p>Идеи реальной практики языка: голосовые, мини-диалоги, заметки.</p>
+          </div>
+        </div>
       </div>
 
-      <div class="reveal">
-        <div class="relative rounded-3xl border border-black/10 bg-white p-5 shadow-soft max-w-md ml-auto">
-          <p class="text-sm font-semibold text-[var(--ink)] mb-2">
-            Вводный урок: <span class="text-[var(--brand-orange)]">«Hello &amp; Goodbye»</span>
-          </p>
-          <p class="text-sm text-[var(--ink-2)]">
-            Вы уже через 10 минут:
-          </p>
-          <ul class="mt-2 space-y-1 text-sm text-[var(--ink-2)]">
-            <li>• умеете поздороваться и попрощаться в разных ситуациях;</li>
-            <li>• ловите первую дозу «я могу» вместо «я ничего не понимаю»;</li>
-            <li>• получаете первые XP и бейдж «Первый шаг».</li>
-          </ul>
-          <button id="btn-open-trainer"
-                  class="mt-4 w-full px-4 py-2.5 rounded-xl bg-[#111827] text-white text-sm font-semibold shadow-soft">
-            Открыть тренажёр курса
+      <!-- Карточка прогресса -->
+      <aside class="bg-white rounded-3xl border border-black/10 shadow-soft p-5 flex flex-col gap-4">
+        <div class="flex justify-between items-baseline">
+          <div>
+            <p class="text-xs text-[var(--ink-2)]">Уровень</p>
+            <p class="text-2xl font-bold" id="stat-level">1</p>
+          </div>
+          <div>
+            <p class="text-xs text-[var(--ink-2)]">XP</p>
+            <p class="text-2xl font-bold" id="stat-xp">0</p>
+          </div>
+          <div>
+            <p class="text-xs text-[var(--ink-2)]">Серия</p>
+            <p class="text-2xl font-bold" id="stat-streak">0 дней</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between text-xs text-[var(--ink-2)] mb-1">
+            <span>Прогресс по урокам</span>
+            <span id="progress-text">0 / 0</span>
+          </div>
+          <div class="pt-progress-outer">
+            <div id="progress-bar" class="pt-progress-inner"></div>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs text-[var(--ink-2)] mb-1">Бейджи</p>
+          <div id="badge-row" class="flex flex-wrap gap-2 text-[10px]"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Табы: Уроки / Словарик / Упражнения / Практика -->
+  <section class="pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-3xl border border-black/10 shadow-soft p-4 sm:p-6">
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button data-tab="lessons" class="tab-btn px-3 py-1.5 rounded-full text-xs sm:text-sm border border-gray-200 bg-[#fffef7] tab-btn-active">
+            Уроки
+          </button>
+          <button data-tab="vocab" class="tab-btn px-3 py-1.5 rounded-full text-xs sm:text-sm border border-gray-200 bg-[#fffef7]">
+            Словарик
+          </button>
+          <button data-tab="exercises" class="tab-btn px-3 py-1.5 rounded-full text-xs sm:text-sm border border-gray-200 bg-[#fffef7]">
+            Упражнения
+          </button>
+          <button data-tab="practice" class="tab-btn px-3 py-1.5 rounded-full text-xs sm:text-sm border border-gray-200 bg-[#fffef7]">
+            Практика
           </button>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- ============ Блок 1: Коротко как работает курс (чистый, без лишнего) ============ -->
-  <section class="py-10 sm:py-12">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-white rounded-3xl border border-black/10 shadow-soft p-6 sm:p-8 space-y-6 reveal">
-        <div>
-          <h2 class="text-xl sm:text-2xl font-extrabold mb-2">
-            Как устроен интенсив по английскому
-          </h2>
-          <p class="text-sm sm:text-base text-[var(--ink-2)] max-w-2xl">
-            Курс поделён на небольшие модули. Каждый модуль — это понятная тема, а каждый урок — маленький шаг с быстрым результатом.
-          </p>
+        <div id="tab-lessons" class="tab-panel">
+          <!-- список уроков -->
+          <div id="lessons-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-[var(--ink-2)]"></div>
         </div>
 
-        <div class="grid sm:grid-cols-3 gap-4 text-sm text-[var(--ink-2)]">
-          <div class="p-4 rounded-2xl bg-[#fffefa] border border-black/5">
-            <p class="font-semibold mb-1">🎯 1 урок = 1 маленькая цель</p>
-            <p>Например: научиться здороваться, представляться, рассказать кто вы и откуда.</p>
-          </div>
-          <div class="p-4 rounded-2xl bg-[#fffefa] border border-black/5">
-            <p class="font-semibold mb-1">🎮 Геймификация в моменте</p>
-            <p>За выполненный урок — XP, прогресс-бар и серия дней. Мозг радуется, и хочется продолжать.</p>
-          </div>
-          <div class="p-4 rounded-2xl bg-[#fffefa] border border-black/5">
-            <p class="font-semibold mb-1">📌 Всё на одной странице</p>
-            <p>Интро, уроки, упражнения и прогресс — без прыжков по вкладкам и потерянных ссылок.</p>
+        <div id="tab-vocab" class="tab-panel hidden">
+          <div class="grid md:grid-cols-[2fr,1fr] gap-4 text-sm text-[var(--ink-2)]">
+            <div>
+              <h2 class="font-semibold mb-2">Ваш словарик</h2>
+              <p class="text-xs mb-3 text-[var(--ink-2)]">
+                Сюда попадают слова из уроков (мы добавляем их в коде урока) + те, что вы введёте сами.
+              </p>
+              <div id="vocab-list" class="divide-y divide-gray-100 text-xs sm:text-sm max-h-80 overflow-auto"></div>
+            </div>
+            <div>
+              <h3 class="font-semibold mb-2">Добавить своё слово</h3>
+              <form id="vocab-form" class="space-y-2">
+                <div>
+                  <label class="block text-xs mb-1">Слово по-английски</label>
+                  <input name="word" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm" placeholder="например, notebook">
+                </div>
+                <div>
+                  <label class="block text-xs mb-1">Перевод</label>
+                  <input name="translation" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm" placeholder="блокнот / ноутбук">
+                </div>
+                <button class="mt-1 px-4 py-2 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-xs font-semibold text-[#1a1a1a] shadow-soft">
+                  ➕ Добавить в словарик
+                </button>
+              </form>
+              <p class="mt-3 text-[11px] text-[var(--ink-2)]">
+                Слова сохраняются в этом браузере. Позже можно будет синхронизировать с личным кабинетом.
+              </p>
+            </div>
           </div>
         </div>
 
-        <!-- раскрывающийся блок чтобы не перегружать -->
-        <details class="mt-2">
-          <summary class="cursor-pointer text-sm text-[var(--ink-2)] flex items-center gap-2">
-            <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#fff0b4] text-xs">+</span>
-            Хочу увидеть подробный план модулей
-          </summary>
-          <div class="mt-4 grid sm:grid-cols-2 gap-3 text-sm text-[var(--ink-2)]">
-            <div class="p-4 rounded-2xl bg-white border border-black/5">
-              <p class="font-semibold mb-1">Модуль 0: Welcome & Mindset</p>
-              <p>Как работает курс, как не бояться ошибок и как выжимать максимум эндорфинов из учёбы.</p>
+        <div id="tab-exercises" class="tab-panel hidden">
+          <div class="grid md:grid-cols-2 gap-4 text-sm text-[var(--ink-2)]">
+            <div>
+              <h2 class="font-semibold mb-2">Мини-тренажёр по словарю</h2>
+              <p class="text-xs mb-3">
+                Когда нет ресурса на новый урок — можно «пощёлкать» слова: мозг всё равно получает дозу «я молодец».
+              </p>
+              <div id="quiz-box" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs space-y-2">
+                <!-- сюда рендерится вопрос -->
+              </div>
+              <button id="quiz-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-[#fffef7] text-xs font-semibold">
+                Следующее задание
+              </button>
             </div>
-            <div class="p-4 rounded-2xl bg-white border border-black/5">
-              <p class="font-semibold mb-1">Модуль 1: First Contact</p>
-              <p>Приветствия, прощания, как представиться и спросить имя.</p>
-            </div>
-            <div class="p-4 rounded-2xl bg-white border border-black/5">
-              <p class="font-semibold mb-1">Модуль 2: To be</p>
-              <p>I am, you are, we are — кто вы, откуда, чем занимаетесь.</p>
-            </div>
-            <div class="p-4 rounded-2xl bg-white border border-black/5">
-              <p class="font-semibold mb-1">Модуль 3: Present Simple</p>
-              <p>Привычки и рутина: I work, I like, I don’t like.</p>
-            </div>
-            <div class="p-4 rounded-2xl bg-white border border-black/5">
-              <p class="font-semibold mb-1">Модуль 4: Everyday Life</p>
-              <p>Время, дом, семья — всё, что нужно для бытового общения.</p>
-            </div>
-            <div class="p-4 rounded-2xl bg-white border border-black/5">
-              <p class="font-semibold mb-1">Модуль 5–6: Past / Future Lite + Travel</p>
-              <p>«Где вы были вчера, что будете делать завтра» и базовые фразы для поездок.</p>
+            <div>
+              <h3 class="font-semibold mb-2">Как лучше использовать тренажёр</h3>
+              <ul class="list-disc list-inside text-xs space-y-1">
+                <li>2–3 мини-задания = уже маленькая победа.</li>
+                <li>Используйте его как «разогрев» перед новым уроком.</li>
+                <li>Если часто ошибаетесь в слове — добавьте к нему ассоциацию прямо в конспекте урока.</li>
+              </ul>
             </div>
           </div>
-        </details>
-      </div>
-    </div>
-  </section>
+        </div>
 
-  <!-- ============ Блок 2: FAQ в формате аккордеона (свернуто по умолчанию) ============ -->
-  <section class="py-8 sm:py-10">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-white rounded-3xl border border-black/10 shadow-soft p-6 sm:p-7 space-y-3 reveal">
-        <h2 class="text-lg sm:text-xl font-extrabold">
-          Частые вопросы про интенсив
-        </h2>
-        <details class="p-3 rounded-2xl bg-[#fffefa] border border-black/5">
-          <summary class="font-semibold cursor-pointer text-sm">С какого уровня можно начинать?</summary>
-          <p class="mt-2 text-sm text-[var(--ink-2)]">
-            Подходит для абсолютных новичков: если вы помните только «hello» и «London is the capital…» — это ваш уровень.
-          </p>
-        </details>
-        <details class="p-3 rounded-2xl bg-[#fffefa] border border-black/5">
-          <summary class="font-semibold cursor-pointer text-sm">Сколько времени займёт курс?</summary>
-          <p class="mt-2 text-sm text-[var(--ink-2)]">
-            В среднем 4–6 недель при 10–20 мин в день. Можно проходить быстрее или медленнее — прогресс сохраняется.
-          </p>
-        </details>
-        <details class="p-3 rounded-2xl bg-[#fffefa] border border-black/5">
-          <summary class="font-semibold cursor-pointer text-sm">Будут ли грамматические объяснения?</summary>
-          <p class="mt-2 text-sm text-[var(--ink-2)]">
-            Да, но короткие и понятные. Сначала живая фраза, потом аккуратное объяснение, почему так.
-          </p>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ ТРЕНАЖЁР КУРСА (спрятан по умолчанию) ============ -->
-  <section id="pt-trainer-section" class="py-10 sm:py-12 hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between gap-4 mb-4">
-        <h2 class="text-xl sm:text-2xl font-extrabold">
-          Игровое поле курса
-        </h2>
-        <p class="text-xs sm:text-sm text-[var(--ink-2)]">
-          Здесь ваши уроки, XP, серия дней и тренажёры.
-        </p>
-      </div>
-
-      <div class="grid lg:grid-cols-[minmax(260px,320px),1fr] gap-5">
-        <!-- левая колонка: прогресс + список уроков -->
-        <aside class="bg-white rounded-3xl border border-black/10 shadow-soft p-4 sm:p-5 space-y-4">
-          <div>
-            <p class="text-xs uppercase tracking-wide text-[var(--ink-2)] mb-1">Ваш прогресс</p>
-            <div class="flex items-baseline justify-between gap-2">
-              <div>
-                <p class="text-xs text-[var(--ink-2)]">Уровень</p>
-                <p class="text-lg font-bold" id="pt-stat-level">1</p>
+        <div id="tab-practice" class="tab-panel hidden">
+          <div class="grid md:grid-cols-2 gap-4 text-sm text-[var(--ink-2)]">
+            <div>
+              <h2 class="font-semibold mb-2">Практика языка</h2>
+              <p class="text-xs mb-3">
+                Здесь — идеи, как использовать английский вне уроков. Вы можете делать это для себя или отправлять задания куратору (платная функция).
+              </p>
+              <div id="practice-idea" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs">
+                <!-- текущая идея -->
               </div>
-              <div>
-                <p class="text-xs text-[var(--ink-2)]">XP</p>
-                <p class="text-lg font-bold" id="pt-stat-xp">0</p>
-              </div>
-              <div>
-                <p class="text-xs text-[var(--ink-2)]">Серия</p>
-                <p class="text-lg font-bold" id="pt-stat-streak">0 дней</p>
+              <button id="practice-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-[#fffef7] text-xs font-semibold">
+                Другая идея
+              </button>
+            </div>
+            <div>
+              <h3 class="font-semibold mb-2">Платные функции внутри курса</h3>
+              <div class="space-y-2 text-xs">
+                <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-[#fffefa]">
+                  <p class="font-semibold mb-1">🧑‍🏫 Проверка заданий куратором (PRO)</p>
+                  <p>Вы выполняете письменные и голосовые задания, а куратор даёт обратную связь, исправляет ошибки и подсказывает, как звучать более естественно.</p>
+                </div>
+                <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-[#fffafa]">
+                  <p class="font-semibold mb-1">📅 Еженедельная «проверка прогресса» (PRO)</p>
+                  <p>Короткий отчёт по тому, что вы сделали за неделю, и конкретные рекомендации, что делать дальше.</p>
+                </div>
+                <p class="text-[11px] text-[var(--ink-2)]">
+                  Базовый доступ к урокам, словарику и тренажёрам остаётся бесплатным. Платные функции включают «человеческую» поддержку и обратную связь.
+                </p>
               </div>
             </div>
           </div>
+        </div>
 
-          <div>
-            <div class="flex items-center justify-between text-xs text-[var(--ink-2)] mb-1">
-              <span>Прогресс по урокам</span>
-              <span id="pt-progress-text">0 / 0</span>
-            </div>
-            <div class="pt-progress-outer">
-              <div id="pt-progress-bar" class="pt-progress-inner"></div>
-            </div>
-          </div>
-
-          <div>
-            <p class="text-xs uppercase tracking-wide text-[var(--ink-2)] mb-2">Бейджи</p>
-            <div id="pt-badge-row" class="flex flex-wrap gap-2 text-[10px]">
-              <!-- бейджи из JS -->
-            </div>
-          </div>
-
-          <div>
-            <p class="text-xs uppercase tracking-wide text-[var(--ink-2)] mb-2">Уроки</p>
-            <div id="pt-lesson-list" class="pt-lesson-scroll space-y-1 text-sm">
-              <!-- список уроков -->
-            </div>
-          </div>
-        </aside>
-
-        <!-- правая колонка: содержимое урока -->
-        <section class="bg-white rounded-3xl border border-black/10 shadow-soft p-4 sm:p-6">
-          <div id="pt-lesson-panel">
-            <!-- сюда рендерится интро/выбранный урок -->
-            <p class="text-sm sm:text-base text-[var(--ink-2)]">
-              Нажмите «Начать с первого урока» или выберите урок слева, чтобы открыть тренажёр.
-            </p>
-          </div>
-        </section>
       </div>
     </div>
   </section>
-
-  <!-- всплывашка XP -->
-  <div id="pt-xp-toast"
-       class="fixed bottom-4 right-4 z-50 hidden bg-emerald-500 text-white text-xs sm:text-sm px-4 py-2 rounded-full shadow-soft">
-    +10 XP — вы ближе к цели! 🎉
-  </div>
 </main>
 
-<!-- ==================== FOOTER (скопирован) ==================== -->
+<!-- FOOTER как на главной -->
 <footer class="border-t border-gray-200 bg-white/70 backdrop-blur py-10 text-sm text-gray-700 mt-10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-    <!-- Бренд -->
     <div>
       <a href="/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
-        <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-2)] items-center justify-center">🏷️</span>
+        <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-yellow-deep)] items-center justify-center">🏷️</span>
         PolyTalky
       </a>
       <p class="mt-3 text-gray-500">Изучайте языки для жизни, а не только для тестов.</p>
       <p class="mt-4 text-gray-400">© 2025 PolyTalky. Все права защищены.</p>
     </div>
-
-    <!-- Навигация -->
     <div>
       <h3 class="font-semibold text-gray-900 mb-3">Навигация</h3>
       <ul class="space-y-2">
@@ -403,8 +309,6 @@
         <li><a href="/contact.html" class="hover:underline">Контакты</a></li>
       </ul>
     </div>
-
-    <!-- Юридическая информация -->
     <div>
       <h3 class="font-semibold text-gray-900 mb-3">Юридическая информация</h3>
       <ul class="space-y-2">
@@ -417,583 +321,210 @@
   </div>
 </footer>
 
-<!-- Cookie баннер (как на главной) -->
-<div id="cookie-banner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white text-gray-900 shadow-md rounded-xl px-4 py-3 text-sm flex items-center gap-3 hidden z-50">
-  <span>Мы используем cookies для улучшения работы сайта.</span>
-  <button id="cookie-accept" class="bg-[var(--brand-1)] text-gray-900 px-3 py-1 rounded-lg text-sm">Понятно</button>
-</div>
+<script src="/courses/english-intro/english-intro-state.js"></script>
 <script>
-  const banner = document.getElementById('cookie-banner');
-  if (!localStorage.getItem('cookieConsent')) banner.classList.remove('hidden');
-  document.getElementById('cookie-accept').onclick = () => {
-    localStorage.setItem('cookieConsent', 'true');
-    banner.classList.add('hidden');
+  // бургер
+  const b=document.getElementById('burger'), m=document.getElementById('mnav');
+  if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
+
+  // описание уроков (id + URL). Тут ты подставляешь реальные свои страницы
+  const courseLessons = [
+    { id:"lesson-01-hello", title:"Урок 1 · Hello & Goodbye", minutes:10, url:"/courses/english-intro/lesson-01-hello.html" },
+    { id:"lesson-02-intro", title:"Урок 2 · Как представиться", minutes:12, url:"/courses/english-intro/lesson-02-intro.html" },
+    // дальше расщеплённые уроки...
+  ];
+
+  // вкладки
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const tabPanels = {
+    lessons: document.getElementById("tab-lessons"),
+    vocab: document.getElementById("tab-vocab"),
+    exercises: document.getElementById("tab-exercises"),
+    practice: document.getElementById("tab-practice"),
   };
-</script>
+  tabButtons.forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const tab = btn.dataset.tab;
+      tabButtons.forEach(b=>b.classList.remove("tab-btn-active"));
+      btn.classList.add("tab-btn-active");
+      Object.entries(tabPanels).forEach(([name,el])=>{
+        el.classList.toggle("hidden", name!==tab);
+      });
+    });
+  });
 
-<!-- ==================== JS логика курса ==================== -->
-<script>
-  /********* Описание курса (урезанная версия, но с живыми уроками 1–2) *********/
-  const englishIntroCourse = {
-    id: "english-intro",
-    modules: [
-      {
-        id: "m0",
-        title: "Welcome & Mindset",
-        lessons: [
-          {
-            id: "welcome-intro",
-            title: "Добро пожаловать · Как мы учим",
-            minutes: 5,
-            type: "intro",
-            goals: [
-              "Понять структуру курса и систему наград",
-              "Настроиться на короткие, но регулярные занятия",
-              "Снять страх перед ошибками"
-            ],
-            contentIntro: [
-              "Этот курс построен на принципе «маленькие шаги — большой результат».",
-              "Каждый урок сочетает грамматику, лексику и мини-игры. За выполнение уроков вы получаете XP, повышаете уровень и зарабатываете бейджи.",
-              "Ошибаться — нормально. Ошибка — сигнал мозгу, что идёт обучение, и именно здесь рождается прогресс."
-            ],
-            exercises: [
-              {
-                id: "welcome-choice",
-                kind: "mcq",
-                question: "Как лучше всего работать с этим курсом?",
-                options: [
-                  "Проходить сразу по 10 уроков за раз и делать длинные паузы",
-                  "Каждый день делать 1–2 коротких урока и радоваться маленьким победам",
-                  "Ждать идеального настроения и только тогда заниматься"
-                ],
-                correctIndex: 1,
-                explanation: "Регулярность + маленькие победы = устойчивый прогресс и стабильные эндорфины."
-              }
-            ]
-          }
-        ]
-      },
-      {
-        id: "m1",
-        title: "First Contact · Приветствия и представления",
-        lessons: [
-          {
-            id: "greetings-1",
-            title: "Урок 1 · Hello & Goodbye",
-            minutes: 10,
-            type: "core",
-            grammarFocus: ["Формальное и неформальное приветствие"],
-            vocabFocus: ["hello, hi, good morning, bye, see you"],
-            goals: [
-              "Научиться здороваться и прощаться в типичных ситуациях",
-              "Различать формальный и неформальный стиль",
-              "Связать фразы с ситуациями через мини-игру"
-            ],
-            vocabList: [
-              { en: "Hello", ru: "Здравствуйте / Привет" },
-              { en: "Hi", ru: "Привет (неформально)" },
-              { en: "Good morning", ru: "Доброе утро" },
-              { en: "Good afternoon", ru: "Добрый день" },
-              { en: "Good evening", ru: "Добрый вечер" },
-              { en: "Goodbye", ru: "До свидания" },
-              { en: "See you", ru: "Увидимся" }
-            ],
-            grammarNotes: [
-              "В английском нет отдельного «ты/вы» в форме приветствий — вежливость передаётся тоном и выбором слов.",
-              "Hi — неформальное приветствие, подходит для друзей и близких коллег.",
-              "Good morning/afternoon/evening — более формальные варианты; можно использовать и с незнакомыми людьми."
-            ],
-            exercises: [
-              {
-                id: "greetings-mcq-1",
-                kind: "mcq",
-                question: "Как лучше поприветствовать коллегу утром в офисе?",
-                options: ["Hi!", "Good morning!", "Good night!"],
-                correctIndex: 1,
-                explanation: "Утро + рабочая обстановка — «Good morning!» звучит вежливо и естественно."
-              },
-              {
-                id: "greetings-mcq-2",
-                kind: "mcq",
-                question: "Как естественно попрощаться с другом после встречи?",
-                options: ["See you!", "Good evening!", "Good morning!"],
-                correctIndex: 0,
-                explanation: "See you! — живое и дружеское «Увидимся!»."
-              },
-              {
-                id: "greetings-input-1",
-                kind: "input",
-                question: "Напишите по-английски: «Доброе утро».",
-                correctAnswers: ["good morning", "goodmorning"],
-                placeholder: "ваш ответ...",
-                explanation: "Обратите внимание на написание: good morning — два слова."
-              }
-            ]
-          },
-          {
-            id: "introduce-1",
-            title: "Урок 2 · Как представиться",
-            minutes: 12,
-            type: "core",
-            grammarFocus: ["Глагол to be в Present Simple (I am, you are)"],
-            vocabFocus: ["name, I am, you are, nice to meet you"],
-            goals: [
-              "Научиться говорить, как вас зовут",
-              "Понимать вопрос «Как тебя зовут?»",
-              "Сделать мини-диалог знакомства"
-            ],
-            vocabList: [
-              { en: "My name is...", ru: "Меня зовут..." },
-              { en: "I am Irina.", ru: "Я Ирина." },
-              { en: "You are...", ru: "Ты / Вы ..." },
-              { en: "Nice to meet you.", ru: "Приятно познакомиться." }
-            ],
-            grammarNotes: [
-              "I am = я есть. В русском «есть» обычно не произносится, в английском — обязателен.",
-              "Сокращённая форма: I’m, You’re. В разговорной речи используются очень часто."
-            ],
-            exercises: [
-              {
-                id: "introduce-mcq-1",
-                kind: "mcq",
-                question: "Выберите корректную фразу:",
-                options: ["I am student.", "I am a student.", "I student."],
-                correctIndex: 1,
-                explanation: "В английском обычно нужен артикль перед исчисляемым существительным: a student."
-              },
-              {
-                id: "introduce-input-1",
-                kind: "input",
-                question: "Напишите фразу «Приятно познакомиться» по-английски.",
-                correctAnswers: ["nice to meet you"],
-                placeholder: "nice...",
-                explanation: "Классический вариант — Nice to meet you."
-              }
-            ]
-          }
-        ]
-      },
-      {
-        id: "m2",
-        title: "To Be · Кто я и где я",
-        lessons: [
-          {
-            id: "tobe-1",
-            title: "Урок 3 · I am / You are / We are",
-            minutes: 15,
-            type: "core",
-            grammarFocus: ["to be: утверждения"],
-            vocabFocus: ["student, teacher, from, Russia, Germany"],
-            goals: [],
-            exercises: []
-          },
-          {
-            id: "tobe-2",
-            title: "Урок 4 · Вопросы и краткие ответы",
-            minutes: 15,
-            type: "core",
-            grammarFocus: ["to be: вопросы и короткие ответы"],
-            vocabFocus: ["Are you...? Yes, I am / No, I’m not"],
-            goals: [],
-            exercises: []
-          }
-        ]
-      }
-      // дальше можно накидать модули 3–6 по аналогии
-    ]
-  };
+  // прогресс
+  const statLevel = document.getElementById("stat-level");
+  const statXp = document.getElementById("stat-xp");
+  const statStreak = document.getElementById("stat-streak");
+  const progressText = document.getElementById("progress-text");
+  const progressBar = document.getElementById("progress-bar");
+  const badgeRow = document.getElementById("badge-row");
 
-  /********* Состояние и localStorage *********/
-  const PT_STORAGE_KEY = "englishIntroProgress-v1";
+  function updateStats() {
+    const state = EnglishIntro.getState();
+    const level = 1 + Math.floor(state.xp / 100);
+    statLevel.textContent = level;
+    statXp.textContent = state.xp;
+    statStreak.textContent = state.streakDays + " дней";
 
-  let ptState = {
-    completedLessons: [],
-    xp: 0,
-    streakDays: 0,
-    lastLessonId: null,
-    lastStudyDate: null // YYYY-MM-DD
-  };
-
-  function ptTodayStr(){
-    const d = new Date();
-    return d.toISOString().slice(0,10);
-  }
-
-  function ptLoadState(){
-    try{
-      const raw = localStorage.getItem(PT_STORAGE_KEY);
-      if(!raw) return;
-      const parsed = JSON.parse(raw);
-      ptState = Object.assign(ptState, parsed);
-    }catch(e){console.warn("Cannot load state", e);}
-  }
-
-  function ptSaveState(){
-    try{
-      localStorage.setItem(PT_STORAGE_KEY, JSON.stringify(ptState));
-    }catch(e){console.warn("Cannot save state", e);}
-  }
-
-  function ptAllLessons(){
-    return englishIntroCourse.modules.flatMap(m => m.lessons);
-  }
-
-  function ptFindLesson(id){
-    return ptAllLessons().find(l => l.id === id) || null;
-  }
-
-  function ptFirstRealLessonId(){
-    const all = ptAllLessons();
-    const core = all.find(l => l.type !== "intro");
-    return core ? core.id : (all[0] && all[0].id);
-  }
-
-  function ptAddXp(amount){
-    ptState.xp += amount;
-    const today = ptTodayStr();
-    if(!ptState.lastStudyDate){
-      ptState.streakDays = 1;
-    }else if(ptState.lastStudyDate !== today){
-      ptState.streakDays += 1;
-    }
-    ptState.lastStudyDate = today;
-    ptSaveState();
-    ptUpdateStats();
-    ptShowXpToast(amount);
-  }
-
-  function ptMarkLessonCompleted(lessonId){
-    if(!ptState.completedLessons.includes(lessonId)){
-      ptState.completedLessons.push(lessonId);
-      ptState.lastLessonId = lessonId;
-      ptAddXp(10);
-      ptSaveState();
-      ptRenderLessonList(lessonId);
-      ptUpdateProgress();
-      ptUpdateBadges();
-    }
-  }
-
-  /********* DOM-элементы *********/
-  const ptEls = {
-    trainerSection: document.getElementById("pt-trainer-section"),
-    statLevel: document.getElementById("pt-stat-level"),
-    statXp: document.getElementById("pt-stat-xp"),
-    statStreak: document.getElementById("pt-stat-streak"),
-    progressBar: document.getElementById("pt-progress-bar"),
-    progressText: document.getElementById("pt-progress-text"),
-    badgeRow: document.getElementById("pt-badge-row"),
-    lessonList: document.getElementById("pt-lesson-list"),
-    lessonPanel: document.getElementById("pt-lesson-panel"),
-    toast: document.getElementById("pt-xp-toast")
-  };
-
-  /********* UI обновления *********/
-  function ptUpdateStats(){
-    const level = 1 + Math.floor(ptState.xp / 100);
-    ptEls.statLevel.textContent = level;
-    ptEls.statXp.textContent = ptState.xp;
-    ptEls.statStreak.textContent = ptState.streakDays + " дней";
-  }
-
-  function ptUpdateProgress(){
-    const all = ptAllLessons().filter(l => l.type !== "intro");
-    const total = all.length;
-    const done = all.filter(l => ptState.completedLessons.includes(l.id)).length;
+    const total = courseLessons.length;
+    const done = courseLessons.filter(l => state.completedLessons.includes(l.id)).length;
     const percent = total ? Math.round(done/total*100) : 0;
-    ptEls.progressText.textContent = done + " / " + total;
-    ptEls.progressBar.style.width = percent + "%";
-  }
+    progressText.textContent = `${done} / ${total}`;
+    progressBar.style.width = percent + "%";
 
-  function ptUpdateBadges(){
-    const row = ptEls.badgeRow;
-    row.innerHTML = "";
+    badgeRow.innerHTML = "";
     const badges = [];
-    if(ptState.completedLessons.length >= 1){
-      badges.push({label:"Первый шаг ✅", highlight:true});
-    }
-    if(ptState.completedLessons.length >= 3){
-      badges.push({label:"3+ урока за плечами", highlight:true});
-    }
-    if(ptState.streakDays >= 3){
-      badges.push({label:"Серия 3+ дня", highlight:true});
-    }
-    if(ptState.xp >= 50){
-      badges.push({label:"50+ XP", highlight:false});
-    }
-    if(!badges.length){
-      badges.push({label:"Сделайте первый урок и получите бейдж 🎖", highlight:true});
-    }
+    if(done >= 1) badges.push({label:"Первый шаг", type:"good"});
+    if(done >= 5) badges.push({label:"5+ уроков", type:"good"});
+    if(state.streakDays >= 3) badges.push({label:"Серия 3+ дня", type:"good"});
+    if(state.xp >= 50) badges.push({label:"50+ XP", type:"neutral"});
+    if(!badges.length) badges.push({label:"Сделайте первый урок 🎖", type:"good"});
     badges.forEach(b=>{
       const span = document.createElement("span");
       span.className = "px-2 py-1 rounded-full border text-[10px] " +
-        (b.highlight ? "border-yellow-400 bg-yellow-50 text-amber-700" : "border-gray-200 bg-gray-50 text-gray-600");
+        (b.type==="good" ? "border-yellow-400 bg-yellow-50 text-amber-700" : "border-gray-200 bg-gray-50 text-gray-600");
       span.textContent = b.label;
-      row.appendChild(span);
+      badgeRow.appendChild(span);
     });
   }
 
-  function ptShowXpToast(amount){
-    const el = ptEls.toast;
-    el.textContent = "+"+amount+" XP — вы ближе к цели! 🎉";
-    el.classList.remove("hidden");
-    setTimeout(()=>el.classList.add("hidden"), 1800);
-  }
-
-  /********* Рендер списка уроков *********/
-  function ptRenderLessonList(activeId){
-    const box = ptEls.lessonList;
+  // список уроков
+  function renderLessons() {
+    const state = EnglishIntro.getState();
+    const box = document.getElementById("lessons-list");
     box.innerHTML = "";
-
-    englishIntroCourse.modules.forEach(mod=>{
-      const header = document.createElement("p");
-      header.className = "text-[11px] uppercase tracking-wide text-[var(--ink-2)] mt-3 mb-1";
-      header.textContent = mod.title;
-      box.appendChild(header);
-
-      mod.lessons.forEach(lesson=>{
-        const isCompleted = ptState.completedLessons.includes(lesson.id);
-        const btn = document.createElement("button");
-        btn.className = "pt-lesson-item w-full flex items-center justify-between gap-2 px-3 py-2 rounded-2xl border text-left " +
-          (lesson.id === activeId ? "border-amber-400 bg-[#fff7ce]" : "border-gray-200 bg-white");
-        btn.innerHTML = `
+    courseLessons.forEach(lesson=>{
+      const isDone = state.completedLessons.includes(lesson.id);
+      const card = document.createElement("a");
+      card.href = lesson.url;
+      card.className = "block border border-gray-200 rounded-2xl px-3 py-3 bg-[#fffef7] hover:bg-[#fff3c6] shadow-soft text-xs sm:text-sm";
+      card.innerHTML = `
+        <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-2">
-            <span class="inline-flex h-5 w-5 rounded-full text-xs items-center justify-center ${isCompleted ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-500"}">
-              ${isCompleted ? "✓" : (lesson.type==="intro" ? "i" : "•")}
+            <span class="inline-flex h-5 w-5 rounded-full text-[10px] items-center justify-center ${isDone ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-500"}">
+              ${isDone ? "✓" : lesson.id.split("-")[1] || "•"}
             </span>
-            <span class="text-xs line-clamp-1">${lesson.title}</span>
+            <span class="font-semibold text-[var(--ink)] line-clamp-1">${lesson.title}</span>
           </div>
-          <span class="text-[10px] text-[var(--ink-2)]">${lesson.minutes || 10} мин</span>
-        `;
-        btn.addEventListener("click", ()=>ptOpenLesson(lesson.id));
-        box.appendChild(btn);
-      });
-    });
-  }
-
-  /********* Рендер урока *********/
-  function ptOpenLesson(id){
-    const lesson = ptFindLesson(id);
-    if(!lesson) return;
-
-    // показать секцию тренажёра, если она была спрятана
-    ptEls.trainerSection.classList.remove("hidden");
-
-    ptState.lastLessonId = id;
-    ptSaveState();
-    ptRenderLessonList(id);
-
-    const panel = ptEls.lessonPanel;
-    // шапка урока
-    const pills = [];
-    (lesson.grammarFocus || []).forEach(g=>{
-      pills.push(`<span class="px-2 py-1 rounded-full border border-blue-100 bg-blue-50 text-[10px] text-blue-800">${g}</span>`);
-    });
-    (lesson.vocabFocus || []).forEach(v=>{
-      pills.push(`<span class="px-2 py-1 rounded-full border border-amber-100 bg-amber-50 text-[10px] text-amber-800">${v}</span>`);
-    });
-
-    let goalsHtml = "";
-    if(lesson.goals && lesson.goals.length){
-      goalsHtml = `
-        <div class="mt-3 mb-3">
-          <p class="text-[11px] font-semibold text-[var(--ink-2)] mb-1">Цели урока</p>
-          <ul class="list-disc list-inside text-xs text-[var(--ink-2)] space-y-1">
-            ${lesson.goals.map(g=>`<li>${g}</li>`).join("")}
-          </ul>
+          <span class="text-[10px] text-[var(--ink-2)]">${lesson.minutes} мин</span>
         </div>
       `;
-    }
-
-    let vocabHtml = "";
-    if(lesson.vocabList && lesson.vocabList.length){
-      vocabHtml = `
-        <div class="mt-3 mb-3">
-          <p class="text-[11px] font-semibold text-[var(--ink-2)] mb-1">Словарик урока</p>
-          <ul class="text-xs text-[var(--ink-2)] space-y-1">
-            ${lesson.vocabList.map(w=>`<li><b>${w.en}</b> — ${w.ru}</li>`).join("")}
-          </ul>
-        </div>
-      `;
-    }
-
-    let introHtml = "";
-    if(lesson.contentIntro && lesson.contentIntro.length){
-      introHtml = `
-        <div class="mt-2 space-y-1 text-xs text-[var(--ink-2)]">
-          ${lesson.contentIntro.map(p=>`<p>${p}</p>`).join("")}
-        </div>
-      `;
-    }
-
-    panel.innerHTML = `
-      <div>
-        <div class="flex items-center justify-between gap-2 mb-1">
-          <h3 class="text-sm sm:text-base font-bold">${lesson.title}</h3>
-          <span class="text-[10px] text-[var(--ink-2)]">${lesson.minutes || 10} мин</span>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          ${pills.join("")}
-        </div>
-        ${introHtml}
-        ${goalsHtml}
-        ${vocabHtml}
-        <div id="pt-exercise-box" class="mt-3 space-y-3"></div>
-      </div>
-    `;
-
-    ptRenderExercises(lesson);
-  }
-
-  function ptRenderExercises(lesson){
-    const box = document.getElementById("pt-exercise-box");
-    const list = lesson.exercises || [];
-    box.innerHTML = "";
-
-    if(!list.length){
-      box.innerHTML = `
-        <div class="border border-dashed border-gray-300 rounded-2xl px-3 py-4 text-xs text-[var(--ink-2)]">
-          Для этого урока тренажёры ещё не настроены. Вы можете добавить свои задания в описании курса (массив <code>exercises</code>).
-        </div>
-      `;
-      return;
-    }
-
-    let completed = 0;
-    const total = list.length;
-
-    list.forEach(ex=>{
-      const card = document.createElement("div");
-      card.className = "border border-gray-200 rounded-2xl px-3 py-3 text-xs space-y-2";
-
-      const q = document.createElement("p");
-      q.className = "font-semibold";
-      q.textContent = ex.question;
-      card.appendChild(q);
-
-      const footer = document.createElement("div");
-      footer.className = "flex items-center justify-between gap-2 mt-1";
-
-      const status = document.createElement("span");
-      status.className = "text-[10px] text-[var(--ink-2)]";
-      status.textContent = "Ответьте на задание";
-
-      const btn = document.createElement("button");
-      btn.className = "px-3 py-1 rounded-full border border-gray-300 bg-[#fffef7] text-[10px] font-semibold";
-      btn.textContent = "Проверить";
-
-      footer.appendChild(status);
-      footer.appendChild(btn);
-
-      if(ex.kind === "mcq"){
-        const optWrap = document.createElement("div");
-        optWrap.className = "space-y-1";
-        let selectedIndex = null;
-
-        ex.options.forEach((opt,idx)=>{
-          const ob = document.createElement("button");
-          ob.className = "w-full text-left px-3 py-1.5 rounded-xl border border-gray-200 bg-white";
-          ob.textContent = opt;
-          ob.addEventListener("click", ()=>{
-            selectedIndex = idx;
-            Array.from(optWrap.children).forEach(ch=>ch.classList.remove("border-amber-300","bg-[#fff7ce]"));
-            ob.classList.add("border-amber-300","bg-[#fff7ce]");
-          });
-          optWrap.appendChild(ob);
-        });
-
-        card.appendChild(optWrap);
-
-        btn.addEventListener("click", ()=>{
-          if(selectedIndex === null){
-            status.textContent = "Сначала выберите вариант.";
-            status.classList.add("text-amber-700");
-            return;
-          }
-          if(selectedIndex === ex.correctIndex){
-            status.textContent = "Верно! " + (ex.explanation || "");
-            status.classList.remove("text-amber-700");
-            status.classList.add("text-emerald-700");
-            btn.disabled = true;
-            completed++;
-            if(completed === total){
-              ptMarkLessonCompleted(lesson.id);
-            }
-          }else{
-            status.textContent = "Пока нет. Попробуйте ещё. " + (ex.explanation || "");
-            status.classList.remove("text-emerald-700");
-            status.classList.add("text-amber-700");
-          }
-        });
-
-      }else if(ex.kind === "input"){
-        const input = document.createElement("input");
-        input.type = "text";
-        input.className = "w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs";
-        if(ex.placeholder) input.placeholder = ex.placeholder;
-        card.appendChild(input);
-
-        btn.addEventListener("click", ()=>{
-          const val = (input.value || "").trim().toLowerCase();
-          if(!val){
-            status.textContent = "Введите ответ.";
-            status.classList.add("text-amber-700");
-            return;
-          }
-          const ok = (ex.correctAnswers || []).some(ans=>val === ans.toLowerCase());
-          if(ok){
-            status.textContent = "Отлично! " + (ex.explanation || "");
-            status.classList.remove("text-amber-700");
-            status.classList.add("text-emerald-700");
-            btn.disabled = true;
-            input.disabled = true;
-            completed++;
-            if(completed === total){
-              ptMarkLessonCompleted(lesson.id);
-            }
-          }else{
-            status.textContent = "Пока нет. Попробуйте ещё. " + (ex.explanation || "");
-            status.classList.remove("text-emerald-700");
-            status.classList.add("text-amber-700");
-          }
-        });
-      }
-
-      card.appendChild(footer);
       box.appendChild(card);
     });
   }
 
-  /********* Инициализация *********/
-  document.addEventListener("DOMContentLoaded", ()=>{
-    ptLoadState();
-    ptUpdateStats();
-    ptUpdateProgress();
-    ptUpdateBadges();
-    ptRenderLessonList(ptState.lastLessonId);
-
-    const startBtn = document.getElementById("btn-start-course");
-    const contBtn = document.getElementById("btn-continue-course");
-    const openBtn = document.getElementById("btn-open-trainer");
-
-    function openFirst(){
-      const id = ptFirstRealLessonId();
-      if(id) ptOpenLesson(id);
+  // словарик
+  function renderVocab() {
+    const list = EnglishIntro.getVocab();
+    const box = document.getElementById("vocab-list");
+    box.innerHTML = "";
+    if(!list.length){
+      box.innerHTML = `<p class="py-2 text-xs text-[var(--ink-2)]">Пока пусто. Пройдите пару уроков или добавьте слова вручную.</p>`;
+      return;
     }
+    list.forEach(item=>{
+      const div = document.createElement("div");
+      div.className = "flex items-baseline justify-between gap-2 py-1.5";
+      div.innerHTML = `
+        <div>
+          <p><b>${item.word}</b> — ${item.translation}</p>
+          ${item.lessonId ? `<p class="text-[10px] text-[var(--ink-2)]">из урока: ${item.lessonId}</p>` : ""}
+        </div>
+      `;
+      box.appendChild(div);
+    });
+  }
 
-    function openLastOrFirst(){
-      if(ptState.lastLessonId && ptFindLesson(ptState.lastLessonId)){
-        ptOpenLesson(ptState.lastLessonId);
-      }else{
-        openFirst();
+  const vocabForm = document.getElementById("vocab-form");
+  vocabForm.addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const form = e.target;
+    const word = form.word.value.trim();
+    const translation = form.translation.value.trim();
+    if(!word || !translation) return;
+    EnglishIntro.addVocab({word, translation, lessonId:"user"});
+    form.reset();
+    renderVocab();
+  });
+
+  // мини-квиз по словарю
+  const quizBox = document.getElementById("quiz-box");
+  function makeQuiz() {
+    const words = EnglishIntro.getVocab();
+    if(words.length < 2){
+      quizBox.innerHTML = `<p>В словаре пока мало слов. Добавьте ещё пару, и тренажёр заработает.</p>`;
+      return;
+    }
+    const correct = words[Math.floor(Math.random()*words.length)];
+    const optionsPool = words.filter(w => w.id !== correct.id);
+    const shuffled = [correct];
+    while(shuffled.length < Math.min(4, words.length)){
+      const cand = optionsPool[Math.floor(Math.random()*optionsPool.length)];
+      if(!shuffled.includes(cand)) shuffled.push(cand);
+    }
+    shuffled.sort(()=>Math.random()-0.5);
+
+    quizBox.innerHTML = "";
+    const q = document.createElement("p");
+    q.className = "font-semibold";
+    q.textContent = `Как перевести: "${correct.word}"?`;
+    quizBox.appendChild(q);
+
+    let answered = false;
+    shuffled.forEach(item=>{
+      const btn = document.createElement("button");
+      btn.className = "mt-2 block w-full text-left px-3 py-2 rounded-xl border border-gray-200 bg-white";
+      btn.textContent = item.translation;
+      btn.addEventListener("click", ()=>{
+        if(answered) return;
+        answered = true;
+        if(item.id === correct.id){
+          btn.classList.add("border-emerald-400","bg-emerald-50");
+        }else{
+          btn.classList.add("border-red-300","bg-red-50");
+        }
+      });
+      quizBox.appendChild(btn);
+    });
+  }
+  document.getElementById("quiz-next").addEventListener("click", makeQuiz);
+
+  // практика
+  const practiceIdeas = [
+    "Запишите голосовое (на телефон) с приветствием и коротким представлением: Name, city, one hobby.",
+    "Сделайте список из 5 людей в вашей жизни и напишите, кем они вам приходятся, по-английски.",
+    "Напишите мини-диалог знакомства из 4–6 реплик. Используйте фразы из первых уроков.",
+    "Попробуйте один день подписывать 3 предмета вокруг вас по-английски (стикерами или в заметках)."
+  ];
+  const practiceBox = document.getElementById("practice-idea");
+  function renderPracticeIdea() {
+    const idea = practiceIdeas[Math.floor(Math.random()*practiceIdeas.length)];
+    practiceBox.textContent = idea;
+  }
+  document.getElementById("practice-next").addEventListener("click", renderPracticeIdea);
+
+  // кнопка "Продолжить"
+  document.getElementById("btn-continue").addEventListener("click", ()=>{
+    const lastId = EnglishIntro.getLastLessonId();
+    if(lastId){
+      const lesson = courseLessons.find(l=>l.id===lastId);
+      if(lesson) {
+        window.location.href = lesson.url;
+        return;
       }
     }
-
-    if(startBtn) startBtn.addEventListener("click", openFirst);
-    if(contBtn) contBtn.addEventListener("click", openLastOrFirst);
-    if(openBtn) openBtn.addEventListener("click", openLastOrFirst);
+    // если ещё не начинали
+    window.location.href = courseLessons[0].url;
   });
-</script>
 
+  // init
+  updateStats();
+  renderLessons();
+  renderVocab();
+  makeQuiz();
+  renderPracticeIdea();
+</script>
 </body>
 </html>
