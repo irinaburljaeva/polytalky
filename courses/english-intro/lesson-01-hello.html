@@ -1225,6 +1225,7 @@
         orderBy,
         doc,
         setDoc
+        arrayUnion
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
       const auth = window.firebaseAuth;
@@ -1283,9 +1284,6 @@
       const totalSteps = 4;
       let badgeAwarded = false;
 
-      import { doc, setDox, updateDoc, arrayUnion }
-        from
-        "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
       async function awardFirstHelloBadge(){
         if (!currentUser || badgeAwarded) return;
 
@@ -1308,7 +1306,7 @@
         badgeAwarded = true;
       }
 
-      function showStep(n){
+      async function showStep(n){
         stepPanels.forEach(p => p.classList.remove("step-panel--visible"));
         const panel = document.getElementById(`step-${n}`);
         if (panel) panel.classList.add("step-panel--visible");
