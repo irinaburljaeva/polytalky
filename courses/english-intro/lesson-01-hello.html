@@ -589,6 +589,109 @@
     }
 
     .hidden{display:none;}
+    /* --------- МОБИЛЬНАЯ ВЕРСТКА --------- */
+@media (max-width: 768px) {
+
+  .lesson-shell{
+    padding: 1rem .9rem 2.2rem;
+  }
+
+  /* Хедер: аккуратно упаковать элементы */
+  .top-bar .max-w-7xl{
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+
+  #user-status{
+    font-size: 0.7rem;
+    flex-basis: 100%;
+    order: 2;
+  }
+
+  #logout-btn{
+    font-size: 0.7rem;
+    padding: .3rem .7rem;
+  }
+
+  .back-to-course-btn{
+    order: 3;
+    margin-right: 0;
+  }
+
+  /* Герой: колонки складываем в столбик */
+  .hero-card{
+    flex-direction: column;
+    padding: 1.3rem 1.1rem 1.4rem;
+    gap: 1.1rem;
+  }
+
+  .hero-title{
+    font-size: 1.5rem;
+  }
+
+  .hero-right{
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero-right-inner{
+    justify-content: flex-end;
+    padding-right: 0;
+  }
+
+  .hero-bg-circle{
+    width: 210px;
+    height: 210px;
+    right: -50px;
+    top: -60px;
+  }
+
+  /* «Случайно» разбросанные пузырьки, но без налезания на текст */
+  .hero-bubbles-cluster{
+    align-items: flex-end;
+    gap: .35rem;
+  }
+
+  .hero-bubble{
+    font-size: .8rem;
+    padding: .4rem .7rem;
+  }
+
+  /* сбрасываем transform и задаём лёгкий «хаос» через margin */
+  .hero-bubble--hello{
+    transform: none;
+    margin-right: .4rem;
+    margin-bottom: .1rem;
+  }
+
+  .hero-bubble--morning{
+    transform: none;
+    margin-right: 1.1rem;
+  }
+
+  .hero-bubble--hi{
+    transform: none;
+    margin-right: .2rem;
+    margin-top: .15rem;
+  }
+
+  /* Навигация по шагам — компактнее */
+  .step-nav{
+    gap: 1rem;
+    margin: 1.3rem 0 1.1rem;
+  }
+
+  .step-nav::before{
+    left: 10%;
+    right: 10%;
+    top: 22px;
+  }
+
+  .step-dot{
+    max-width: 80px;
+    font-size: .6rem;
+  }
+}
   </style>
 </head>
 <body>
