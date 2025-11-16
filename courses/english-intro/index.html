@@ -328,6 +328,16 @@
               <p class="text-[11px] text-[var(--ink-2)]">
                 Базовый доступ к урокам, словарю и тренажёрам остаётся бесплатным. Платные опции добавляют «живого» человека и обратную связь.
               </p>
+              <!-- КНОПКА ОФОРМИТЬ PRO -->
+              <button
+                id="btn-pro"
+                class="mt-3 w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--brand-orange)] hover:bg-[var(--brand-yellow-deep)] text-xs sm:text-sm font-semibold text-white shadow-soft"
+              >
+                ✨ Оформить PRO-доступ
+              </button>
+              <p class="mt-1 text-[10px] text-[var(--ink-2)]">
+                Оплата картами зарубежных банков через Stripe. Для входа в PRO потребуется ваш аккаунт PolyTalky.
+              </p>
             </div>
           </div>
         </div>
@@ -368,6 +378,9 @@
     </div>
   </div>
 </footer>
+
+<!-- Stripe.js для Checkout -->
+<script src="https://js.stripe.com/v3"></script>
 
 <!-- СТЕЙТ КУРСА -->
 <script src="/courses/english-intro/english-intro-state.js"></script>
@@ -571,6 +584,58 @@
       window.location.href = courseLessons[0].url;
     }
   });
+
+  // Кнопка "Оформить PRO"
+  const proBtn = document.getElementById("btn-pro");
+  if (proBtn) {
+    proBtn.addEventListener("click", async () => {
+      try {
+        // предполагаем, что Firebase Auth уже инициализирован на сайте
+        const user = (window.PolyTalkyAuth && window.PolyTalkyAuth.currentUser) || null;
+
+        if (!user || !user.uid) {
+          // если не авторизован — отправляем в личный кабинет / логин
+          window.location.href = "/student/";
+          return;
+        }
+
+        const resp = await fetch("/api/create-english-intro-pro-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.uid })
+        });
+
+        if (!resp.ok) {
+          alert("Не удалось создать оплату. Попробуйте ещё раз чуть позже.");
+          return;
+        }
+
+        const data = await resp.json();
+        if (!data.id) {
+          alert("Ответ от сервера без ID сессии. Напишите, пожалуйста, в поддержку.");
+          return;
+        }
+
+        if (!window.Stripe) {
+          alert("Платёжный модуль не загрузился. Обновите страницу и попробуйте ещё раз.");
+          return;
+        }
+
+        // TODO: сюда нужно подставить твой реальный publishable key Stripe
+        const STRIPE_PK = "pk_xxx_replace_me";
+        const stripe = Stripe(STRIPE_PK);
+        const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+
+        if (error) {
+          console.error(error);
+          alert("Не удалось открыть страницу оплаты. Попробуйте позже.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Что-то пошло не так. Попробуйте ещё раз позже.");
+      }
+    });
+  }
 
   // init
   updateStats();
