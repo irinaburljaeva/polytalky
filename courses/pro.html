@@ -23,7 +23,9 @@
     }
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:radial-gradient(circle at top,#fffef2 0,#FFF8D6 40%,#FFEFC0 100%);
+      background:
+        radial-gradient(circle at top left, #fffef2 0, #FFF8D6 35%, transparent 65%),
+        radial-gradient(circle at top right, #ffe7ba 0, #FFEFC0 40%, #fef9c3 100%);
       color:var(--ink);
     }
     .shadow-soft{box-shadow:0 14px 40px rgba(0,0,0,.12)}
@@ -37,7 +39,7 @@
     }
     .glass-card{
       background:#fffef7ee;
-      backdrop-filter:blur(14px);
+      backdrop-filter:blur(16px);
       border-radius:1.75rem;
       border:1px solid rgba(15,23,42,.08);
     }
@@ -47,11 +49,18 @@
     .faq-item button[aria-expanded="true"]{
       background:#fffbeb;
     }
+    .tag{
+      border-radius:999px;
+      border:1px solid rgba(15,23,42,.08);
+      padding:.15rem .55rem;
+      font-size:.65rem;
+      background:#fffdf5;
+    }
   </style>
 </head>
 <body>
 
-<!-- HEADER (как на главной / english-intro) -->
+<!-- HEADER -->
 <header class="sticky top-0 z-50 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
     <a href="./" class="flex items-center gap-3 font-semibold text-lg">
@@ -88,31 +97,39 @@
 <main class="pb-16">
   <!-- HERO -->
   <section class="pt-10 sm:pt-14 pb-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1.6fr,1.1fr] gap-8 items-center">
-      <div class="space-y-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1.7fr,1.1fr] gap-8 items-center">
+      <!-- Текст -->
+      <div class="space-y-5">
         <div class="flex flex-wrap gap-2 items-center">
           <span class="pill inline-flex items-center gap-2">
-            <span class="text-xs">PolyTalky PRO</span>
+            <span class="text-xs">Надстройка к базовой версии</span>
             <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#ecfccb] text-[#3f6212] border border-[#bbf7d0]">
-              Для всех курсов
+              PRO для всех курсов
             </span>
           </span>
         </div>
+
         <h1 class="text-3xl sm:text-4xl lg:text-[2.5rem] font-extrabold leading-tight tracking-tight">
-          Подписка <span class="text-[var(--brand-orange)]">PRO</span>: когда у вас есть не только курс, но и человек рядом 🧑‍🏫
+          <span class="inline-block align-middle">Подписка</span>
+          <span class="inline-block align-middle ml-1 px-3 py-1 rounded-full bg-[var(--brand-orange)] text-white text-[1.9rem] sm:text-[2rem]">
+            PRO
+          </span>
+          <span class="block mt-2 text-[1.1rem] sm:text-xl text-[var(--ink-2)]">
+            когда у вас есть не только курс, но и человек рядом 🧑‍🏫
+          </span>
         </h1>
+
         <p class="text-sm sm:text-base text-[var(--ink-2)] max-w-2xl">
-          Базовая версия PolyTalky — бесплатна: вы проходите уроки, делаете упражнения и ведёте словарик.
+          Базовая версия PolyTalky остаётся бесплатной: вы проходите уроки, делаете упражнения и ведёте словарик.
           <br class="hidden sm:block">
-          <b>PRO</b> добавляет живую обратную связь: куратор проверяет ваши задания, даёт комментарии и помогает
-          двигаться вперёд, когда мотивация падает.
+          <b>PRO</b> добавляет живую обратную связь: куратор проверяет ваши задания, даёт комментарии и мягко подталкивает к следующему шагу.
         </p>
 
-        <ul class="text-xs sm:text-sm text-[var(--ink-2)] space-y-1">
-          <li>· Проверка письменных и голосовых заданий из уроков.</li>
-          <li>· Приоритетный ответ на вопросы внутри курса.</li>
-          <li>· Небольшие рекомендации по тому, на что обратить внимание в следующем уроке.</li>
-        </ul>
+        <div class="flex flex-wrap gap-2 text-[11px] text-[var(--ink-2)]">
+          <span class="tag">Проверка письменных и голосовых заданий</span>
+          <span class="tag">Приоритетные ответы в Q&A</span>
+          <span class="tag">Мини-отчёты по прогрессу</span>
+        </div>
 
         <div class="flex flex-wrap gap-3 pt-2">
           <button
@@ -130,112 +147,129 @@
         </div>
 
         <p class="text-[11px] text-[var(--ink-2)] max-w-md">
+          Чтобы оформить PRO, сначала войдите в ваш
+          <a href="/student/" class="underline font-semibold">личный кабинет</a>, а затем вернитесь на эту страницу.
           Оплата подписки PRO сейчас доступна <b>только картами зарубежных банков через Stripe</b>.
-          Для карт РФ мы отдельно добавим оплату через Яндекс, и это будет другая кнопка.
         </p>
       </div>
 
-      <aside class="glass-card shadow-soft p-6 space-y-4">
-        <div class="flex items-baseline justify-between gap-4">
-          <div>
-            <p class="text-xs uppercase tracking-wide text-[var(--ink-2)] mb-1">Тариф</p>
-            <p class="text-2xl font-extrabold">PRO · Месяц</p>
-            <p class="text-xs text-[var(--ink-2)] mt-1">
-              Месячная подписка на проверку заданий и приоритетный ответ на вопросы по всем курсам.
-            </p>
+      <!-- Карточка PRO vs Базовый -->
+      <aside class="relative">
+        <div class="absolute -top-6 -right-2 sm:-right-6 w-20 h-20 rounded-full bg-[var(--brand-yellow)]/70 blur-2xl opacity-90 pointer-events-none"></div>
+        <div class="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-[#fde68a]/70 blur-2xl opacity-80 pointer-events-none"></div>
+
+        <div class="glass-card shadow-soft p-5 sm:p-6 relative z-10 space-y-4">
+          <div class="grid grid-cols-2 gap-3 text-xs sm:text-sm text-[var(--ink-2)]">
+            <div class="border border-gray-200 rounded-2xl bg-white px-3 py-3 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-gray-500">Базовый</p>
+              <p class="font-semibold text-sm">Самостоятельно</p>
+              <ul class="mt-1 space-y-1.5 text-[11px]">
+                <li>· Все уроки и материалы курса.</li>
+                <li>· Словарик и тренажёры внутри курса.</li>
+                <li>· Практика и мини-упражнения.</li>
+              </ul>
+              <p class="mt-2 text-[11px] font-semibold text-emerald-700">0 € / навсегда</p>
+            </div>
+
+            <div class="border border-amber-300 rounded-2xl bg-[#fffbeb] px-3 py-3 flex flex-col gap-1 relative overflow-hidden">
+              <div class="absolute -top-4 right-2 text-[10px] bg-[var(--brand-orange)] text-white px-2 py-0.5 rounded-full shadow-soft">
+                Рекомендовано
+              </div>
+              <p class="text-[11px] uppercase tracking-wide text-amber-700">PRO</p>
+              <p class="font-semibold text-sm">С поддержкой куратора</p>
+              <ul class="mt-1 space-y-1.5 text-[11px]">
+                <li>· Проверка письменных заданий из уроков.</li>
+                <li>· Комментарии к голосовым заданиям и произношению.</li>
+                <li>· Приоритетный ответ в Q&A внутри уроков.</li>
+              </ul>
+              <p class="mt-2 text-[11px]">
+                <span class="text-base font-extrabold text-[var(--brand-orange)]">5 €</span>
+                <span class="text-[10px] text-[var(--ink-2)]"> / месяц*</span>
+              </p>
+              <p class="text-[10px] text-[var(--ink-2)]">
+                *Пример. Реальная цена настраивается в backend.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div class="border border-dashed border-amber-300 rounded-2xl px-4 py-4 bg-[#fffbeb]">
-          <p class="text-sm font-semibold mb-1">Что входит:</p>
-          <ul class="text-xs text-[var(--ink-2)] space-y-1">
-            <li>· Проверка письменных заданий из уроков (в пределах разумного объёма).</li>
-            <li>· Комментарии к вашим голосовым заданиям и произношению.</li>
-            <li>· Приоритетный ответ на вопросы в блоке Q&A внутри уроков.</li>
-          </ul>
+          <button
+            id="btn-pro-side"
+            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-xs sm:text-sm font-semibold text-[#1a1a1a] shadow-soft"
+          >
+            Оформить PRO сейчас
+          </button>
         </div>
-
-        <div class="flex items-end justify-between gap-3">
-          <div>
-            <p class="text-xs text-[var(--ink-2)] mb-0.5">Стоимость</p>
-            <p class="text-2xl font-extrabold">
-              5&nbsp;€ <span class="align-middle text-xs text-[var(--ink-2)]">/ месяц*</span>
-            </p>
-            <p class="text-[10px] text-[var(--ink-2)] mt-1">
-              *Пример. Ты можешь изменить цену в backend (`server.js`) в параметре <code>unit_amount</code>.
-            </p>
-          </div>
-        </div>
-
-        <button
-          id="btn-pro-side"
-          class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-xs sm:text-sm font-semibold text-[#1a1a1a] shadow-soft"
-        >
-          Оформить PRO сейчас
-        </button>
       </aside>
     </div>
   </section>
 
-  <!-- Блок преимуществ -->
+  <!-- Как работает PRO -->
   <section id="pro-details" class="pb-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="glass-card shadow-soft px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <h2 class="text-xl sm:text-2xl font-extrabold mb-2">
-          Что даёт PRO по сравнению с базовым доступом?
+          Как работает PRO внутри ваших уроков?
         </h2>
-        <p class="text-sm text-[var(--ink-2)] mb-5 max-w-2xl">
-          Базовый уровень — это доступ к урокам, словарю, тренажёрам и практике.
-          PRO добавляет к этому человека, который смотрит на ваши задания и помогает делать английский живым, а не только «по правилам».
+        <p class="text-sm text-[var(--ink-2)] mb-6 max-w-2xl">
+          Базовый доступ — это всё, что вам нужно, чтобы начать. PRO включают, когда хочется
+          движения быстрее и поддержки по пути: вместо «я заполнила задание и забыла» вы получаете обратную связь и живой диалог.
         </p>
 
-        <div class="grid md:grid-cols-3 gap-4 text-sm text-[var(--ink-2)]">
-          <div class="border border-gray-200 rounded-2xl bg-white px-4 py-4">
-            <p class="text-xs uppercase tracking-wide text-amber-700 mb-1">1 · Проверка заданий</p>
-            <p class="font-semibold mb-1">Живой разбор вместо галочки «выполнено»</p>
-            <p class="text-xs">
-              Вы отправляете письменные и голосовые задания, а куратор:
-              выделяет удачные формулировки, мягко исправляет ошибки и предлагает более естественные варианты.
+        <!-- Таймлайн -->
+        <div class="relative border-l border-dashed border-amber-300 pl-4 ml-1 space-y-5 text-xs sm:text-sm text-[var(--ink-2)]">
+          <div class="absolute -left-[7px] top-0 h-3 w-3 rounded-full bg-[var(--brand-orange)]"></div>
+          <div class="absolute -left-[7px] bottom-0 h-3 w-3 rounded-full bg-[var(--brand-yellow-deep)]"></div>
+
+          <div>
+            <p class="font-semibold mb-1">1. Вы проходите урок и выполняете задание</p>
+            <p>
+              В уроке есть письменные и голосовые задания. В базовом режиме вы отмечаете задание как «сделано» —
+              и двигаетесь дальше. В PRO вы можете отправить его на проверку.
             </p>
           </div>
 
-          <div class="border border-gray-200 rounded-2xl bg-white px-4 py-4">
-            <p class="text-xs uppercase tracking-wide text-amber-700 mb-1">2 · Приоритетные ответы</p>
-            <p class="font-semibold mb-1">Ваши вопросы не теряются</p>
-            <p class="text-xs">
-              В блоке Q&A у PRO-пользователей приоритет: мы стараемся отвечать в первую очередь на ваши запросы,
-              чтобы вы не зависали на непонятной теме.
+          <div>
+            <p class="font-semibold mb-1">2. Задание попадает к куратору</p>
+            <p>
+              Система сохраняет ваши ответы в отдельную коллекцию для куратора. Он видит, какие задания вы выполняете,
+              и в каком контексте это было внутри курса.
             </p>
           </div>
 
-          <div class="border border-gray-200 rounded-2xl bg-white px-4 py-4">
-            <p class="text-xs uppercase tracking-wide text-amber-700 mb-1">3 · Лёгкий контроль прогресса</p>
-            <p class="font-semibold mb-1">Мини-обратная связь по движению</p>
-            <p class="text-xs">
-              По ходу прохождения курса вы можете уточнять, что делать дальше:
-              добить произношение, расширить словарный запас или перейти к более сложным текстам.
+          <div>
+            <p class="font-semibold mb-1">3. Вы получаете комментарии</p>
+            <p>
+              Куратор не только исправляет ошибки, но и подсказывает более естественные формулировки,
+              отмечает сильные моменты и даёт мягкие рекомендации: что уже получается, а где ещё потренироваться.
+            </p>
+          </div>
+
+          <div>
+            <p class="font-semibold mb-1">4. Задаёте вопросы и не застреваете</p>
+            <p>
+              В блоке Q&A внутри уроков у PRO-пользователей приоритет. Если вы на чём-то застряли —
+              задаёте вопрос и получаете ответ быстрее, чем если бы шли в одиночку.
             </p>
           </div>
         </div>
 
         <div class="mt-6 grid md:grid-cols-[1.2fr,1fr] gap-5 items-start text-xs sm:text-sm text-[var(--ink-2)]">
           <div class="border border-dashed border-amber-300 rounded-2xl px-4 py-4 bg-[#fffbeb]">
-            <p class="font-semibold mb-2">Как это работает внутри уроков?</p>
-            <ul class="list-disc list-inside space-y-1">
-              <li>Вы выполняете задание (письменное или голосовое) и отмечаете его как отправленное.</li>
-              <li>Если у вас есть PRO, система сохраняет задание в отдельную коллекцию для куратора.</li>
-              <li>Куратор просматривает ответы и оставляет комментарии (в удобном формате — текстом или аудио).</li>
-              <li>Вы получаете не только «правильно/неправильно», но и подсказки, как сказать это естественнее.</li>
+            <p class="font-semibold mb-2">Кому особенно полезен PRO?</p>
+            <ul class="list-disc list-inside space-y-1.5">
+              <li>Если вы боитесь «говорить неправильно» и хочется мягких, но честных правок.</li>
+              <li>Если сложно держать мотивацию одной и нужен человек, который видит ваш прогресс.</li>
+              <li>Если вы любите курсы, но без обратной связи они быстро превращаются в «ещё один недоделанный курс».</li>
             </ul>
           </div>
           <div class="border border-gray-200 rounded-2xl px-4 py-4 bg-white">
             <p class="font-semibold mb-1">Базовый доступ остаётся бесплатным</p>
             <p>
-              Даже без PRO вы можете:
-              проходить уроки, смотреть видео, читать объяснения, выполнять упражнения, пополнять словарик и тренироваться.
+              Даже без PRO вы можете проходить уроки, смотреть видео, читать объяснения,
+              выполнять упражнения, пополнять словарик и тренироваться в своём темпе.
             </p>
             <p class="mt-2 text-[11px]">
-              PRO — это опция для тех, кто хочет поддержку, обратную связь и ощущение, что вы не «один на один» с курсом.
+              PRO — это надстройка: поддержка, обратная связь и ощущение, что вы идёте не в одиночку.
             </p>
           </div>
         </div>
@@ -251,7 +285,7 @@
         <div class="space-y-2 text-sm text-[var(--ink-2)]">
           <div class="faq-item border border-gray-200 rounded-2xl bg-white overflow-hidden">
             <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
-              <span>PRO действует только на курс English Intro или на все курсы?</span>
+              <span>PRO действует только на English Intro или на все курсы?</span>
               <span class="ml-2 text-lg leading-none">+</span>
             </button>
             <div class="px-4 pb-3 hidden text-xs sm:text-sm">
@@ -295,7 +329,7 @@
         </div>
 
         <div class="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs sm:text-sm">
-          <p class="text-[var(--ink-2)]">
+          <p class="text-[var(--ink-2)] max-w-md">
             Если остались вопросы — напишите нам через форму обратной связи или в Q&A внутри уроков.
           </p>
           <button
@@ -305,6 +339,10 @@
             Оформить PRO
           </button>
         </div>
+
+        <p class="mt-3 text-[10px] text-[var(--ink-2)]">
+          Чтобы оформить PRO, сначала войдите в ваш <a href="/student/" class="underline">личный кабинет</a>, а затем вернитесь на эту страницу.
+        </p>
       </div>
     </div>
   </section>
@@ -364,14 +402,14 @@
     });
   });
 
-  // Общая функция для оформления PRO
+  // Общая функция для оформления PRO через localStorage uid
   async function startProCheckout() {
     try {
-      // предполагаем, что Firebase Auth уже инициализирован на сайте
-      const user = (window.PolyTalkyAuth && window.PolyTalkyAuth.currentUser) || null;
+      // Берём UID из localStorage (сохраняется после логина на /student/)
+      const uid = localStorage.getItem('pt_uid');
 
-      if (!user || !user.uid) {
-        // если не авторизован — отправляем в личный кабинет / логин
+      if (!uid) {
+        alert("Чтобы оформить PRO, сначала войдите в ваш личный кабинет, а затем вернитесь на эту страницу.");
         window.location.href = "/student/";
         return;
       }
@@ -379,7 +417,7 @@
       const resp = await fetch("/api/create-english-intro-pro-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.uid })
+        body: JSON.stringify({ userId: uid })
       });
 
       if (!resp.ok) {
@@ -399,7 +437,7 @@
       }
 
       // TODO: сюда нужно подставить твой реальный publishable key Stripe
-      const STRIPE_PK = "pk_live_51HqHTmBDwT3uzr4q884SspcgqeyUSp4esf81Z6tHnTkf66WJG1Z6b90PDtyXSdiEommSFnBpHEHswX2ks5Geq9G0004uLMLbKu";
+      const STRIPE_PK = "pk_xxx_replace_me";
       const stripe = Stripe(STRIPE_PK);
       const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
 
