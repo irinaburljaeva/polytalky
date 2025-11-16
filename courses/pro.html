@@ -437,7 +437,7 @@
       }
 
       // TODO: сюда нужно подставить твой реальный publishable key Stripe
-      const STRIPE_PK = "pk_xxx_replace_me";
+      const STRIPE_PK = "pk_live_51HqHTmBDwT3uzr4q884SspcgqeyUSp4esf81Z6tHnTkf66WJG1Z6b90PDtyXSdiEommSFnBpHEHswX2ks5Geq9G0004uLMLbKu";
       const stripe = Stripe(STRIPE_PK);
       const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
 
