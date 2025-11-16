@@ -8,7 +8,7 @@
   <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Firebase -->
+  <!-- Firebase init -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -55,7 +55,7 @@
       overflow-x:hidden;
     }
 
-    /* Большие мягкие буквы на фоне */
+    /* фоновые буквы */
     .bg-letter{
       position:fixed;
       font-weight:900;
@@ -141,17 +141,28 @@
       color:var(--text-muted);
     }
 
-    /* Правый визуальный блок */
     .hero-right-inner{
       position:relative;
       width:100%;
-      min-height:190px;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      padding-right:1.4rem;
+    }
+
+    .hero-bubbles-cluster{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap:.4rem;
+      align-items:flex-end;
     }
 
     .hero-bubble{
-      position:absolute;
+      position:relative;
       border-radius:1.1rem;
-      padding:.45rem .7rem;
+      padding:.45rem .8rem;
       font-size:.78rem;
       background:#fffdfa;
       border:1px solid rgba(148,163,184,.35);
@@ -159,23 +170,20 @@
     }
 
     .hero-bubble--hello{
-      top:35%;
-      left:6%;
       font-weight:700;
       font-size:.9rem;
       background:linear-gradient(135deg,#FFDE59,#FFB347);
       color:#78350f;
       box-shadow:0 12px 32px rgba(248,181,48,.65);
-    }
-    .hero-bubble--hi{
-      bottom:10%;
-      right:10%;
-      background:#FFFFFF;
+      transform:translate(8px,-4px);
     }
     .hero-bubble--morning{
-      top:8%;
-      right:22%;
       background:#fff7ed;
+      transform:translate(-4px,2px);
+    }
+    .hero-bubble--hi{
+      background:#FFFFFF;
+      transform:translate(10px,6px);
     }
 
     .hero-bg-circle{
@@ -222,46 +230,36 @@
       position:relative;
       display:flex;
       justify-content:center;
-      gap:1.4rem;
+      gap:1.6rem;
       margin:1.8rem 0 1.4rem;
       flex-wrap:wrap;
     }
-
     .step-nav::before{
       content:"";
       position:absolute;
-      top:26px;
-      left:10%;
-      right:10%;
+      left:8%;
+      right:8%;
+      top:20px;
       height:2px;
-      background:repeating-linear-gradient(
-        to right,
-        rgba(148,163,184,.55),
-        rgba(148,163,184,.55) 6px,
-        transparent 6px,
-        transparent 12px
-      );
-      z-index:-1;
+      background:linear-gradient(90deg,#fee2e2,#fde68a,#dcfce7);
+      z-index:0;
     }
 
     .step-dot{
+      position:relative;
+      z-index:1;
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:.25rem;
       font-size:.65rem;
       color:var(--text-muted);
-      max-width:90px;
+      max-width:110px;
       text-align:center;
     }
 
-    .step-dot-icon{
-      font-size:.9rem;
-      opacity:.9;
-    }
-
     .step-dot-circle{
-      width:30px;height:30px;
+      width:32px;height:32px;
       border-radius:999px;
       display:flex;
       align-items:center;
@@ -270,6 +268,10 @@
       background:rgba(255,255,255,.95);
       box-shadow:0 8px 18px rgba(0,0,0,.08);
       font-size:.8rem;
+    }
+
+    .step-dot-label{
+      line-height:1.3;
     }
 
     .step-dot--active .step-dot-circle{
@@ -292,10 +294,6 @@
     }
     .step-dot--done .step-dot-label{
       color:#166534;
-    }
-
-    .step-dot-label{
-      line-height:1.3;
     }
 
     /* ПАНЕЛИ ШАГОВ */
@@ -341,8 +339,12 @@
       line-height:1.5;
       color:#1f2937;
     }
-
-    .step-body-text b{
+    .step-body-text--lead{
+      font-size:.96rem;
+      font-weight:500;
+    }
+    .step-body-text--accent{
+      font-size:.9rem;
       font-weight:600;
     }
 
@@ -438,34 +440,34 @@
 
     /* Таблицы звуков */
     .sound-table-wrapper{
-      margin-top: .6rem;
-      border-radius: 1rem;
-      border: 1px solid rgba(226,232,240,1);
-      background: #ffffff;
-      box-shadow: 0 10px 28px rgba(15,23,42,.06);
-      overflow: hidden;
+      margin-top:.6rem;
+      border-radius:1rem;
+      border:1px solid rgba(226,232,240,1);
+      background:#ffffff;
+      box-shadow:0 10px 28px rgba(15,23,42,.06);
+      overflow:hidden;
     }
 
     .sound-table-scroll{
-      overflow-x: auto;
+      overflow-x:auto;
     }
 
     .sound-table{
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .8rem;
-      min-width: 420px;
+      width:100%;
+      border-collapse:collapse;
+      font-size:.8rem;
+      min-width:420px;
     }
 
     .sound-table thead{
-      background: linear-gradient(90deg,#FFF8E5,#FFE6B3);
+      background:linear-gradient(90deg,#FFF8E5,#FFE6B3);
     }
 
     .sound-table th,
     .sound-table td{
-      padding: .45rem .6rem;
-      border-bottom: 1px solid rgba(229,231,235,1);
-      text-align: left;
+      padding:.45rem .6rem;
+      border-bottom:1px solid rgba(229,231,235,1);
+      text-align:left;
     }
 
     .sound-table th{
@@ -491,27 +493,27 @@
 
     /* tooltip + озвучка */
     .word-tip{
-      position: relative;
-      cursor: pointer;
-      border-bottom: 1px dashed rgba(156,163,175,.8);
+      position:relative;
+      cursor:pointer;
+      border-bottom:1px dashed rgba(156,163,175,.8);
     }
     .word-tip::after{
-      content: attr(data-ru);
-      position: absolute;
-      left: 50%;
-      bottom: 120%;
-      transform: translateX(-50%) translateY(4px);
-      font-size: .72rem;
-      color: #111827;
-      background: #fffefb;
-      border-radius: .55rem;
-      padding: .25rem .55rem;
-      white-space: nowrap;
-      box-shadow: 0 10px 25px rgba(15,23,42,.30);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .15s ease-out, transform .15s ease-out;
-      z-index: 20;
+      content:attr(data-ru);
+      position:absolute;
+      left:50%;
+      bottom:120%;
+      transform:translateX(-50%) translateY(4px);
+      font-size:.72rem;
+      color:#111827;
+      background:#fffefb;
+      border-radius:.55rem;
+      padding:.25rem .55rem;
+      white-space:nowrap;
+      box-shadow:0 10px 25px rgba(15,23,42,.30);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .15s ease-out, transform .15s ease-out;
+      z-index:20;
     }
     .word-tip::before{
       content:"";
@@ -534,17 +536,16 @@
       transform:translateX(-50%) translateY(0);
     }
 
-    /* маленькие всплывающие фразы */
-    .tiny-toast{
+    .mini-toast{
+      font-size:.75rem;
+      color:#166534;
+      background:#ecfdf5;
+      border-radius:.9rem;
+      padding:.45rem .7rem;
       display:inline-flex;
       align-items:center;
-      gap:.4rem;
-      border-radius:999px;
-      padding:.3rem .7rem;
-      font-size:.72rem;
-      background:rgba(255,255,255,.95);
-      border:1px solid rgba(209,213,219,1);
-      box-shadow:0 10px 22px rgba(15,23,42,.16);
+      gap:.25rem;
+      border:1px solid #bbf7d0;
     }
 
     .hidden{display:none;}
@@ -599,14 +600,16 @@
         <div class="hero-right-inner">
           <div class="hero-bg-circle"></div>
 
-          <div class="hero-bubble hero-bubble--hello">
-            Hello! 👋
-          </div>
-          <div class="hero-bubble hero-bubble--hi">
-            Hi 🙂
-          </div>
-          <div class="hero-bubble hero-bubble--morning">
-            Good morning!
+          <div class="hero-bubbles-cluster">
+            <div class="hero-bubble hero-bubble--hello">
+              Hello! 👋
+            </div>
+            <div class="hero-bubble hero-bubble--morning">
+              Good morning!
+            </div>
+            <div class="hero-bubble hero-bubble--hi">
+              Hi 🙂
+            </div>
           </div>
         </div>
       </div>
@@ -628,27 +631,23 @@
     <nav class="step-nav">
 
       <div class="step-dot" data-step="1" id="dot-1">
-        <div class="step-dot-icon">📍</div>
         <div class="step-dot-circle">1</div>
-        <div class="step-dot-label">Приветствие</div>
+        <div class="step-dot-label">👋 Приветствие</div>
       </div>
 
       <div class="step-dot" data-step="2" id="dot-2">
-        <div class="step-dot-icon">🎧</div>
         <div class="step-dot-circle">2</div>
-        <div class="step-dot-label">Видео от носителя</div>
+        <div class="step-dot-label">🎧 Видео от носителя</div>
       </div>
 
       <div class="step-dot" data-step="3" id="dot-3">
-        <div class="step-dot-icon">🔤</div>
         <div class="step-dot-circle">3</div>
-        <div class="step-dot-label">Гласные</div>
+        <div class="step-dot-label">🔤 Гласные</div>
       </div>
 
       <div class="step-dot" data-step="4" id="dot-4">
-        <div class="step-dot-icon">🏁</div>
         <div class="step-dot-circle">4</div>
-        <div class="step-dot-label">Финал</div>
+        <div class="step-dot-label">🏁 Финал</div>
       </div>
 
     </nav>
@@ -663,23 +662,18 @@
         <span class="step-icon">👋</span>
       </div>
 
-      <p class="step-body-text">
-        <b>Ура, ура, ура!</b> Вы наконец запустили курс английского от PolyTalky.  
+      <p class="step-body-text step-body-text--lead">
+        Ура, ура, ура! Вы наконец запустили курс английского от PolyTalky.  
         Вот он — первый урок. Урок полный надежд, лёгкости и энтузиазма!
       </p>
 
-      <div class="mt-3 rounded-2xl overflow-hidden border border-yellow-100 bg-white/70">
-        <!-- сюда позже можно поставить настоящую GIF -->
-        <img src="/assets/gifs/english-hello-start.gif" alt="Start gif"
-             class="w-full max-h-40 object-cover">
-      </div>
-
       <p class="step-body-text mt-3">
-        Если что-то будет непонятно — не стесняйтесь задавать вопросы вашему куратору или общаться с другими участниками.  
+        Если что-то будет непонятно — не стесняйтесь задавать вопросы вашему куратору
+        или общаться с другими участниками.
       </p>
 
-      <p class="step-body-text mt-4">
-        Ваше первое мини-задание, чтобы настроится на нужную волну уже ждет вас 😊
+      <p class="step-body-text step-body-text--accent mt-4">
+        Ваше первое мини-задание, чтобы настроиться на нужную волну, уже ждёт вас 😊
       </p>
 
       <p class="step-body-text mt-3 highlight">
@@ -693,12 +687,12 @@
         Можно одно слово или фразу — главное, сделать первый шаг.
       </p>
 
-      <div id="hello-feedback" class="mt-3 hidden">
-        <span class="tiny-toast">Классное приветствие! 💛</span>
+      <div id="hello-feedback" class="mini-toast mt-3 hidden">
+        💚 Отличное приветствие! Продолжаем путешествие.
       </div>
 
       <button class="btn-main mt-5 next-step-btn" data-next="2" id="task-hello-submit">
-        Готово, идем дальше →
+        Готово, идём дальше →
       </button>
 
     </section>
@@ -712,7 +706,8 @@
       </div>
 
       <p class="step-body-text">
-        Английское произношение — одно из наиболее сложных в мире, за счет того, что существуют десятки различных буквосочетаний, которые производят различные звуки. Но помимо этого, английский славится тем, что на каждое правило в нем всегда найдутся исключения! 
+        Английское произношение — одно из наиболее сложных в мире, за счет того, что существуют десятки различных буквосочетаний, которые производят различные звуки. 
+        Но помимо этого, английский славится тем, что на каждое правило в нем всегда найдутся исключения! 
         А значит, что порой разобраться в фонетике этого языка может оказаться очень и очень затруднительно.
       </p>
 
@@ -722,6 +717,7 @@
       </p>
 
       <div class="mt-5">
+        <!-- здесь используешь свой youtube/vk embed -->
         <iframe width="100%" height="215"
                 style="border-radius:1rem;"
                 src="https://www.youtube.com/embed/2f32fcQ2An8"
@@ -870,7 +866,7 @@
         </div>
 
         <p class="soft-note mt-2">
-          Не забывайте читать все вслух, чтобы лучше запомнить 💛
+          Не забывайте читать всё вслух, чтобы лучше запомнить 💛
         </p>
       </div>
 
@@ -881,7 +877,7 @@
         </p>
 
         <p class="soft-note mb-3">
-          Нажмите на кнопку «Записать», прочитайте несколько слов, а затем остановите запись.
+          Нажмите «Записать», произнесите несколько слов, затем остановите запись.
         </p>
 
         <div class="mt-2 flex gap-3">
@@ -891,9 +887,9 @@
 
         <audio id="audio-playback" class="mt-4 w-full" controls style="display:none;"></audio>
 
-        <div id="audio-feedback" class="mt-3 hidden">
-          <span class="tiny-toast">Отлично получилось! Вы молодец 💛</span>
-        </div>
+        <p id="audio-feedback" class="mini-toast mt-3 hidden">
+          ⭐ Отлично получилось! Вы молодец.
+        </p>
       </div>
 
     </section>
@@ -912,7 +908,7 @@
       </p>
 
       <div class="mt-3 rounded-2xl overflow-hidden border border-yellow-100 bg-white/70">
-        <!-- сюда позже можно поставить забавную финальную GIF -->
+        <!-- здесь будет твоя забавная GIF -->
         <img src="/assets/gifs/english-lesson1-finish.gif" alt="Finish gif"
              class="w-full max-h-40 object-cover">
       </div>
@@ -965,8 +961,7 @@
           </div>
 
           <p class="text-sm text-gray-600 mt-1">
-            Выберите слова, которые хотите сохранить.  
-            Они появятся в вашем словарике на аккаунте.
+            Выберите слова, которые хотите сохранить. Они появятся в вашем словарике на аккаунте.
           </p>
 
           <!-- Блок: пользователь не авторизован -->
@@ -987,7 +982,7 @@
               </h3>
 
               <div id="vocab-vowels" class="grid grid-cols-1 gap-2 pl-1">
-                <!-- JS автоматически заполнит -->
+                <!-- JS заполнит -->
               </div>
             </div>
 
@@ -1012,6 +1007,7 @@
       </div>
     </div>
 
+    <!-- ОСНОВНОЙ СКРИПТ -->
     <script type="module">
       import {
         getAuth,
@@ -1029,14 +1025,15 @@
       const auth = window.firebaseAuth;
       const db   = window.firebaseDb;
 
-      /* UI элементы */
+      /* UI */
       const stepPanels = document.querySelectorAll(".step-panel");
       const stepDots   = document.querySelectorAll(".step-dot");
+
       const progressText = document.getElementById("lesson-progress-text");
       const progressBar  = document.getElementById("lesson-progress-bar");
 
-      const userStatus  = document.getElementById("user-status");
-      const logoutBtn   = document.getElementById("logout-btn");
+      const userStatus = document.getElementById("user-status");
+      const logoutBtn  = document.getElementById("logout-btn");
 
       const openVocabBtn    = document.getElementById("open-vocab-btn");
       const vocabModal      = document.getElementById("vocab-modal");
@@ -1046,15 +1043,36 @@
       const vocabSaveBtn    = document.getElementById("vocab-save");
       const vocabSelectAll  = document.getElementById("vocab-select-all");
 
+      const helloFeedback   = document.getElementById("hello-feedback");
+      const audioFeedback   = document.getElementById("audio-feedback");
+
       let currentUser = null;
 
-      /* 4 шага */
+      /* АВТОРИЗАЦИЯ */
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentUser = user;
+          userStatus.textContent = `Вы вошли как: ${user.email}`;
+          logoutBtn.classList.remove("hidden");
+        } else {
+          currentUser = null;
+          userStatus.textContent = "Вы не авторизованы";
+          logoutBtn.classList.add("hidden");
+        }
+      });
+
+      logoutBtn.addEventListener("click", () => {
+        signOut(auth);
+      });
+
+      /* СИСТЕМА ШАГОВ */
       let currentStep = 1;
       const totalSteps = 4;
 
       function showStep(n){
         stepPanels.forEach(p => p.classList.remove("step-panel--visible"));
-        document.getElementById(`step-${n}`).classList.add("step-panel--visible");
+        const panel = document.getElementById(`step-${n}`);
+        if (panel) panel.classList.add("step-panel--visible");
 
         stepDots.forEach(dot => {
           dot.classList.remove("step-dot--active","step-dot--done");
@@ -1072,63 +1090,62 @@
 
       document.querySelectorAll(".next-step-btn").forEach(btn => {
         btn.addEventListener("click", () => {
+          if (btn.id === "task-hello-submit") return; // отдельная логика
           const next = Number(btn.dataset.next);
-          showStep(next);
+          if (next) showStep(next);
         });
       });
 
-      /* Авторизация */
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          currentUser = user;
-          userStatus.textContent = `Вы вошли как: ${user.email}`;
-          logoutBtn.classList.remove("hidden");
-        } else {
-          currentUser = null;
-          userStatus.textContent = "Вы не авторизованы";
-          logoutBtn.classList.add("hidden");
-        }
-      });
-
-      logoutBtn.addEventListener("click", () => {
-        signOut(auth);
-      });
-
-      /* Мини-задание приветствия */
-      document.getElementById("task-hello-submit").addEventListener("click", (e) => {
+      /* МИНИ-ЗАДАНИЕ ПРИВЕТСТВИЯ */
+      document.getElementById("task-hello-submit").addEventListener("click", () => {
         const val = document.getElementById("task-hello-input").value.trim();
         if (!val){
           alert("Напишите любое английское приветствие :)");
-          e.stopImmediatePropagation();
           return;
         }
 
-        const fb = document.getElementById("hello-feedback");
-        if (fb){
-          fb.classList.remove("hidden");
+        if (helloFeedback){
+          helloFeedback.classList.remove("hidden");
         }
+
+        setTimeout(() => {
+          if (helloFeedback) helloFeedback.classList.add("hidden");
+          showStep(2);
+        }, 1100);
       });
 
-      /* Аудиозапись */
+      /* АУДИОЗАПИСЬ */
       let mediaRecorder;
       let audioChunks = [];
 
-      const recordBtn   = document.getElementById("record-btn");
-      const stopBtn     = document.getElementById("stop-btn");
-      const audioPlay   = document.getElementById("audio-playback");
-      const audioFb     = document.getElementById("audio-feedback");
+      const recordBtn = document.getElementById("record-btn");
+      const stopBtn   = document.getElementById("stop-btn");
+      const audioPlay = document.getElementById("audio-playback");
 
-      recordBtn.addEventListener("click", async () => {
-        try{
-          audioChunks = [];
-          const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
-          mediaRecorder = new MediaRecorder(stream);
+      if (recordBtn && stopBtn && audioPlay){
+        recordBtn.addEventListener("click", async () => {
+          try{
+            audioChunks = [];
+            const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+            mediaRecorder = new MediaRecorder(stream);
 
-          mediaRecorder.start();
-          recordBtn.disabled = true;
-          stopBtn.disabled   = false;
+            mediaRecorder.start();
+            recordBtn.disabled = true;
+            stopBtn.disabled = false;
+            audioFeedback?.classList.add("hidden");
 
-          mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
+            mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
+          }catch(err){
+            alert("Не удалось получить доступ к микрофону :(");
+            console.error(err);
+          }
+        });
+
+        stopBtn.addEventListener("click", () => {
+          if (!mediaRecorder) return;
+          mediaRecorder.stop();
+          recordBtn.disabled = false;
+          stopBtn.disabled = true;
 
           mediaRecorder.addEventListener("stop", () => {
             const audioBlob = new Blob(audioChunks);
@@ -1136,74 +1153,78 @@
             audioPlay.src = url;
             audioPlay.style.display = "block";
 
-            if (audioFb){
-              audioFb.classList.remove("hidden");
+            if (audioFeedback){
+              audioFeedback.classList.remove("hidden");
             }
 
             setTimeout(() => {
+              if (audioFeedback) audioFeedback.classList.add("hidden");
               showStep(4);
-            }, 1300);
+            }, 1800);
           });
-        } catch(err){
-          alert("Не удалось получить доступ к микрофону :(");
-          console.error(err);
-        }
-      });
+        });
+      }
 
-      stopBtn.addEventListener("click", () => {
-        if (!mediaRecorder) return;
-        mediaRecorder.stop();
-        recordBtn.disabled = false;
-        stopBtn.disabled   = true;
-      });
-
-      /* Озвучка слов (speechSynthesis) */
-      function initWordAudio(){
-        if (!("speechSynthesis" in window)) return;
-        const synth = window.speechSynthesis;
-
+      /* ОЗВУЧКА СЛОВ (speechSynthesis) */
+      if ("speechSynthesis" in window){
         document.querySelectorAll(".word-tip").forEach(el => {
           el.addEventListener("click", () => {
             const text = el.textContent.trim();
             if (!text) return;
-            synth.cancel();
             const u = new SpeechSynthesisUtterance(text);
             u.lang = "en-US";
-            synth.speak(u);
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(u);
           });
         });
       }
 
-      /* Автосбор слов из таблицы (шаг 3) */
-      function extractVowelWords(){
+      /* СЛОВАРЬ — слово + перевод из таблицы */
+      function extractVowelEntries(){
         const tips = document.querySelectorAll("#step-3 .word-tip");
-        const words = new Set();
+        const map = new Map(); // word -> ru
+
         tips.forEach(tip => {
-          const w = tip.textContent.trim().toLowerCase();
-          if (/^[a-z]+$/.test(w)) words.add(w);
+          const w  = tip.textContent.trim().toLowerCase();
+          const ru = (tip.dataset.ru || "").trim();
+          if (/^[a-z]+$/.test(w) && !map.has(w)){
+            map.set(w, ru);
+          }
         });
-        return Array.from(words);
+
+        return Array.from(map.entries()).map(([word, translation]) => ({
+          word,
+          translation
+        }));
       }
 
       function renderVowelWords(){
-        const list = extractVowelWords();
+        const entries = extractVowelEntries();
         vocabListVowels.innerHTML = "";
 
-        list.forEach(word => {
+        entries.forEach(({ word, translation }) => {
           const label = document.createElement("label");
           label.className = "flex items-center gap-2 text-[0.85rem]";
 
+          const ruPart = translation
+            ? `<span class="text-gray-400 text-[0.78rem] ml-1">— ${translation}</span>`
+            : "";
+
           label.innerHTML = `
-            <input type="checkbox" class="vocab-word" data-word="${word}"
+            <input type="checkbox"
+                   class="vocab-word"
+                   data-word="${word}"
+                   data-ru="${translation}"
                    data-category="Гласные буквосочетания">
-            ${word}
+            <span>${word}</span>
+            ${ruPart}
           `;
 
           vocabListVowels.appendChild(label);
         });
       }
 
-      /* Окно словарика */
+      /* ОКНО СЛОВАРИКА */
       openVocabBtn.addEventListener("click", () => {
         vocabModal.classList.remove("hidden");
         vocabModal.classList.add("flex");
@@ -1225,20 +1246,20 @@
       });
 
       vocabSelectAll.addEventListener("click", () => {
-        document.querySelectorAll("#vocab-vowels .vocab-word")
-          .forEach(cb => cb.checked = true);
+        const boxes = document.querySelectorAll(".vocab-word");
+        const anyUnchecked = Array.from(boxes).some(b => !b.checked);
+        boxes.forEach(b => b.checked = anyUnchecked);
       });
 
-      async function saveWordsToFirestore(words){
+      async function saveWordsToFirestore(entries){
         if (!currentUser) return;
-
         const uid = currentUser.uid;
         const colRef = collection(db, `users/${uid}/vocabulary`);
 
-        for (const word of words){
+        for (const { word, translation } of entries){
           await addDoc(colRef, {
             word,
-            translation: "",
+            translation: translation || "",
             lesson: "lesson-01-hello",
             category: "Гласные буквосочетания",
             addedAt: serverTimestamp()
@@ -1254,7 +1275,10 @@
 
         const checked = Array.from(document.querySelectorAll(".vocab-word"))
           .filter(cb => cb.checked)
-          .map(cb => cb.dataset.word);
+          .map(cb => ({
+            word: cb.dataset.word,
+            translation: cb.dataset.ru || ""
+          }));
 
         if (checked.length === 0){
           alert("Выберите хотя бы одно слово.");
@@ -1275,9 +1299,8 @@
         }, 700);
       });
 
-      /* Инициализация */
+      /* старт */
       showStep(1);
-      initWordAudio();
     </script>
 
     <!-- ПОЗДРАВИТЕЛЬНАЯ МОДАЛКА -->
@@ -1305,10 +1328,10 @@
           </p>
 
           <div class="mt-5 flex justify-end gap-3">
-            <button id="congrats-close" class="btn-ghost">
-              Продолжить
+            <button id="congrats-add-words" class="btn-ghost">
+              Добавить слова в словарик
             </button>
-            <a href="/courses/english-intro/lesson-02.html" class="btn-main">
+            <a href="/courses/english-intro/lesson-02.html" id="congrats-next" class="btn-main">
               Следующий урок →
             </a>
           </div>
@@ -1318,27 +1341,28 @@
     </div>
 
     <script type="module">
-      const congratsModal = document.getElementById("congrats-modal");
-      const congratsClose = document.getElementById("congrats-close");
-      const step4        = document.getElementById("step-4");
+      const congratsModal   = document.getElementById("congrats-modal");
+      const congratsAdd     = document.getElementById("congrats-add-words");
+      const step4           = document.getElementById("step-4");
+      const openVocabButton = document.getElementById("open-vocab-btn");
 
-      const observer = new MutationObserver(() => {
-        if (step4.classList.contains("step-panel--visible")) {
-          setTimeout(() => {
-            congratsModal.classList.remove("hidden");
-            congratsModal.classList.add("flex");
-          }, 500);
-        }
-      });
+      if (step4){
+        const observer = new MutationObserver(() => {
+          if (step4.classList.contains("step-panel--visible")){
+            setTimeout(() => {
+              congratsModal.classList.remove("hidden");
+              congratsModal.classList.add("flex");
+            }, 400);
+          }
+        });
 
-      observer.observe(step4, {
-        attributes: true,
-        attributeFilter: ["class"]
-      });
+        observer.observe(step4, { attributes:true, attributeFilter:["class"] });
+      }
 
-      congratsClose.addEventListener("click", () => {
+      congratsAdd.addEventListener("click", () => {
         congratsModal.classList.add("hidden");
         congratsModal.classList.remove("flex");
+        openVocabButton?.click();
       });
     </script>
 
