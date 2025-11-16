@@ -2,585 +2,440 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <title>PolyTalky — English Intro</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PolyTalky — Интенсив по английскому для начинающих</title>
+  <meta name="description" content="Английский для абсолютных новичков: короткие уроки, геймификация, XP, серия дней и интерактивные тренажёры. Всё на одной странице, с сохранением прогресса." />
+  <base href="/">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- фавикон -->
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <link rel="apple-touch-icon" href="/assets/favicon.jpg">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
   <style>
-    :root {
-      --primary: #cf2c02;
-      --primary-light: #ffba08;
-      --bg: #0f172a;
-      --bg-soft: #111827;
-      --text: #f9fafb;
-      --muted: #9ca3af;
-      --card: #111827;
-      --border: #1f2937;
-      --success: #22c55e;
-      --radius: 14px;
+    :root{
+      --brand-yellow:#FFDE59;
+      --brand-yellow-deep:#FFBA08;
+      --brand-orange:#E85D04;
+      --ink:#0F172A;
+      --ink-2:#334155;
+      --card:#FFFFFF;
+      --bg:#FFF8D6;
+      /* чтобы не было расхождений в футере/куки */
+      --brand-1:#FFDE59;
+      --brand-2:#FFBA08;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:var(--bg);
+      color:var(--ink);
     }
-    .page-wrap {
-      max-width: 1200px;
-      width: 100%;
-      padding: 16px;
-      display: flex;
-      gap: 16px;
+    .shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.08)}
+    .card{transition:transform .25s ease, box-shadow .25s ease}
+    .card:hover{transform:translateY(-6px)}
+    .wow-bg{position:relative;overflow:hidden}
+    .wow-bg:before,.wow-bg:after{
+      content:"";
+      position:absolute;
+      filter:blur(70px);
+      opacity:.75;
+      animation:float 12s ease-in-out infinite
     }
-    .sidebar {
-      width: 280px;
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+    .wow-bg:before{
+      width:560px;height:560px;
+      left:-140px;top:-140px;
+      background:radial-gradient(closest-side,rgba(255,222,89,.9),transparent)
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .wow-bg:after{
+      width:520px;height:520px;
+      right:-120px;top:-60px;
+      background:radial-gradient(closest-side,rgba(232,93,4,.35),transparent);
+      animation-delay:2.2s
     }
-    .brand-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: conic-gradient(from 120deg, var(--primary), var(--primary-light), #e85d04, var(--primary));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: 700;
-      color: #fff;
+    @keyframes float{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(14px)}
     }
-    .brand-text-main {
-      font-weight: 700;
-      font-size: 16px;
+    .badge{
+      background:#fff;border:1px solid rgba(0,0,0,.06);
+      padding:.45rem .75rem;border-radius:999px;
+      font-size:.8rem;color:var(--ink-2)
     }
-    .brand-text-sub {
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .stats-card {
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      padding: 12px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      font-size: 12px;
-    }
-    .stat {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .stat-label {
-      color: var(--muted);
-    }
-    .stat-value {
-      font-weight: 700;
-      font-size: 14px;
-    }
-    .progress-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .progress-bar-outer {
-      width: 100%;
-      height: 10px;
-      border-radius: 999px;
-      background: #020617;
-      overflow: hidden;
-    }
-    .progress-bar-inner {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--primary), var(--primary-light));
-      transition: width 0.3s ease;
-    }
-    .progress-label {
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-    }
-    .lesson-list {
-      margin-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      max-height: 60vh;
-      overflow: auto;
-      padding-right: 4px;
-    }
-    .module-title {
-      margin-top: 8px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-    }
-    .lesson-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: 999px;
-      font-size: 13px;
-      cursor: pointer;
-      border: 1px solid transparent;
-    }
-    .lesson-item:hover {
-      background: rgba(148, 163, 184, 0.06);
-    }
-    .lesson-item.active {
-      background: rgba(248, 250, 252, 0.08);
-      border-color: rgba(248, 250, 252, 0.2);
-    }
-    .lesson-check {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      flex-shrink: 0;
-    }
-    .lesson-check.completed {
-      background: var(--success);
-      border-color: var(--success);
-      color: #022c22;
-    }
-    .lesson-meta {
-      margin-left: auto;
-      font-size: 11px;
-      color: var(--muted);
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease}
+    .reveal.reveal--visible{opacity:1;transform:translateY(0)}
+    .badge-free{background:#e8ffe3;border:1px solid #a7f3d0;color:#065f46}
+    .badge-pro{background:#fff0f0;border:1px solid #fecaca;color:#7f1d1d}
+
+    /* Мобильные улучшения */
+    @media (max-width: 640px){
+      .hero-grid{display:grid;grid-template-columns:1fr;gap:16px}
+      .hero-cta{display:grid;gap:8px}
+      .card{transform:none}
     }
 
-    .main {
-      flex: 1;
-      background: rgba(15, 23, 42, 0.96);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      padding: 16px 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-height: calc(100vh - 32px);
-      overflow: hidden;
-    }
-    .hero {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .hero-left {
-      max-width: 500px;
-    }
-    .hero-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 2px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-    .hero-kicker span.tag {
-      background: rgba(248, 250, 252, 0.08);
-      border-radius: 999px;
-      padding: 2px 8px;
-      font-size: 10px;
-      color: var(--primary-light);
-    }
-    .hero-title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .hero-subtitle {
-      font-size: 14px;
-      color: var(--muted);
-      max-width: 440px;
-    }
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-    .btn {
-      border-radius: 999px;
-      padding: 8px 16px;
-      font-size: 14px;
-      border: 1px solid transparent;
-      background: #020617;
-      color: var(--text);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: #111827;
-      font-weight: 600;
-      border-color: transparent;
-    }
-    .btn-ghost {
-      background: transparent;
-      border-color: rgba(148, 163, 184, 0.5);
-      color: var(--muted);
-    }
-    .hero-right {
-      min-width: 220px;
-      flex: 1;
-      display: flex;
-      justify-content: flex-end;
-    }
-    .streak-card {
-      min-width: 220px;
-      max-width: 270px;
-      border-radius: 18px;
-      padding: 12px;
-      background: radial-gradient(circle at top left, rgba(251, 191, 36, 0.22), transparent 50%), #020617;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .streak-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 4px;
-    }
-    .streak-label {
-      color: var(--muted);
-    }
-    .streak-value {
-      font-weight: 700;
-    }
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-    .badge {
-      font-size: 10px;
-      padding: 3px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      color: var(--muted);
-    }
-    .badge.highlight {
-      border-color: var(--primary-light);
-      color: var(--primary-light);
+    /* Десктоп-усиление */
+    @media (min-width: 1024px){
+      h1{ font-size:2.7rem; line-height:1.1; }
+      .card:hover{ transform:translateY(-8px); box-shadow:0 16px 40px rgba(0,0,0,.10); }
     }
 
-    .content {
-      flex: 1;
-      display: flex;
-      gap: 12px;
-      overflow: hidden;
+    /* мини-стили для прогресса и тренажёра */
+    .pt-progress-outer{
+      border-radius:999px;
+      background:#f3f4f6;
+      overflow:hidden;
+      height:10px;
     }
-    .content-main {
-      flex: 2;
-      background: radial-gradient(circle at top, rgba(248, 250, 252, 0.06), transparent 55%);
-      border-radius: 14px;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      padding: 14px 14px 18px;
-      overflow-y: auto;
-      max-height: calc(100vh - 190px);
+    .pt-progress-inner{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--brand-orange),var(--brand-yellow));
+      transition:width .3s ease;
     }
-    .content-sidebar {
-      flex: 1;
-      min-width: 240px;
-      max-width: 320px;
-      background: #020617;
-      border-radius: 14px;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      padding: 12px;
-      overflow-y: auto;
-      max-height: calc(100vh - 190px);
-      font-size: 13px;
+    .pt-lesson-scroll{
+      max-height:260px;
+      overflow:auto;
     }
-    .content-section-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .pill-row {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-    .pill {
-      font-size: 11px;
-      padding: 3px 7px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      color: var(--muted);
-    }
-    .pill.good {
-      color: #bbf7d0;
-      border-color: #22c55e;
-    }
-    .pill.grammar {
-      color: #bfdbfe;
-      border-color: #3b82f6;
-    }
-    .pill.vocab {
-      color: #fef9c3;
-      border-color: #eab308;
-    }
-    .pill.game {
-      color: #fecaca;
-      border-color: #f97316;
-    }
-
-    .text-muted { color: var(--muted); }
-    .mb-4 { margin-bottom: 12px; }
-    .mb-2 { margin-bottom: 6px; }
-    .mb-1 { margin-bottom: 4px; }
-
-    .grammar-block,
-    .vocab-block,
-    .tips-block {
-      margin-bottom: 12px;
-      padding: 8px 10px;
-      border-radius: 10px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(31, 41, 55, 0.9);
-    }
-    .grammar-block h3,
-    .vocab-block h3,
-    .tips-block h3 {
-      margin: 0 0 6px;
-      font-size: 14px;
-    }
-    ul {
-      padding-left: 18px;
-      margin: 4px 0;
-    }
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 12px;
-      background: #020617;
-      padding: 1px 4px;
-      border-radius: 4px;
-    }
-
-    .exercise {
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 10px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-    }
-    .exercise-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .exercise-question {
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-    .exercise-options {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 6px;
-    }
-    .exercise-option {
-      border-radius: 999px;
-      padding: 6px 10px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      font-size: 13px;
-      cursor: pointer;
-      text-align: left;
-      background: #020617;
-    }
-    .exercise-option.selected {
-      border-color: var(--primary-light);
-      background: rgba(234, 179, 8, 0.08);
-    }
-    .exercise-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--muted);
-      gap: 6px;
-    }
-    .exercise-status.ok { color: #4ade80; }
-    .exercise-status.err { color: #f97316; }
-    .input-small {
-      padding: 5px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: #020617;
-      color: var(--text);
-      font-size: 13px;
-      min-width: 140px;
-    }
-
-    .xp-toast {
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(22, 163, 74, 0.96);
-      color: #ecfdf5;
-      font-size: 13px;
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
-      display: none;
-      z-index: 999;
-    }
-
-    @media (max-width: 960px) {
-      .page-wrap {
-        flex-direction: column;
-        max-width: 100%;
-      }
-      .sidebar {
-        width: 100%;
-        order: 2;
-      }
-      .main {
-        order: 1;
-        max-height: none;
-      }
-      .content {
-        flex-direction: column;
-      }
+    .pt-lesson-item:hover{
+      background-color:#fff7ce;
     }
   </style>
 </head>
 <body>
-<div class="page-wrap">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-logo">P</div>
-      <div>
-        <div class="brand-text-main">PolyTalky</div>
-        <div class="brand-text-sub">English Intro · A1</div>
-      </div>
-    </div>
 
-    <div class="stats-card">
-      <div class="stat">
-        <div class="stat-label">Уровень</div>
-        <div class="stat-value" id="stat-level">1</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">XP</div>
-        <div class="stat-value" id="stat-xp">0</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Серия</div>
-        <div class="stat-value" id="stat-streak">0 дней</div>
-      </div>
-    </div>
+<script>
+  // Плавное появление блоков (как на главной)
+  const onReady=()=>{
+    const obs=new IntersectionObserver((ents)=>{
+      ents.forEach(e=>{
+        if(e.isIntersecting)e.target.classList.add('reveal--visible');
+      });
+    },{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  };
+  if(document.readyState!=='loading') onReady(); else document.addEventListener('DOMContentLoaded', onReady);
+</script>
 
-    <div class="progress-wrap">
-      <div class="progress-label">
-        <span>Прогресс курса</span>
-        <span id="progress-text">0 / 0</span>
-      </div>
-      <div class="progress-bar-outer">
-        <div class="progress-bar-inner" id="progress-bar"></div>
-      </div>
-    </div>
+<!-- ==================== HEADER (скопирован) ==================== -->
+<header class="sticky top-0 z-50 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+    <a href="./" class="flex items-center gap-3 font-semibold text-lg">
+      <img src="assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl"> PolyTalky
+    </a>
 
-    <div class="lesson-list" id="lesson-list">
-      <!-- сюда рендерятся модули и уроки -->
-    </div>
-  </aside>
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
+      <a href="courses/" class="hover:opacity-80">Курсы</a>
+      <a href="shop/" class="hover:opacity-80">Магазин</a>
+      <a href="student/" class="hover:opacity-80">Личный кабинет</a>
+      <a href="courses/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">Начать бесплатно</a>
+    </nav>
 
-  <main class="main">
-    <section class="hero">
-      <div class="hero-left">
-        <div class="hero-kicker">
-          🌍 ENGLISH INTRO
-          <span class="tag">гамифицированный старт</span>
-        </div>
-        <h1 class="hero-title">Английский для начинающих — без стресса, с эндорфинами 🎮</h1>
-        <p class="hero-subtitle">
-          Маленькие шаги, быстрые победы, понятная грамматика и живые слова. 
-          Всё на одной странице: интро, уроки, упражнения и сохранение прогресса.
+    <!-- Mobile burger -->
+    <button id="burger" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft" aria-label="Меню">
+      ☰
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mnav" class="md:hidden hidden border-t border-black/10 bg-[#fffef7]">
+    <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-[var(--ink-2)]">
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="courses/">Курсы</a>
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="shop/">Магазин</a>
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="student/">Личный кабинет</a>
+      <a class="px-3 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold shadow-soft" href="courses/">Начать бесплатно</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Тоггл мобильного меню
+  const b=document.getElementById('burger'), m=document.getElementById('mnav');
+  if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
+</script>
+
+<main>
+  <!-- ============ HERO: воздух, минимум шума ============ -->
+  <section class="wow-bg">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 hero-grid">
+      <div class="reveal">
+        <span class="badge">Starter • Абсолютный ноль → первые фразы</span>
+        <h1 class="mt-4 text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight">
+          Интенсив по английскому для тех, кто «с нуля» — но хочет разговаривать 💬
+        </h1>
+        <p class="mt-4 text-base sm:text-lg text-[var(--ink-2)] max-w-xl">
+          Короткие уроки, живые фразы и мини-игры. XP, серия дней и «маленькие победы», которые кормят эндорфины.
         </p>
-        <div class="hero-actions">
-          <button class="btn btn-primary" id="btn-start">
-            ▶ Начать с Урока 1
+
+        <div class="mt-6 flex flex-wrap gap-3 hero-cta">
+          <button id="btn-start-course"
+                  class="px-5 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">
+            ▶ Начать с первого урока
           </button>
-          <button class="btn btn-ghost" id="btn-continue">
+          <button id="btn-continue-course"
+                  class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft text-sm text-[var(--ink-2)]">
             ⏱ Продолжить с места остановки
           </button>
         </div>
+
+        <ul class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-[#333]">
+          <li class="p-3 rounded-xl bg-white border border-black/10 shadow-soft">⚡ 10–15 минут на урок</li>
+          <li class="p-3 rounded-xl bg-white border border-black/10 shadow-soft">🎮 XP, серия дней и бейджи</li>
+          <li class="p-3 rounded-xl bg-white border border-black/10 shadow-soft">📱 Удобно с телефона</li>
+        </ul>
       </div>
-      <div class="hero-right">
-        <div class="streak-card">
-          <div class="streak-row">
-            <span class="streak-label">Сегодняшний заряд эндорфинов</span>
-            <span class="streak-value" id="streak-today">0%</span>
-          </div>
-          <div class="text-muted">
-            Выполните хотя бы один урок, чтобы получить «дозу» удовольствия от прогресса.
-          </div>
-          <div class="badges" id="badge-row">
-            <!-- бейджи динамически -->
-          </div>
+
+      <div class="reveal">
+        <div class="relative rounded-3xl border border-black/10 bg-white p-5 shadow-soft max-w-md ml-auto">
+          <p class="text-sm font-semibold text-[var(--ink)] mb-2">
+            Вводный урок: <span class="text-[var(--brand-orange)]">«Hello &amp; Goodbye»</span>
+          </p>
+          <p class="text-sm text-[var(--ink-2)]">
+            Вы уже через 10 минут:
+          </p>
+          <ul class="mt-2 space-y-1 text-sm text-[var(--ink-2)]">
+            <li>• умеете поздороваться и попрощаться в разных ситуациях;</li>
+            <li>• ловите первую дозу «я могу» вместо «я ничего не понимаю»;</li>
+            <li>• получаете первые XP и бейдж «Первый шаг».</li>
+          </ul>
+          <button id="btn-open-trainer"
+                  class="mt-4 w-full px-4 py-2.5 rounded-xl bg-[#111827] text-white text-sm font-semibold shadow-soft">
+            Открыть тренажёр курса
+          </button>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="content">
-      <div class="content-main" id="content-main">
-        <!-- сюда рендерится интро/выбранный урок -->
+  <!-- ============ Блок 1: Коротко как работает курс (чистый, без лишнего) ============ -->
+  <section class="py-10 sm:py-12">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-3xl border border-black/10 shadow-soft p-6 sm:p-8 space-y-6 reveal">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-extrabold mb-2">
+            Как устроен интенсив по английскому
+          </h2>
+          <p class="text-sm sm:text-base text-[var(--ink-2)] max-w-2xl">
+            Курс поделён на небольшие модули. Каждый модуль — это понятная тема, а каждый урок — маленький шаг с быстрым результатом.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-4 text-sm text-[var(--ink-2)]">
+          <div class="p-4 rounded-2xl bg-[#fffefa] border border-black/5">
+            <p class="font-semibold mb-1">🎯 1 урок = 1 маленькая цель</p>
+            <p>Например: научиться здороваться, представляться, рассказать кто вы и откуда.</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#fffefa] border border-black/5">
+            <p class="font-semibold mb-1">🎮 Геймификация в моменте</p>
+            <p>За выполненный урок — XP, прогресс-бар и серия дней. Мозг радуется, и хочется продолжать.</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#fffefa] border border-black/5">
+            <p class="font-semibold mb-1">📌 Всё на одной странице</p>
+            <p>Интро, уроки, упражнения и прогресс — без прыжков по вкладкам и потерянных ссылок.</p>
+          </div>
+        </div>
+
+        <!-- раскрывающийся блок чтобы не перегружать -->
+        <details class="mt-2">
+          <summary class="cursor-pointer text-sm text-[var(--ink-2)] flex items-center gap-2">
+            <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#fff0b4] text-xs">+</span>
+            Хочу увидеть подробный план модулей
+          </summary>
+          <div class="mt-4 grid sm:grid-cols-2 gap-3 text-sm text-[var(--ink-2)]">
+            <div class="p-4 rounded-2xl bg-white border border-black/5">
+              <p class="font-semibold mb-1">Модуль 0: Welcome & Mindset</p>
+              <p>Как работает курс, как не бояться ошибок и как выжимать максимум эндорфинов из учёбы.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-white border border-black/5">
+              <p class="font-semibold mb-1">Модуль 1: First Contact</p>
+              <p>Приветствия, прощания, как представиться и спросить имя.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-white border border-black/5">
+              <p class="font-semibold mb-1">Модуль 2: To be</p>
+              <p>I am, you are, we are — кто вы, откуда, чем занимаетесь.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-white border border-black/5">
+              <p class="font-semibold mb-1">Модуль 3: Present Simple</p>
+              <p>Привычки и рутина: I work, I like, I don’t like.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-white border border-black/5">
+              <p class="font-semibold mb-1">Модуль 4: Everyday Life</p>
+              <p>Время, дом, семья — всё, что нужно для бытового общения.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-white border border-black/5">
+              <p class="font-semibold mb-1">Модуль 5–6: Past / Future Lite + Travel</p>
+              <p>«Где вы были вчера, что будете делать завтра» и базовые фразы для поездок.</p>
+            </div>
+          </div>
+        </details>
       </div>
-      <aside class="content-sidebar" id="content-sidebar">
-        <!-- сюда рендерится грамматика/лексика/подсказки -->
-      </aside>
-    </section>
-  </main>
+    </div>
+  </section>
+
+  <!-- ============ Блок 2: FAQ в формате аккордеона (свернуто по умолчанию) ============ -->
+  <section class="py-8 sm:py-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-3xl border border-black/10 shadow-soft p-6 sm:p-7 space-y-3 reveal">
+        <h2 class="text-lg sm:text-xl font-extrabold">
+          Частые вопросы про интенсив
+        </h2>
+        <details class="p-3 rounded-2xl bg-[#fffefa] border border-black/5">
+          <summary class="font-semibold cursor-pointer text-sm">С какого уровня можно начинать?</summary>
+          <p class="mt-2 text-sm text-[var(--ink-2)]">
+            Подходит для абсолютных новичков: если вы помните только «hello» и «London is the capital…» — это ваш уровень.
+          </p>
+        </details>
+        <details class="p-3 rounded-2xl bg-[#fffefa] border border-black/5">
+          <summary class="font-semibold cursor-pointer text-sm">Сколько времени займёт курс?</summary>
+          <p class="mt-2 text-sm text-[var(--ink-2)]">
+            В среднем 4–6 недель при 10–20 мин в день. Можно проходить быстрее или медленнее — прогресс сохраняется.
+          </p>
+        </details>
+        <details class="p-3 rounded-2xl bg-[#fffefa] border border-black/5">
+          <summary class="font-semibold cursor-pointer text-sm">Будут ли грамматические объяснения?</summary>
+          <p class="mt-2 text-sm text-[var(--ink-2)]">
+            Да, но короткие и понятные. Сначала живая фраза, потом аккуратное объяснение, почему так.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ТРЕНАЖЁР КУРСА (спрятан по умолчанию) ============ -->
+  <section id="pt-trainer-section" class="py-10 sm:py-12 hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between gap-4 mb-4">
+        <h2 class="text-xl sm:text-2xl font-extrabold">
+          Игровое поле курса
+        </h2>
+        <p class="text-xs sm:text-sm text-[var(--ink-2)]">
+          Здесь ваши уроки, XP, серия дней и тренажёры.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-[minmax(260px,320px),1fr] gap-5">
+        <!-- левая колонка: прогресс + список уроков -->
+        <aside class="bg-white rounded-3xl border border-black/10 shadow-soft p-4 sm:p-5 space-y-4">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-[var(--ink-2)] mb-1">Ваш прогресс</p>
+            <div class="flex items-baseline justify-between gap-2">
+              <div>
+                <p class="text-xs text-[var(--ink-2)]">Уровень</p>
+                <p class="text-lg font-bold" id="pt-stat-level">1</p>
+              </div>
+              <div>
+                <p class="text-xs text-[var(--ink-2)]">XP</p>
+                <p class="text-lg font-bold" id="pt-stat-xp">0</p>
+              </div>
+              <div>
+                <p class="text-xs text-[var(--ink-2)]">Серия</p>
+                <p class="text-lg font-bold" id="pt-stat-streak">0 дней</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-xs text-[var(--ink-2)] mb-1">
+              <span>Прогресс по урокам</span>
+              <span id="pt-progress-text">0 / 0</span>
+            </div>
+            <div class="pt-progress-outer">
+              <div id="pt-progress-bar" class="pt-progress-inner"></div>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-xs uppercase tracking-wide text-[var(--ink-2)] mb-2">Бейджи</p>
+            <div id="pt-badge-row" class="flex flex-wrap gap-2 text-[10px]">
+              <!-- бейджи из JS -->
+            </div>
+          </div>
+
+          <div>
+            <p class="text-xs uppercase tracking-wide text-[var(--ink-2)] mb-2">Уроки</p>
+            <div id="pt-lesson-list" class="pt-lesson-scroll space-y-1 text-sm">
+              <!-- список уроков -->
+            </div>
+          </div>
+        </aside>
+
+        <!-- правая колонка: содержимое урока -->
+        <section class="bg-white rounded-3xl border border-black/10 shadow-soft p-4 sm:p-6">
+          <div id="pt-lesson-panel">
+            <!-- сюда рендерится интро/выбранный урок -->
+            <p class="text-sm sm:text-base text-[var(--ink-2)]">
+              Нажмите «Начать с первого урока» или выберите урок слева, чтобы открыть тренажёр.
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- всплывашка XP -->
+  <div id="pt-xp-toast"
+       class="fixed bottom-4 right-4 z-50 hidden bg-emerald-500 text-white text-xs sm:text-sm px-4 py-2 rounded-full shadow-soft">
+    +10 XP — вы ближе к цели! 🎉
+  </div>
+</main>
+
+<!-- ==================== FOOTER (скопирован) ==================== -->
+<footer class="border-t border-gray-200 bg-white/70 backdrop-blur py-10 text-sm text-gray-700 mt-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Бренд -->
+    <div>
+      <a href="/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
+        <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-2)] items-center justify-center">🏷️</span>
+        PolyTalky
+      </a>
+      <p class="mt-3 text-gray-500">Изучайте языки для жизни, а не только для тестов.</p>
+      <p class="mt-4 text-gray-400">© 2025 PolyTalky. Все права защищены.</p>
+    </div>
+
+    <!-- Навигация -->
+    <div>
+      <h3 class="font-semibold text-gray-900 mb-3">Навигация</h3>
+      <ul class="space-y-2">
+        <li><a href="/courses/" class="hover:underline">Курсы</a></li>
+        <li><a href="/shop/" class="hover:underline">Магазин</a></li>
+        <li><a href="/student/" class="hover:underline">Личный кабинет</a></li>
+        <li><a href="/contact.html" class="hover:underline">Контакты</a></li>
+      </ul>
+    </div>
+
+    <!-- Юридическая информация -->
+    <div>
+      <h3 class="font-semibold text-gray-900 mb-3">Юридическая информация</h3>
+      <ul class="space-y-2">
+        <li><a href="/legal/privacy.html" class="hover:underline">Политика конфиденциальности</a></li>
+        <li><a href="/legal/offer.html" class="hover:underline">Публичная оферта</a></li>
+        <li><a href="/legal/cookies.html" class="hover:underline">Cookies</a></li>
+        <li><a href="/legal/consent.html" class="hover:underline">Согласие на обработку данных</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<!-- Cookie баннер (как на главной) -->
+<div id="cookie-banner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white text-gray-900 shadow-md rounded-xl px-4 py-3 text-sm flex items-center gap-3 hidden z-50">
+  <span>Мы используем cookies для улучшения работы сайта.</span>
+  <button id="cookie-accept" class="bg-[var(--brand-1)] text-gray-900 px-3 py-1 rounded-lg text-sm">Понятно</button>
 </div>
-
-<div class="xp-toast" id="xp-toast">+10 XP — вы ближе к цели! 🎉</div>
-
 <script>
-  /***********************
-   * Course definition
-   ***********************/
+  const banner = document.getElementById('cookie-banner');
+  if (!localStorage.getItem('cookieConsent')) banner.classList.remove('hidden');
+  document.getElementById('cookie-accept').onclick = () => {
+    localStorage.setItem('cookieConsent', 'true');
+    banner.classList.add('hidden');
+  };
+</script>
+
+<!-- ==================== JS логика курса ==================== -->
+<script>
+  /********* Описание курса (урезанная версия, но с живыми уроками 1–2) *********/
   const englishIntroCourse = {
     id: "english-intro",
-    title: "English Intro A1",
-    description: "Полный вводный курс для начинающих: базовая грамматика, живые фразы, словарики и упражнения.",
     modules: [
       {
         id: "m0",
@@ -591,8 +446,6 @@
             title: "Добро пожаловать · Как мы учим",
             minutes: 5,
             type: "intro",
-            grammarFocus: [],
-            vocabFocus: [],
             goals: [
               "Понять структуру курса и систему наград",
               "Настроиться на короткие, но регулярные занятия",
@@ -601,7 +454,7 @@
             contentIntro: [
               "Этот курс построен на принципе «маленькие шаги — большой результат».",
               "Каждый урок сочетает грамматику, лексику и мини-игры. За выполнение уроков вы получаете XP, повышаете уровень и зарабатываете бейджи.",
-              "Ошибаться — нормально. Ошибка = сигнал мозгу, что идёт обучение."
+              "Ошибаться — нормально. Ошибка — сигнал мозгу, что идёт обучение, и именно здесь рождается прогресс."
             ],
             exercises: [
               {
@@ -648,7 +501,7 @@
             grammarNotes: [
               "В английском нет отдельного «ты/вы» в форме приветствий — вежливость передаётся тоном и выбором слов.",
               "Hi — неформальное приветствие, подходит для друзей и близких коллег.",
-              "Good morning/afternoon/evening — чуть более формальные варианты; можно использовать и с незнакомыми людьми."
+              "Good morning/afternoon/evening — более формальные варианты; можно использовать и с незнакомыми людьми."
             ],
             exercises: [
               {
@@ -712,7 +565,7 @@
                 id: "introduce-input-1",
                 kind: "input",
                 question: "Напишите фразу «Приятно познакомиться» по-английски.",
-                correctAnswers: ["nice to meet you", "nice 2 meet u"], // второй – немного шуточный
+                correctAnswers: ["nice to meet you"],
                 placeholder: "nice...",
                 explanation: "Классический вариант — Nice to meet you."
               }
@@ -731,11 +584,8 @@
             type: "core",
             grammarFocus: ["to be: утверждения"],
             vocabFocus: ["student, teacher, from, Russia, Germany"],
-            goals: [
-              "Говорить о том, кто вы и откуда",
-              "Составлять простые предложения с to be"
-            ],
-            exercises: [] // можно заполнить позже
+            goals: [],
+            exercises: []
           },
           {
             id: "tobe-2",
@@ -748,583 +598,402 @@
             exercises: []
           }
         ]
-      },
-      {
-        id: "m3",
-        title: "Present Simple · Привычки и рутина",
-        lessons: [
-          {
-            id: "present-1",
-            title: "Урок 5 · I work, you play",
-            minutes: 15,
-            type: "core",
-            grammarFocus: ["Present Simple: I/you/we/they"],
-            vocabFocus: ["to work, to play, to like"],
-            goals: [],
-            exercises: []
-          },
-          {
-            id: "present-2",
-            title: "Урок 6 · He works, she plays",
-            minutes: 18,
-            type: "core",
-            grammarFocus: ["Present Simple: he/she/it + -s"],
-            vocabFocus: [],
-            goals: [],
-            exercises: []
-          }
-        ]
-      },
-      {
-        id: "m4",
-        title: "Everyday Life · Время, дом, семья",
-        lessons: [
-          { id: "time-1", title: "Урок 7 · Время и распорядок дня", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] },
-          { id: "family-1", title: "Урок 8 · Семья и дом", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] }
-        ]
-      },
-      {
-        id: "m5",
-        title: "Past & Future Lite · Вчера и завтра",
-        lessons: [
-          { id: "past-1", title: "Урок 9 · Вчера: was / were", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] },
-          { id: "future-1", title: "Урок 10 · Планы: going to", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] }
-        ]
-      },
-      {
-        id: "m6",
-        title: "Travel & Small Talk",
-        lessons: [
-          { id: "travel-1", title: "Урок 11 · В аэропорту", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] },
-          { id: "smalltalk-1", title: "Урок 12 · Небольшой разговор", minutes: 18, type: "core", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] }
-        ]
-      },
-      {
-        id: "m7",
-        title: "Revision & Endorphins",
-        lessons: [
-          { id: "review-1", title: "Финальный квест · Повторяем всё", minutes: 25, type: "revision", grammarFocus: [], vocabFocus: [], goals: [], exercises: [] }
-        ]
       }
+      // дальше можно накидать модули 3–6 по аналогии
     ]
   };
 
-  /***********************
-   * State & persistence
-   ***********************/
-  const STORAGE_KEY = "englishIntroProgress-v1";
+  /********* Состояние и localStorage *********/
+  const PT_STORAGE_KEY = "englishIntroProgress-v1";
 
-  let state = {
+  let ptState = {
     completedLessons: [],
     xp: 0,
     streakDays: 0,
     lastLessonId: null,
-    lastStudyDate: null // 'YYYY-MM-DD'
+    lastStudyDate: null // YYYY-MM-DD
   };
 
-  function todayStr() {
+  function ptTodayStr(){
     const d = new Date();
-    return d.toISOString().slice(0, 10);
+    return d.toISOString().slice(0,10);
   }
 
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
+  function ptLoadState(){
+    try{
+      const raw = localStorage.getItem(PT_STORAGE_KEY);
+      if(!raw) return;
       const parsed = JSON.parse(raw);
-      state = Object.assign(state, parsed);
-    } catch (e) {
-      console.warn("Cannot load state", e);
-    }
+      ptState = Object.assign(ptState, parsed);
+    }catch(e){console.warn("Cannot load state", e);}
   }
 
-  function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (e) {
-      console.warn("Cannot save state", e);
-    }
+  function ptSaveState(){
+    try{
+      localStorage.setItem(PT_STORAGE_KEY, JSON.stringify(ptState));
+    }catch(e){console.warn("Cannot save state", e);}
   }
 
-  function addXp(amount) {
-    state.xp += amount;
-    const today = todayStr();
-    if (!state.lastStudyDate) {
-      state.streakDays = 1;
-    } else if (state.lastStudyDate !== today) {
-      // очень простой подсчёт серии: новый день = +1
-      state.streakDays += 1;
-    }
-    state.lastStudyDate = today;
-    saveState();
-    updateStats();
-    showXpToast(amount);
-  }
-
-  function markLessonCompleted(lessonId) {
-    if (!state.completedLessons.includes(lessonId)) {
-      state.completedLessons.push(lessonId);
-      state.lastLessonId = lessonId;
-      addXp(10); // 10 XP за урок
-      saveState();
-      renderSidebarLessons();
-      updateProgress();
-      updateStreakCard();
-    }
-  }
-
-  function getAllLessons() {
+  function ptAllLessons(){
     return englishIntroCourse.modules.flatMap(m => m.lessons);
   }
 
-  function findLessonById(id) {
-    return getAllLessons().find(l => l.id === id) || null;
+  function ptFindLesson(id){
+    return ptAllLessons().find(l => l.id === id) || null;
   }
 
-  function firstRealLessonId() {
-    const all = getAllLessons();
-    const firstCore = all.find(l => l.type !== "intro");
-    return firstCore ? firstCore.id : (all[0] && all[0].id);
+  function ptFirstRealLessonId(){
+    const all = ptAllLessons();
+    const core = all.find(l => l.type !== "intro");
+    return core ? core.id : (all[0] && all[0].id);
   }
 
-  /***********************
-   * UI helpers
-   ***********************/
-  const els = {
-    lessonList: document.getElementById("lesson-list"),
-    progressText: document.getElementById("progress-text"),
-    progressBar: document.getElementById("progress-bar"),
-    statLevel: document.getElementById("stat-level"),
-    statXp: document.getElementById("stat-xp"),
-    statStreak: document.getElementById("stat-streak"),
-    contentMain: document.getElementById("content-main"),
-    contentSidebar: document.getElementById("content-sidebar"),
-    btnStart: document.getElementById("btn-start"),
-    btnContinue: document.getElementById("btn-continue"),
-    xpToast: document.getElementById("xp-toast"),
-    streakToday: document.getElementById("streak-today"),
-    badgeRow: document.getElementById("badge-row")
+  function ptAddXp(amount){
+    ptState.xp += amount;
+    const today = ptTodayStr();
+    if(!ptState.lastStudyDate){
+      ptState.streakDays = 1;
+    }else if(ptState.lastStudyDate !== today){
+      ptState.streakDays += 1;
+    }
+    ptState.lastStudyDate = today;
+    ptSaveState();
+    ptUpdateStats();
+    ptShowXpToast(amount);
+  }
+
+  function ptMarkLessonCompleted(lessonId){
+    if(!ptState.completedLessons.includes(lessonId)){
+      ptState.completedLessons.push(lessonId);
+      ptState.lastLessonId = lessonId;
+      ptAddXp(10);
+      ptSaveState();
+      ptRenderLessonList(lessonId);
+      ptUpdateProgress();
+      ptUpdateBadges();
+    }
+  }
+
+  /********* DOM-элементы *********/
+  const ptEls = {
+    trainerSection: document.getElementById("pt-trainer-section"),
+    statLevel: document.getElementById("pt-stat-level"),
+    statXp: document.getElementById("pt-stat-xp"),
+    statStreak: document.getElementById("pt-stat-streak"),
+    progressBar: document.getElementById("pt-progress-bar"),
+    progressText: document.getElementById("pt-progress-text"),
+    badgeRow: document.getElementById("pt-badge-row"),
+    lessonList: document.getElementById("pt-lesson-list"),
+    lessonPanel: document.getElementById("pt-lesson-panel"),
+    toast: document.getElementById("pt-xp-toast")
   };
 
-  function updateStats() {
-    const level = 1 + Math.floor(state.xp / 100);
-    els.statLevel.textContent = level;
-    els.statXp.textContent = state.xp;
-    els.statStreak.textContent = state.streakDays + " дней";
+  /********* UI обновления *********/
+  function ptUpdateStats(){
+    const level = 1 + Math.floor(ptState.xp / 100);
+    ptEls.statLevel.textContent = level;
+    ptEls.statXp.textContent = ptState.xp;
+    ptEls.statStreak.textContent = ptState.streakDays + " дней";
   }
 
-  function updateProgress() {
-    const allLessons = getAllLessons().filter(l => l.type !== "intro");
-    const total = allLessons.length;
-    const done = allLessons.filter(l => state.completedLessons.includes(l.id)).length;
-    const percent = total === 0 ? 0 : Math.round((done / total) * 100);
-    els.progressText.textContent = done + " / " + total;
-    els.progressBar.style.width = percent + "%";
+  function ptUpdateProgress(){
+    const all = ptAllLessons().filter(l => l.type !== "intro");
+    const total = all.length;
+    const done = all.filter(l => ptState.completedLessons.includes(l.id)).length;
+    const percent = total ? Math.round(done/total*100) : 0;
+    ptEls.progressText.textContent = done + " / " + total;
+    ptEls.progressBar.style.width = percent + "%";
   }
 
-  function updateStreakCard() {
-    const today = todayStr();
-    const todayDone = state.lastStudyDate === today;
-    els.streakToday.textContent = todayDone ? "100%" : "0%";
-    renderBadges();
-  }
-
-  function renderBadges() {
-    const container = els.badgeRow;
-    container.innerHTML = "";
+  function ptUpdateBadges(){
+    const row = ptEls.badgeRow;
+    row.innerHTML = "";
     const badges = [];
-
-    if (state.completedLessons.length >= 1) {
-      badges.push({ label: "Первый шаг ✅", highlight: true });
+    if(ptState.completedLessons.length >= 1){
+      badges.push({label:"Первый шаг ✅", highlight:true});
     }
-    if (state.completedLessons.length >= 5) {
-      badges.push({ label: "5 уроков — красавчик", highlight: true });
+    if(ptState.completedLessons.length >= 3){
+      badges.push({label:"3+ урока за плечами", highlight:true});
     }
-    if (state.streakDays >= 3) {
-      badges.push({ label: "Серия 3+ дня", highlight: true });
+    if(ptState.streakDays >= 3){
+      badges.push({label:"Серия 3+ дня", highlight:true});
     }
-    if (state.xp >= 50) {
-      badges.push({ label: "50+ XP", highlight: false });
+    if(ptState.xp >= 50){
+      badges.push({label:"50+ XP", highlight:false});
     }
-    if (badges.length === 0) {
-      badges.push({ label: "Сделайте первый урок и получите бейдж 🎖", highlight: true });
+    if(!badges.length){
+      badges.push({label:"Сделайте первый урок и получите бейдж 🎖", highlight:true});
     }
-
-    badges.forEach(b => {
+    badges.forEach(b=>{
       const span = document.createElement("span");
-      span.className = "badge" + (b.highlight ? " highlight" : "");
+      span.className = "px-2 py-1 rounded-full border text-[10px] " +
+        (b.highlight ? "border-yellow-400 bg-yellow-50 text-amber-700" : "border-gray-200 bg-gray-50 text-gray-600");
       span.textContent = b.label;
-      container.appendChild(span);
+      row.appendChild(span);
     });
   }
 
-  function showXpToast(amount) {
-    const el = els.xpToast;
-    el.textContent = "+" + amount + " XP — вы ближе к цели! 🎉";
-    el.style.display = "block";
-    setTimeout(() => { el.style.display = "none"; }, 2000);
+  function ptShowXpToast(amount){
+    const el = ptEls.toast;
+    el.textContent = "+"+amount+" XP — вы ближе к цели! 🎉";
+    el.classList.remove("hidden");
+    setTimeout(()=>el.classList.add("hidden"), 1800);
   }
 
-  /***********************
-   * Render functions
-   ***********************/
-  function renderSidebarLessons(activeLessonId) {
-    const container = els.lessonList;
-    container.innerHTML = "";
+  /********* Рендер списка уроков *********/
+  function ptRenderLessonList(activeId){
+    const box = ptEls.lessonList;
+    box.innerHTML = "";
 
-    englishIntroCourse.modules.forEach(module => {
-      const mt = document.createElement("div");
-      mt.className = "module-title";
-      mt.textContent = module.title;
-      container.appendChild(mt);
+    englishIntroCourse.modules.forEach(mod=>{
+      const header = document.createElement("p");
+      header.className = "text-[11px] uppercase tracking-wide text-[var(--ink-2)] mt-3 mb-1";
+      header.textContent = mod.title;
+      box.appendChild(header);
 
-      module.lessons.forEach(lesson => {
-        const item = document.createElement("div");
-        item.className = "lesson-item";
-        if (lesson.id === activeLessonId) {
-          item.classList.add("active");
-        }
-
-        const check = document.createElement("div");
-        check.className = "lesson-check";
-        if (state.completedLessons.includes(lesson.id)) {
-          check.classList.add("completed");
-          check.textContent = "✓";
-        }
-
-        const titleSpan = document.createElement("span");
-        titleSpan.textContent = lesson.title;
-
-        const meta = document.createElement("span");
-        meta.className = "lesson-meta";
-        meta.textContent = lesson.minutes ? lesson.minutes + " мин" : "";
-
-        item.appendChild(check);
-        item.appendChild(titleSpan);
-        item.appendChild(meta);
-
-        item.addEventListener("click", () => {
-          openLesson(lesson.id);
-        });
-
-        container.appendChild(item);
+      mod.lessons.forEach(lesson=>{
+        const isCompleted = ptState.completedLessons.includes(lesson.id);
+        const btn = document.createElement("button");
+        btn.className = "pt-lesson-item w-full flex items-center justify-between gap-2 px-3 py-2 rounded-2xl border text-left " +
+          (lesson.id === activeId ? "border-amber-400 bg-[#fff7ce]" : "border-gray-200 bg-white");
+        btn.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="inline-flex h-5 w-5 rounded-full text-xs items-center justify-center ${isCompleted ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-500"}">
+              ${isCompleted ? "✓" : (lesson.type==="intro" ? "i" : "•")}
+            </span>
+            <span class="text-xs line-clamp-1">${lesson.title}</span>
+          </div>
+          <span class="text-[10px] text-[var(--ink-2)]">${lesson.minutes || 10} мин</span>
+        `;
+        btn.addEventListener("click", ()=>ptOpenLesson(lesson.id));
+        box.appendChild(btn);
       });
     });
   }
 
-  function renderIntroScreen() {
-    els.contentMain.innerHTML = `
-      <div>
-        <div class="content-section-title mb-1">Как устроен курс</div>
-        <p class="mb-2 text-muted">
-          Курс состоит из модулей. Каждый модуль — это маленький «уровень» игры, 
-          а каждый урок — отдельный шаг, за который вы получаете XP и прогресс-бар сдвигается вперёд.
-        </p>
-        <div class="pill-row mb-2">
-          <span class="pill grammar">Грамматика без перегруза</span>
-          <span class="pill vocab">Живые словарики</span>
-          <span class="pill game">Мини-игры и тренажёры</span>
-          <span class="pill good">Маленькие победы каждый день</span>
-        </div>
+  /********* Рендер урока *********/
+  function ptOpenLesson(id){
+    const lesson = ptFindLesson(id);
+    if(!lesson) return;
 
-        <div class="grammar-block">
-          <h3>Как работать с материалом</h3>
-          <ul>
-            <li><b>1 урок = 10–20 минут.</b> Столько, сколько легко встроить в день.</li>
-            <li><b>Сначала прочитайте краткое объяснение</b>, затем сделайте упражнения.</li>
-            <li><b>Ошибки — окей.</b> Это не экзамен, а тренажёр. Система показывает, что и почему верно.</li>
-          </ul>
-        </div>
+    // показать секцию тренажёра, если она была спрятана
+    ptEls.trainerSection.classList.remove("hidden");
 
-        <div class="vocab-block">
-          <h3>Что вы освоите</h3>
-          <ul>
-            <li>Приветствия, представления, small talk.</li>
-            <li>Глагол <code>to be</code>, Present Simple, немного прошедшего и будущего.</li>
-            <li>Базовые фразы для путешествий, переписки и общения.</li>
-          </ul>
-        </div>
+    ptState.lastLessonId = id;
+    ptSaveState();
+    ptRenderLessonList(id);
 
-        <div class="tips-block">
-          <h3>Как получать больше эндорфинов от учёбы</h3>
-          <ul>
-            <li>Делайте <b>минимум один урок в день</b> — так растёт серия дней и мотивация.</li>
-            <li>Отмечайте каждую маленькую победу: «я сделал», а не «я сделал мало».</li>
-            <li>Возвращайтесь к пройденным урокам, если хочется лёгкой победы и повторения.</li>
-          </ul>
-        </div>
-      </div>
-    `;
+    const panel = ptEls.lessonPanel;
+    // шапка урока
+    const pills = [];
+    (lesson.grammarFocus || []).forEach(g=>{
+      pills.push(`<span class="px-2 py-1 rounded-full border border-blue-100 bg-blue-50 text-[10px] text-blue-800">${g}</span>`);
+    });
+    (lesson.vocabFocus || []).forEach(v=>{
+      pills.push(`<span class="px-2 py-1 rounded-full border border-amber-100 bg-amber-50 text-[10px] text-amber-800">${v}</span>`);
+    });
 
-    els.contentSidebar.innerHTML = `
-      <div class="content-section-title mb-1">С чего начать?</div>
-      <p class="text-muted mb-2">
-        Нажмите «Начать с Урока 1», чтобы перейти сразу к практическим фразам. 
-        Или откройте урок «Добро пожаловать», если хотите прочитать методику подробно.
-      </p>
-      <div class="pill-row">
-        <span class="pill">1–2 урока в день</span>
-        <span class="pill">Гибкий темп</span>
-        <span class="pill">Сохранение прогресса</span>
-      </div>
-    `;
-  }
-
-  function openLesson(lessonId) {
-    const lesson = findLessonById(lessonId);
-    if (!lesson) return;
-
-    state.lastLessonId = lessonId;
-    saveState();
-    renderSidebarLessons(lessonId);
-
-    // MAIN CONTENT
-    const main = els.contentMain;
     let goalsHtml = "";
-    if (lesson.goals && lesson.goals.length) {
+    if(lesson.goals && lesson.goals.length){
       goalsHtml = `
-        <div class="tips-block mb-2">
-          <h3>Цели урока</h3>
-          <ul>
-            ${lesson.goals.map(g => `<li>${g}</li>`).join("")}
+        <div class="mt-3 mb-3">
+          <p class="text-[11px] font-semibold text-[var(--ink-2)] mb-1">Цели урока</p>
+          <ul class="list-disc list-inside text-xs text-[var(--ink-2)] space-y-1">
+            ${lesson.goals.map(g=>`<li>${g}</li>`).join("")}
           </ul>
         </div>
       `;
     }
 
     let vocabHtml = "";
-    if (lesson.vocabList && lesson.vocabList.length) {
+    if(lesson.vocabList && lesson.vocabList.length){
       vocabHtml = `
-        <div class="vocab-block">
-          <h3>Словарик урока</h3>
-          <ul>
-            ${lesson.vocabList.map(w => `<li><b>${w.en}</b> — ${w.ru}</li>`).join("")}
+        <div class="mt-3 mb-3">
+          <p class="text-[11px] font-semibold text-[var(--ink-2)] mb-1">Словарик урока</p>
+          <ul class="text-xs text-[var(--ink-2)] space-y-1">
+            ${lesson.vocabList.map(w=>`<li><b>${w.en}</b> — ${w.ru}</li>`).join("")}
           </ul>
         </div>
       `;
     }
 
-    let introTextHtml = "";
-    if (lesson.contentIntro && lesson.contentIntro.length) {
-      introTextHtml = `
-        <div class="grammar-block mb-2">
-          ${lesson.contentIntro.map(p => `<p class="mb-1">${p}</p>`).join("")}
+    let introHtml = "";
+    if(lesson.contentIntro && lesson.contentIntro.length){
+      introHtml = `
+        <div class="mt-2 space-y-1 text-xs text-[var(--ink-2)]">
+          ${lesson.contentIntro.map(p=>`<p>${p}</p>`).join("")}
         </div>
       `;
     }
 
-    const headPills = `
-      <div class="pill-row mb-2">
-        ${(lesson.grammarFocus || []).map(g => `<span class="pill grammar">${g}</span>`).join("")}
-        ${(lesson.vocabFocus || []).map(v => `<span class="pill vocab">${v}</span>`).join("")}
-      </div>
-    `;
-
-    main.innerHTML = `
+    panel.innerHTML = `
       <div>
-        <div class="content-section-title mb-1">${lesson.title}</div>
-        <p class="text-muted mb-2">
-          Примерное время: ${lesson.minutes || 10} минут. 
-          Сконцентрируйтесь на понимании и игре, а не на идеальности.
-        </p>
-        ${headPills}
-        ${introTextHtml}
-        ${vocabHtml}
-        <div id="exercise-container"></div>
-      </div>
-    `;
-
-    // SIDEBAR: grammar / tips
-    const sidebar = els.contentSidebar;
-    let grammarHtml = "";
-    if (lesson.grammarNotes && lesson.grammarNotes.length) {
-      grammarHtml = `
-        <div class="grammar-block">
-          <h3>Грамматика коротко</h3>
-          <ul>
-            ${lesson.grammarNotes.map(n => `<li>${n}</li>`).join("")}
-          </ul>
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <h3 class="text-sm sm:text-base font-bold">${lesson.title}</h3>
+          <span class="text-[10px] text-[var(--ink-2)]">${lesson.minutes || 10} мин</span>
         </div>
-      `;
-    }
-
-    sidebar.innerHTML = `
-      <div class="content-section-title mb-1">Подсказки к уроку</div>
-      ${grammarHtml || "<p class='text-muted'>Для этого урока пока нет отдельного блока грамматики. Сосредоточьтесь на упражнениях.</p>"}
-      <div class="tips-block">
-        <h3>Совет</h3>
-        <p class="text-muted mb-1">
-          Если чувствуете, что устали, сделайте паузу после одного упражнения и вернитесь позже.
-        </p>
-        <p class="text-muted">
-          Главное — сохранить ощущение, что уроки приносят удовольствие, а не выжимают силы.
-        </p>
+        <div class="flex flex-wrap gap-2">
+          ${pills.join("")}
+        </div>
+        ${introHtml}
+        ${goalsHtml}
+        ${vocabHtml}
+        <div id="pt-exercise-box" class="mt-3 space-y-3"></div>
       </div>
     `;
 
-    renderExercises(lesson);
+    ptRenderExercises(lesson);
   }
 
-  function renderExercises(lesson) {
-    const container = document.getElementById("exercise-container");
-    container.innerHTML = "";
+  function ptRenderExercises(lesson){
+    const box = document.getElementById("pt-exercise-box");
+    const list = lesson.exercises || [];
+    box.innerHTML = "";
 
-    const exercises = lesson.exercises || [];
-
-    if (!exercises.length) {
-      container.innerHTML = `
-        <div class="exercise">
-          <div class="exercise-title mb-1">Интерактивный тренажёр</div>
-          <p class="exercise-question text-muted">
-            Для этого урока тренажёры ещё не настроены. 
-            Вы можете добавить сюда свои задания в коде (массив <code>exercises</code>).
-          </p>
+    if(!list.length){
+      box.innerHTML = `
+        <div class="border border-dashed border-gray-300 rounded-2xl px-3 py-4 text-xs text-[var(--ink-2)]">
+          Для этого урока тренажёры ещё не настроены. Вы можете добавить свои задания в описании курса (массив <code>exercises</code>).
         </div>
       `;
       return;
     }
 
-    let completedCount = 0;
-    const total = exercises.length;
+    let completed = 0;
+    const total = list.length;
 
-    exercises.forEach(ex => {
-      const exEl = document.createElement("div");
-      exEl.className = "exercise";
+    list.forEach(ex=>{
+      const card = document.createElement("div");
+      card.className = "border border-gray-200 rounded-2xl px-3 py-3 text-xs space-y-2";
 
-      const title = document.createElement("div");
-      title.className = "exercise-title";
-      title.textContent = "Задание";
-
-      const question = document.createElement("div");
-      question.className = "exercise-question";
-      question.textContent = ex.question;
+      const q = document.createElement("p");
+      q.className = "font-semibold";
+      q.textContent = ex.question;
+      card.appendChild(q);
 
       const footer = document.createElement("div");
-      footer.className = "exercise-footer";
+      footer.className = "flex items-center justify-between gap-2 mt-1";
 
       const status = document.createElement("span");
-      status.className = "exercise-status";
+      status.className = "text-[10px] text-[var(--ink-2)]";
       status.textContent = "Ответьте на задание";
 
-      const btnCheck = document.createElement("button");
-      btnCheck.className = "btn btn-ghost";
-      btnCheck.style.padding = "4px 10px";
-      btnCheck.style.fontSize = "12px";
-      btnCheck.textContent = "Проверить";
+      const btn = document.createElement("button");
+      btn.className = "px-3 py-1 rounded-full border border-gray-300 bg-[#fffef7] text-[10px] font-semibold";
+      btn.textContent = "Проверить";
 
       footer.appendChild(status);
-      footer.appendChild(btnCheck);
+      footer.appendChild(btn);
 
-      exEl.appendChild(title);
-      exEl.appendChild(question);
-
-      // Different kinds
-      if (ex.kind === "mcq") {
-        const optionsWrap = document.createElement("div");
-        optionsWrap.className = "exercise-options";
+      if(ex.kind === "mcq"){
+        const optWrap = document.createElement("div");
+        optWrap.className = "space-y-1";
         let selectedIndex = null;
 
-        ex.options.forEach((opt, idx) => {
-          const btn = document.createElement("button");
-          btn.className = "exercise-option";
-          btn.textContent = opt;
-          btn.addEventListener("click", () => {
+        ex.options.forEach((opt,idx)=>{
+          const ob = document.createElement("button");
+          ob.className = "w-full text-left px-3 py-1.5 rounded-xl border border-gray-200 bg-white";
+          ob.textContent = opt;
+          ob.addEventListener("click", ()=>{
             selectedIndex = idx;
-            Array.from(optionsWrap.children).forEach(ch => ch.classList.remove("selected"));
-            btn.classList.add("selected");
+            Array.from(optWrap.children).forEach(ch=>ch.classList.remove("border-amber-300","bg-[#fff7ce]"));
+            ob.classList.add("border-amber-300","bg-[#fff7ce]");
           });
-          optionsWrap.appendChild(btn);
+          optWrap.appendChild(ob);
         });
 
-        exEl.appendChild(optionsWrap);
+        card.appendChild(optWrap);
 
-        btnCheck.addEventListener("click", () => {
-          if (selectedIndex === null) {
+        btn.addEventListener("click", ()=>{
+          if(selectedIndex === null){
             status.textContent = "Сначала выберите вариант.";
-            status.className = "exercise-status err";
+            status.classList.add("text-amber-700");
             return;
           }
-          if (selectedIndex === ex.correctIndex) {
+          if(selectedIndex === ex.correctIndex){
             status.textContent = "Верно! " + (ex.explanation || "");
-            status.className = "exercise-status ok";
-            btnCheck.disabled = true;
-            completedCount++;
-            if (completedCount === total) {
-              // все задания выполнены
-              markLessonCompleted(lesson.id);
+            status.classList.remove("text-amber-700");
+            status.classList.add("text-emerald-700");
+            btn.disabled = true;
+            completed++;
+            if(completed === total){
+              ptMarkLessonCompleted(lesson.id);
             }
-          } else {
-            status.textContent = "Неверно. Попробуйте ещё. " + (ex.explanation || "");
-            status.className = "exercise-status err";
+          }else{
+            status.textContent = "Пока нет. Попробуйте ещё. " + (ex.explanation || "");
+            status.classList.remove("text-emerald-700");
+            status.classList.add("text-amber-700");
           }
         });
 
-      } else if (ex.kind === "input") {
+      }else if(ex.kind === "input"){
         const input = document.createElement("input");
-        input.className = "input-small";
         input.type = "text";
-        if (ex.placeholder) input.placeholder = ex.placeholder;
+        input.className = "w-full px-3 py-1.5 rounded-xl border border-gray-200 text-xs";
+        if(ex.placeholder) input.placeholder = ex.placeholder;
+        card.appendChild(input);
 
-        exEl.appendChild(input);
-
-        btnCheck.addEventListener("click", () => {
-          const value = (input.value || "").trim().toLowerCase();
-          if (!value) {
+        btn.addEventListener("click", ()=>{
+          const val = (input.value || "").trim().toLowerCase();
+          if(!val){
             status.textContent = "Введите ответ.";
-            status.className = "exercise-status err";
+            status.classList.add("text-amber-700");
             return;
           }
-          const correct = (ex.correctAnswers || []).some(ans =>
-            value === ans.toLowerCase()
-          );
-          if (correct) {
+          const ok = (ex.correctAnswers || []).some(ans=>val === ans.toLowerCase());
+          if(ok){
             status.textContent = "Отлично! " + (ex.explanation || "");
-            status.className = "exercise-status ok";
-            btnCheck.disabled = true;
+            status.classList.remove("text-amber-700");
+            status.classList.add("text-emerald-700");
+            btn.disabled = true;
             input.disabled = true;
-            completedCount++;
-            if (completedCount === total) {
-              markLessonCompleted(lesson.id);
+            completed++;
+            if(completed === total){
+              ptMarkLessonCompleted(lesson.id);
             }
-          } else {
-            status.textContent = "Пока нет. Подумайте ещё. " + (ex.explanation || "");
-            status.className = "exercise-status err";
+          }else{
+            status.textContent = "Пока нет. Попробуйте ещё. " + (ex.explanation || "");
+            status.classList.remove("text-emerald-700");
+            status.classList.add("text-amber-700");
           }
         });
       }
 
-      exEl.appendChild(footer);
-      container.appendChild(exEl);
+      card.appendChild(footer);
+      box.appendChild(card);
     });
   }
 
-  /***********************
-   * Init
-   ***********************/
-  function init() {
-    loadState();
-    updateStats();
-    updateProgress();
-    updateStreakCard();
-    renderSidebarLessons(state.lastLessonId);
-    renderIntroScreen();
+  /********* Инициализация *********/
+  document.addEventListener("DOMContentLoaded", ()=>{
+    ptLoadState();
+    ptUpdateStats();
+    ptUpdateProgress();
+    ptUpdateBadges();
+    ptRenderLessonList(ptState.lastLessonId);
 
-    els.btnStart.addEventListener("click", () => {
-      const firstLesson = firstRealLessonId();
-      if (firstLesson) openLesson(firstLesson);
-    });
+    const startBtn = document.getElementById("btn-start-course");
+    const contBtn = document.getElementById("btn-continue-course");
+    const openBtn = document.getElementById("btn-open-trainer");
 
-    els.btnContinue.addEventListener("click", () => {
-      if (state.lastLessonId && findLessonById(state.lastLessonId)) {
-        openLesson(state.lastLessonId);
-      } else {
-        const firstLesson = firstRealLessonId();
-        if (firstLesson) openLesson(firstLesson);
+    function openFirst(){
+      const id = ptFirstRealLessonId();
+      if(id) ptOpenLesson(id);
+    }
+
+    function openLastOrFirst(){
+      if(ptState.lastLessonId && ptFindLesson(ptState.lastLessonId)){
+        ptOpenLesson(ptState.lastLessonId);
+      }else{
+        openFirst();
       }
-    });
-  }
+    }
 
-  document.addEventListener("DOMContentLoaded", init);
+    if(startBtn) startBtn.addEventListener("click", openFirst);
+    if(contBtn) contBtn.addEventListener("click", openLastOrFirst);
+    if(openBtn) openBtn.addEventListener("click", openLastOrFirst);
+  });
 </script>
+
 </body>
 </html>
