@@ -33,9 +33,10 @@
       backdrop-filter:blur(8px);
     }
     .mode-btn-active{
-      background:#111827;
-      color:#f9fafb;
+      background:#111827 !important;
+      color:#f9fafb !important;
       box-shadow:0 10px 30px rgba(0,0,0,.18);
+      border-color:rgba(0,0,0,.4);
     }
     .pt-progress-outer{
       width:100%;
@@ -202,7 +203,7 @@
 
         <div class="w-full">
           <p class="text-[11px] text-[var(--ink-2)] mb-1">Бейджи</p>
-          <div id="badge-row" class="flex flex-wrap gap-2 text-[10px]"></div>
+          <div id="badge-row" class="flex flex-wrap gap-3 text-[10px]"></div>
         </div>
       </aside>
     </div>
@@ -230,22 +231,12 @@
 
         <!-- Панели -->
         <div id="tab-lessons" class="tab-panel">
-          <div class="grid md:grid-cols-[2fr,1.1fr] gap-6 items-start">
-            <div>
-              <h2 class="text-base sm:text-lg font-extrabold mb-2">Уроки курса</h2>
-              <p class="text-xs sm:text-sm text-[var(--ink-2)] mb-4">
-                Каждый урок — отдельная страница с текстом, картинками, видео и заданиями. Продолжительность 10–15 минут.
-              </p>
-              <div id="lessons-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-[var(--ink-2)]"></div>
-            </div>
-            <div class="bg-[#fffef7] border border-gray-200 rounded-2xl p-4 text-xs sm:text-sm text-[var(--ink-2)]">
-              <p class="font-semibold mb-2">Как устроена структура</p>
-              <ul class="list-disc list-inside space-y-1">
-                <li>Мы разрезаем длинные уроки на короткие логичные блоки.</li>
-                <li>Каждый блок завершает маленькое упражнение и «галочка» в прогрессе.</li>
-                <li>Мультимедиа остаётся: текст, картинки, видео, таблицы и задания.</li>
-              </ul>
-            </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-extrabold mb-2">Уроки курса</h2>
+            <p class="text-xs sm:text-sm text-[var(--ink-2)] mb-4">
+              Каждый урок — отдельная страница с текстом, картинками, видео и заданиями. Продолжительность 10–15 минут.
+            </p>
+            <div id="lessons-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-[var(--ink-2)]"></div>
           </div>
         </div>
 
@@ -254,7 +245,7 @@
             <div>
               <h2 class="text-base sm:text-lg font-extrabold mb-2">Словарик курса</h2>
               <p class="text-xs sm:text-sm text-[var(--ink-2)] mb-3">
-                В словарик попадают слова из уроков (мы добавляем их из кода) и те, что вы добавите сами. Всё сохраняется в этом браузере.
+                В словарик попадают слова из уроков и те, что вы добавите сами. Если вы авторизованы, слова сохраняются в вашем профиле.
               </p>
               <div id="vocab-list" class="max-h-80 overflow-auto divide-y divide-gray-100 text-xs sm:text-sm"></div>
             </div>
@@ -336,7 +327,9 @@
                 ✨ Оформить PRO-доступ
               </button>
               <p class="mt-1 text-[10px] text-[var(--ink-2)]">
-                Оплата картами зарубежных банков через Stripe. Для входа в PRO потребуется ваш аккаунт PolyTalky.
+                Чтобы оформить PRO, сначала войдите в ваш
+                <a href="/student/" class="underline">личный кабинет</a>, а затем вернитесь на эту страницу.
+                Оплата — картами зарубежных банков через Stripe.
               </p>
             </div>
           </div>
@@ -408,9 +401,12 @@
   modeButtons.forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const tab = btn.dataset.tab;
-      modeButtons.forEach(b=>b.classList.remove("mode-btn-active"));
+      modeButtons.forEach(b=>{
+        b.classList.remove("mode-btn-active");
+      });
       btn.classList.add("mode-btn-active");
       Object.entries(panels).forEach(([name,el])=>{
+        if (!el) return;
         el.classList.toggle("hidden", name!==tab);
       });
     });
@@ -423,6 +419,9 @@
   const progressText = document.getElementById("progress-text");
   const progressBar = document.getElementById("progress-bar");
   const badgeRow = document.getElementById("badge-row");
+
+  // Текущий словарик (можно подменять данными из Firebase)
+  let currentVocab = [];
 
   function updateStats(){
     const state = EnglishIntro.getState();
@@ -437,20 +436,43 @@
     progressText.textContent = `${done} / ${total}`;
     progressBar.style.width = percent + "%";
 
+    // Бейджи с визуальными значками
     badgeRow.innerHTML = "";
-    const badges = [];
-    if(done >= 1) badges.push({label:"Первый шаг", type:"good"});
-    if(done >= 3) badges.push({label:"3+ урока", type:"good"});
-    if(state.streakDays >= 3) badges.push({label:"Серия 3+ дня", type:"good"});
-    if(state.xp >= 50) badges.push({label:"50+ XP", type:"neutral"});
-    if(!badges.length) badges.push({label:"Сделайте первый урок 🎖", type:"good"});
+    const earned = [];
 
-    badges.forEach(b=>{
-      const span = document.createElement("span");
-      span.className = "px-2 py-1 rounded-full border text-[10px] " +
-        (b.type==="good" ? "border-yellow-400 bg-yellow-50 text-amber-700" : "border-gray-200 bg-gray-50 text-gray-600");
-      span.textContent = b.label;
-      badgeRow.appendChild(span);
+    if (done >= 1) {
+      earned.push({ label:"Первый урок", emoji:"🌟" });
+    }
+    if (done >= 3) {
+      earned.push({ label:"3+ урока", emoji:"📚" });
+    }
+    if (state.streakDays >= 3) {
+      earned.push({ label:"Серия 3+ дня", emoji:"🔥" });
+    }
+    if (state.xp >= 50) {
+      earned.push({ label:"50+ XP", emoji:"⚡" });
+    }
+
+    if (!earned.length) {
+      const p = document.createElement("p");
+      p.className = "text-[10px] text-[var(--ink-2)]";
+      p.textContent = "Пройдите первый урок, чтобы получить свой первый бейдж 🎖";
+      badgeRow.appendChild(p);
+      return;
+    }
+
+    earned.forEach(b=>{
+      const wrap = document.createElement("div");
+      wrap.className = "flex flex-col items-center text-[10px]";
+      const circle = document.createElement("div");
+      circle.className = "h-10 w-10 rounded-full bg-[var(--brand-yellow)] flex items-center justify-center text-lg shadow-soft";
+      circle.textContent = b.emoji;
+      const caption = document.createElement("span");
+      caption.className = "mt-1 text-[10px] text-[var(--ink-2)] text-center max-w-[72px]";
+      caption.textContent = b.label;
+      wrap.appendChild(circle);
+      wrap.appendChild(caption);
+      badgeRow.appendChild(wrap);
     });
   }
 
@@ -482,7 +504,7 @@
 
   // Словарик
   function renderVocab(){
-    const list = EnglishIntro.getVocab();
+    const list = currentVocab;
     const box = document.getElementById("vocab-list");
     box.innerHTML = "";
     if(!list.length){
@@ -503,13 +525,44 @@
   }
 
   const vocabForm = document.getElementById("vocab-form");
-  vocabForm.addEventListener("submit",(e)=>{
+  vocabForm.addEventListener("submit", async (e)=>{
     e.preventDefault();
     const form = e.target;
     const word = form.word.value.trim();
     const translation = form.translation.value.trim();
     if(!word || !translation) return;
-    EnglishIntro.addVocab({word, translation, lessonId:"user"});
+
+    // Пытаемся сохранить в Firestore, если он есть
+    let savedToFirebase = false;
+    try{
+      if (window.firebase && firebase.firestore && firebase.auth) {
+        const user = firebase.auth().currentUser;
+        if (user) {
+          const db = firebase.firestore();
+          const docRef = await db
+            .collection("users")
+            .doc(user.uid)
+            .collection("vocabulary")
+            .add({
+              word,
+              translation,
+              lessonId:"user",
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          currentVocab.push({ id: docRef.id, word, translation, lessonId:"user" });
+          savedToFirebase = true;
+        }
+      }
+    } catch(err){
+      console.error("Не удалось сохранить слово в Firestore:", err);
+    }
+
+    if(!savedToFirebase){
+      // Фоллбэк на локальный стейт
+      EnglishIntro.addVocab({word, translation, lessonId:"user"});
+      currentVocab = EnglishIntro.getVocab();
+    }
+
     form.reset();
     renderVocab();
   });
@@ -517,7 +570,7 @@
   // Мини-квиз по словарю
   const quizBox = document.getElementById("quiz-box");
   function makeQuiz(){
-    const words = EnglishIntro.getVocab();
+    const words = currentVocab;
     if(words.length < 2){
       quizBox.innerHTML = `<p>В словаре пока мало слов. Добавьте ещё пару, и тренажёр заработает.</p>`;
       return;
@@ -585,16 +638,14 @@
     }
   });
 
-  // Кнопка "Оформить PRO"
+  // Кнопка "Оформить PRO" (через localStorage pt_uid)
   const proBtn = document.getElementById("btn-pro");
   if (proBtn) {
     proBtn.addEventListener("click", async () => {
       try {
-        // предполагаем, что Firebase Auth уже инициализирован на сайте
-        const user = (window.PolyTalkyAuth && window.PolyTalkyAuth.currentUser) || null;
-
-        if (!user || !user.uid) {
-          // если не авторизован — отправляем в личный кабинет / логин
+        const uid = localStorage.getItem("pt_uid");
+        if (!uid) {
+          alert("Чтобы оформить PRO, сначала войдите в ваш личный кабинет, а затем вернитесь на эту страницу.");
           window.location.href = "/student/";
           return;
         }
@@ -602,7 +653,7 @@
         const resp = await fetch("/api/create-english-intro-pro-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: user.uid })
+          body: JSON.stringify({ userId: uid })
         });
 
         if (!resp.ok) {
@@ -621,7 +672,6 @@
           return;
         }
 
-        // TODO: сюда нужно подставить твой реальный publishable key Stripe
         const STRIPE_PK = "pk_live_51HqHTmBDwT3uzr4q884SspcgqeyUSp4esf81Z6tHnTkf66WJG1Z6b90PDtyXSdiEommSFnBpHEHswX2ks5Geq9G0004uLMLbKu";
         const stripe = Stripe(STRIPE_PK);
         const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
@@ -637,12 +687,45 @@
     });
   }
 
+  // Загрузка словаря: сначала пробуем Firebase, иначе — локальный стейт
+  async function loadVocabFromFirebaseIfPossible() {
+    try {
+      if (window.firebase && firebase.firestore && firebase.auth) {
+        await new Promise(resolve => {
+          const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+            unsubscribe();
+            if (!user) {
+              currentVocab = EnglishIntro.getVocab();
+              return resolve();
+            }
+            const db = firebase.firestore();
+            const snap = await db
+              .collection("users")
+              .doc(user.uid)
+              .collection("vocabulary")
+              .get();
+            currentVocab = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            resolve();
+          });
+        });
+      } else {
+        currentVocab = EnglishIntro.getVocab();
+      }
+    } catch (err) {
+      console.error("Ошибка загрузки словаря из Firestore, используем локальные данные:", err);
+      currentVocab = EnglishIntro.getVocab();
+    }
+  }
+
   // init
-  updateStats();
-  renderLessons();
-  renderVocab();
-  makeQuiz();
-  renderPracticeIdea();
+  (async function initPage(){
+    await loadVocabFromFirebaseIfPossible();
+    updateStats();
+    renderLessons();
+    renderVocab();
+    makeQuiz();
+    renderPracticeIdea();
+  })();
 </script>
 </body>
 </html>
