@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>PolyTalky PRO — проверка заданий и поддержка куратора</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="PolyTalky PRO — месячная подписка с проверкой заданий куратором, приоритетными ответами и дополнительной поддержкой по всем курсам."
+  >
+  <base href="/">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+
+  <style>
+    :root{
+      --brand-yellow:#FFDE59;
+      --brand-yellow-deep:#FFBA08;
+      --brand-orange:#E85D04;
+      --ink:#0F172A;
+      --ink-2:#334155;
+      --bg:#FFF8D6;
+    }
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:radial-gradient(circle at top,#fffef2 0,#FFF8D6 40%,#FFEFC0 100%);
+      color:var(--ink);
+    }
+    .shadow-soft{box-shadow:0 14px 40px rgba(0,0,0,.12)}
+    .pill{
+      border-radius:999px;
+      padding:.35rem .9rem;
+      font-size:.7rem;
+      border:1px solid rgba(0,0,0,.06);
+      background:#ffffffdd;
+      backdrop-filter:blur(8px);
+    }
+    .glass-card{
+      background:#fffef7ee;
+      backdrop-filter:blur(14px);
+      border-radius:1.75rem;
+      border:1px solid rgba(15,23,42,.08);
+    }
+    .faq-item button{
+      transition:background .2s ease;
+    }
+    .faq-item button[aria-expanded="true"]{
+      background:#fffbeb;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER (как на главной / english-intro) -->
+<header class="sticky top-0 z-50 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+    <a href="./" class="flex items-center gap-3 font-semibold text-lg">
+      <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl">
+      <span>PolyTalky</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
+      <a href="/courses/" class="hover:opacity-80">Курсы</a>
+      <a href="/shop/" class="hover:opacity-80">Магазин</a>
+      <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
+      <a href="/courses/english-intro/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">
+        Вернуться к курсу
+      </a>
+    </nav>
+
+    <button id="burger" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft" aria-label="Меню">
+      ☰
+    </button>
+  </div>
+
+  <div id="mnav" class="md:hidden hidden border-t border-black/10 bg-[#fffef7]">
+    <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-[var(--ink-2)]">
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/courses/">Курсы</a>
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/shop/">Магазин</a>
+      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/student/">Личный кабинет</a>
+      <a class="px-3 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold shadow-soft" href="/courses/english-intro/">
+        Вернуться к курсу
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="pb-16">
+  <!-- HERO -->
+  <section class="pt-10 sm:pt-14 pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1.6fr,1.1fr] gap-8 items-center">
+      <div class="space-y-4">
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="pill inline-flex items-center gap-2">
+            <span class="text-xs">PolyTalky PRO</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#ecfccb] text-[#3f6212] border border-[#bbf7d0]">
+              Для всех курсов
+            </span>
+          </span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-[2.5rem] font-extrabold leading-tight tracking-tight">
+          Подписка <span class="text-[var(--brand-orange)]">PRO</span>: когда у вас есть не только курс, но и человек рядом 🧑‍🏫
+        </h1>
+        <p class="text-sm sm:text-base text-[var(--ink-2)] max-w-2xl">
+          Базовая версия PolyTalky — бесплатна: вы проходите уроки, делаете упражнения и ведёте словарик.
+          <br class="hidden sm:block">
+          <b>PRO</b> добавляет живую обратную связь: куратор проверяет ваши задания, даёт комментарии и помогает
+          двигаться вперёд, когда мотивация падает.
+        </p>
+
+        <ul class="text-xs sm:text-sm text-[var(--ink-2)] space-y-1">
+          <li>· Проверка письменных и голосовых заданий из уроков.</li>
+          <li>· Приоритетный ответ на вопросы внутри курса.</li>
+          <li>· Небольшие рекомендации по тому, на что обратить внимание в следующем уроке.</li>
+        </ul>
+
+        <div class="flex flex-wrap gap-3 pt-2">
+          <button
+            id="btn-pro-main"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[var(--brand-orange)] hover:bg-[var(--brand-yellow-deep)] text-sm font-semibold text-white shadow-soft"
+          >
+            ✨ Оформить PRO-доступ
+          </button>
+          <a
+            href="#pro-details"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-black/10 bg-white/90 hover:bg-[#fff3c6] text-sm text-[var(--ink-2)] shadow-soft"
+          >
+            Подробнее о преимуществах
+          </a>
+        </div>
+
+        <p class="text-[11px] text-[var(--ink-2)] max-w-md">
+          Оплата подписки PRO сейчас доступна <b>только картами зарубежных банков через Stripe</b>.
+          Для карт РФ мы отдельно добавим оплату через Яндекс, и это будет другая кнопка.
+        </p>
+      </div>
+
+      <aside class="glass-card shadow-soft p-6 space-y-4">
+        <div class="flex items-baseline justify-between gap-4">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-[var(--ink-2)] mb-1">Тариф</p>
+            <p class="text-2xl font-extrabold">PRO · Месяц</p>
+            <p class="text-xs text-[var(--ink-2)] mt-1">
+              Месячная подписка на проверку заданий и приоритетный ответ на вопросы по всем курсам.
+            </p>
+          </div>
+        </div>
+
+        <div class="border border-dashed border-amber-300 rounded-2xl px-4 py-4 bg-[#fffbeb]">
+          <p class="text-sm font-semibold mb-1">Что входит:</p>
+          <ul class="text-xs text-[var(--ink-2)] space-y-1">
+            <li>· Проверка письменных заданий из уроков (в пределах разумного объёма).</li>
+            <li>· Комментарии к вашим голосовым заданиям и произношению.</li>
+            <li>· Приоритетный ответ на вопросы в блоке Q&A внутри уроков.</li>
+          </ul>
+        </div>
+
+        <div class="flex items-end justify-between gap-3">
+          <div>
+            <p class="text-xs text-[var(--ink-2)] mb-0.5">Стоимость</p>
+            <p class="text-2xl font-extrabold">
+              5&nbsp;€ <span class="align-middle text-xs text-[var(--ink-2)]">/ месяц*</span>
+            </p>
+            <p class="text-[10px] text-[var(--ink-2)] mt-1">
+              *Пример. Ты можешь изменить цену в backend (`server.js`) в параметре <code>unit_amount</code>.
+            </p>
+          </div>
+        </div>
+
+        <button
+          id="btn-pro-side"
+          class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-xs sm:text-sm font-semibold text-[#1a1a1a] shadow-soft"
+        >
+          Оформить PRO сейчас
+        </button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Блок преимуществ -->
+  <section id="pro-details" class="pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="glass-card shadow-soft px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <h2 class="text-xl sm:text-2xl font-extrabold mb-2">
+          Что даёт PRO по сравнению с базовым доступом?
+        </h2>
+        <p class="text-sm text-[var(--ink-2)] mb-5 max-w-2xl">
+          Базовый уровень — это доступ к урокам, словарю, тренажёрам и практике.
+          PRO добавляет к этому человека, который смотрит на ваши задания и помогает делать английский живым, а не только «по правилам».
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-4 text-sm text-[var(--ink-2)]">
+          <div class="border border-gray-200 rounded-2xl bg-white px-4 py-4">
+            <p class="text-xs uppercase tracking-wide text-amber-700 mb-1">1 · Проверка заданий</p>
+            <p class="font-semibold mb-1">Живой разбор вместо галочки «выполнено»</p>
+            <p class="text-xs">
+              Вы отправляете письменные и голосовые задания, а куратор:
+              выделяет удачные формулировки, мягко исправляет ошибки и предлагает более естественные варианты.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-2xl bg-white px-4 py-4">
+            <p class="text-xs uppercase tracking-wide text-amber-700 mb-1">2 · Приоритетные ответы</p>
+            <p class="font-semibold mb-1">Ваши вопросы не теряются</p>
+            <p class="text-xs">
+              В блоке Q&A у PRO-пользователей приоритет: мы стараемся отвечать в первую очередь на ваши запросы,
+              чтобы вы не зависали на непонятной теме.
+            </p>
+          </div>
+
+          <div class="border border-gray-200 rounded-2xl bg-white px-4 py-4">
+            <p class="text-xs uppercase tracking-wide text-amber-700 mb-1">3 · Лёгкий контроль прогресса</p>
+            <p class="font-semibold mb-1">Мини-обратная связь по движению</p>
+            <p class="text-xs">
+              По ходу прохождения курса вы можете уточнять, что делать дальше:
+              добить произношение, расширить словарный запас или перейти к более сложным текстам.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 grid md:grid-cols-[1.2fr,1fr] gap-5 items-start text-xs sm:text-sm text-[var(--ink-2)]">
+          <div class="border border-dashed border-amber-300 rounded-2xl px-4 py-4 bg-[#fffbeb]">
+            <p class="font-semibold mb-2">Как это работает внутри уроков?</p>
+            <ul class="list-disc list-inside space-y-1">
+              <li>Вы выполняете задание (письменное или голосовое) и отмечаете его как отправленное.</li>
+              <li>Если у вас есть PRO, система сохраняет задание в отдельную коллекцию для куратора.</li>
+              <li>Куратор просматривает ответы и оставляет комментарии (в удобном формате — текстом или аудио).</li>
+              <li>Вы получаете не только «правильно/неправильно», но и подсказки, как сказать это естественнее.</li>
+            </ul>
+          </div>
+          <div class="border border-gray-200 rounded-2xl px-4 py-4 bg-white">
+            <p class="font-semibold mb-1">Базовый доступ остаётся бесплатным</p>
+            <p>
+              Даже без PRO вы можете:
+              проходить уроки, смотреть видео, читать объяснения, выполнять упражнения, пополнять словарик и тренироваться.
+            </p>
+            <p class="mt-2 text-[11px]">
+              PRO — это опция для тех, кто хочет поддержку, обратную связь и ощущение, что вы не «один на один» с курсом.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="pb-4">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="glass-card shadow-soft px-4 sm:px-6 lg:px-8 py-6 sm:py-7">
+        <h2 class="text-lg sm:text-xl font-extrabold mb-2">Частые вопросы про PRO</h2>
+        <div class="space-y-2 text-sm text-[var(--ink-2)]">
+          <div class="faq-item border border-gray-200 rounded-2xl bg-white overflow-hidden">
+            <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
+              <span>PRO действует только на курс English Intro или на все курсы?</span>
+              <span class="ml-2 text-lg leading-none">+</span>
+            </button>
+            <div class="px-4 pb-3 hidden text-xs sm:text-sm">
+              Подписка PRO сейчас действует <b>для всех курсов PolyTalky</b>, которые подключены к системе проверки заданий.
+              Это удобно, если вы учите несколько языков или проходите несколько программ параллельно.
+            </div>
+          </div>
+
+          <div class="faq-item border border-gray-200 rounded-2xl bg-white overflow-hidden">
+            <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
+              <span>Сколько заданий можно отправлять на проверку?</span>
+              <span class="ml-2 text-lg leading-none">+</span>
+            </button>
+            <div class="px-4 pb-3 hidden text-xs sm:text-sm">
+              Мы ориентируемся на «разумный» объём: все задания из уроков, плюс несколько дополнительных вопросов в месяц.
+              Если вы будете отправлять слишком много, куратор честно подскажет, как лучше распределить нагрузку.
+            </div>
+          </div>
+
+          <div class="faq-item border border-gray-200 rounded-2xl bg-white overflow-hidden">
+            <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
+              <span>Что, если у меня нет карты зарубежного банка?</span>
+              <span class="ml-2 text-lg leading-none">+</span>
+            </button>
+            <div class="px-4 pb-3 hidden text-xs sm:text-sm">
+              Сейчас Stripe доступен только для карт зарубежных банков.
+              Для России мы готовим оплату через Яндекс — она появится на отдельной кнопке и будет оформляться другим способом.
+            </div>
+          </div>
+
+          <div class="faq-item border border-gray-200 rounded-2xl bg-white overflow-hidden">
+            <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
+              <span>Могу ли я отменить PRO в любой момент?</span>
+              <span class="ml-2 text-lg leading-none">+</span>
+            </button>
+            <div class="px-4 pb-3 hidden text-xs sm:text-sm">
+              Да. Подписка оформляется помесячно.
+              При отмене PRO останется активным до конца оплаченного периода, а затем автоматически выключится.
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs sm:text-sm">
+          <p class="text-[var(--ink-2)]">
+            Если остались вопросы — напишите нам через форму обратной связи или в Q&A внутри уроков.
+          </p>
+          <button
+            id="btn-pro-bottom"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--brand-orange)] hover:bg-[var(--brand-yellow-deep)] text-xs sm:text-sm font-semibold text-white shadow-soft"
+          >
+            Оформить PRO
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-gray-200 bg-white/80 backdrop-blur py-10 text-sm text-gray-700 mt-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div>
+      <a href="/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
+        <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-yellow-deep)] items-center justify-center">🏷️</span>
+        PolyTalky
+      </a>
+      <p class="mt-3 text-gray-500">Изучайте языки для жизни, а не только для тестов.</p>
+      <p class="mt-4 text-gray-400">© 2025 PolyTalky. Все права защищены.</p>
+    </div>
+    <div>
+      <h3 class="font-semibold text-gray-900 mb-3">Навигация</h3>
+      <ul class="space-y-2">
+        <li><a href="/courses/" class="hover:underline">Курсы</a></li>
+        <li><a href="/shop/" class="hover:underline">Магазин</a></li>
+        <li><a href="/student/" class="hover:underline">Личный кабинет</a></li>
+        <li><a href="/contact.html" class="hover:underline">Контакты</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="font-semibold text-gray-900 mb-3">Юридическая информация</h3>
+      <ul class="space-y-2">
+        <li><a href="/legal/privacy.html" class="hover:underline">Политика конфиденциальности</a></li>
+        <li><a href="/legal/offer.html" class="hover:underline">Публичная оферта</a></li>
+        <li><a href="/legal/cookies.html" class="hover:underline">Cookies</a></li>
+        <li><a href="/legal/consent.html" class="hover:underline">Согласие на обработку данных</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<!-- Stripe.js -->
+<script src="https://js.stripe.com/v3"></script>
+
+<script>
+  // Бургер
+  const burger = document.getElementById("burger");
+  const mnav = document.getElementById("mnav");
+  if (burger) burger.addEventListener("click", () => mnav.classList.toggle("hidden"));
+
+  // FAQ аккордеон
+  document.querySelectorAll(".faq-item button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const expanded = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", expanded ? "false" : "true");
+      const content = btn.parentElement.querySelector("div");
+      if (!content) return;
+      content.classList.toggle("hidden", expanded);
+      const icon = btn.querySelector("span:last-child");
+      if (icon) icon.textContent = expanded ? "+" : "–";
+    });
+  });
+
+  // Общая функция для оформления PRO
+  async function startProCheckout() {
+    try {
+      // предполагаем, что Firebase Auth уже инициализирован на сайте
+      const user = (window.PolyTalkyAuth && window.PolyTalkyAuth.currentUser) || null;
+
+      if (!user || !user.uid) {
+        // если не авторизован — отправляем в личный кабинет / логин
+        window.location.href = "/student/";
+        return;
+      }
+
+      const resp = await fetch("/api/create-english-intro-pro-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.uid })
+      });
+
+      if (!resp.ok) {
+        alert("Не удалось создать оплату. Попробуйте ещё раз чуть позже.");
+        return;
+      }
+
+      const data = await resp.json();
+      if (!data.id) {
+        alert("Ответ от сервера без ID сессии. Напишите, пожалуйста, в поддержку.");
+        return;
+      }
+
+      if (!window.Stripe) {
+        alert("Платёжный модуль не загрузился. Обновите страницу и попробуйте ещё раз.");
+        return;
+      }
+
+      // TODO: сюда нужно подставить твой реальный publishable key Stripe
+      const STRIPE_PK = "pk_xxx_replace_me";
+      const stripe = Stripe(STRIPE_PK);
+      const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+
+      if (error) {
+        console.error(error);
+        alert("Не удалось открыть страницу оплаты. Попробуйте позже.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Что-то пошло не так. Попробуйте ещё раз позже.");
+    }
+  }
+
+  // Кнопки оформления PRO
+  const btnMain   = document.getElementById("btn-pro-main");
+  const btnSide   = document.getElementById("btn-pro-side");
+  const btnBottom = document.getElementById("btn-pro-bottom");
+
+  [btnMain, btnSide, btnBottom].forEach(btn=>{
+    if (btn) btn.addEventListener("click", startProCheckout);
+  });
+</script>
+</body>
+</html>
