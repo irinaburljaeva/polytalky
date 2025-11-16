@@ -2,234 +2,379 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>English Intro — Урок 1: Старт языкового путешествия</title>
+  <title>English Intro · Урок 1 — Старт путешествия</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <base href="/">
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-  <link rel="apple-touch-icon" href="/assets/favicon.jpg">
-
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root{
-      --brand-yellow:#FFDE59;
-      --brand-yellow-deep:#FFBA08;
-      --brand-orange:#E85D04;
-      --ink:#0F172A;
-      --ink-2:#334155;
-      --card:#FFFFFF;
-      --bg:#FFF8D6;
+      --bg-cream:#FFF8E5;
+      --bg-cream-soft:#FFFDF4;
+      --accent-yellow:#FFDE59;
+      --accent-yellow-deep:#FFBA08;
+      --accent-peach:#FFD4A8;
+      --accent-coral:#FF8A5C;
+      --text-main:#111827;
+      --text-muted:#6b7280;
+      --border-soft:rgba(148,163,184,.35);
     }
     body{
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:var(--bg);
-      color:var(--ink);
-    }
-    .shadow-soft{box-shadow:0 14px 36px rgba(0,0,0,.12);}
-    .glass{
-      background:#fffef8ee;
-      backdrop-filter:blur(14px);
-      border-radius:1.75rem;
-      border:1px solid rgba(15,23,42,.06);
-    }
-    .wow-bg{
-      position:relative;
-      overflow:hidden;
-    }
-    .wow-bg::before,
-    .wow-bg::after{
-      content:"";
-      position:absolute;
-      filter:blur(70px);
-      opacity:.7;
-      z-index:-1;
-      animation:float 14s ease-in-out infinite;
-    }
-    .wow-bg::before{
-      width:520px;height:520px;
-      left:-120px;top:-140px;
-      background:radial-gradient(closest-side,rgba(255,222,89,.9),transparent);
-    }
-    .wow-bg::after{
-      width:480px;height:480px;
-      right:-140px;bottom:-160px;
-      background:radial-gradient(closest-side,rgba(232,93,4,.55),transparent);
-      animation-delay:2.5s;
-    }
-    @keyframes float{
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(18px)}
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text-main);
+      background:
+        radial-gradient(circle at 0 0, #FFF9D9 0, transparent 55%),
+        radial-gradient(circle at 100% 0, #FFE3CC 0, transparent 55%),
+        linear-gradient(to bottom,#FFFDF6,#FFF8E5);
     }
 
-    /* Вертикальный маршрут */
-    .route-card{
-      border-radius:1.5rem;
-      background:rgba(255,255,255,.9);
-      border:1px solid rgba(15,23,42,.05);
-      box-shadow:0 10px 30px rgba(0,0,0,.06);
+    /* Верхний бар */
+    .top-bar{
+      backdrop-filter:blur(16px);
+      background:linear-gradient(to right,rgba(255,255,255,.9),rgba(255,249,219,.9));
+      border-bottom:1px solid rgba(0,0,0,.06);
     }
-    .route-line{
-      position:absolute;
-      left:15px;
-      top:16px;
-      bottom:16px;
-      width:2px;
-      background:linear-gradient(to bottom,#fecaca,#fed7aa,#bbf7d0);
-      opacity:.6;
+
+    /* Главная «лента» урока */
+    .lesson-shell{
+      max-width:980px;
+      margin:0 auto;
+      padding:1.5rem 1.25rem 3rem;
     }
-    .route-step{
+
+    .hero-card{
       position:relative;
-      padding-left:40px;
-      padding-right:8px;
-      padding-top:10px;
-      padding-bottom:10px;
-      border-radius:0.85rem;
-      cursor:default;
-      transition:background .25s ease, transform .25s ease, box-shadow .25s ease;
+      border-radius:1.8rem;
+      padding:1.4rem 1.6rem 1.5rem;
+      background:radial-gradient(circle at 0 0,#FFFDF5,transparent 65%),
+                 radial-gradient(circle at 120% 10%,rgba(255,222,89,.55),transparent 55%),
+                 #FFFFFFE6;
+      border:1px solid rgba(255,255,255,.6);
+      box-shadow:0 20px 60px rgba(0,0,0,.16);
+      overflow:hidden;
     }
-    .route-bullet{
-      position:absolute;
-      left:7px;
-      top:50%;
-      transform:translateY(-50%);
-      width:16px;height:16px;
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      font-size:.65rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      padding:.35rem .9rem;
       border-radius:999px;
-      border:2px solid #e5e7eb;
-      background:#fff;
+      border:1px solid rgba(156,163,175,.55);
+      background:rgba(255,255,255,.85);
+      color:var(--text-muted);
+    }
+    .hero-bg-circle{
+      position:absolute;
+      width:260px;
+      height:260px;
+      border-radius:999px;
+      background:radial-gradient(circle,#FFE9A6,#FFCE8A,#FFB48F);
+      opacity:.65;
+      right:-60px;
+      top:-60px;
+      filter:blur(8px);
+    }
+    .hero-tagline{
+      font-size:.78rem;
+      color:var(--text-muted);
+    }
+
+    /* Шапка прогресса */
+    .progress-chip{
+      border-radius:1.2rem;
+      padding:.4rem .9rem;
+      background:rgba(255,255,255,.85);
+      border:1px solid rgba(148,163,184,.35);
+      font-size:.7rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      color:var(--text-muted);
+    }
+    .progress-bar-wrap{
+      border-radius:999px;
+      background:rgba(249,250,251,.9);
+      overflow:hidden;
+      border:1px solid rgba(226,232,240,.9);
+    }
+    .progress-bar-fill{
+      height:0.3rem;
+      border-radius:999px;
+      background:linear-gradient(90deg,#FF8A5C,#FFDE59);
+      transition:width .2s ease-out;
+    }
+
+    /* Навигация шагов (кружочки сверху) */
+    .step-nav{
+      display:flex;
+      justify-content:center;
+      gap:1.25rem;
+      margin:1.6rem 0 1.2rem;
+    }
+    .step-dot{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:.25rem;
+      font-size:.63rem;
+      color:var(--text-muted);
+      max-width:80px;
+      text-align:center;
+    }
+    .step-dot-circle{
+      width:28px;height:28px;
+      border-radius:999px;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:11px;
-      color:#9ca3af;
-      box-shadow:0 1px 3px rgba(0,0,0,.12);
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(255,255,255,.95);
+      box-shadow:0 8px 18px rgba(0,0,0,.08);
+      font-size:.75rem;
     }
-    .route-step-active{
-      background:linear-gradient(90deg,#fefce8,#fffbeb);
-      box-shadow:0 10px 26px rgba(248,191,88,.35);
+    .step-dot--active .step-dot-circle{
+      background:linear-gradient(145deg,#FFDE59,#FFB347);
+      border-color:#f97316;
+      color:#78350f;
+      box-shadow:0 0 0 2px rgba(255,237,213,.95),0 10px 28px rgba(249,115,22,.35);
       transform:translateY(-1px);
     }
-    .route-step-active .route-bullet{
-      border-color:#f97316;
-      background:#facc15;
-      color:#7c2d12;
-    }
-    .route-step-done{
-      background:#ecfdf5;
-    }
-    .route-step-done .route-bullet{
+    .step-dot--done .step-dot-circle{
+      background:linear-gradient(145deg,#4ade80,#22c55e);
       border-color:#16a34a;
-      background:#22c55e;
       color:#ecfdf5;
+    }
+    .step-dot--active .step-dot-label{
+      color:#92400e;
+      font-weight:600;
+    }
+    .step-dot--done .step-dot-label{
+      color:#166534;
     }
 
     /* Карточки шагов */
-    .step-card{
-      border-radius:1.5rem;
-      border:1px solid rgba(15,23,42,.06);
-      background:#fff;
-      box-shadow:0 12px 34px rgba(0,0,0,.06);
+    .step-panel{
+      display:none;
+      border-radius:1.6rem;
+      background:rgba(255,255,255,.98);
+      border:1px solid rgba(148,163,184,.25);
+      box-shadow:0 18px 52px rgba(15,23,42,.18);
+      padding:1.25rem 1.4rem 1.4rem;
+    }
+    .step-panel--visible{
+      display:block;
+    }
+    .step-panel-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:.5rem;
+      margin-bottom:.75rem;
     }
     .step-pill{
-      font-size:11px;
-      padding:3px 10px;
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      padding:.26rem .7rem;
       border-radius:999px;
-      border:1px solid rgba(148,163,184,.4);
-      background:#f8fafc;
-      color:#475569;
+      font-size:.68rem;
+      border:1px solid rgba(156,163,175,.65);
+      background:#F9FAFB;
+      color:var(--text-muted);
     }
-    .step-hidden{display:none;}
-
-    /* Прогресс */
-    .progress-wrap{
-      border-radius:1rem;
-      background:rgba(255,255,255,.9);
-      border:1px solid rgba(148,163,184,.25);
+    .step-icon{
+      font-size:1.3rem;
+      opacity:.95;
+    }
+    .step-body-text{
+      font-size:.88rem;
+      line-height:1.5;
+      color:#1f2937;
     }
 
-    /* Модал поздравления */
+    /* Тонкие акценты текста */
+    .highlight{
+      background:linear-gradient(to right,rgba(255,222,89,.5),rgba(255,222,89,0));
+      padding:0 .15rem;
+      border-radius:.4rem;
+    }
+    .soft-note{
+      font-size:.73rem;
+      color:var(--text-muted);
+    }
+
+    /* Интерактивные блоки */
+    .soft-block{
+      border-radius:1.1rem;
+      padding:.8rem .9rem;
+      border:1px solid rgba(226,232,240,1);
+      background:linear-gradient(135deg,#FFFCF7,#FFF8E5);
+      font-size:.8rem;
+    }
+    .soft-block--blue{
+      background:linear-gradient(135deg,#ECFEFF,#F0F9FF);
+      border-color:#BAE6FD;
+    }
+    .soft-block--green{
+      background:linear-gradient(135deg,#ecfdf5,#f0fdf4);
+      border-color:#bbf7d0;
+    }
+    .soft-block--rose{
+      background:linear-gradient(135deg,#fff1f2,#ffe4e6);
+      border-color:#fecaca;
+    }
+
+    .input-main{
+      width:100%;
+      border-radius:.95rem;
+      border:1px solid rgba(209,213,219,1);
+      background:#FFFFFF;
+      padding:.5rem .7rem;
+      font-size:.84rem;
+      outline:none;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }
+    .input-main:focus{
+      border-color:#f97316;
+      box-shadow:0 0 0 1px rgba(249,115,22,.4);
+    }
+    .btn-main{
+      border-radius:999px;
+      border:none;
+      padding:.5rem 1.1rem;
+      font-size:.8rem;
+      font-weight:600;
+      background:linear-gradient(135deg,#22c55e,#16a34a);
+      color:#fff;
+      cursor:pointer;
+      box-shadow:0 12px 26px rgba(22,163,74,.35);
+      transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    }
+    .btn-main:active{
+      transform:translateY(1px);
+      box-shadow:0 6px 16px rgba(22,163,74,.5);
+    }
+    .btn-main:disabled{
+      opacity:.4;
+      box-shadow:none;
+      cursor:default;
+      transform:none;
+    }
+    .btn-ghost{
+      border-radius:999px;
+      padding:.5rem 1rem;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(255,255,255,.85);
+      font-size:.78rem;
+      color:var(--text-muted);
+      cursor:pointer;
+    }
+
+    textarea.input-main{
+      resize:vertical;
+      min-height:90px;
+    }
+
+    /* Модальное поздравление */
     .modal-backdrop{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
       background:rgba(15,23,42,.45);
+      z-index:50;
+    }
+    .modal-backdrop--visible{
+      display:flex;
+    }
+    .modal-card{
+      position:relative;
+      max-width:420px;
+      margin:0 1rem;
+      border-radius:1.8rem;
+      padding:1.4rem 1.5rem 1.5rem;
+      background:#fffefb;
+      box-shadow:0 24px 70px rgba(15,23,42,.6);
+      overflow:hidden;
+    }
+    .modal-card::before{
+      content:"";
+      position:absolute;
+      width:230px;height:230px;
+      border-radius:999px;
+      background:radial-gradient(circle,#FFDE59,#FFB347);
+      opacity:.35;
+      right:-60px;top:-80px;
+      filter:blur(10px);
+      z-index:-1;
     }
 
-    @media (max-width:1023px){
-      .layout-grid{grid-template-columns:1fr;}
+    @media (max-width:640px){
+      .hero-card{
+        padding:1.1rem 1.1rem 1.2rem;
+      }
+      .step-panel{
+        padding:1rem 1.1rem 1.15rem;
+      }
+      .step-nav{
+        gap:.9rem;
+      }
+      .step-dot{
+        max-width:70px;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-<!-- HEADER: адаптация хедера с главной -->
-<header class="sticky top-0 z-40 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3 font-semibold text-lg">
-      <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl">
-      PolyTalky
-    </a>
-
-    <!-- Desktop nav -->
-    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
-      <a href="/courses/" class="hover:opacity-80">Курсы</a>
-      <a href="/shop/" class="hover:opacity-80">Магазин</a>
-      <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
-      <a href="/courses/english-intro/"
-         class="inline-flex items-center gap-2 border border-black/10 bg-white px-4 py-2 rounded-xl text-sm font-semibold shadow-soft hover:bg-[#fff3c6]">
-        ← К программе интенсивa
-      </a>
-    </nav>
-
-    <!-- Mobile burger -->
-    <button id="burger" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft" aria-label="Меню">
-      ☰
-    </button>
-  </div>
-
-  <!-- Mobile menu -->
-  <div id="mnav" class="md:hidden hidden border-t border-black/10 bg-[#fffef7]">
-    <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-[var(--ink-2)] text-sm">
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/courses/">Курсы</a>
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/shop/">Магазин</a>
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/student/">Личный кабинет</a>
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/courses/english-intro/">К интенсиву</a>
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+    <div class="flex items-center gap-2">
+      <div class="h-8 w-8 rounded-2xl bg-[radial-gradient(circle_at_30%_0,#FFDE59,#FFB347)] flex items-center justify-center text-xs font-bold text-[#78350f] shadow-md">
+        P
+      </div>
+      <div class="flex flex-col leading-tight">
+        <span class="text-xs font-semibold tracking-wide">PolyTalky</span>
+        <span class="text-[10px] text-[var(--text-muted)]">English Intro · Lesson 1</span>
+      </div>
     </div>
+    <a href="/courses/english-intro/" class="text-[11px] px-3 py-1.5 rounded-full border border-[rgba(148,163,184,.5)] bg-white/70 hover:bg-white transition">
+      ← К программе курса
+    </a>
   </div>
 </header>
 
-<script>
-  // Тоггл мобильного меню
-  const b=document.getElementById('burger'), m=document.getElementById('mnav');
-  if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
-</script>
-
-<!-- ПОЗДРАВЛЕНИЕ ПОСЛЕ УРОКА -->
-<div id="lesson-congrats"
-     class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop">
-  <div class="max-w-sm mx-4 bg-white rounded-3xl p-5 sm:p-6 shadow-soft relative overflow-hidden">
-    <!-- Декор -->
-    <div class="pointer-events-none absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[var(--brand-yellow)]/40 blur-2xl"></div>
-    <div class="pointer-events-none absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-[var(--brand-orange)]/30 blur-2xl"></div>
-
-    <div class="relative space-y-3 text-sm text-[#0f172a]">
-      <h2 class="text-lg font-extrabold flex items-center gap-2">
-        <span>Ура! 🎉</span>
-        <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-          Первый урок пройден
-        </span>
+<!-- MODAL: поздравление -->
+<div id="lesson-congrats" class="modal-backdrop">
+  <div class="modal-card">
+    <div class="space-y-2 text-sm text-[#111827]">
+      <div class="inline-flex items-center gap-.5">
+        <span class="text-2xl">🎉</span>
+        <span class="text-[11px] tracking-[0.14em] uppercase text-[var(--text-muted)]">Отличный старт</span>
+      </div>
+      <h2 class="text-lg sm:text-xl font-extrabold leading-snug">
+        Ура! Вы полностью прошли первый урок 🤩
       </h2>
-      <p>Вы выполнили первый урок целиком 🤩</p>
       <p>
-        С таким настроем вы точно быстро заговорите на английском свободно —
-        шаг за шагом, как в поездке: сегодня приветствие и звуки, завтра диалоги и уверенность.
+        Это уже больше, чем делают большинство людей, которые «когда-нибудь начнут».
+        Вы сделали <span class="highlight">первый реальный шаг</span> к свободному английскому для путешествий.
       </p>
-      <p class="text-xs text-[#64748b]">
-        Можете сразу перейти ко второму уроку или немного потренироваться с тем, что прошли сегодня.
+      <p class="text-[.78rem] text-[var(--text-muted)]">
+        С таким настроем вы точно быстро заговорите на английском: шаг за шагом, урок за уроком.
       </p>
 
-      <div class="flex flex-wrap gap-2 pt-1">
-        <a href="/courses/english-intro/lesson-02-phonetics.html"
-           class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold shadow-soft">
+      <div class="mt-2 flex flex-wrap gap-2">
+        <a href="/courses/english-intro/lesson-02-phonetics.html" class="btn-main">
           → Ко 2 уроку
         </a>
-        <button id="congrats-close"
-                class="px-4 py-2 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-[#334155]">
+        <button id="congrats-close" class="btn-ghost">
           Остаться на этом уроке
         </button>
       </div>
@@ -237,374 +382,332 @@
   </div>
 </div>
 
-<!-- MAIN -->
-<main class="wow-bg">
-  <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-    <section class="glass shadow-soft p-5 sm:p-7 lg:p-8">
-      <!-- Топ-блок -->
-      <header class="flex flex-wrap items-start justify-between gap-4 mb-6">
-        <div class="space-y-2 max-w-xl">
-          <div class="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#64748b]">
-            <span class="step-pill bg-white">English Intro · Day 1</span>
-            <span>10–15 минут • Произношение</span>
-          </div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold leading-tight tracking-tight">
-            Старт языкового путешествия: приветствие и звуки
+<!-- MAIN CONTENT -->
+<main class="lesson-shell">
+  <!-- HERO -->
+  <section class="hero-card mb-5 sm:mb-7">
+    <div class="hero-bg-circle"></div>
+    <div class="flex flex-wrap items-start justify-between gap-4 relative z-10">
+      <div class="space-y-3 max-w-xl">
+        <div class="hero-badge">
+          <span>English Intro · Day 1</span>
+          <span class="w-1 h-1 rounded-full bg-[var(--accent-yellow-deep)]"></span>
+          <span>Travel Focus</span>
+        </div>
+        <div>
+          <h1 class="text-2xl sm:text-3xl md:text-[1.9rem] font-black tracking-tight leading-snug">
+            Старт вашего языкового путешествия
           </h1>
-          <p class="text-xs sm:text-sm text-[var(--ink-2)]">
-            Представьте, что вы готовитесь к поездке: вам нужно уметь поздороваться, услышать живую речь
-            и не пугаться английских звуков. В этом уроке вы сделаете первый шаг — и он уже очень важный.
+          <p class="hero-tagline mt-2">
+            Представьте, что вы готовитесь к поездке: вам нужно уверенно поздороваться, услышать живую речь
+            и не пугаться английских звуков. Сегодня вы делаете <span class="highlight">первый шаг</span>.
           </p>
-        </div>
-        <div class="progress-wrap px-3 py-3 sm:px-4 sm:py-3 text-xs text-[#475569]">
-          <div class="flex items-center justify-between gap-3 mb-1">
-            <span class="font-semibold flex items-center gap-1">Прогресс урока</span>
-            <span id="bar-label" class="text-[11px]">25%</span>
-          </div>
-          <div class="w-full h-1.5 rounded-full bg-gray-200 overflow-hidden mb-2">
-            <div id="step-bar"
-                 class="h-full w-1/4 rounded-full"
-                 style="background:linear-gradient(90deg,var(--brand-orange),var(--brand-yellow));"></div>
-          </div>
-          <p id="step-label" class="text-[11px]">
-            Шаг 1 из 4 — вы только начали, и это уже больше, чем «когда-нибудь».
-          </p>
-        </div>
-      </header>
-
-      <!-- Лейаут: слева маршрут, справа контент -->
-      <div class="grid layout-grid gap-6 lg:gap-8">
-        <!-- Левая колонка: маршрут -->
-        <aside class="space-y-4 lg:max-w-xs">
-          <div class="route-card relative p-4">
-            <div class="route-line"></div>
-            <div class="text-xs font-semibold text-[#6b7280] mb-2 flex items-center gap-2">
-              <span>Маршрут урока</span>
-              <span class="px-2 py-0.5 rounded-full bg-white text-[10px] border border-gray-200">для путешествий</span>
-            </div>
-
-            <div class="space-y-1.5 text-xs">
-              <div class="route-step route-step-active" data-step-node="1">
-                <div class="route-bullet">1</div>
-                <div class="font-semibold text-[#111827]">Приветствие</div>
-                <div class="text-[#6b7280]">настроиться и сказать «hello» как в настоящей поездке</div>
-              </div>
-
-              <div class="route-step" data-step-node="2">
-                <div class="route-bullet">2</div>
-                <div class="font-semibold text-[#111827]">Голос английского</div>
-                <div class="text-[#6b7280]">послушать носителя, не пугаясь скорости речи</div>
-              </div>
-
-              <div class="route-step" data-step-node="3">
-                <div class="route-bullet">3</div>
-                <div class="font-semibold text-[#111827]">Карта гласных</div>
-                <div class="text-[#6b7280]">разобраться, почему одна буква звучит по-разному</div>
-              </div>
-
-              <div class="route-step" data-step-node="4">
-                <div class="route-bullet">4</div>
-                <div class="font-semibold text-[#111827]">Аудио-чек</div>
-                <div class="text-[#6b7280]">произнести вслух и почувствовать, что вы уже можете</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="hidden lg:block text-[11px] text-[#4b5563] bg-white/80 border border-black/5 rounded-2xl p-3">
-            🧡 Если что-то кажется сложным — это нормально. На этом курсе мы делаем маленькие шаги,
-            но каждый шаг заметно приближает вас к уверенности в путешествиях.
-          </div>
-        </aside>
-
-        <!-- Правая колонка: сами шаги -->
-        <div class="space-y-5">
-
-          <!-- ШАГ 1 -->
-          <section id="step-1" class="step-card p-4 sm:p-5 space-y-4">
-            <div class="flex items-center justify-between gap-3">
-              <div class="space-y-1">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="step-pill bg-amber-50 border-amber-200 text-amber-700">Шаг 1</span>
-                  <span class="text-[11px] text-[#6b7280]">Приветствие и настрой</span>
-                </div>
-                <h2 class="font-semibold text-base sm:text-lg">
-                  Первый шаг в языковое путешествие
-                </h2>
-              </div>
-              <div class="hidden sm:flex text-2xl">🛫</div>
-            </div>
-
-            <div class="space-y-2 text-sm text-[#1f2937]">
-              <p>Ура, ура, ура! Настал наш долгожданный курс! Вот он — первый день. День полный надежд и энтузиазма!</p>
-              <p>Если вдруг что-то непонятно — не стесняйтесь спросить, это нормально и очень правильно 🙂</p>
-              <p>Ну что же, приступим?</p>
-            </div>
-
-            <div class="mt-3 border border-amber-200 bg-amber-50/80 rounded-2xl p-3 text-xs sm:text-sm space-y-2">
-              <p class="font-semibold flex items-center gap-1">
-                <span>🎯 Мини-миссия путешественника</span>
-              </p>
-              <p>
-                Поздоровайтесь по-английски. Представьте, что вы приехали в новый город
-                и заходите в отель или на стойку регистрации.
-              </p>
-              <input id="hello-input"
-                     class="w-full border border-amber-200 rounded-xl px-3 py-2 text-sm bg-white/90"
-                     placeholder='Например: "Hello!" или "Hi, I am Anna!"'>
-              <p id="hello-status" class="text-[11px] text-[#92400e]">
-                Введите вариант приветствия — даже один короткий «Hello!» уже отлично.
-              </p>
-            </div>
-
-            <div class="flex justify-end">
-              <button id="btn-step-1"
-                      class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
-                      disabled>
-                Дальше → Послушать живой английский
-              </button>
-            </div>
-          </section>
-
-          <!-- ШАГ 2 -->
-          <section id="step-2" class="step-card p-4 sm:p-5 space-y-4 step-hidden">
-            <div class="flex items-center justify-between gap-3">
-              <div class="space-y-1">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="step-pill bg-sky-50 border-sky-200 text-sky-700">Шаг 2</span>
-                  <span class="text-[11px] text-[#6b7280]">Видео от носителя</span>
-                </div>
-                <h2 class="font-semibold text-base sm:text-lg">
-                  Голос английского: не боимся звуков
-                </h2>
-              </div>
-              <div class="hidden sm:flex text-2xl">🎧</div>
-            </div>
-
-            <div class="text-sm space-y-2">
-              <p>
-                Английское произношение — одно из наиболее сложных в мире, за счёт того,
-                что существуют десятки различных буквосочетаний, которые производят различные звуки.
-              </p>
-              <p>
-                Но помимо этого, английский славится тем, что на каждое правило в нём всегда найдутся исключения!
-                А значит, что порой разобраться в фонетике этого языка может оказаться очень и очень затруднительно.
-              </p>
-              <p>
-                Для начала давайте посмотрим это видео, в котором носитель языка расскажет нам,
-                какие звуки мы можем встретить в английском и как правильно что произносить.
-              </p>
-              <p class="text-xs text-[#64748b]">
-                Если пока вам сложно понять, что говорят на видео — включите субтитры и автоперевод.
-                Это нормально, если в начале кажется быстро и немного «слишком».
-              </p>
-            </div>
-
-            <!-- ВИДЕО-БЛОК -->
-            <div class="mt-3 rounded-2xl border border-dashed border-sky-300 bg-white/80 p-4 text-xs text-[#0f172a]">
-              Здесь будет плеер с видео от носителя.
-              Вставьте iframe YouTube / Vimeo или тег &lt;video&gt;.
-            </div>
-
-            <div class="mt-3 border border-sky-200 bg-sky-50/80 rounded-2xl p-3 text-xs sm:text-sm space-y-2">
-              <p class="font-semibold">Отметьте миссию выполненной</p>
-              <p>Как только вы посмотрели видео (полностью или частично), нажмите кнопку ниже.</p>
-              <button id="video-done"
-                      class="px-3 py-1.5 rounded-full border border-sky-200 bg-white text-[11px] font-semibold">
-                ✓ Я посмотрел(а) видео
-              </button>
-              <p id="video-status" class="text-[11px] text-[#0369a1]">
-                Нажмите кнопку, когда будете готовы двигаться дальше.
-              </p>
-            </div>
-
-            <div class="flex justify-between">
-              <button data-back="1" class="px-3 py-2 rounded-xl border bg-white text-xs">
-                ← К приветствию
-              </button>
-              <button id="btn-step-2"
-                      class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
-                      disabled>
-                Далее → Карта гласных
-              </button>
-            </div>
-          </section>
-
-          <!-- ШАГ 3 -->
-          <section id="step-3" class="step-card p-4 sm:p-5 space-y-4 step-hidden">
-            <div class="flex items-center justify-between gap-3">
-              <div class="space-y-1">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="step-pill bg-emerald-50 border-emerald-200 text-emerald-800">Шаг 3</span>
-                  <span class="text-[11px] text-[#6b7280]">Таблица гласных</span>
-                </div>
-                <h2 class="font-semibold text-base sm:text-lg">
-                  Карта буквосочетаний гласных
-                </h2>
-              </div>
-              <div class="hidden sm:flex text-2xl">📜</div>
-            </div>
-
-            <div class="text-sm space-y-2">
-              <p>Вроде с фонетикой становится немного понятнее? Что скажете?</p>
-              <p>Однако стоит ещё раз всё разобрать. Не забывайте читать всё вслух, чтобы лучше запомнить:</p>
-            </div>
-
-            <!-- ТАБЛИЦА -->
-            <div class="mt-3 rounded-2xl border border-dashed border-emerald-300 bg-white/80 p-4 text-xs text-[#0f172a]">
-              Здесь будет ваша таблица
-              <b>rules-table-of-combinations-of-vowels-under-stress</b>
-              (картинка или HTML-таблица).
-            </div>
-
-            <div class="mt-3 border border-emerald-200 bg-emerald-50/80 rounded-2xl p-3 text-xs sm:text-sm space-y-2">
-              <p class="font-semibold">Мини-задание: ваши примеры</p>
-              <p>
-                №1 Аудиозадание! Подберите по 3 своих примера на каждое из приведённых буквосочетаний.
-                Если с каким-то из них не получится ничего придумать, откройте любой текст на английском
-                и найдите там слово с нужным буквосочетанием.
-              </p>
-              <p class="text-[11px] text-[#166534]">
-                Не забудьте посмотреть значение слов в словаре и записать в свой личный словарик! 🙂
-              </p>
-              <textarea id="vowel-input"
-                        class="w-full min-h-[90px] border border-emerald-200 rounded-xl px-3 py-2 text-sm bg-white/90"
-                        placeholder="Например: ai — rain, train, Spain; ea — eat, speak, tea..."></textarea>
-              <p id="vowel-status" class="text-[11px] text-[#166534]">
-                Запишите хотя бы пару сочетаний и слов — даже небольшой список уже отлично работает.
-              </p>
-            </div>
-
-            <div class="flex justify-between">
-              <button data-back="2" class="px-3 py-2 rounded-xl border bg-white text-xs">
-                ← К видео
-              </button>
-              <button id="btn-step-3"
-                      class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
-                      disabled>
-                Далее → Аудио-чек
-              </button>
-            </div>
-          </section>
-
-          <!-- ШАГ 4 -->
-          <section id="step-4" class="step-card p-4 sm:p-5 space-y-4 step-hidden">
-            <div class="flex items-center justify-between gap-3">
-              <div class="space-y-1">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="step-pill bg-rose-50 border-rose-200 text-rose-800">Шаг 4</span>
-                  <span class="text-[11px] text-[#6b7280]">Аудиозадание</span>
-                </div>
-                <h2 class="font-semibold text-base sm:text-lg">
-                  Аудио-чек: вы уже звучите по-английски
-                </h2>
-              </div>
-              <div class="hidden sm:flex text-2xl">🎤</div>
-            </div>
-
-            <div class="text-sm space-y-2">
-              <p>
-                Теперь порядок. И гласные, и их буквосочетания разобраны.
-                Осталось выучить эти сочетания — и тогда англичане вас от «своих» точно не отличат!
-              </p>
-              <p>Учить это, конечно же, удобнее всего именно в практике.</p>
-              <p>
-                Поэтому наша <b>аудиомиссия</b>: произнести вслух свои примеры и записать небольшой фрагмент.
-                Представьте, что вы тренируетесь перед реальной поездкой.
-              </p>
-            </div>
-
-            <!-- AUDIO RECORDER -->
-            <div class="mt-3 border border-rose-200 bg-rose-50/80 rounded-2xl p-3 text-xs sm:text-sm space-y-2">
-              <p class="font-semibold">Запишите свой голос</p>
-              <p>
-                Нажмите «Начать запись», произнесите свои примеры (можно просто список слов или пару фраз),
-                затем нажмите «Остановить».
-              </p>
-              <div class="flex flex-wrap gap-2">
-                <button id="rec-start"
-                        class="px-3 py-1.5 rounded-full border border-rose-300 bg-[#fee2e2] text-[11px] font-semibold">
-                  ⏺ Начать запись
-                </button>
-                <button id="rec-stop" disabled
-                        class="px-3 py-1.5 rounded-full border border-gray-300 bg-[#e5e7eb] text-[11px] font-semibold">
-                  ⏹ Остановить
-                </button>
-              </div>
-              <p id="rec-status" class="text-[11px] text-[#9f1239]">
-                Запись пока не начата.
-              </p>
-              <audio id="rec-player" controls class="w-full hidden"></audio>
-
-              <p class="text-[11px] text-[#9f1239] mt-1">
-                Автоматизированная проверка произношения появится позже (на сервере).
-                Сейчас мы сохраняем запись локально и отмечаем задание как выполненное —
-                этого достаточно, чтобы вы сделали важный шаг.
-              </p>
-            </div>
-
-            <!-- PRO UPSALE -->
-            <div class="border border-amber-200 bg-[#fffbeb] rounded-2xl p-3 text-xs sm:text-sm space-y-2">
-              <p class="font-semibold">🧑‍🏫 Проверка от куратора</p>
-              <p>
-                Если вы докупите функцию проверки от куратора, ваши аудиозадания будут проверяться
-                вручную опытными преподавателями английского. Вы получите комментарии, где есть акцент,
-                какие звуки уже звучат естественно, а над чем лучше поработать — чтобы в реальной поездке
-                чувствовать себя максимально уверенно.
-              </p>
-              <p class="text-[11px] text-[#92400e]">
-                При активной PRO-функции записи этого урока будут автоматически попадать к куратору.
-              </p>
-              <a href="/courses/english-intro/pro.html"
-                 class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-amber-300 bg-white text-[11px] font-semibold">
-                Узнать о PRO-проверке →
-              </a>
-            </div>
-
-            <!-- ФИНАЛ УРОКА -->
-            <section class="space-y-3 pt-3 border-t border-gray-100 text-sm">
-              <h3 class="font-semibold flex items-center gap-2">
-                <span>Словарик этого урока</span>
-                <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                  Добавится в общий словарь курса
-                </span>
-              </h3>
-              <ul class="text-xs list-disc list-inside space-y-0.5">
-                <li><b>Hello</b> — здравствуйте / привет</li>
-                <li><b>Hi</b> — привет (неформально)</li>
-                <li><b>Good morning</b> — доброе утро</li>
-                <li><b>Goodbye</b> — до свидания</li>
-                <li><b>See you</b> — увидимся</li>
-              </ul>
-
-              <p id="complete-status" class="text-[11px] text-[#64748b]">
-                После записи аудио отметьте урок пройденным — это будет ваш официальный старт в английском.
-              </p>
-
-              <div class="flex flex-wrap gap-2 items-center">
-                <button id="finish-lesson"
-                        class="px-4 py-2 rounded-xl bg-[#16a34a] text-xs sm:text-sm text-white font-semibold disabled:opacity-40 shadow-soft"
-                        disabled>
-                  ✓ Отметить урок пройденным
-                </button>
-                <a id="next-lesson" href="/courses/english-intro/lesson-02-phonetics.html"
-                   class="px-4 py-2 rounded-xl border bg-white text-xs sm:text-sm text-[#334155] disabled:opacity-50 disabled:pointer-events-none">
-                  → Перейти ко 2 уроку
-                </a>
-                <a href="/courses/english-intro/#exercises"
-                   class="px-4 py-2 rounded-xl border bg-white text-xs sm:text-sm text-[#334155]">
-                  🎯 Потренироваться с этим уроком
-                </a>
-              </div>
-
-              <button data-back="3" class="mt-2 px-3 py-2 rounded-xl border bg-white text-xs">
-                ← Вернуться к таблице
-              </button>
-            </section>
-          </section>
         </div>
       </div>
-    </section>
-  </div>
+      <div class="space-y-2 text-right min-w-[160px]">
+        <div class="progress-chip">
+          <span class="text-xs">Прогресс урока</span>
+          <span class="w-1 h-1 rounded-full bg-green-500"></span>
+          <span id="bar-label" class="font-semibold text-[0.7rem]">25%</span>
+        </div>
+        <div class="progress-bar-wrap mt-1">
+          <div id="step-bar" class="progress-bar-fill" style="width:25%;"></div>
+        </div>
+        <p id="step-label" class="soft-note mt-1 text-right">
+          Шаг 1 из 4 — вы только начали, и это уже большой шаг.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- НАВИГАЦИЯ ШАГОВ -->
+  <section class="step-nav">
+    <div class="step-dot step-dot--active" data-step-dot="1">
+      <div class="step-dot-circle">1</div>
+      <span class="step-dot-label">Приветствие</span>
+    </div>
+    <div class="step-dot" data-step-dot="2">
+      <div class="step-dot-circle">2</div>
+      <span class="step-dot-label">Голос языка</span>
+    </div>
+    <div class="step-dot" data-step-dot="3">
+      <div class="step-dot-circle">3</div>
+      <span class="step-dot-label">Гласные</span>
+    </div>
+    <div class="step-dot" data-step-dot="4">
+      <div class="step-dot-circle">4</div>
+      <span class="step-dot-label">Аудио-чек</span>
+    </div>
+  </section>
+
+  <!-- STEP PANELS -->
+  <section class="space-y-4 sm:space-y-5">
+
+    <!-- STEP 1 -->
+    <article id="step-1" class="step-panel step-panel--visible">
+      <header class="step-panel-header">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <span class="step-pill">Шаг 1 · настроение и первое «hello»</span>
+          </div>
+          <h2 class="text-base sm:text-lg font-semibold">
+            Первый шаг в языковое путешествие
+          </h2>
+        </div>
+        <div class="step-icon">🛫</div>
+      </header>
+
+      <div class="step-body-text space-y-2.5">
+        <p><b>Ура, ура, ура!</b> Настал наш долгожданный курс! Вот он — первый день. День полный надежд и энтузиазма!</p>
+        <p>Если вдруг что-то непонятно — не стесняйтесь спросить, это нормально и очень правильно 🙂</p>
+        <p>Ну что же, приступим?</p>
+      </div>
+
+      <div class="mt-4 soft-block">
+        <p class="font-semibold mb-1 text-[0.82rem]">🎯 Мини-миссия путешественника</p>
+        <p class="text-[0.82rem] mb-2">
+          Поздоровайтесь по-английски. Представьте, что вы приехали в новый город
+          и заходите в отель или на стойку регистрации.
+        </p>
+        <input id="hello-input"
+               class="input-main"
+               placeholder='Например: "Hello!" или "Hi, I am Anna!"'>
+        <p id="hello-status" class="soft-note mt-1 text-[0.72rem] text-[#92400e]">
+          Напишите любое приветствие — даже короткий «Hello!» уже отличный старт.
+        </p>
+      </div>
+
+      <footer class="mt-4 flex justify-end gap-2">
+        <button id="btn-step-1" class="btn-main" disabled>
+          Дальше → Послушать живой английский
+        </button>
+      </footer>
+    </article>
+
+    <!-- STEP 2 -->
+    <article id="step-2" class="step-panel">
+      <header class="step-panel-header">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <span class="step-pill">Шаг 2 · видео от носителя</span>
+          </div>
+          <h2 class="text-base sm:text-lg font-semibold">
+            Голос английского: слышим, а не боимся
+          </h2>
+        </div>
+        <div class="step-icon">🎧</div>
+      </header>
+
+      <div class="step-body-text space-y-2.5">
+        <p>
+          Английское произношение — одно из наиболее сложных в мире, за счёт того,
+          что существуют десятки различных буквосочетаний, которые производят различные звуки.
+        </p>
+        <p>
+          Но помимо этого, английский славится тем, что на каждое правило в нём всегда найдутся исключения!
+          А значит, что порой разобраться в фонетике этого языка может оказаться очень и очень затруднительно.
+        </p>
+        <p>
+          Для начала давайте посмотрим это видео, в котором носитель языка расскажет нам,
+          какие звуки мы можем встретить в английском и как правильно что произносить.
+        </p>
+        <p class="soft-note">
+          Если пока вам сложно понять, что говорят на видео — включите субтитры и автоперевод.
+          Это нормально, если в начале кажется быстро.
+        </p>
+      </div>
+
+      <div class="mt-4 soft-block soft-block--blue">
+        <p class="text-[0.78rem] mb-2"><b>Здесь будет само видео.</b></p>
+        <p class="text-[0.78rem]">
+          Вставьте сюда iframe YouTube/Vimeo или тег <code>&lt;video&gt;</code>.
+          После просмотра нажмите кнопку ниже.
+        </p>
+      </div>
+
+      <div class="mt-3 soft-block soft-block--green">
+        <p class="font-semibold text-[0.8rem] mb-1">Отметьте шаг как выполненный</p>
+        <p class="text-[0.8rem] mb-2">
+          Как только вы посмотрели видео (полностью или частично), нажмите кнопку:
+        </p>
+        <button id="video-done"
+                class="px-3 py-1.5 rounded-full border border-emerald-300 bg-white text-[0.75rem] font-semibold">
+          ✓ Я посмотрел(а) видео
+        </button>
+        <p id="video-status" class="soft-note mt-1 text-[0.72rem] text-[#0369a1]">
+          Нажмите кнопку, когда будете готовы двигаться дальше.
+        </p>
+      </div>
+
+      <footer class="mt-4 flex justify-between gap-2">
+        <button data-back="1" class="btn-ghost">← Назад к приветствию</button>
+        <button id="btn-step-2" class="btn-main" disabled>
+          Далее → Карта гласных
+        </button>
+      </footer>
+    </article>
+
+    <!-- STEP 3 -->
+    <article id="step-3" class="step-panel">
+      <header class="step-panel-header">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <span class="step-pill">Шаг 3 · гласные буквосочетания</span>
+          </div>
+          <h2 class="text-base sm:text-lg font-semibold">
+            Карта гласных: буквосочетания под микроскопом
+          </h2>
+        </div>
+        <div class="step-icon">📜</div>
+      </header>
+
+      <div class="step-body-text space-y-2.5">
+        <p>Вроде с фонетикой становится немного понятнее? Что скажете?</p>
+        <p>Однако стоит ещё раз всё разобрать. Не забывайте читать всё вслух, чтобы лучше запомнить:</p>
+      </div>
+
+      <div class="mt-3 soft-block soft-block--green">
+        <p class="text-[0.78rem] mb-2">
+          <b>Здесь будет ваша таблица</b> <span class="highlight">rules-table-of-combinations-of-vowels-under-stress</span>.
+        </p>
+        <p class="text-[0.78rem]">
+          Вставьте сюда картинку с таблицей или сверстанную HTML-таблицу с буквосочетаниями и примерами.
+        </p>
+      </div>
+
+      <div class="mt-3 soft-block">
+        <p class="font-semibold text-[0.8rem] mb-1">Мини-задание: ваши примеры</p>
+        <p class="text-[0.8rem] mb-2">
+          №1 Аудиозадание! Подберите по 3 своих примера на каждое из приведённых буквосочетаний.
+          Если с каким-то из них не получится ничего придумать, откройте любой текст на английском
+          и найдите в этом тексте слово, в котором нужное буквосочетание имеется.
+        </p>
+        <p class="soft-note">
+          Не забудьте посмотреть значение слов в словаре и записать в свой личный словарик! 🙂
+        </p>
+        <textarea id="vowel-input"
+                  class="input-main mt-2"
+                  placeholder="Например: ai — rain, train, Spain; ea — eat, speak, tea..."></textarea>
+        <p id="vowel-status" class="soft-note mt-1 text-[0.72rem] text-[#166534]">
+          Запишите хотя бы пару сочетаний и слов — даже небольшой список уже работает на вас.
+        </p>
+      </div>
+
+      <footer class="mt-4 flex justify-between gap-2">
+        <button data-back="2" class="btn-ghost">← Вернуться к видео</button>
+        <button id="btn-step-3" class="btn-main" disabled>
+          Далее → Аудио-чек
+        </button>
+      </footer>
+    </article>
+
+    <!-- STEP 4 -->
+    <article id="step-4" class="step-panel">
+      <header class="step-panel-header">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <span class="step-pill">Шаг 4 · аудиозадание</span>
+          </div>
+          <h2 class="text-base sm:text-lg font-semibold">
+            Аудио-чек: вы уже звучите по-английски
+          </h2>
+        </div>
+        <div class="step-icon">🎤</div>
+      </header>
+
+      <div class="step-body-text space-y-2.5">
+        <p>
+          Теперь порядок. И гласные, и их буквосочетания разобраны.
+          Осталось выучить эти сочетания — и тогда англичане вас от «своих» точно не отличат!
+        </p>
+        <p>
+          Учить это, конечно же, удобнее всего именно в практике.
+        </p>
+        <p>
+          Поэтому наша <b>аудиомиссия</b>: произнести вслух свои примеры и записать небольшой фрагмент.
+          Представьте, что вы тренируетесь перед реальной поездкой.
+        </p>
+      </div>
+
+      <div class="mt-3 soft-block soft-block--rose">
+        <p class="font-semibold text-[0.8rem] mb-1">Запишите свой голос</p>
+        <p class="text-[0.8rem] mb-2">
+          Нажмите «Начать запись», произнесите свои примеры (можно просто список слов или пару фраз),
+          затем нажмите «Остановить».
+        </p>
+        <div class="flex flex-wrap gap-2 mb-1">
+          <button id="rec-start"
+                  class="px-3 py-1.5 rounded-full border border-rose-300 bg-[#fee2e2] text-[0.75rem] font-semibold">
+            ⏺ Начать запись
+          </button>
+          <button id="rec-stop" disabled
+                  class="px-3 py-1.5 rounded-full border border-gray-300 bg-[#e5e7eb] text-[0.75rem] font-semibold">
+            ⏹ Остановить
+          </button>
+        </div>
+        <p id="rec-status" class="soft-note text-[0.72rem] text-[#9f1239]">
+          Запись пока не начата.
+        </p>
+        <audio id="rec-player" controls class="w-full hidden mt-2"></audio>
+        <p class="soft-note mt-1 text-[0.72rem]">
+          Автоматизированная проверка произношения появится позже (на сервере).
+          Сейчас важно, что вы <span class="highlight">произносите вслух</span> — это мощно продвигает вперёд.
+        </p>
+      </div>
+
+      <div class="mt-3 soft-block">
+        <p class="font-semibold text-[0.8rem] mb-1">🧑‍🏫 Проверка от куратора</p>
+        <p class="text-[0.8rem] mb-2">
+          Если вы докупите функцию проверки от куратора, ваши аудиозадания будут проверяться вручную
+          опытными преподавателями английского. Вы получите комментарии, где есть акцент,
+          какие звуки уже звучат естественно, а над чем лучше поработать —
+          чтобы в реальной поездке чувствовать себя максимально уверенно.
+        </p>
+        <p class="soft-note text-[0.72rem] mb-2">
+          При активной PRO-функции записи этого урока будут автоматически попадать к куратору.
+        </p>
+        <a href="/courses/english-intro/pro.html"
+           class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-amber-300 bg-white text-[0.75rem] font-semibold">
+          Узнать о PRO-проверке →
+        </a>
+      </div>
+
+      <div class="mt-4 border-t border-gray-100 pt-3 space-y-2">
+        <h3 class="text-sm font-semibold">
+          Словарик этого урока
+        </h3>
+        <ul class="text-[0.8rem] list-disc list-inside space-y-0.5">
+          <li><b>Hello</b> — здравствуйте / привет</li>
+          <li><b>Hi</b> — привет (неформально)</li>
+          <li><b>Good morning</b> — доброе утро</li>
+          <li><b>Goodbye</b> — до свидания</li>
+          <li><b>See you</b> — увидимся</li>
+        </ul>
+        <p id="complete-status" class="soft-note mt-1 text-[0.72rem]">
+          После записи аудио отметьте урок пройденным — это будет ваш официальный старт.
+        </p>
+
+        <div class="mt-2 flex flex-wrap gap-2 items-center">
+          <button id="finish-lesson" class="btn-main" disabled>
+            ✓ Отметить урок пройденным
+          </button>
+          <a id="next-lesson"
+             href="/courses/english-intro/lesson-02-phonetics.html"
+             class="btn-ghost">
+            → Перейти ко 2 уроку
+          </a>
+          <a href="/courses/english-intro/#exercises" class="btn-ghost">
+            🎯 Потренироваться с этим уроком
+          </a>
+        </div>
+
+        <button data-back="3" class="btn-ghost mt-2">
+          ← Вернуться к таблице
+        </button>
+      </div>
+    </article>
+
+  </section>
 </main>
 
 <script src="/courses/english-intro/english-intro-state.js"></script>
@@ -617,110 +720,97 @@
     3: document.getElementById("step-3"),
     4: document.getElementById("step-4"),
   };
+  const dots = document.querySelectorAll("[data-step-dot]");
   const stepLabel = document.getElementById("step-label");
   const barLabel = document.getElementById("bar-label");
   const stepBar = document.getElementById("step-bar");
-  const routeNodes = document.querySelectorAll("[data-step-node]");
 
+  function updateUI(step){
+    Object.entries(steps).forEach(([k,el])=>{
+      el.classList.toggle("step-panel--visible", Number(k)===step);
+    });
+    dots.forEach(dot=>{
+      const s = Number(dot.dataset.stepDot);
+      dot.classList.remove("step-dot--active","step-dot--done");
+      if(s < step) dot.classList.add("step-dot--done");
+      if(s === step) dot.classList.add("step-dot--active");
+    });
+    const perc = step*25;
+    barLabel.textContent = perc + "%";
+    stepBar.style.width = perc + "%";
+    stepLabel.textContent = `Шаг ${step} из 4` + (step===1 ? " — вы только начали, и это уже большой шаг." : "");
+  }
+
+  // STEP 1
   const helloInput = document.getElementById("hello-input");
   const helloStatus = document.getElementById("hello-status");
-  const next1 = document.getElementById("btn-step-1");
+  const btn1 = document.getElementById("btn-step-1");
 
+  helloInput.addEventListener("input", ()=>{
+    const v = (helloInput.value || "").trim();
+    if(!v){
+      helloStatus.textContent = "Напишите любое приветствие — даже короткий «Hello!» уже отличный старт.";
+      helloStatus.style.color = "#92400e";
+      btn1.disabled = true;
+    } else {
+      helloStatus.textContent = "Отлично! У вас уже есть первое английское приветствие — так начинается уверенность в поездках.";
+      helloStatus.style.color = "#15803d";
+      btn1.disabled = false;
+    }
+  });
+
+  btn1.addEventListener("click", ()=>updateUI(2));
+
+  // STEP 2
   const videoBtn = document.getElementById("video-done");
   const videoStatus = document.getElementById("video-status");
-  const next2 = document.getElementById("btn-step-2");
+  const btn2 = document.getElementById("btn-step-2");
 
+  videoBtn.addEventListener("click", ()=>{
+    videoStatus.textContent = "Супер! Вы услышали живой английский. Даже если не всё понятно — это нормально. Переходим к карте гласных.";
+    videoStatus.style.color = "#15803d";
+    btn2.disabled = false;
+  });
+
+  btn2.addEventListener("click", ()=>updateUI(3));
+
+  // STEP 3
   const vowelInput = document.getElementById("vowel-input");
   const vowelStatus = document.getElementById("vowel-status");
-  const next3 = document.getElementById("btn-step-3");
+  const btn3 = document.getElementById("btn-step-3");
 
+  vowelInput.addEventListener("input", ()=>{
+    const v = (vowelInput.value || "").trim();
+    if(v.length < 5){
+      vowelStatus.textContent = "Добавьте хотя бы пару сочетаний и слов — этого уже достаточно, чтобы мозг начал привыкать.";
+      vowelStatus.style.color = "#166534";
+      btn3.disabled = false; // не стопорим прогресс
+    } else {
+      vowelStatus.textContent = "Отлично! Вы заполняете свой языковой «путевой дневник» — это реально продвигает вперёд.";
+      vowelStatus.style.color = "#15803d";
+      btn3.disabled = false;
+    }
+  });
+
+  btn3.addEventListener("click", ()=>updateUI(4));
+
+  // BACK buttons
+  document.querySelectorAll("[data-back]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const target = Number(btn.dataset.back);
+      updateUI(target);
+    });
+  });
+
+  // STEP 4 — audio
   const recStart = document.getElementById("rec-start");
   const recStop = document.getElementById("rec-stop");
   const recStatus = document.getElementById("rec-status");
   const recPlayer = document.getElementById("rec-player");
 
-  const finishLesson = document.getElementById("finish-lesson");
-  const completeStatus = document.getElementById("complete-status");
-  const nextLesson = document.getElementById("next-lesson");
-
-  const lessonCongrats = document.getElementById("lesson-congrats");
-  const congratsClose = document.getElementById("congrats-close");
-
   let mediaRecorder = null;
   let chunks = [];
 
-  function updateRoute(active){
-    routeNodes.forEach(node=>{
-      const step = Number(node.dataset.stepNode);
-      node.classList.remove("route-step-active","route-step-done");
-      if(step < active) node.classList.add("route-step-done");
-      if(step === active) node.classList.add("route-step-active");
-    });
-  }
-
-  function showStep(n){
-    Object.entries(steps).forEach(([i,el])=>{
-      el.classList.toggle("step-hidden", Number(i)!==n);
-    });
-    stepLabel.textContent = `Шаг ${n} из 4` + (n===1 ? " — вы только начали, и это уже большой шаг." : "");
-    const perc = n*25;
-    barLabel.textContent = perc + "%";
-    stepBar.style.width = perc + "%";
-    updateRoute(n);
-  }
-
-  /* STEP 1 */
-  helloInput.addEventListener("input", ()=>{
-    const v = (helloInput.value || "").trim();
-    if(!v){
-      helloStatus.textContent = "Введите вариант приветствия — даже короткий «Hello!» уже отличный старт.";
-      helloStatus.classList.remove("text-emerald-700");
-      helloStatus.classList.add("text-[#92400e]");
-      next1.disabled = true;
-    } else {
-      helloStatus.textContent = "Отлично! У вас уже есть первое английское приветствие — это именно тот живой язык, который нужен в поездках.";
-      helloStatus.classList.remove("text-[#92400e]");
-      helloStatus.classList.add("text-emerald-700");
-      next1.disabled = false;
-    }
-  });
-  next1.addEventListener("click", ()=>showStep(2));
-
-  /* STEP 2 */
-  videoBtn.addEventListener("click", ()=>{
-    videoStatus.textContent = "Супер! Вы услышали живой английский. Даже если не всё понятно — это нормально. Переходим к карте гласных.";
-    videoStatus.classList.remove("text-[#0369a1]");
-    videoStatus.classList.add("text-emerald-700");
-    next2.disabled = false;
-  });
-  next2.addEventListener("click", ()=>showStep(3));
-
-  /* STEP 3 */
-  vowelInput.addEventListener("input", ()=>{
-    const v = (vowelInput.value || "").trim();
-    if(v.length < 5){
-      vowelStatus.textContent = "Добавьте хотя бы пару сочетаний и слов — этого уже достаточно, чтобы мозг начал привыкать.";
-      vowelStatus.classList.remove("text-emerald-700");
-      vowelStatus.classList.add("text-[#166534]");
-      next3.disabled = false; // не стопорим прогресс
-    } else {
-      vowelStatus.textContent = "Отлично! Вы заполняете свой языковой «путевой дневник» — это очень продвигает вперёд.";
-      vowelStatus.classList.remove("text-[#166534]");
-      vowelStatus.classList.add("text-emerald-700");
-      next3.disabled = false;
-    }
-  });
-  next3.addEventListener("click", ()=>showStep(4));
-
-  /* BACK BUTTONS */
-  document.querySelectorAll("[data-back]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const target = Number(btn.dataset.back);
-      showStep(target);
-    });
-  });
-
-  /* STEP 4 — AUDIO */
   recStart.addEventListener("click", async ()=>{
     try{
       const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
@@ -733,19 +823,17 @@
         recPlayer.src = url;
         recPlayer.classList.remove("hidden");
         recStatus.textContent = "Запись готова! Послушайте себя — вы реально звучите по-английски.";
-        recStatus.classList.remove("text-[#9f1239]");
-        recStatus.classList.add("text-emerald-700");
+        recStatus.style.color = "#15803d";
         finishLesson.disabled = false;
       };
       mediaRecorder.start();
-      recStatus.textContent = "Идёт запись... Не стремитесь к идеалу — важнее, что вы делаете шаг и говорите.";
-      recStatus.classList.remove("text-emerald-700");
-      recStatus.classList.add("text-[#9f1239]");
+      recStatus.textContent = "Идёт запись... Не стремитесь к идеалу — важнее, что вы говорите.";
+      recStatus.style.color = "#9f1239";
       recStart.disabled = true;
       recStop.disabled = false;
     }catch(e){
-      recStatus.textContent = "Не удалось получить доступ к микрофону. Проверьте разрешения — вы точно это сможете.";
-      recStatus.classList.add("text-red-600");
+      recStatus.textContent = "Не удалось получить доступ к микрофону. Проверьте разрешения — вы точно с этим справитесь.";
+      recStatus.style.color = "#b91c1c";
     }
   });
 
@@ -757,11 +845,16 @@
     }
   });
 
-  /* FINISH LESSON */
+  // Finish lesson + vocab
+  const finishLesson = document.getElementById("finish-lesson");
+  const completeStatus = document.getElementById("complete-status");
+  const nextLesson = document.getElementById("next-lesson");
+  const congrats = document.getElementById("lesson-congrats");
+  const congratsClose = document.getElementById("congrats-close");
+
   finishLesson.addEventListener("click", ()=>{
     if(typeof EnglishIntro !== "undefined" && EnglishIntro.completeLesson){
       EnglishIntro.completeLesson(LESSON_ID, 20);
-
       [
         {word:"hello", translation:"здравствуйте / привет"},
         {word:"hi", translation:"привет (неформально)"},
@@ -776,22 +869,19 @@
     completeStatus.textContent = "Урок первого дня завершён 🎉 Это очень сильный старт — дальше будет только легче и интереснее.";
     finishLesson.disabled = true;
 
-    if(lessonCongrats){
-      lessonCongrats.classList.remove("hidden");
-      lessonCongrats.classList.add("flex");
+    if(congrats){
+      congrats.classList.add("modal-backdrop--visible");
     }
   });
 
-  if(congratsClose && lessonCongrats){
+  if(congratsClose && congrats){
     congratsClose.addEventListener("click", ()=>{
-      lessonCongrats.classList.add("hidden");
-      lessonCongrats.classList.remove("flex");
+      congrats.classList.remove("modal-backdrop--visible");
     });
   }
 
-  /* INIT */
-  showStep(1);
+  // INIT
+  updateUI(1);
 </script>
-
 </body>
 </html>
