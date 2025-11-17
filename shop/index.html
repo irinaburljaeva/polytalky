@@ -1546,80 +1546,8 @@
   confirmModal.classList.add('hidden');
   confirmModal.classList.remove('flex');
 };
+                              </script>
 
-document.getElementById('confirmClose').addEventListener('click', closeConfirm);
-
-// Обработчик подтверждения оплаты
-document.getElementById('confirmPay').addEventListener('click', () => {
-  // Просто скрываем окно — вся логика Stripe вынесена в openPay()
-  closeConfirm();
-});
-
-// Stripe checkout (Оплата из-за рубежа)
-const openPay = async () => {
-  const items = getCart();
-  const email = cfEmail.value.trim();
-
-  if (!email) {
-    alert('Пожалуйста, введите email.');
-    return;
-  }
-
-  try {
-    const response = await fetch(`${BACKEND_URL}/api/create-checkout-session`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        items: items.map(i => ({
-          id: i.id,
-          title: i.title,
-          priceEur: i.priceEur,
-        })),
-        email
-      })
-    });
-
-    const data = await response.json();
-
-    if (!data.id) {
-      console.error('Ошибка Stripe:', data);
-      alert('Ошибка при создании платежа');
-      return;
-    }
-
-    const stripe = Stripe(STRIPE_PUBLIC_KEY);
-    const result = await stripe.redirectToCheckout({ sessionId: data.id });
-
-    if (result.error) {
-      console.error(result.error);
-      alert(result.error.message || 'Ошибка Stripe');
-    }
-
-  } catch (err) {
-    console.error(err);
-    alert('Ошибка соединения с сервером');
-  }
-};
-
-// Кнопка "Оплата из-за рубежа"
-document.getElementById('payIntl').addEventListener('click', openPay);
-
-// Кнопка "Оплата РФ" — не трогаю логику, оставляю как у тебя
-document.getElementById('payRU').addEventListener('click', () => {
-  closeConfirm();
-  openPayRuModal();
-});
-
-// Автоподстановка email при открытии корзины
-const bmEmailFromCartOrSession = () => {
-  return localStorage.getItem('userEmail') ||
-         sessionStorage.getItem('userEmail') ||
-         '';
-};
-
-cfEmail.addEventListener('input', () => {
-  localStorage.setItem('userEmail', cfEmail.value.trim());
-});
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
