@@ -1519,16 +1519,6 @@
         openPay('ru', cart, totals);
       });
 
-      document.getElementById('cartPayINT').addEventListener('click', async () => {
-        const email = (document.getElementById('cartEmail').value || '').trim();
-        if (!email) { alert('Введите email для доступа и чека'); return; }
-        sessionStorage.setItem('pt_last_email', email);
-        const cart = getCart();
-        if (!cart.length) { alert('Корзина пуста'); return; }
-        const totals = calcTotals(cart);
-
-        openPay('int', cart, totals);
-      });
 
       // ----- CONFIRM -----
       const confirmModal = document.getElementById('confirmModal');
