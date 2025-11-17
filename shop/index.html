@@ -1199,6 +1199,8 @@
         renderCart();
       };
 
+      window.getCart = getCart;
+      
       const cartCount = document.getElementById('cartCount');
       const bumpCart = () => {
         cartCount.classList.remove('bump');
@@ -1248,7 +1250,9 @@
 
         return { baseRub, baseEur, finalRub, finalEur, discountRub, discountEur };
       }
-
+ 
+      window.calcTotals = calcTotals;
+      
       // ----- DETAIL -----
       let currentProduct = null;
       const detailModal = document.getElementById('detailModal');
@@ -1309,6 +1313,7 @@
       const cartDiscountLine = document.getElementById('cartDiscountLine');
 
       const promoInput = document.getElementById('cartPromo');
+      window.promoInput = promoInput;
       const promoBtn = document.getElementById('cartPromoBtn');
       const promoMsg = document.getElementById('cartPromoMsg');
 
