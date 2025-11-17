@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
     <!-- фавикон -->
 <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.jpg">
   <style>
     :root{
       --brand:#FFBA08; --ink:#0f172a; --ink-2:#334155; --paper:#fff; --bg:#F9FAFB;
@@ -124,9 +124,9 @@
   <!-- ШАПКА -->
   <header class="nav sticky top-0 z-30">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2 font-extrabold text-lg text-[var(--ink)]">
-        <span class="inline-flex h-9 w-9 rounded-xl bg-[var(--brand)] items-center justify-center">🏷️</span>
-        <span>PolyTalky</span>
+      <a href="/" class="flex items-center justify-center">
+        <img src='/assets/logo.png" class="w-8 mr-2" alt="PolyTalky">
+        <span class="font-bold">PolyTalky</span>
       </a>
       <nav class="hidden md:flex items-center gap-6 text-sm">
         <a href="/courses/" class="opacity-80 hover:opacity-100 text-[var(--ink-2)]">Курсы</a>
@@ -1201,7 +1201,11 @@
         localStorage.setItem(CART_KEY, JSON.stringify(items));
         renderCart();
       };
-
+  // ДЕЛАЕМ ДОСТУПНЫМИ ДЛЯ ДРУГОГО СКРИПТА
+      window.getCart = getCart;
+      window.calcTotals = calcTotals;
+      window.promoInput = promoInput;
+      
       const cartCount = document.getElementById('cartCount');
       const bumpCart = () => {
         cartCount.classList.remove('bump');
@@ -1607,20 +1611,22 @@
           closeDetail();
         }
       });
-      document.getElementById('dm-buy').addEventListener('click', () => {
+document.getElementById('dm-buy').addEventListener('click', () => {
         if (currentProduct) {
           addToCart(currentProduct);
           closeDetail();
           toggleCart(true);
         }
       });      
-    });
-     <script type="module">
+    });              <!-- конец document.addEventListener -->
+  </script>          <!-- конец ПЕРВОГО скрипта -->
+
+  <!-- Модульный скрипт с Firebase + Stripe Checkout -->
+  <script type="module">
     // Firebase SDK (ESM)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // Конфигурация проекта
     const firebaseConfig = {
       apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
       authDomain: "polytalky-70999.firebaseapp.com",
@@ -1630,98 +1636,90 @@
       appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
     };
 
-    // Инициализация Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const appFb = initializeApp(firebaseConfig);
+    const db = getFirestore(appFb);
 
-    // Подключение к форме подтверждения для записи заказов в Firestore
+    // ----- запись заказов в Firestore -----
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('confirmForm');
-      if (!form) return;
+      if (form) {
+        form.addEventListener('submit', async () => {
+          const email   = (document.getElementById('cf-email')?.value || '').trim();
+          const channel = document.getElementById('cf-channel')?.value || '';
+          const items   = document.getElementById('cf-items')?.value || '';
+          const note    = document.getElementById('cf-note')?.value || '';
+          if (!email || !items) return;
 
-      form.addEventListener('submit', async () => {
-        const emailEl   = document.getElementById('cf-email');
-        const channelEl = document.getElementById('cf-channel');
-        const itemsEl   = document.getElementById('cf-items');
-        const noteEl    = document.getElementById('cf-note');
+          try {
+            await addDoc(collection(db, 'orders'), {
+              email,
+              channel,
+              items,
+              note,
+              createdAt: serverTimestamp()
+            });
+            console.log('Заказ сохранён в Firebase');
+          } catch (err) {
+            console.error('Ошибка записи в Firebase', err);
+          }
+        });
+      }
 
-        const email   = (emailEl?.value || '').trim();
-        const channel = channelEl?.value || '';
-        const items   = itemsEl?.value || '';
-        const note    = noteEl?.value || '';
+      // ----------- STRIPE CHECKOUT (оплата из-за рубежа) -----------
+      const stripe = Stripe('pk_live_51HqHTmBDwT3uzr4q884SspcgqeyUSp4esf81Z6tHnTkf66WJG1Z6b90PDtyXSdiEommSFnBpHEHswX2ks5Geq9G0004uLMLbKu'); 
 
-        if (!email || !items) return;
+      const cartPayIntBtn = document.getElementById('cartPayINT');
+      if (!cartPayIntBtn) return;
+
+      cartPayIntBtn.addEventListener('click', async () => {
+        // берём функции/переменные из первого скрипта через window
+        const cart = window.getCart ? window.getCart() : [];
+        if (!cart || !cart.length) {
+          alert('Корзина пуста');
+          return;
+        }
+
+        const emailInput = document.getElementById('cartEmail');
+        const email = (emailInput?.value || '').trim();
+        if (!email) {
+          alert('Введите email для доступа к курсам');
+          return;
+        }
+
+        const promo = (window.promoInput?.value  '').trim().toUpperCase()  '';
+        const totals = window.calcTotals ? window.calcTotals(cart) : { finalEur: 0 };
+        const totalEur = totals.finalEur || 0;
 
         try {
-          await addDoc(collection(db, 'orders'), {
-            email,
-            channel,
-            items,
-            note,
-            createdAt: serverTimestamp()
+          const res = await fetch('https://polytalky-backend.onrender.com/api/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email,
+              items: cart,
+              promoCode: promo,
+              totalEur
+            })
           });
-          console.log('Заказ сохранён в Firebase');
+
+          const data = await res.json();
+          if (!data.id) {
+            console.error(data);
+            alert('Ошибка при создании оплаты. Попробуйте позже.');
+            return;
+          }
+
+          const result = await stripe.redirectToCheckout({ sessionId: data.id });
+          if (result.error) {
+            console.error(result.error);
+            alert(result.error.message || 'Ошибка Stripe');
+          }
         } catch (err) {
-          console.error('Ошибка записи в Firebase', err);
+          console.error(err);
+          alert('Ошибка соединения с сервером');
         }
       });
     });
-    // ----------- STRIPE CHECKOUT (оплата из-за рубежа) -----------
-const stripe = Stripe('pk_live_51HqHTmBDwT3uzr4q884SspcgqeyUSp4esf81Z6tHnTkf66WJG1Z6b90PDtyXSdiEommSFnBpHEHswX2ks5Geq9G0004uLMLbKu'); 
-
-document.getElementById('cartPayINT').addEventListener('click', async () => {
-  const cart = getCart();
-  if (!cart || !cart.length) {
-    alert('Корзина пуста');
-    return;
-  }
-
-  const email = document.getElementById('cartEmail').value.trim();
-  if (!email) {
-    alert('Введите email для доступа к курсам');
-    return;
-  }
-
-  const promo = promoInput.value.trim().toUpperCase() || '';
-  const totals = calcTotals(cart); // твоя функция
-  const totalEur = totals.finalEur; // используем итог в евро
-
-  try {
-    // создаём checkout session на backend
-    const res = await fetch('https://polytalky-backend.onrender.com/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        items: cart,
-        promoCode: promo,
-        totalEur
-      })
-    });
-
-    const data = await res.json();
-
-    if (!data.id) {
-      console.error(data);
-      alert('Ошибка при создании оплаты. Попробуйте позже.');
-      return;
-    }
-
-    // переходим в Stripe
-    const result = await stripe.redirectToCheckout({
-      sessionId: data.id
-    });
-
-    if (result.error) {
-      console.error(result.error);
-      alert(result.error.message || 'Ошибка Stripe');
-    }
-  } catch (err) {
-    console.error(err);
-    alert('Ошибка соединения с сервером');
-  }
-});
   </script>
-</script>
 </body>
 </html>
