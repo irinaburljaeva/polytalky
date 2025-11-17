@@ -1533,7 +1533,7 @@
       body: JSON.stringify({
         email,
         amountRub,
-        promoCode: (window.promoInput?.value  '').trim()  null,
+        promoCode: (window.promoInput?.value || '').trim() || null,
         items: cart.map(c => ({
           id: c.id,
           title: c.title,
