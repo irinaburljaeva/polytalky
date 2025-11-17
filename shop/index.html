@@ -1499,16 +1499,70 @@
       }
 
       // Кнопки оплаты в корзине (РФ)
-      document.getElementById('cartPayRU').addEventListener('click', () => {
-        const email = (document.getElementById('cartEmail').value || '').trim();
-        if (!email) { alert('Введите email для доступа и чека'); return; }
-        sessionStorage.setItem('pt_last_email', email);
-        const cart = getCart();
-        if (!cart.length) { alert('Корзина пуста'); return; }
-        const totals = calcTotals(cart);
+    document.getElementById('cartPayRU').addEventListener('click', async () => {
+  const emailInput = document.getElementById('cartEmail');
+  const email = (emailInput?.value || '').trim();
 
-        openPay('ru', cart, totals);
-      });
+  if (!email) {
+    alert('Введите email для доступа и чека');
+    return;
+  }
+
+  const cart = getCart();
+  if (!cart.length) {
+    alert('Корзина пуста');
+    return;
+  }
+
+  // сохраняем email, как и раньше
+  sessionStorage.setItem('pt_last_email', email);
+
+  // считаем сумму в рублях с учётом промокода
+  const totals = calcTotals(cart);
+  const amountRub = totals.finalRub;
+
+  if (!amountRub || amountRub <= 0) {
+    alert('Сумма заказа должна быть больше 0 ₽');
+    return;
+  }
+
+  try {
+    const res = await fetch('https://polytalky-backend.onrender.com/api/yookassa/create-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        amountRub,
+        promoCode: (window.promoInput?.value  '').trim()  null,
+        items: cart.map(c => ({
+          id: c.id,
+          title: c.title,
+          priceRub: c.priceRub,
+          quantity: 1
+        }))
+      })
+    });
+
+    if (!res.ok) {
+      console.error('YooKassa HTTP error', res.status);
+      alert('Не удалось создать платёж. Попробуйте ещё раз.');
+      return;
+    }
+
+    const data = await res.json();
+
+    if (data && data.confirmationUrl) {
+      // переходим на страницу оплаты Юкассы
+      window.location.href = data.confirmationUrl;
+    } else {
+      console.error('Unexpected response from backend', data);
+      alert('Сервер не вернул ссылку на оплату. Проверь настройки backend.');
+    }
+  } catch (err) {
+    console.error('Ошибка соединения с backend для YooKassa', err);
+    alert('Ошибка соединения с сервером. Попробуйте ещё раз.');
+  }
+});
 
       // ----- CONFIRM -----
       const confirmModal = document.getElementById('confirmModal');
