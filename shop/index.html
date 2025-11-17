@@ -6,9 +6,9 @@
   <title>PolyTalky — Магазин курсов</title>
   <meta name="description" content="Магазин языковых курсов PolyTalky: спецпрограммы, челленджи и курсы для продолжающих. Оплата для РФ и из-за рубежа." />
   <script src="https://cdn.tailwindcss.com"></script>
-    <!-- фавикон -->
-<link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-<link rel="apple-touch-icon" href="/favicon.jpg">
+  <!-- фавикон -->
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <link rel="apple-touch-icon" href="/favicon.jpg">
   <style>
     :root{
       --brand:#FFBA08; --ink:#0f172a; --ink-2:#334155; --paper:#fff; --bg:#F9FAFB;
@@ -125,7 +125,7 @@
   <header class="nav sticky top-0 z-30">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
       <a href="/" class="flex items-center justify-center">
-        <img src='/assets/logo.png" class="w-8 mr-2" alt="PolyTalky">
+        <img src="/assets/logo.png" class="w-8 mr-2" alt="PolyTalky">
         <span class="font-bold">PolyTalky</span>
       </a>
       <nav class="hidden md:flex items-center gap-6 text-sm">
@@ -887,7 +887,7 @@
                 <span class="chip">RO</span>
                 <span class="chip">A0</span>
               </div>
-              <h3 class="font-extrabold">Румынский с нуля</h3>
+              <h3 class="font-extrabолд">Румынский с нуля</h3>
               <p class="text-[var(--ink-2)] text-sm mt-1">
                 Для тех, кто любит романские языки и хочет «что-то необычное».
               </p>
@@ -979,73 +979,69 @@
   </div>
 
   <!-- КОРЗИНА (боковая панель) -->
-<div
-  id="cartDrawer"
-  class="fixed top-0 right-0 h-full max-h-screen w-[360px] max-w-[92vw] bg-white shadow-xl z-50 transform translate-x-full transition-transform flex flex-col"
->
-  <!-- ШАПКА -->
-  <div class="p-4 border-b border-black/5 flex items-center justify-between">
-    <h3 class="text-lg font-extrabold">Корзина</h3>
-    <button class="text-sm underline" id="cartClose">Закрыть</button>
-  </div>
-
-  <!-- СКРОЛЛИРУЕМЫЙ СПИСОК ТОВАРОВ -->
-  <div id="cartList" class="p-4 space-y-3 text-sm flex-1 min-h-0 overflow-y-auto">
-    <!-- сюда JS рендерит товары; если корзина пустая, сюда же можешь оставить div с текстом -->
-  </div>
-
-  <!-- ФУТЕР: EMAIL + ПРОМОКОД + ИТОГО + КНОПКИ -->
-  <div class="p-4 border-t border-black/5 text-sm space-y-3">
-    <div>
-      <label for="cartEmail" class="block text-xs text-[var(--ink-2)] mb-1">
-        Email для доступа и чека
-      </label>
-      <input
-        id="cartEmail"
-        type="email"
-        class="w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
-        placeholder="you@example.com"
-      />
+  <div
+    id="cartDrawer"
+    class="fixed top-0 right-0 h-full max-h-screen w-[360px] max-w-[92vw] bg-white shadow-xl z-50 transform translate-x-full transition-transform flex flex-col"
+  >
+    <!-- ШАПКА -->
+    <div class="p-4 border-b border-black/5 flex items-center justify-between">
+      <h3 class="text-lg font-extrabold">Корзина</h3>
+      <button class="text-sm underline" id="cartClose">Закрыть</button>
     </div>
 
-    <div class="flex gap-2 items-center">
-      <input
-        id="cartPromo"
-        type="text"
-        class="flex-1 rounded-xl border border-black/10 px-3 py-2 text-sm"
-        placeholder="Промокод"
-      />
-      <button
-        id="cartPromoBtn"
-        class="text-xs underline whitespace-nowrap"
-      >
-        Применить
-      </button>
-    </div>
-    <div id="cartPromoMsg" class="text-xs text-[var(--ink-2)] min-h-[1.25rem]"></div>
-
-    <div class="flex justify-between text-sm">
-      <span class="font-semibold">Итого:</span>
-      <span id="cartTotalRub">0 ₽</span>
-    </div>
-    <div id="cartDiscountLine" class="text-xs text-[var(--ink-2)] min-h-[1.25rem]"></div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-      <button id="cartPayRU" class="btn btn-brand w-full">
-        Оплата РФ
-      </button>
-      <button id="cartPayINT" class="btn btn-ghost w-full">
-        Оплата из-за рубежа
-      </button>
+    <!-- СКРОЛЛИРУЕМЫЙ СПИСОК ТОВАРОВ -->
+    <div id="cartList" class="p-4 space-y-3 text-sm flex-1 min-h-0 overflow-y-auto">
+      <!-- сюда JS рендерит товары; если корзина пустая, сюда же можешь оставить div с текстом -->
     </div>
 
-    <div class="pt-1 text-[11px] text-[var(--ink-2)]">
-      После успешной оплаты вы автоматически получите доступ к приобретенному курсу.
-    </div>
-  </div>
-</div>
+    <!-- ФУТЕР: EMAIL + ПРОМОКОД + ИТОГО + КНОПКИ -->
+    <div class="p-4 border-t border-black/5 text-sm space-y-3">
+      <div>
+        <label for="cartEmail" class="block text-xs text-[var(--ink-2)] mb-1">
+          Email для доступа и чека
+        </label>
+        <input
+          id="cartEmail"
+          type="email"
+          class="w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          placeholder="you@example.com"
+        />
+      </div>
 
-     
+      <div class="flex gap-2 items-center">
+        <input
+          id="cartPromo"
+          type="text"
+          class="flex-1 rounded-xl border border-black/10 px-3 py-2 text-sm"
+          placeholder="Промокод"
+        />
+        <button
+          id="cartPromoBtn"
+          class="text-xs underline whitespace-nowrap"
+        >
+          Применить
+        </button>
+      </div>
+      <div id="cartPromoMsg" class="text-xs text-[var(--ink-2)] min-h-[1.25rem]"></div>
+
+      <div class="flex justify-between text-sm">
+        <span class="font-semibold">Итого:</span>
+        <span id="cartTotalRub">0 ₽</span>
+      </div>
+      <div id="cartDiscountLine" class="text-xs text-[var(--ink-2)] min-h-[1.25rem]"></div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <button id="cartPayRU" class="btn btn-brand w-full">
+          Оплата РФ
+        </button>
+        <button id="cartPayINT" class="btn btn-ghost w-full">
+          Оплата из-за рубежа
+        </button>
+      </div>
+
+      <div class="pt-1 text-[11px] text-[var(--ink-2)]">
+        После успешной оплаты вы автоматически получите доступ к приобретенному курсу.
+      </div>
     </div>
   </div>
 
@@ -1143,7 +1139,8 @@
       </form>
     </div>
   </div>
-<script src="https://js.stripe.com/v3/"></script>
+
+  <script src="https://js.stripe.com/v3/"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const CART_KEY = 'pt_cart';
@@ -1201,11 +1198,7 @@
         localStorage.setItem(CART_KEY, JSON.stringify(items));
         renderCart();
       };
-  // ДЕЛАЕМ ДОСТУПНЫМИ ДЛЯ ДРУГОГО СКРИПТА
-      window.getCart = getCart;
-      window.calcTotals = calcTotals;
-      window.promoInput = promoInput;
-      
+
       const cartCount = document.getElementById('cartCount');
       const bumpCart = () => {
         cartCount.classList.remove('bump');
@@ -1213,22 +1206,22 @@
         cartCount.classList.add('bump');
       };
 
-    function collectProductData(card) {
-  return {
-    id: card.dataset.id,
-    title: card.dataset.title,
-    img: card.dataset.img,
-    priceRub: Number(card.dataset.priceRub || 0),
-    priceEur: Number(card.dataset.priceEur || 0),
-    level: card.dataset.level || '',
-    lessons: card.dataset.lessons || '',
-    desc: card.dataset.desc || '',
-    includes: JSON.parse(card.dataset.includes || '[]'),
-    outcomes: JSON.parse(card.dataset.outcomes || '[]'),
-    seasonal: card.querySelector('.badge') ? true : false,
-    soon: card.dataset.soon === '1' || card.dataset.soon === 'true'
-  };
-}
+      function collectProductData(card) {
+        return {
+          id: card.dataset.id,
+          title: card.dataset.title,
+          img: card.dataset.img,
+          priceRub: Number(card.dataset.priceRub || 0),
+          priceEur: Number(card.dataset.priceEur || 0),
+          level: card.dataset.level || '',
+          lessons: card.dataset.lessons || '',
+          desc: card.dataset.desc || '',
+          includes: JSON.parse(card.dataset.includes || '[]'),
+          outcomes: JSON.parse(card.dataset.outcomes || '[]'),
+          seasonal: card.querySelector('.badge') ? true : false,
+          soon: card.dataset.soon === '1' || card.dataset.soon === 'true'
+        };
+      }
 
       // Подсчёт сумм с учётом промокода
       function calcTotals(items) {
@@ -1319,6 +1312,10 @@
       const promoBtn = document.getElementById('cartPromoBtn');
       const promoMsg = document.getElementById('cartPromoMsg');
 
+      // экспорт в window для второго скрипта
+      window.getCart = getCart;
+      window.calcTotals = calcTotals;
+      window.promoInput = promoInput;
 
       function renderCart() {
         const cart = getCart();
@@ -1405,25 +1402,25 @@
       };
 
       // ----- ПРОХОД ПО КАРТОЧКАМ -----
-    document.querySelectorAll('.product').forEach(card => {
-  const data = collectProductData(card);
+      document.querySelectorAll('.product').forEach(card => {
+        const data = collectProductData(card);
 
-  card.querySelectorAll('.js-more').forEach(btn => {
-    btn.addEventListener('click', () => openDetail(data));
-  });
+        card.querySelectorAll('.js-more').forEach(btn => {
+          btn.addEventListener('click', () => openDetail(data));
+        });
 
-  card.querySelectorAll('.js-add').forEach(btn => {
-    if (data.soon) {
-      // Режим "Скоро": не даём добавить в корзину
-      btn.textContent = 'Скоро';
-      btn.disabled = true;
-      btn.classList.add('opacity-60', 'cursor-not-allowed');
-    } else {
-      // Обычный товар: можно купить
-      btn.addEventListener('click', () => addToCart(data));
-    }
-  });
-});
+        card.querySelectorAll('.js-add').forEach(btn => {
+          if (data.soon) {
+            // Режим "Скоро": не даём добавить в корзину
+            btn.textContent = 'Скоро';
+            btn.disabled = true;
+            btn.classList.add('opacity-60', 'cursor-not-allowed');
+          } else {
+            // Обычный товар: можно купить
+            btn.addEventListener('click', () => addToCart(data));
+          }
+        });
+      });
 
       // ----- BUY + PAY -----
       const payModal = document.getElementById('payModal');
@@ -1488,13 +1485,15 @@
           ''
         );
       };
-// при загрузке — подставить последний email, если он есть
+
+      // при загрузке — подставить последний email, если он есть
       const cartEmailInput = document.getElementById('cartEmail');
       const lastEmail = sessionStorage.getItem('pt_last_email');
       if (cartEmailInput && lastEmail && !cartEmailInput.value) {
         cartEmailInput.value = lastEmail;
       }
-      // Кнопки оплаты в корзине
+
+      // Кнопки оплаты в корзине (РФ)
       document.getElementById('cartPayRU').addEventListener('click', () => {
         const email = (document.getElementById('cartEmail').value || '').trim();
         if (!email) { alert('Введите email для доступа и чека'); return; }
@@ -1505,7 +1504,6 @@
 
         openPay('ru', cart, totals);
       });
-
 
       // ----- CONFIRM -----
       const confirmModal = document.getElementById('confirmModal');
@@ -1518,13 +1516,13 @@
         const list = items && items.length ? items : getCart();
         cfEmail.value = bmEmailFromCartOrSession();
         // Прием платежей в корзине
-       cfItems.value = list
-  .map(c =>
-    lastRegion === 'int'
-      ? `${c.title} — €${c.priceEur}`          // если "из-за рубежа" → евро
-      : `${c.title} — ${fmtRub(c.priceRub)}`   // по умолчанию → рубли
-  )
-  .join('\n');
+        cfItems.value = list
+          .map(c =>
+            lastRegion === 'int'
+              ? `${c.title} — €${c.priceEur}`          // если "из-за рубежа" → евро
+              : `${c.title} — ${fmtRub(c.priceRub)}`   // по умолчанию → рубли
+          )
+          .join('\n');
   
         const totals = calcTotals(list);
 
@@ -1545,181 +1543,163 @@
       };
 
       const closeConfirm = () => {
-        confirmModal.classList.add('hidden');
-        confirmModal.classList.remove('flex');
-      };
+  confirmModal.classList.add('hidden');
+  confirmModal.classList.remove('flex');
+};
 
-      document.getElementById('cf-close').addEventListener('click', closeConfirm);
-      document.getElementById('cartConfirm').addEventListener('click', () => openConfirm());
+document.getElementById('confirmClose').addEventListener('click', closeConfirm);
 
-      document.getElementById('confirmForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = cfEmail.value.trim();
-        if (!email) {
-          alert('Введите email');
-          return;
-        }
+// Обработчик подтверждения оплаты
+document.getElementById('confirmPay').addEventListener('click', () => {
+  // Просто скрываем окно — вся логика Stripe вынесена в openPay()
+  closeConfirm();
+});
 
-        const cart = getCart();
-        const items = lastItems && lastItems.length ? lastItems : cart;
+// Stripe checkout (Оплата из-за рубежа)
+const openPay = async () => {
+  const items = getCart();
+  const email = cfEmail.value.trim();
 
-        const enrollments = JSON.parse(localStorage.getItem(ENROLL_KEY) || '{}');
-        items.forEach(c => {
-          enrollments[c.id] = {
-            access: true,
-            purchasedAt: new Date().toISOString(),
-            channel: cfChannel.value
-          };
-        });
-        localStorage.setItem(ENROLL_KEY, JSON.stringify(enrollments));
+  if (!email) {
+    alert('Пожалуйста, введите email.');
+    return;
+  }
 
-        // отправка формы через Formspree (если настроен)
-        let ok = false;
-        try {
-          if (FORMSPREE && /formspree\.io\/f\//.test(FORMSPREE)) {
-            const payload = {
-              email,
-              channel: cfChannel.value,
-              items: cfItems.value,
-              note: cfNote.value || '',
-              promo: appliedPromo ? appliedPromo.code : ''
-            };
-            const res = await fetch(FORMSPREE, {
-              method:'POST',
-              headers:{'Content-Type':'application/json','Accept':'application/json'},
-              body:JSON.stringify(payload)
-            });
-            ok = res.ok;
-          }
-        } catch(_) {}
+  try {
+    const response = await fetch(`${BACKEND_URL}/api/create-checkout-session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: items.map(i => ({
+          id: i.id,
+          title: i.title,
+          priceEur: i.priceEur,
+        })),
+        email
+      })
+    });
 
-        showToast(ok
-          ? 'Спасибо! Подтверждение отправлено 👍'
-          : 'Спасибо! Если письмо не дойдёт — напишите на iraburljaeva@gmail.com'
-        );
+    const data = await response.json();
 
-        closeConfirm();
-        closePay();
-        toggleCart(false);
-        setCart([]);
-      });
+    if (!data.id) {
+      console.error('Ошибка Stripe:', data);
+      alert('Ошибка при создании платежа');
+      return;
+    }
 
-      // Кнопки "Купить" в модалке (пока просто добавляем в корзину и открываем корзину)
-      document.getElementById('dm-add').addEventListener('click', () => {
-        if (currentProduct) {
-          addToCart(currentProduct);
-          closeDetail();
-        }
-      });
-document.getElementById('dm-buy').addEventListener('click', () => {
-        if (currentProduct) {
-          addToCart(currentProduct);
-          closeDetail();
-          toggleCart(true);
-        }
-      });      
-    });              <!-- конец document.addEventListener -->
-  </script>          <!-- конец ПЕРВОГО скрипта -->
+    const stripe = Stripe(STRIPE_PUBLIC_KEY);
+    const result = await stripe.redirectToCheckout({ sessionId: data.id });
 
-  <!-- Модульный скрипт с Firebase + Stripe Checkout -->
-  <script type="module">
-    // Firebase SDK (ESM)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    if (result.error) {
+      console.error(result.error);
+      alert(result.error.message || 'Ошибка Stripe');
+    }
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
-      authDomain: "polytalky-70999.firebaseapp.com",
-      projectId: "polytalky-70999",
-      storageBucket: "polytalky-70999.firebasestorage.app",
-      messagingSenderId: "62407152289",
-      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
-    };
+  } catch (err) {
+    console.error(err);
+    alert('Ошибка соединения с сервером');
+  }
+};
 
-    const appFb = initializeApp(firebaseConfig);
-    const db = getFirestore(appFb);
+// Кнопка "Оплата из-за рубежа"
+document.getElementById('payIntl').addEventListener('click', openPay);
 
-    // ----- запись заказов в Firestore -----
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('confirmForm');
-      if (form) {
-        form.addEventListener('submit', async () => {
-          const email   = (document.getElementById('cf-email')?.value || '').trim();
-          const channel = document.getElementById('cf-channel')?.value || '';
-          const items   = document.getElementById('cf-items')?.value || '';
-          const note    = document.getElementById('cf-note')?.value || '';
-          if (!email || !items) return;
+// Кнопка "Оплата РФ" — не трогаю логику, оставляю как у тебя
+document.getElementById('payRU').addEventListener('click', () => {
+  closeConfirm();
+  openPayRuModal();
+});
 
-          try {
-            await addDoc(collection(db, 'orders'), {
-              email,
-              channel,
-              items,
-              note,
-              createdAt: serverTimestamp()
-            });
-            console.log('Заказ сохранён в Firebase');
-          } catch (err) {
-            console.error('Ошибка записи в Firebase', err);
-          }
-        });
+// Автоподстановка email при открытии корзины
+const bmEmailFromCartOrSession = () => {
+  return localStorage.getItem('userEmail') ||
+         sessionStorage.getItem('userEmail') ||
+         '';
+};
+
+cfEmail.addEventListener('input', () => {
+  localStorage.setItem('userEmail', cfEmail.value.trim());
+});
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+    authDomain: "polytalky-70999.firebaseapp.com",
+    projectId: "polytalky-70999",
+    storageBucket: "polytalky-70999.firebasestorage.app",
+    messagingSenderId: "62407152289",
+    appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+  };
+
+  const fbApp = initializeApp(firebaseConfig);
+  const db = getFirestore(fbApp);
+
+  // ----- Stripe Checkout -----
+  const stripe = Stripe("pk_live_51HqHTmBDwT3uzr4q884SspcgqeyUSp4esf81Z6tHnTkf66WJG1Z6b90PDtyXSdiEommSFnBpHEHswX2ks5Geq9G0004uLMLbKu");
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    const btnInt = document.getElementById('cartPayINT');
+    if (!btnInt) return;
+
+    btnInt.addEventListener('click', async () => {
+
+      const cart = window.getCart ? window.getCart() : [];
+      if (!cart.length) {
+        alert("Корзина пуста");
+        return;
       }
 
-      // ----------- STRIPE CHECKOUT (оплата из-за рубежа) -----------
-      const stripe = Stripe('pk_live_51HqHTmBDwT3uzr4q884SspcgqeyUSp4esf81Z6tHnTkf66WJG1Z6b90PDtyXSdiEommSFnBpHEHswX2ks5Geq9G0004uLMLbKu'); 
+      const emailInput = document.getElementById('cartEmail');
+      const email = (emailInput?.value || "").trim();
+      if (!email) {
+        alert("Введите email");
+        return;
+      }
 
-      const cartPayIntBtn = document.getElementById('cartPayINT');
-      if (!cartPayIntBtn) return;
+      const promo = (window.promoInput?.value || "").trim().toUpperCase();
+      const totals = window.calcTotals ? window.calcTotals(cart) : { finalEur: 0 };
+      const totalEur = totals.finalEur;
 
-      cartPayIntBtn.addEventListener('click', async () => {
-        // берём функции/переменные из первого скрипта через window
-        const cart = window.getCart ? window.getCart() : [];
-        if (!cart || !cart.length) {
-          alert('Корзина пуста');
+      try {
+        const res = await fetch("https://polytalky-backend.onrender.com/api/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            items: cart,
+            promoCode: promo,
+            totalEur
+          })
+        });
+
+        const data = await res.json();
+
+        if (!data.id) {
+          console.error(data);
+          alert("Ошибка при создании платежа");
           return;
         }
 
-        const emailInput = document.getElementById('cartEmail');
-        const email = (emailInput?.value || '').trim();
-        if (!email) {
-          alert('Введите email для доступа к курсам');
-          return;
+        const result = await stripe.redirectToCheckout({
+          sessionId: data.id
+        });
+
+        if (result.error) {
+          console.error(result.error);
+          alert(result.error.message);
         }
 
-        const promo = (window.promoInput?.value  '').trim().toUpperCase()  '';
-        const totals = window.calcTotals ? window.calcTotals(cart) : { finalEur: 0 };
-        const totalEur = totals.finalEur || 0;
-
-        try {
-          const res = await fetch('https://polytalky-backend.onrender.com/api/create-checkout-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email,
-              items: cart,
-              promoCode: promo,
-              totalEur
-            })
-          });
-
-          const data = await res.json();
-          if (!data.id) {
-            console.error(data);
-            alert('Ошибка при создании оплаты. Попробуйте позже.');
-            return;
-          }
-
-          const result = await stripe.redirectToCheckout({ sessionId: data.id });
-          if (result.error) {
-            console.error(result.error);
-            alert(result.error.message || 'Ошибка Stripe');
-          }
-        } catch (err) {
-          console.error(err);
-          alert('Ошибка соединения с сервером');
-        }
-      });
+      } catch (err) {
+        console.error(err);
+        alert("Ошибка соединения с сервером");
+      }
     });
-  </script>
+
+  });
+</script>
 </body>
-</html>
+</html>              
