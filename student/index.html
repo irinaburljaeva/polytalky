@@ -43,7 +43,7 @@
     }
     .badge{
       border-radius:.6rem;
-      padding:.25rem .45rem;
+      padding:.25рем .45рем;
       font-size:.7rem;
       border:1px solid rgba(148,163,184,.3);
       background:rgba(248,250,252,.7);
@@ -197,7 +197,7 @@
   </header>
 
   <main class="flex-1">
-    <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6">
+    <div class="wrap px-4 sm:px-6 lg:px-8 py-6 см:py-10 space-y-6">
 
       <!-- PRO STATUS BANNERS -->
       <section id="pro-banner-success" class="pro-banner pro-banner--success">
@@ -352,7 +352,16 @@
                 </p>
               </div>
 
-              <!-- КОИНЫ -->
+              <div class="flex flex-col см:flex-row gap-2">
+                <button id="btn-open-profile" class="btn btn-ghost flex-1 text-xs sm:text-sm">
+                  Настройки профиля
+                </button>
+                <button id="auth-logout" class="btn btn-main flex-1 text-xs sm:text-sm">
+                  Выйти
+                </button>
+              </div>
+
+              <!-- КОИНЫ (после кнопок) -->
               <div id="coins-card" class="soft-card p-3 sm:p-4 space-y-2 hidden">
                 <div class="flex items-center justify-between gap-2">
                   <div class="flex items-center gap-2">
@@ -378,15 +387,6 @@
                 </p>
                 <button id="coins-claim-btn" class="btn btn-main w-full text-xs sm:text-sm">
                   Забрать ежедневный бонус
-                </button>
-              </div>
-
-              <div class="flex flex-col sm:flex-row gap-2">
-                <button id="btn-open-profile" class="btn btn-ghost flex-1 text-xs sm:text-sm">
-                  Настройки профиля
-                </button>
-                <button id="auth-logout" class="btn btn-main flex-1 text-xs sm:text-sm">
-                  Выйти
                 </button>
               </div>
             </div>
@@ -450,7 +450,7 @@
         <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
           <div class="flex items-start justify-between gap-3">
             <div>
-              <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
+              <p class="text-xs font-semibold tracking-[.18ем] uppercase text-amber-700">
                 Профиль
               </p>
               <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
@@ -548,6 +548,31 @@
         </div>
       </div>
 
+      <!-- COIN MODAL -->
+      <div id="coin-modal" class="hidden fixed inset-0 bg-black/40 items-center justify-center z-40">
+        <div class="card max-w-xs w-full mx-6 p-6 text-center space-y-3">
+          <img
+            src="/assets/coin.png"
+            alt="PolyTalky-коин"
+            class="mx-auto mb-2 w-24 h-24"
+          >
+          <h3 class="text-lg font-extrabold mb-1">PolyTalky-коины 🪙</h3>
+          <p class="text-sm text-[var(--ink-2)]">
+            За ежедневные заходы в кабинет вы получаете внутренние коины. В будущем их можно будет обменять на платные курсы, дополнительные аватары и секретные упражнения.
+          </p>
+          <p class="text-xs text-slate-500 mt-1">
+            Текущий баланс: <span id="coin-modal-balance">0</span> коинов.
+          </p>
+          <button
+            id="coin-modal-close"
+            type="button"
+            class="btn btn-ghost px-4 py-2 mt-2"
+          >
+            Понятно
+          </button>
+        </div>
+      </div>
+
       <!-- COOKIE-BANNER -->
       <div id="cookie-banner" class="fixed bottom-3 inset-x-0 flex justify-center z-50 hidden">
         <div class="soft-card px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-2 text-xs sm:text-sm text-slate-700 max-w-xl mx-4">
@@ -563,7 +588,7 @@
     </div>
   </main>
 
-  <footer class="border-t border-slate-200/70 bg-white/80">
+  <footer class="border-т border-slate-200/70 bg-white/80">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] sm:text-xs text-slate-500">
       <p>© PolyTalky. Языки как стиль жизни.</p>
       <p class="flex items-center gap-3">
@@ -673,6 +698,11 @@
       const coinsBalanceEl  = document.getElementById('coins-balance');
       const coinsTextEl     = document.getElementById('coins-text');
       const coinsClaimBtn   = document.getElementById('coins-claim-btn');
+
+      // Модалка коинов
+      const coinModal       = document.getElementById('coin-modal');
+      const coinModalClose  = document.getElementById('coin-modal-close');
+      const coinModalBalance= document.getElementById('coin-modal-balance');
 
       // Состояние коинов в памяти
       let coinsState = {
@@ -792,6 +822,9 @@
 
         coinsCard.classList.remove('hidden');
         coinsBalanceEl.textContent = balance;
+        if (coinModalBalance) {
+          coinModalBalance.textContent = balance;
+        }
 
         coinsClaimBtn.disabled = false;
         coinsClaimBtn.classList.remove('opacity-60','cursor-default');
@@ -827,7 +860,7 @@
         }
       }
 
-      // КОИНЫ: обработчик клика
+      // КОИНЫ: обработчик клика по кнопке «забрать»
       if (coinsClaimBtn) {
         coinsClaimBtn.addEventListener('click', async () => {
           const user = auth.currentUser;
@@ -916,6 +949,42 @@
           }
         });
       }
+
+      // Клик по маленькому коину → модалка с большим
+      (function setupCoinModal() {
+        const coinImgSmall =
+          document.querySelector('#coins-card img[src="/assets/coin.png"]') ||
+          document.querySelector('#coins-card img');
+
+        if (!coinImgSmall || !coinModal || !coinModalClose) return;
+
+        coinImgSmall.classList.add('transition-transform','duration-200','cursor-pointer');
+
+        const openCoinModal = () => {
+          if (coinModalBalance) {
+            coinModalBalance.textContent = coinsBalanceEl ? coinsBalanceEl.textContent : coinsState.balance;
+          }
+          coinModal.classList.remove('hidden');
+          coinModal.classList.add('flex');
+
+          // лёгкий «бамп» маленькой иконки
+          coinImgSmall.classList.add('scale-110');
+          setTimeout(() => {
+            coinImgSmall.classList.remove('scale-110');
+          }, 180);
+        };
+
+        const closeCoinModal = () => {
+          coinModal.classList.add('hidden');
+          coinModal.classList.remove('flex');
+        };
+
+        coinImgSmall.addEventListener('click', openCoinModal);
+        coinModalClose.addEventListener('click', closeCoinModal);
+        coinModal.addEventListener('click', (e) => {
+          if (e.target === coinModal) closeCoinModal();
+        });
+      })();
 
       /* ошибки авторизации */
       function showAuthError(code){
