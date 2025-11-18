@@ -2,252 +2,313 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
+  <title>PolyTalky — Админ-панель</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PolyTalky — Живой редактор</title>
+  <base href="/">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    .edit-outline{ outline:2px dashed #FFBA08; outline-offset:2px; }
-    .img-chip{ position:absolute; bottom:6px; right:6px; font-size:12px; background:#0009; color:#fff; padding:2px 6px; border-radius:6px }
-    .img-wrap{ position:relative; display:inline-block }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                   "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top left,#ffffff 0,#f9fafb 45%,#eef2ff 100%);
+      color:#020617;
+    }
+    .card {
+      border-radius: 1.25rem;
+      border: 1px solid rgba(15,23,42,0.06);
+      background: #ffffff;
+      box-shadow: 0 22px 45px rgba(15,23,42,0.08);
+    }
+    .badge {
+      border-radius:999px;
+      padding:.25rem .8rem;
+      font-size:.7rem;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fffef7ee;
+      backdrop-filter:blur(8px);
+    }
   </style>
 </head>
-<body class="min-h-screen bg-[#0f1115] text-white">
-  <main class="grid lg:grid-cols-[320px,1fr] gap-0 min-h-screen">
-    <!-- Sidebar -->
-    <aside class="border-r border-white/10 bg-black/30 p-4 space-y-4">
-      <h1 class="text-xl font-bold">Живой редактор</h1>
+<body class="min-h-screen flex flex-col">
 
-      <section class="space-y-2">
-        <h2 class="font-semibold">Подключение к GitHub</h2>
-        <input id="gh-user"   class="w-full px-3 py-2 rounded bg-black/40 border border-white/10" placeholder="Владелец (напр. irinaburljaeva)" />
-        <input id="gh-repo"   class="w-full px-3 py-2 rounded bg-black/40 border border-white/10" placeholder="Репозиторий (напр. polytalky)" />
-        <input id="gh-branch" class="w-full px-3 py-2 rounded bg-black/40 border border-white/10" value="main" placeholder="Ветка (main)" />
-        <input id="gh-token"  type="password" class="w-full px-3 py-2 rounded bg-black/40 border border-white/10" placeholder="Personal Access Token (repo)" />
-        <button id="connect" class="w-full px-3 py-2 rounded-xl bg-white text-gray-900 font-semibold">Подключиться</button>
-        <div id="status" class="text-sm text-white/70"></div>
-      </section>
+<header class="border-b border-slate-200 bg-white/80 backdrop-blur sticky top-0 z-40">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex h-8 w-8 rounded-xl bg-slate-900 items-center justify-center text-white text-lg">P</span>
+      <div>
+        <p class="font-semibold text-sm">PolyTalky Admin</p>
+        <p class="text-[11px] text-slate-500">Ручное управление курсами и PRO</p>
+      </div>
+    </div>
+  </div>
+</header>
 
-      <section class="space-y-2">
-        <h2 class="font-semibold">Страница</h2>
-        <select id="page" class="w-full px-3 py-2 rounded bg-black/40 border border-white/10">
-          <option value="/">Главная (index.html)</option>
-          <option value="/courses/">Курсы (/courses/index.html)</option>
-          <option value="/shop/">Магазин (/shop/index.html)</option>
-          <option value="/student/">Личный кабинет (/student/index.html)</option>
-        </select>
-        <button id="load" class="w-full px-3 py-2 rounded-xl bg-white text-gray-900 font-semibold">Открыть</button>
-      </section>
+<main class="flex-1 py-8">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-      <section class="space-y-2">
-        <h2 class="font-semibold">Редактирование</h2>
-        <button id="toggle-edit" class="w-full px-3 py-2 rounded-xl bg-yellow-400 text-gray-900 font-semibold">Включить редактирование</button>
-        <button id="save" class="w-full px-3 py-2 rounded-xl bg-emerald-400 text-gray-900 font-semibold">Сохранить изменения</button>
-        <div class="text-xs text-white/60">
-          Редактируются все элементы с атрибутом <code>data-ct="ключ"</code>.  
-          Картинки — с <code>data-ct-img="ключ"</code>.
+    <!-- Блок с ключом -->
+    <section class="card p-4 sm:p-5 space-y-3">
+      <div class="flex items-center justify-between gap-2">
+        <div>
+          <p class="text-sm font-semibold">Доступ администратора</p>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Используйте ADMIN_API_KEY из Render → Environment.
+          </p>
         </div>
-      </section>
+        <span class="badge text-[10px] uppercase tracking-[0.16em] text-slate-600">Только вы</span>
+      </div>
 
-      <section class="space-y-2">
-        <h2 class="font-semibold">Картинка (заменить)</h2>
-        <input id="img-key" class="w-full px-3 py-2 rounded bg-black/40 border border-white/10" placeholder="Ключ (например, logo)" />
-        <input id="img-path" class="w-full px-3 py-2 rounded bg-black/40 border border-white/10" placeholder="Куда сохранить (assets/logo.png)" />
-        <input id="img-file" type="file" accept="image/*" class="w-full px-3 py-2 rounded bg-black/40 border border-white/10 bg-transparent" />
-        <button id="img-upload" class="w-full px-3 py-2 rounded-xl bg-white text-gray-900 font-semibold">Загрузить и подставить</button>
-        <div class="text-xs text-white/60">Выберите элемент на странице с таким же ключом <code>data-ct-img</code> — ссылка обновится.</div>
-      </section>
-
-      <section class="space-y-2">
-        <h2 class="font-semibold">Справка</h2>
-        <div class="text-sm text-white/70 space-y-2">
-          <p>Пометьте редактируемые места на страницах:</p>
-          <pre class="text-xs bg-black/40 p-2 rounded border border-white/10 overflow-auto">
-&lt;h1 data-ct="hero-title"&gt;Заголовок&lt;/h1&gt;
-&lt;p data-ct="hero-sub"&gt;Подзаголовок&lt;/p&gt;
-&lt;a data-ct="cta-1"&gt;Кнопка 1&lt;/a&gt;
-&lt;img data-ct-img="logo" src="assets/logo.png" alt="Логотип"&gt;
-          </pre>
-          <p>Текст попадает в <code>data/content.json</code>, картинки — в <code>/assets/</code>.</p>
-        </div>
-      </section>
-    </aside>
-
-    <!-- Preview -->
-    <section class="min-h-screen">
-      <iframe id="frame" class="w-full h-screen" src="" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+      <div class="space-y-2">
+        <label for="adminKey" class="block text-xs text-slate-600">Admin key</label>
+        <input
+          id="adminKey"
+          type="password"
+          class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/80"
+          placeholder="Вставьте сюда ADMIN_API_KEY"
+        />
+        <p class="text-[11px] text-slate-500">
+          Ключ хранится в <b>localStorage</b> и передаётся в заголовке
+          <code class="bg-slate-100 px-1 rounded text-[10px]">x-admin-key</code>.
+        </p>
+      </div>
     </section>
-  </main>
 
-  <script>
-// БАЗОВЫЙ ПУТЬ РЕПО (работает на GitHub Pages проектного типа)
-const base = location.pathname.replace(/\/admin\/.*$/, '/'); 
-// например, '/polytalky/'
-function pageUrl(slug){
-  // slug: '/', '/courses/', '/shop/', '/student/'
-  return base + (slug === '/' ? '' : slug.replace(/^\//,''));
-}
-    // --- helpers for GitHub API ---
-    const E = s => document.querySelector(s);
-    const store = {
-      get k(){ return JSON.parse(localStorage.getItem('pt_live') || '{}') },
-      set k(v){ localStorage.setItem('pt_live', JSON.stringify(v)) }
-    };
-    function setStatus(t){ E('#status').textContent = t||'' }
-    function b64(bytes){ return btoa(Array.from(bytes).map(b=>String.fromCharCode(b)).join('')) }
-    function apiPath(path){
-      const {user,repo,branch} = store.k;
-      return `https://api.github.com/repos/${user}/${repo}/contents/${path}?ref=${branch}`;
-    }
-    async function ghGet(path){
-      const r = await fetch(apiPath(path), { headers: { Authorization:`Bearer ${store.k.token}` }});
-      if(!r.ok) throw new Error('GET '+path+' '+r.status);
-      return r.json();
-    }
-    async function ghPut(path, content, sha, message){
-      const body = { message, content, branch: store.k.branch };
-      if(sha) body.sha = sha;
-      const r = await fetch(apiPath(path), {
-        method:'PUT',
-        headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${store.k.token}` },
-        body: JSON.stringify(body)
+    <!-- Поиск пользователя -->
+    <section class="card p-4 sm:p-5 space-y-5">
+      <div class="space-y-1">
+        <p class="text-sm font-semibold">Управление пользователем</p>
+        <p class="text-xs text-slate-500">Введите email — загрузятся PRO и курсы.</p>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-[2fr,auto] items-end">
+        <div>
+          <label for="email" class="block text-xs text-slate-600 mb-1">Email пользователя</label>
+          <input
+            id="email"
+            type="email"
+            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/80"
+            placeholder="user@example.com"
+          />
+        </div>
+        <button
+          id="btnLoad"
+          class="inline-flex items-center justify-center rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold px-4 py-2.5"
+        >
+          Загрузить
+        </button>
+      </div>
+
+      <div id="loadStatus" class="text-xs text-slate-500 min-h-[1.25rem]"></div>
+
+      <!-- Данные пользователя -->
+      <div id="userBlock" class="hidden border-t border-dashed border-slate-200 pt-4 mt-2 space-y-4">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <p class="text-sm font-semibold">Пользователь</p>
+            <p id="userIdLabel" class="text-xs text-slate-500"></p>
+          </div>
+          <span id="proBadge" class="badge text-xs font-semibold text-emerald-700 hidden">PRO активен</span>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="block text-xs text-slate-600">Статус PRO</label>
+            <label class="inline-flex items-center gap-2 text-xs text-slate-700">
+              <input id="proCheckbox" type="checkbox" class="rounded border-slate-300">
+              <span>Включить PRO для этого email</span>
+            </label>
+            <p class="text-[11px] text-slate-500">
+              Соответствует полю <code class="bg-slate-100 px-1 rounded">proGlobal</code>.
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="courses" class="block text-xs text-slate-600">Курсы (ID через запятую)</label>
+            <textarea
+              id="courses"
+              rows="3"
+              class="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-slate-900/80"
+              placeholder="swedish-from-zero, afrikaans, english-intro"
+            ></textarea>
+            <p class="text-[11px] text-slate-500">
+              Полностью переписывает массив <code class="bg-slate-100 px-1 rounded">courses</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-2 pt-2">
+          <p class="text-[11px] text-slate-500 max-w-xs">Список курсов заменяется полностью.</p>
+          <button
+            id="btnSave"
+            class="inline-flex items-center justify-center rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-sm font-semibold px-4 py-2.5"
+          >
+            💾 Сохранить изменения
+          </button>
+        </div>
+
+        <div id="saveStatus" class="text-xs text-slate-500 min-h-[1.25rem]"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  const backendBase = "https://polytalky-backend.onrender.com";
+
+  const adminKeyInput = document.getElementById("adminKey");
+  const emailInput    = document.getElementById("email");
+  const btnLoad       = document.getElementById("btnLoad");
+  const btnSave       = document.getElementById("btnSave");
+  const loadStatus    = document.getElementById("loadStatus");
+  const saveStatus    = document.getElementById("saveStatus");
+  const userBlock     = document.getElementById("userBlock");
+  const userIdLabel   = document.getElementById("userIdLabel");
+  const proCheckbox   = document.getElementById("proCheckbox");
+  const coursesInput  = document.getElementById("courses");
+  const proBadge      = document.getElementById("proBadge");
+
+  // Восстанавливаем ключ из localStorage
+  const storedKey = localStorage.getItem("pt_admin_key");
+  if (storedKey) adminKeyInput.value = storedKey;
+
+  adminKeyInput.addEventListener("change", () => {
+    localStorage.setItem("pt_admin_key", adminKeyInput.value.trim());
+  });
+
+  function getAdminKey() {
+    return adminKeyInput.value.trim();
+  }
+
+  function setLoadStatus(msg, err = false) {
+    loadStatus.textContent = msg;
+    loadStatus.className = "text-xs " + (err ? "text-red-600" : "text-slate-500");
+  }
+
+  function setSaveStatus(msg, err = false) {
+    saveStatus.textContent = msg;
+    saveStatus.className = "text-xs " + (err ? "text-red-600" : "text-slate-500");
+  }
+
+  function showUserBlock(show) {
+    userBlock.classList.toggle("hidden", !show);
+  }
+
+  function updateProBadge(active) {
+    proBadge.classList.toggle("hidden", !active);
+  }
+
+  // Загрузка пользователя
+  async function loadUser() {
+    setSaveStatus("");
+    const adminKey = getAdminKey();
+    const email = emailInput.value.trim();
+
+    if (!adminKey) return setLoadStatus("Укажите admin key.", true);
+    if (!email) return setLoadStatus("Введите email.", true);
+
+    setLoadStatus("Загружаем данные...");
+    showUserBlock(false);
+
+    try {
+      const resp = await fetch(backendBase + "/api/admin/get-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": adminKey
+        },
+        body: JSON.stringify({ email })
       });
-      if(!r.ok) throw new Error('PUT '+path+' '+r.status+' '+await r.text());
-      return r.json();
-    }
 
-    // connect
-    E('#connect').onclick = async () => {
-      const user = E('#gh-user').value.trim();
-      const repo = E('#gh-repo').value.trim();
-      const branch = E('#gh-branch').value.trim() || 'main';
-      const token = E('#gh-token').value.trim();
-      store.k = {user, repo, branch, token};
-      setStatus('Пробую прочитать data/content.json...');
-      try{
-        const r = await ghGet('data/content.json');
-        // просто проверка доступа
-        setStatus('OK: доступ есть. Изменения можно сохранять.');
-      }catch(e){
-        setStatus('Предупреждение: data/content.json пока нет. Он будет создан автоматически при сохранении.');
+      if (!resp.ok) {
+        setLoadStatus("Ошибка сервера: " + resp.status, true);
+        return;
       }
-    };
 
-    // load page into iframe
-    E('#load').onclick = () => {
-      const url = E('#page').value;
-      E('#frame').src = pageUrl(url);
-    };
-// сразу откроем главную
-E('#frame').src = pageUrl('/');
-    // make editable
-    let editOn = false;
-    E('#toggle-edit').onclick = () => {
-      const w = E('#frame').contentWindow;
-      const d = w.document;
-      if(!d || !d.body){ alert('Страница ещё не загрузилась'); return; }
+      const data = await resp.json();
 
-      editOn = !editOn;
-      E('#toggle-edit').textContent = editOn ? 'Выключить редактирование' : 'Включить редактирование';
-
-      // текстовые узлы
-      d.querySelectorAll('[data-ct]').forEach(el=>{
-        el.contentEditable = editOn ? 'true' : 'false';
-        el.classList.toggle('edit-outline', editOn);
-      });
-
-      // картинки
-      d.querySelectorAll('[data-ct-img]').forEach(el=>{
-        if(editOn){
-          el.classList.add('edit-outline');
-          // бейдж
-          if(!el.parentElement.classList.contains('img-wrap')){
-            const wrap = d.createElement('span');
-            wrap.className = 'img-wrap';
-            el.parentNode.insertBefore(wrap, el);
-            wrap.appendChild(el);
-            const chip = d.createElement('span');
-            chip.className = 'img-chip';
-            chip.textContent = 'Картинка: ' + el.getAttribute('data-ct-img');
-            wrap.appendChild(chip);
-          }
-        } else {
-          el.classList.remove('edit-outline');
-          // упрощённо: не разворачиваем обратно, это не влияет на отображение
-        }
-      });
-    };
-
-    // save to content.json (collect all [data-ct] from iframe)
-    E('#save').onclick = async () => {
-      const w = E('#frame').contentWindow;
-      const d = w.document;
-      if(!d || !d.body){ alert('Страница не загружена'); return; }
-
-      // Собираем текстовые/кнопочные значения
-      const index = {};
-      d.querySelectorAll('[data-ct]').forEach(el=>{
-        const key = el.getAttribute('data-ct');
-        // если есть теги внутри — сохраняем HTML, иначе текст
-        const hasInnerTags = el.innerHTML.trim() !== el.textContent.trim();
-        index[key] = hasInnerTags ? el.innerHTML : el.textContent;
-      });
-
-      // Загружаем существующий JSON (если есть)
-      let cfg = {};
-      let sha;
-      try{
-        const res = await ghGet('data/content.json');
-        cfg = JSON.parse(atob(res.content));
-        sha = res.sha;
-      }catch(e){
-        cfg = {};
-        sha = undefined;
+      if (!data.found) {
+        setLoadStatus("Пользователь не найден. Можно создать нового.", false);
+        userIdLabel.textContent = "Будет создан users/" + email;
+        proCheckbox.checked = false;
+        coursesInput.value = "";
+        updateProBadge(false);
+        showUserBlock(true);
+        return;
       }
-      cfg.index = Object.assign(cfg.index||{}, index);
 
-      try{
-        const res = await ghPut('data/content.json',
-          btoa(new TextEncoder().encode(JSON.stringify(cfg,null,2))),
-          sha,
-          'feat: update content.json via live editor'
-        );
-        setStatus('Сохранено ✔ ' + new Date().toLocaleTimeString());
-      }catch(e){
-        setStatus('Ошибка сохранения: ' + e.message);
-      }
-    };
+      // Пользователь найден:
+      const u = data.user;
+      userIdLabel.textContent = "users/" + u.id;
+      proCheckbox.checked = !!u.proGlobal;
+      coursesInput.value = u.courses.join(", ");
+      updateProBadge(!!u.proGlobal);
 
-    // upload image and set src
-    E('#img-upload').onclick = async ()=>{
-      const key = E('#img-key').value.trim();
-      const path = (E('#img-path').value||'').replace(/^\/+/, '');
-      const file = E('#img-file').files?.[0];
-      if(!key || !path || !file){ setStatus('Укажите ключ, путь и файл'); return; }
+      setLoadStatus("Данные загружены.", false);
+      showUserBlock(true);
 
-      setStatus('Загружаю изображение в репозиторий...');
-      try{
-        const bytes = new Uint8Array(await file.arrayBuffer());
-        await ghPut(path, b64(bytes), undefined, 'feat: upload asset '+path);
-      }catch(e){ setStatus('Ошибка загрузки: '+e.message); return; }
-
-      // Меняем src у картинки в iframe
-      const w = E('#frame').contentWindow;
-      const d = w.document;
-      const img = d.querySelector(`[data-ct-img="${key}"]`);
-      if(!img){ setStatus('На странице нет элемента data-ct-img="'+key+'"'); return; }
-      img.setAttribute('src', '/'+path.replace(/^\/+/,''));
-      setStatus('Готово: картинка обновлена');
-
-      // (опционально) можно вынести ссылки на картинки тоже в JSON, но чаще достаточно просто менять src
-    };
-
-    // preload saved creds
-    const saved = store.k; if(saved.user){
-      E('#gh-user').value = saved.user;
-      E('#gh-repo').value = saved.repo;
-      E('#gh-branch').value = saved.branch||'main';
+    } catch (e) {
+      console.error(e);
+      setLoadStatus("Ошибка соединения.", true);
     }
-  </script>
+  }
+
+  // Сохранение пользователя
+  async function saveUser() {
+    const adminKey = getAdminKey();
+    const email = emailInput.value.trim();
+
+    if (!adminKey) return setSaveStatus("Укажите admin key.", true);
+    if (!email) return setSaveStatus("Введите email.", true);
+
+    const pro = proCheckbox.checked;
+    const courses = coursesInput.value.trim();
+
+    setSaveStatus("Сохраняем изменения...");
+
+    try {
+      const resp = await fetch(backendBase + "/api/admin/save-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": adminKey
+        },
+        body: JSON.stringify({
+          email,
+          proGlobal: pro,
+          courses
+        })
+      });
+
+      if (!resp.ok) {
+        setSaveStatus("Ошибка: " + resp.status, true);
+        return;
+      }
+
+      const data = await resp.json();
+
+      if (data.ok) {
+        setSaveStatus("Изменения сохранены.", false);
+        updateProBadge(pro);
+      } else {
+        setSaveStatus("Неожиданный ответ сервера.", true);
+      }
+
+    } catch (e) {
+      console.error(e);
+      setSaveStatus("Ошибка соединения.", true);
+    }
+  }
+
+  btnLoad.addEventListener("click", loadUser);
+  btnSave.addEventListener("click", saveUser);
+
+  emailInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      loadUser();
+    }
+  });
+</script>
+
 </body>
 </html>
