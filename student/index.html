@@ -335,7 +335,8 @@
                 </p>
                 <div class="flex items-center gap-3">
                   <div class="h-10 w-10 rounded-full overflow-hidden bg-slate-200 flex-shrink-0">
-                    <img id="profile-avatar-img" src="/assets/avatar.jpg" alt="Avatar" class="h-full w-full object-cover">
+                    <!-- ДЕФОЛТ: девочка -->
+                    <img id="profile-avatar-img" src="/assets/avatarf.png" alt="Avatar" class="h-full w-full object-cover">
                   </div>
                   <div class="min-w-0">
                     <p id="profile-name" class="text-sm font-semibold text-slate-900 truncate">
@@ -475,6 +476,32 @@
               <p class="text-[11px] text-slate-500 mt-1">
                 Выберите изображение с компьютера, мы сохраним его как ваш аватар.
               </p>
+
+              <div class="mt-2 space-y-1">
+                <p class="text-[11px] text-slate-500">
+                  Или используйте один из стандартных аватаров:
+                </p>
+                <div class="flex gap-2">
+                  <!-- Девочка по умолчанию -->
+                  <button
+                    type="button"
+                    class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1 ring-2 ring-amber-400"
+                    data-avatar-type="girl"
+                  >
+                    <img src="/assets/avatarf.png" alt="Аватар девочка" class="h-10 w-10 object-cover rounded-lg">
+                  </button>
+                  <button
+                    type="button"
+                    class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1"
+                    data-avatar-type="boy"
+                  >
+                    <img src="/assets/avatar.png" alt="Аватар мальчик" class="h-10 w-10 object-cover rounded-lg">
+                  </button>
+                </div>
+              </div>
+
+              <!-- скрытое поле для хранения выбора -->
+              <input type="hidden" id="profile-avatar-type" value="girl">
             </div>
 
             <p id="profile-msg" class="text-xs text-slate-500 min-h-[1rem]"></p>
@@ -595,6 +622,8 @@
       const profileLast     = document.getElementById('profile-last');
       const profileAvatarFile = document.getElementById('profile-avatar-file');
       const profileMsg      = document.getElementById('profile-msg');
+      const profileAvatarType = document.getElementById('profile-avatar-type');
+      const avatarChoiceButtons = document.querySelectorAll('.avatar-choice');
 
       const coursesNeedAuth = document.getElementById('courses-need-auth');
       const coursesList     = document.getElementById('courses-list');
@@ -661,6 +690,33 @@
       });
       profileSettings.addEventListener('click', (e)=>{
         if (e.target === profileSettings) closeProfileModal();
+      });
+
+      /* выбор базового аватара */
+      function setAvatarChoice(type) {
+        if (!profileAvatarType) return;
+        const t = type || 'girl';
+        profileAvatarType.value = t;
+
+        avatarChoiceButtons.forEach((btn) => {
+          const bt = btn.getAttribute('data-avatar-type');
+          if (bt === t) {
+            btn.classList.add('ring-2','ring-amber-400');
+          } else {
+            btn.classList.remove('ring-2','ring-amber-400');
+          }
+        });
+      }
+
+      avatarChoiceButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const t = btn.getAttribute('data-avatar-type') || 'girl';
+          setAvatarChoice(t);
+          // предварительный просмотр дефолтного аватара
+          profileAvatarImg.src = t === 'girl'
+            ? '/assets/avatarf.png'
+            : '/assets/avatar.png';
+        });
       });
 
       /* ошибки авторизации */
@@ -770,7 +826,9 @@
           coursesNeedAuth.classList.remove('hidden');
           authUserEmail.textContent = '';
           profileName.textContent = '';
-          profileAvatarImg.src = '/assets/avatar.jpg';
+          profileAvatarImg.src = '/assets/avatarf.png';
+          if (profileAvatarType) profileAvatarType.value = 'girl';
+          setAvatarChoice('girl');
           coursesList.innerHTML = '';
           coursesEmpty.classList.add('hidden');
           achievementsList.innerHTML = '';
@@ -805,7 +863,8 @@
 
           const first = data.firstName || '';
           const last  = data.lastName || '';
-          const avatarUrl = data.avatarUrl || '';
+          const avatarUrl  = data.avatarUrl || '';
+          const avatarType = data.avatarType || 'girl';
           const displayEmail = data.email || email || '';
 
           const displayName = (first || last)
@@ -818,10 +877,14 @@
           profileFirst.value = first;
           profileLast.value  = last;
 
+          setAvatarChoice(avatarType);
+
           if (avatarUrl) {
             profileAvatarImg.src = avatarUrl;
           } else {
-            profileAvatarImg.src = '/assets/avatar.jpg';
+            profileAvatarImg.src = avatarType === 'girl'
+              ? '/assets/avatarf.png'
+              : '/assets/avatar.png';
           }
 
           profileMsg.textContent = '';
@@ -841,7 +904,8 @@
         }
       }
 
-     profileForm.addEventListener('submit', async (e) => {
+      /* сохранение профиля + загрузка аватара */
+      profileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         profileMsg.textContent = '';
 
@@ -856,24 +920,34 @@
           const first = profileFirst.value.trim();
           const last  = profileLast.value.trim();
           const file  = profileAvatarFile.files[0] || null;
+          const avatarType = profileAvatarType ? (profileAvatarType.value || 'girl') : 'girl';
 
-          const payload = {
-            firstName: first,
-            lastName:  last
-          };
+          let avatarUrlToSave = null;
 
-          // если выбрали новый файл — загружаем в Storage
           if (file) {
             profileMsg.textContent = 'Загружаем фото...';
 
             const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-            const avatarRef = storage.ref().child(avatars/${user.uid}_${Date.now()}.${ext});
+            const avatarRef = storage.ref().child(`avatars/${user.uid}_${Date.now()}.${ext}`);
 
             const snap = await avatarRef.put(file);
-            const url  = await snap.ref.getDownloadURL();
+            avatarUrlToSave = await snap.ref.getDownloadURL();
+          }
 
-            payload.avatarUrl = url;
-            profileAvatarImg.src = url;     // сразу обновляем картинку в шапке
+          const payload = {
+            firstName: first,
+            lastName:  last,
+            avatarType: avatarType
+          };
+
+          if (avatarUrlToSave) {
+            payload.avatarUrl = avatarUrlToSave;
+            profileAvatarImg.src = avatarUrlToSave;
+          } else {
+            // если файла нет, обновляем отображение дефолтного аватара по выбору
+            profileAvatarImg.src = avatarType === 'girl'
+              ? '/assets/avatarf.png'
+              : '/assets/avatar.png';
           }
 
           // сохраняем профиль в Firestore
@@ -882,7 +956,7 @@
           profileMsg.textContent = 'Профиль обновлён ✔️';
           profileAvatarFile.value = '';     // очищаем поле файла
 
-          // можно дополнительно обновить профиль из базы (не обязательно)
+          // при желании можно ещё раз перечитать профиль
           const again = auth.currentUser;
           if (again) {
             await loadUserProfile(again);
