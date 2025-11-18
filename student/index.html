@@ -351,6 +351,30 @@
                   Это ваш личный кабинет PolyTalky. Здесь вы можете управлять курсами, видеть прогресс и собирать достижения.
                 </p>
               </div>
+
+              <!-- КОИНЫ -->
+              <div id="coins-card" class="soft-card p-3 sm:p-4 space-y-2 hidden">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">🪙</span>
+                    <div>
+                      <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">
+                        Ваши коины
+                      </p>
+                      <p class="text-sm text-slate-900">
+                        Баланс: <span id="coins-balance">0</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <p id="coins-text" class="text-[11px] text-slate-600">
+                  Заходите каждый день, чтобы получать больше коинов и менять их на бонусы.
+                </p>
+                <button id="coins-claim-btn" class="btn btn-main w-full text-xs sm:text-sm">
+                  Забрать ежедневный бонус
+                </button>
+              </div>
+
               <div class="flex flex-col sm:flex-row gap-2">
                 <button id="btn-open-profile" class="btn btn-ghost flex-1 text-xs sm:text-sm">
                   Настройки профиля
@@ -638,6 +662,30 @@
       const proBannerCancel  = document.getElementById('pro-banner-cancel');
       const proCancelButton  = document.getElementById('pro-cancel-button');
 
+      // КОИНЫ: элементы
+      const coinsCard       = document.getElementById('coins-card');
+      const coinsBalanceEl  = document.getElementById('coins-balance');
+      const coinsTextEl     = document.getElementById('coins-text');
+      const coinsClaimBtn   = document.getElementById('coins-claim-btn');
+
+      // Состояние коинов в памяти
+      let coinsState = {
+        balance: 0,
+        streak: 0,
+        lastDate: null,
+        alreadyClaimedToday: false,
+        mode: null,       // 'daily' | 'wheel'
+        nextReward: 0
+      };
+
+      function todayStr() {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
       /* PRO параметр */
       (function handleProParam() {
         const params = new URLSearchParams(window.location.search);
@@ -718,6 +766,150 @@
             : '/assets/avatar.png';
         });
       });
+
+      /* КОИНЫ: обновление UI по данным пользователя */
+      function updateCoinsUI(userData) {
+        if (!coinsCard || !coinsBalanceEl || !coinsTextEl || !coinsClaimBtn) return;
+
+        const balance = typeof userData.coinsBalance === 'number' ? userData.coinsBalance : 0;
+        const streak  = typeof userData.coinStreak   === 'number' ? userData.coinStreak   : 0;
+        const last    = userData.lastCoinDate || null;
+        const today   = todayStr();
+        const already = (last === today);
+
+        coinsState.balance = balance;
+        coinsState.streak  = streak;
+        coinsState.lastDate= last;
+        coinsState.alreadyClaimedToday = already;
+        coinsState.mode = null;
+        coinsState.nextReward = 0;
+
+        coinsCard.classList.remove('hidden');
+        coinsBalanceEl.textContent = balance;
+
+        coinsClaimBtn.disabled = false;
+        coinsClaimBtn.classList.remove('opacity-60','cursor-default');
+
+        if (already) {
+          coinsTextEl.textContent = 'Бонус за сегодня уже получен, приходите завтра 💛';
+          coinsClaimBtn.textContent = 'Бонус уже забран';
+          coinsClaimBtn.disabled = true;
+          coinsClaimBtn.classList.add('opacity-60','cursor-default');
+          coinsState.mode = null;
+          return;
+        }
+
+        // Ещё не получали бонус сегодня
+        if (streak >= 6) {
+          // 7-й день: колесо удачи
+          coinsTextEl.textContent = 'Сегодня 7-й день подряд! Вы можете крутить колесо удачи и получить случайное количество коинов.';
+          coinsClaimBtn.textContent = 'Крутить колесо 🎡';
+          coinsState.mode = 'wheel';
+          coinsState.nextReward = 0;
+        } else {
+          // Обычный день: 1–6 коинов
+          const reward = Math.min(streak + 1, 6);
+          coinsState.mode = 'daily';
+          coinsState.nextReward = reward;
+
+          if (streak === 0 && balance === 0) {
+            coinsTextEl.textContent = 'Сегодня вы можете получить 1 коин за вход. Коины — внутренняя валюта PolyTalky. В будущем их можно будет обменять на платные курсы, аватары и секретные упражнения.';
+          } else {
+            coinsTextEl.textContent = `Сегодня вы можете забрать ${reward} коинов за ежедневный вход. Продолжайте заходить каждый день, чтобы дойти до колеса удачи!`;
+          }
+          coinsClaimBtn.textContent = `Забрать ${reward} коинов`;
+        }
+      }
+
+      // КОИНЫ: обработчик клика
+      if (coinsClaimBtn) {
+        coinsClaimBtn.addEventListener('click', async () => {
+          const user = auth.currentUser;
+          if (!user) {
+            alert('Сначала войдите в аккаунт, чтобы получать коины.');
+            return;
+          }
+          if (coinsState.alreadyClaimedToday) {
+            return;
+          }
+          if (!coinsState.mode) {
+            return;
+          }
+
+          const email = user.email;
+          if (!email) {
+            alert('Не удалось определить email пользователя.');
+            return;
+          }
+
+          const docRef = db.collection('users').doc(email);
+          const today  = todayStr();
+
+          coinsClaimBtn.disabled = true;
+          coinsClaimBtn.textContent = 'Подождите...';
+          coinsClaimBtn.classList.add('opacity-60','cursor-default');
+
+          try {
+            if (coinsState.mode === 'daily') {
+              const reward = coinsState.nextReward || 1;
+              const newBalance = coinsState.balance + reward;
+              const newStreak  = Math.min(coinsState.streak + 1, 6);
+
+              await docRef.set({
+                coinsBalance: newBalance,
+                coinStreak: newStreak,
+                lastCoinDate: today
+              }, { merge: true });
+
+              coinsState.balance = newBalance;
+              coinsState.streak  = newStreak;
+              coinsState.lastDate= today;
+              coinsState.alreadyClaimedToday = true;
+
+              updateCoinsUI({
+                coinsBalance: newBalance,
+                coinStreak: newStreak,
+                lastCoinDate: today
+              });
+              coinsTextEl.textContent = `Вы получили ${reward} коинов за сегодняшний вход. Спасибо, что заходите! 💛`;
+            } else if (coinsState.mode === 'wheel') {
+              const wheelPrizes = [
+                { label: '5 коинов',  coins: 5 },
+                { label: '10 коинов', coins: 10 },
+                { label: '15 коинов', coins: 15 },
+                { label: '20 коинов', coins: 20 }
+              ];
+              const i = Math.floor(Math.random() * wheelPrizes.length);
+              const prize = wheelPrizes[i];
+              const newBalance = coinsState.balance + prize.coins;
+
+              await docRef.set({
+                coinsBalance: newBalance,
+                coinStreak: 0, // новый цикл
+                lastCoinDate: today
+              }, { merge: true });
+
+              coinsState.balance = newBalance;
+              coinsState.streak  = 0;
+              coinsState.lastDate= today;
+              coinsState.alreadyClaimedToday = true;
+
+              updateCoinsUI({
+                coinsBalance: newBalance,
+                coinStreak: 0,
+                lastCoinDate: today
+              });
+              coinsTextEl.textContent = `Колесо остановилось на: ${prize.label}! Эти коины уже добавлены на ваш счёт 🪙`;
+            }
+          } catch (err) {
+            console.error('coins error', err);
+            coinsTextEl.textContent = 'Не удалось выдать бонус. Проверьте соединение и попробуйте ещё раз.';
+            coinsClaimBtn.disabled = false;
+            coinsClaimBtn.classList.remove('opacity-60','cursor-default');
+            coinsClaimBtn.textContent = 'Повторить';
+          }
+        });
+      }
 
       /* ошибки авторизации */
       function showAuthError(code){
@@ -832,6 +1024,9 @@
           coursesList.innerHTML = '';
           coursesEmpty.classList.add('hidden');
           achievementsList.innerHTML = '';
+          if (coinsCard) {
+            coinsCard.classList.add('hidden');
+          }
         }
       }
 
@@ -888,6 +1083,9 @@
           }
 
           profileMsg.textContent = '';
+
+          // КОИНЫ: обновляем интерфейс по данным профиля
+          updateCoinsUI(data);
 
           if (emailRef) {
             try {
