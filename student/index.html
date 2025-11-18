@@ -841,8 +841,7 @@
         }
       }
 
-      /* профиль: сохранение + загрузка аватара */
-      profileForm.addEventListener('submit', async (e) => {
+     profileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         profileMsg.textContent = '';
 
@@ -858,35 +857,42 @@
           const last  = profileLast.value.trim();
           const file  = profileAvatarFile.files[0] || null;
 
-          let avatarUrlToSave = null;
-
-          if (file) {
-            const ext = file.name.split('.').pop() || 'jpg';
-            const avatarRef = storage.ref().child(`avatars/${user.uid}_${Date.now()}.${ext}`);
-            const snap = await avatarRef.put(file);
-            avatarUrlToSave = await snap.ref.getDownloadURL();
-          }
-
           const payload = {
-            firstName:first,
-            lastName:last
+            firstName: first,
+            lastName:  last
           };
-          if (avatarUrlToSave) {
-            payload.avatarUrl = avatarUrlToSave;
+
+          // если выбрали новый файл — загружаем в Storage
+          if (file) {
+            profileMsg.textContent = 'Загружаем фото...';
+
+            const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+            const avatarRef = storage.ref().child(avatars/${user.uid}_${Date.now()}.${ext});
+
+            const snap = await avatarRef.put(file);
+            const url  = await snap.ref.getDownloadURL();
+
+            payload.avatarUrl = url;
+            profileAvatarImg.src = url;     // сразу обновляем картинку в шапке
           }
 
-          await db.collection('users').doc(email).set(payload,{merge:true});
+          // сохраняем профиль в Firestore
+          await db.collection('users').doc(email).set(payload, { merge: true });
 
-          if (avatarUrlToSave) {
-            profileAvatarImg.src = avatarUrlToSave;
-          }
+          profileMsg.textContent = 'Профиль обновлён ✔️';
+          profileAvatarFile.value = '';     // очищаем поле файла
 
-          profileMsg.textContent = 'Профиль обновлён ✔';
+          // можно дополнительно обновить профиль из базы (не обязательно)
           const again = auth.currentUser;
-          if (again) await loadUserProfile(again);
+          if (again) {
+            await loadUserProfile(again);
+          }
+
+          // закрываем модалку после успешного сохранения
+          closeProfileModal();
         } catch (err) {
-          console.error(err);
-          profileMsg.textContent = 'Не удалось сохранить профиль. Попробуйте ещё раз.';
+          console.error('profile save error', err);
+          profileMsg.textContent = 'Не удалось сохранить профиль. Проверьте соединение и попробуйте ещё раз.';
         }
       });
 
