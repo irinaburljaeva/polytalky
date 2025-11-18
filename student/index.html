@@ -1477,14 +1477,14 @@
         if (!medals.length) {
           return `
             <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
-              Как только вы начнёте проходить уроки, здесь появятся первые бейджи и медали за ваши шаги в языках.
+              Как только вы начнёте проходить уроки, здесь появятся первые бейджи и медали за ваши достижения в языках.
             </div>`;
         }
 
         if (!medals.some(m => m.earned)) {
           return `
             <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
-              Первые медали появятся, когда вы активируете курс в
+              Первые медали появятся, когда вы купите один из Premium-курсов в
               <a href="/shop/" class="underline">магазине</a> или начнёте
               <a href="/courses/" class="underline">бесплатную программу</a>.
             </div>`;
