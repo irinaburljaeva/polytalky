@@ -27,6 +27,9 @@
       background:#fffef7ee;
       backdrop-filter:blur(8px);
     }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -111,33 +114,55 @@
         </div>
 
         <div class="grid sm:grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <label class="block text-xs text-slate-600">Статус PRO</label>
-            <label class="inline-flex items-center gap-2 text-xs text-slate-700">
-              <input id="proCheckbox" type="checkbox" class="rounded border-slate-300">
-              <span>Включить PRO для этого email</span>
-            </label>
-            <p class="text-[11px] text-slate-500">
-              Соответствует полю <code class="bg-slate-100 px-1 rounded">proGlobal</code>.
-            </p>
+          <div class="space-y-3">
+            <div class="space-y-2">
+              <label class="block text-xs text-slate-600">Статус PRO</label>
+              <label class="inline-flex items-center gap-2 text-xs text-slate-700">
+                <input id="proCheckbox" type="checkbox" class="rounded border-slate-300">
+                <span>Включить PRO для этого email</span>
+              </label>
+              <p class="text-[11px] text-slate-500">
+                Соответствует полю <code class="bg-slate-100 px-1 rounded">proGlobal</code> в документе <code class="bg-slate-100 px-1 rounded">users</code>.
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <label for="proUntil" class="block text-xs text-slate-600">Срок действия PRO (опционально)</label>
+              <input
+                id="proUntil"
+                type="date"
+                class="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-slate-900/80"
+              />
+              <p class="text-[11px] text-slate-500">
+                Хранится как строка <code class="bg-slate-100 px-1 rounded">YYYY-MM-DD</code> в поле
+                <code class="bg-slate-100 px-1 rounded">proUntil</code>. Если пусто — PRO без даты окончания.
+              </p>
+            </div>
           </div>
 
           <div class="space-y-2">
-            <label for="courses" class="block text-xs text-slate-600">Курсы (ID через запятую)</label>
+            <label class="block text-xs text-slate-600">Курсы</label>
+            <!-- чекбоксы курсов -->
+            <div id="coursesCheckboxes" class="grid grid-cols-1 gap-1.5 text-xs text-slate-700 mb-2">
+              <!-- сюда динамически отрисуются галочки -->
+            </div>
+            <label for="coursesExtra" class="block text-xs text-slate-600 mt-1">Доп. курсы (ID через запятую)</label>
             <textarea
-              id="courses"
-              rows="3"
+              id="coursesExtra"
+              rows="2"
               class="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-slate-900/80"
-              placeholder="swedish-from-zero, afrikaans, english-intro"
+              placeholder="если курс не в списке — впишите сюда его ID"
             ></textarea>
             <p class="text-[11px] text-slate-500">
-              Полностью переписывает массив <code class="bg-slate-100 px-1 rounded">courses</code>.
+              При сохранении в <code class="bg-slate-100 px-1 rounded">courses</code> уйдут и галочки, и дополнительные курсы.
             </p>
           </div>
         </div>
 
         <div class="flex items-center justify-between gap-2 pt-2">
-          <p class="text-[11px] text-slate-500 max-w-xs">Список курсов заменяется полностью.</p>
+          <p class="text-[11px] text-slate-500 max-w-xs">
+            Внимание: список курсов <b>переписывается целиком</b> тем, что указано здесь.
+          </p>
           <button
             id="btnSave"
             class="inline-flex items-center justify-center rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-sm font-semibold px-4 py-2.5"
@@ -149,25 +174,52 @@
         <div id="saveStatus" class="text-xs text-slate-500 min-h-[1.25rem]"></div>
       </div>
     </section>
+
+    <!-- Логи текущей сессии -->
+    <section class="card p-4 sm:p-5 space-y-3">
+      <div class="flex items-center justify-between gap-2">
+        <div>
+          <p class="text-sm font-semibold">Логи этой сессии</p>
+          <p class="text-xs text-slate-500">Здесь фиксируются действия, которые вы сделали через эту страницу.</p>
+        </div>
+      </div>
+      <div id="logs" class="text-xs text-slate-600 space-y-1 max-h-48 overflow-auto">
+        <p class="text-[11px] text-slate-400">Пока нет записей.</p>
+      </div>
+    </section>
+
   </div>
 </main>
 
 <script>
   const backendBase = "https://polytalky-backend.onrender.com";
 
-  const adminKeyInput = document.getElementById("adminKey");
-  const emailInput    = document.getElementById("email");
-  const btnLoad       = document.getElementById("btnLoad");
-  const btnSave       = document.getElementById("btnSave");
-  const loadStatus    = document.getElementById("loadStatus");
-  const saveStatus    = document.getElementById("saveStatus");
-  const userBlock     = document.getElementById("userBlock");
-  const userIdLabel   = document.getElementById("userIdLabel");
-  const proCheckbox   = document.getElementById("proCheckbox");
-  const coursesInput  = document.getElementById("courses");
-  const proBadge      = document.getElementById("proBadge");
+  // Список известных курсов (можешь дополнять)
+  const KNOWN_COURSES = [
+    { id: "english-intro",      label: "English Intro" },
+    { id: "swedish-from-zero",  label: "Swedish from zero" },
+    { id: "afrikaans",          label: "Afrikaans" },
+    { id: "german-from-zero",   label: "German from zero" },
+    { id: "spanish-from-zero",  label: "Spanish from zero" },
+    // добавь сюда остальные ID курсов по мере необходимости
+  ];
 
-  // Восстанавливаем ключ из localStorage
+  const adminKeyInput  = document.getElementById("adminKey");
+  const emailInput     = document.getElementById("email");
+  const btnLoad        = document.getElementById("btnLoad");
+  const btnSave        = document.getElementById("btnSave");
+  const loadStatus     = document.getElementById("loadStatus");
+  const saveStatus     = document.getElementById("saveStatus");
+  const userBlock      = document.getElementById("userBlock");
+  const userIdLabel    = document.getElementById("userIdLabel");
+  const proCheckbox    = document.getElementById("proCheckbox");
+  const proUntilInput  = document.getElementById("proUntil");
+  const coursesExtra   = document.getElementById("coursesExtra");
+  const coursesBox     = document.getElementById("coursesCheckboxes");
+  const proBadge       = document.getElementById("proBadge");
+  const logsContainer  = document.getElementById("logs");
+
+  // Восстанавливаем admin key из localStorage
   const storedKey = localStorage.getItem("pt_admin_key");
   if (storedKey) adminKeyInput.value = storedKey;
 
@@ -180,12 +232,12 @@
   }
 
   function setLoadStatus(msg, err = false) {
-    loadStatus.textContent = msg;
+    loadStatus.textContent = msg || "";
     loadStatus.className = "text-xs " + (err ? "text-red-600" : "text-slate-500");
   }
 
   function setSaveStatus(msg, err = false) {
-    saveStatus.textContent = msg;
+    saveStatus.textContent = msg || "";
     saveStatus.className = "text-xs " + (err ? "text-red-600" : "text-slate-500");
   }
 
@@ -195,6 +247,54 @@
 
   function updateProBadge(active) {
     proBadge.classList.toggle("hidden", !active);
+  }
+
+  function appendLog(message) {
+    const ts = new Date().toLocaleString();
+    const line = document.createElement("p");
+    line.textContent = `[${ts}] ${message}`;
+    logsContainer.querySelectorAll("p")[0]?.remove(); // убираем "Пока нет записей", если ещё есть
+    logsContainer.appendChild(line);
+  }
+
+  // Рендерим список курсов-галочек
+  function renderCourseCheckboxes() {
+    coursesBox.innerHTML = "";
+    KNOWN_COURSES.forEach(course => {
+      const label = document.createElement("label");
+      label.className = "inline-flex items-center gap-2";
+
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.value = course.id;
+      input.className = "course-checkbox rounded border-slate-300";
+
+      const span = document.createElement("span");
+      span.textContent = `${course.label} (${course.id})`;
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+      const wrapper = document.createElement("div");
+      wrapper.appendChild(label);
+
+      coursesBox.appendChild(wrapper);
+    });
+  }
+
+  renderCourseCheckboxes();
+
+  function getSelectedCourseIds() {
+    return Array.from(document.querySelectorAll(".course-checkbox"))
+      .filter(cb => cb.checked)
+      .map(cb => cb.value);
+  }
+
+  function setCourseCheckboxesFromList(courseIds) {
+    const idsSet = new Set(courseIds);
+    document.querySelectorAll(".course-checkbox").forEach(cb => {
+      cb.checked = idsSet.has(cb.value);
+    });
   }
 
   // Загрузка пользователя
@@ -226,25 +326,43 @@
 
       const data = await resp.json();
 
+      let coursesForUser = [];
+      let pro = false;
+      let proUntil = "";
+
       if (!data.found) {
-        setLoadStatus("Пользователь не найден. Можно создать нового.", false);
+        setLoadStatus("Пользователь не найден. Можно создать нового при сохранении.", false);
         userIdLabel.textContent = "Будет создан users/" + email;
-        proCheckbox.checked = false;
-        coursesInput.value = "";
-        updateProBadge(false);
-        showUserBlock(true);
-        return;
+        pro = false;
+        coursesForUser = [];
+        proUntil = "";
+      } else {
+        const u = data.user;
+        userIdLabel.textContent = "users/" + u.id;
+        pro = !!u.proGlobal;
+        coursesForUser = Array.isArray(u.courses) ? u.courses : [];
+        // proUntil берём из raw.proUntil как строку
+        if (u.raw && typeof u.raw.proUntil === "string") {
+          proUntil = u.raw.proUntil;
+        } else {
+          proUntil = "";
+        }
+        setLoadStatus("Данные загружены.", false);
       }
 
-      // Пользователь найден:
-      const u = data.user;
-      userIdLabel.textContent = "users/" + u.id;
-      proCheckbox.checked = !!u.proGlobal;
-      coursesInput.value = u.courses.join(", ");
-      updateProBadge(!!u.proGlobal);
+      // Обновляем UI для PRO
+      proCheckbox.checked = pro;
+      updateProBadge(pro);
+      proUntilInput.value = proUntil;
 
-      setLoadStatus("Данные загружены.", false);
+      // Раскладываем курсы по галочкам + extra
+      setCourseCheckboxesFromList(coursesForUser);
+      const knownIds = new Set(KNOWN_COURSES.map(c => c.id));
+      const extra = coursesForUser.filter(id => !knownIds.has(id));
+      coursesExtra.value = extra.join(", ");
+
       showUserBlock(true);
+      appendLog(`Загружен пользователь ${email} (found: ${data.found})`);
 
     } catch (e) {
       console.error(e);
@@ -261,7 +379,19 @@
     if (!email) return setSaveStatus("Введите email.", true);
 
     const pro = proCheckbox.checked;
-    const courses = coursesInput.value.trim();
+    const proUntil = proUntilInput.value || null;
+    const selected = getSelectedCourseIds();
+    const extraStr = (coursesExtra.value || "").trim();
+
+    // Собираем финальный список курсов
+    let finalCourses = [...selected];
+    if (extraStr) {
+      const extraList = extraStr
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean);
+      finalCourses = [...new Set([...finalCourses, ...extraList])];
+    }
 
     setSaveStatus("Сохраняем изменения...");
 
@@ -275,7 +405,8 @@
         body: JSON.stringify({
           email,
           proGlobal: pro,
-          courses
+          courses: finalCourses,
+          proUntil: proUntil    // <- это поле нужно поддержать на backend
         })
       });
 
@@ -289,6 +420,7 @@
       if (data.ok) {
         setSaveStatus("Изменения сохранены.", false);
         updateProBadge(pro);
+        appendLog(`Сохранён пользователь ${email}: PRO=${pro}, courses=[${finalCourses.join(", ")}], proUntil=${proUntil || "—"}`);
       } else {
         setSaveStatus("Неожиданный ответ сервера.", true);
       }
