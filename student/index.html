@@ -14,9 +14,16 @@
       --brand-1:#FFBA08; /* жёлтый */
       --brand-2:#F97316; /* мягкий оранжевый */
       --brand-3:#10B981; /* зелёный для успеха */
-      --brand-bg:#FEF9C3;
+
+      --ink-1:#0F172A;
+      --ink-2:#4B5563;
+      --ink-soft:#9CA3AF;
+      --bg-soft:#F9FAFB;
     }
+    *{box-sizing:border-box}
     body{
+      margin:0;
+      min-height:100vh;
       font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
       background:
         radial-gradient(circle at top left,#FEF9C3 0,#FEFCE8 40%,#F9FAFB 100%);
@@ -31,45 +38,64 @@
     }
     .soft-card{
       border-radius:1rem;
-      border:1px solid rgba(148,163,184,.25);
-      background-color:rgba(255,255,255,.9);
+      border:1px solid rgba(148,163,184,.18);
+      background:rgba(255,255,255,.9);
+    }
+    .tag{
+      border-radius:999px;
+      padding:.15rem .6rem;
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      border:1px solid rgba(148,163,184,.4);
+      background:rgba(255,255,255,.9);
+      color:#6b7280;
+    }
+    .chip{
+      border-radius:999px;
+      padding:.15rem .6rem;
+      font-size:.75rem;
+      border:1px solid rgba(148,163,184,.4);
+    }
+    .badge{
+      border-radius:.6rem;
+      padding:.25rem .45rem;
+      font-size:.7rem;
+      border:1px solid rgba(148,163,184,.3);
+      background:rgba(248,250,252,.7);
     }
     .btn{
       border-radius:999px;
-      padding:.55rem 1.1rem;
+      padding:.55rem 1.2rem;
+      font-size:.88rem;
       font-weight:600;
-      font-size:.85rem;
+      border:1px solid transparent;
+      cursor:pointer;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:.4rem;
-      transition:.15s;
-      border:1px solid transparent;
-      cursor:pointer;
-      text-decoration:none;
       white-space:nowrap;
     }
-    .btn-brand{
-      background:var(--brand-1);
+    .btn-main{
+      background:linear-gradient(135deg,var(--brand-2),var(--brand-1));
       color:#111827;
-      border-color:#FDE68A;
+      border-color:rgba(251,191,36,0.9);
+      box-shadow:0 12px 30px rgba(234,179,8,.45);
     }
-    .btn-brand:hover{
-      background:#FACC15;
-    }
+    .btn-main:hover{filter:brightness(1.03);}
     .btn-ghost{
-      background:transparent;
-      color:#111827;
-      border-color:rgba(148,163,184,.6);
+      background:rgba(255,255,255,.7);
+      border-color:rgba(148,163,184,.5);
+      color:#374151;
     }
     .btn-ghost:hover{
-      background:rgba(148,163,184,.08);
+      background:white;
     }
-    .badge{
+    .pill-label{
       border-radius:999px;
-      font-size:.65rem;
-      padding:.15rem .55rem;
-      font-weight:600;
+      padding:.18rem .6rem;
+      font-size:.7rem;
       text-transform:uppercase;
       letter-spacing:.06em;
       border:1px solid rgba(148,163,184,.5);
@@ -83,6 +109,93 @@
       opacity:0;
       pointer-events:none;
       height:0;width:0;
+    }
+
+    /* PRO status banners on student page */
+    .pro-banner{
+      max-width:1040px;
+      margin:0 auto 0;
+      padding:10px 14px;
+      border-radius:14px;
+      display:none;
+      align-items:flex-start;
+      gap:10px;
+      font-size:13px;
+    }
+    .pro-banner__icon{
+      flex:0 0 28px;
+      height:28px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+      font-weight:600;
+    }
+    .pro-banner__body h2{
+      margin:0 0 2px;
+      font-size:14px;
+      font-weight:600;
+    }
+    .pro-banner__body p{
+      margin:0;
+      font-size:13px;
+    }
+    .pro-banner--success{
+      border:1px solid rgba(16,185,129,.4);
+      background:linear-gradient(135deg,#ecfdf5,#f0fdf4,#ffffff);
+      color:#065f46;
+    }
+    .pro-banner--success .pro-banner__icon{
+      background:#22c55e;
+      color:#ecfdf5;
+      box-shadow:0 0 0 2px #bbf7d0;
+    }
+    .pro-banner--error{
+      border:1px solid rgba(248,113,113,.4);
+      background:linear-gradient(135deg,#fef2f2,#fee2e2,#ffffff);
+      color:#b91c1c;
+    }
+    .pro-banner--error .pro-banner__icon{
+      background:#ef4444;
+      color:#fef2f2;
+      box-shadow:0 0 0 2px #fecaca;
+    }
+    .pro-banner--cancel{
+      border:1px solid rgba(148,163,184,.4);
+      background:linear-gradient(135deg,#f9fafb,#e5e7eb,#ffffff);
+      color:#374151;
+    }
+    .pro-banner--cancel .pro-banner__icon{
+      background:#6b7280;
+      color:#f9fafb;
+      box-shadow:0 0 0 2px #e5e7eb;
+    }
+    .pro-banner__btn{
+      margin-left:auto;
+      border-radius:999px;
+      padding:6px 14px;
+      border:none;
+      font-size:12px;
+      font-weight:600;
+      cursor:pointer;
+      background:#0f172a;
+      color:#f9fafb;
+      white-space:nowrap;
+    }
+    .pro-banner__btn:hover{
+      background:#111827;
+    }
+    @media (max-width:640px){
+      .pro-banner{
+        margin:0 1rem;
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .pro-banner__btn{
+        margin-left:0;
+        margin-top:6px;
+      }
     }
   </style>
 </head>
@@ -104,6 +217,33 @@
 
   <main class="flex-1">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6">
+      <!-- PRO STATUS BANNERS -->
+      <section id="pro-banner-success" class="pro-banner pro-banner--success">
+        <div class="pro-banner__icon">✓</div>
+        <div class="pro-banner__body">
+          <h2>Подписка PRO активирована</h2>
+          <p>Теперь ваши задания будут проверяться кураторами, а вы получаете приоритет в ответах и особое внимание к прогрессу.</p>
+        </div>
+      </section>
+
+      <section id="pro-banner-error" class="pro-banner pro-banner--error">
+        <div class="pro-banner__icon">!</div>
+        <div class="pro-banner__body">
+          <h2>Оплата не прошла</h2>
+          <p>Что-то пошло не так при оформлении подписки PRO. Попробуйте ещё раз или выберите другой способ оплаты.</p>
+        </div>
+      </section>
+
+      <section id="pro-banner-cancel" class="pro-banner pro-banner--cancel">
+        <div class="pro-banner__icon">⏹</div>
+        <div class="pro-banner__body">
+          <h2>Оформление подписки отменено</h2>
+          <p>Если у вас уже есть активная подписка и вы хотите её завершить, вы можете запросить отмену.</p>
+        </div>
+        <button type="button" id="pro-cancel-button" class="pro-banner__btn">
+          Отменить подписку
+        </button>
+      </section>
 
       <!-- HERO / AUTH CARD -->
       <section class="card p-5 sm:p-7 space-y-5">
@@ -116,159 +256,295 @@
               Личный кабинет <span class="text-amber-600">языкового героя</span>
             </h1>
             <p class="text-sm sm:text-base text-slate-600">
-              Здесь хранятся ваши курсы, достижения и прогресс.
-              Войдите по email, чтобы всё синхронизировалось между телефоном, планшетом и ноутбуком.
+              Здесь появляются все ваши курсы, прогресс и достижения. Авторизуйтесь, чтобы увидеть свою личную карту маршрутов в мире языков.
             </p>
           </div>
+          <div class="w-full max-w-sm mx-auto">
+            <div id="auth-when-logged-out" class="space-y-4">
+              <div class="soft-card p-4 space-y-3">
+                <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">
+                  Войти в кабинет
+                </p>
+                <p class="text-sm text-slate-600">
+                  Используйте тот же email, который вы указывали при покупке курсов или регистрации на сайте PolyTalky.
+                </p>
+                <p class="text-xs text-slate-500">
+                  После входа мы подберём для вас все активированные курсы и достижения.
+                </p>
+              </div>
+              <form id="auth-form" class="space-y-3">
+                <div>
+                  <label for="auth-email" class="block text-xs font-medium text-slate-600 mb-1">
+                    Email
+                  </label>
+                  <input
+                    id="auth-email"
+                    type="email"
+                    autocomplete="email"
+                    required
+                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+                    placeholder="you@example.com"
+                  />
+                </div>
+                <div>
+                  <label for="auth-pass" class="block text-xs font-medium text-slate-600 mb-1">
+                    Пароль
+                  </label>
+                  <input
+                    id="auth-pass"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+                    placeholder="Минимум 6 символов"
+                  />
+                </div>
 
-          <!-- блок для состояния "вошёл" -->
-          <div id="auth-when-logged-in" class="hidden soft-card px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 min-w-[260px]">
-            <div id="profile-avatar" class="h-12 w-12 rounded-full bg-[var(--brand-1)]/60 flex items-center justify-center text-xl font-bold text-slate-900 shadow-inner">
-              😊
+                <!-- honeypot -->
+                <input id="auth-website" type="text" class="hp-field" autocomplete="off" />
+
+                <div id="auth-extra" class="space-y-3 hidden">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label for="auth-first" class="block text-xs font-medium text-slate-600 mb-1">
+                        Имя
+                      </label>
+                      <input
+                        id="auth-first"
+                        type="text"
+                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+                        placeholder="Например, Anna"
+                      />
+                    </div>
+                    <div>
+                      <label for="auth-last" class="block text-xs font-medium text-slate-600 mb-1">
+                        Фамилия
+                      </label>
+                      <input
+                        id="auth-last"
+                        type="text"
+                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+                        placeholder="Фамилия (опционально)"
+                      />
+                    </div>
+                  </div>
+                  <p class="text-[11px] text-slate-500">
+                    Эти данные мы используем только для отображения в профиле и для более персональных писем.
+                  </p>
+                </div>
+
+                <p id="auth-error" class="text-xs text-red-500 min-h-[1rem]"></p>
+
+                <div class="flex flex-col sm:flex-row gap-2 pt-1">
+                  <button
+                    id="btn-login"
+                    type="submit"
+                    class="btn btn-main flex-1 justify-center text-sm"
+                  >
+                    Войти
+                  </button>
+                  <button
+                    id="auth-register"
+                    type="button"
+                    class="btn btn-ghost flex-1 justify-center text-sm"
+                  >
+                    Регистрация
+                  </button>
+                </div>
+              </form>
             </div>
-            <div class="flex-1">
-              <div class="text-xs uppercase tracking-wide text-slate-500">Вы вошли как</div>
-              <div id="profile-name" class="font-semibold text-slate-900 text-sm"></div>
-              <div id="auth-user-email" class="text-xs text-slate-500"></div>
+
+            <div id="auth-when-logged-in" class="hidden space-y-4">
+              <div class="soft-card p-4 space-y-3">
+                <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">
+                  Вы авторизованы
+                </p>
+                <div class="flex items-center gap-3">
+                  <div id="profile-avatar" class="h-10 w-10 rounded-full bg-slate-900 text-white flex items-center justify-center text-sm font-semibold shadow-md">
+                    😊
+                  </div>
+                  <div class="min-w-0">
+                    <p id="profile-name" class="text-sm font-semibold text-slate-900 truncate">
+                      ...
+                    </p>
+                    <p id="auth-user-email" class="text-xs text-slate-500 truncate">
+                      ...
+                    </p>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-500">
+                  Это ваш личный кабинет PolyTalky. Здесь вы можете управлять курсами, видеть прогресс и собирать достижения.
+                </p>
+              </div>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <button id="btn-open-profile" class="btn btn-ghost flex-1 text-xs sm:text-sm">
+                  Настройки профиля
+                </button>
+                <button id="auth-logout" class="btn btn-main flex-1 text-xs sm:text-sm">
+                  Выйти
+                </button>
+              </div>
             </div>
-            <button id="auth-logout" class="btn btn-ghost text-xs px-3 py-1">Выйти</button>
           </div>
         </div>
+      </section>
 
-        <!-- блок для состояния "НЕ вошёл" -->
-        <div id="auth-when-logged-out" class="soft-card p-4 sm:p-5 text-sm text-slate-700 space-y-3">
-          <p class="font-semibold text-slate-900">Войдите в PolyTalky</p>
+      <!-- КУРСЫ -->
+      <section class="space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <div class="space-y-1">
+            <p class="pill-label">Ваши курсы</p>
+            <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
+              Все активированные программы и мини-курсы
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600">
+              Здесь собраны курсы, купленные в <a href="/shop/" class="underline">магазине</a>, а также бесплатные программы, в которых вы прошли хотя бы первый урок.
+            </p>
+          </div>
+          <a href="/shop/" class="hidden sm:inline-flex btn btn-ghost text-xs">
+            🛒 В магазин
+          </a>
+        </div>
+
+        <div id="courses-need-auth" class="soft-card p-4 text-xs sm:text-sm text-slate-600">
+          Войдите в аккаунт, чтобы увидеть список ваших курсов и прогресс.
+        </div>
+
+        <div id="courses-empty" class="soft-card p-4 text-xs sm:text-sm text-slate-600 hidden">
+          Пока здесь пусто. Загляните в
+          <a href="/shop/" class="underline">магазин</a>, чтобы выбрать курс, или начните один из бесплатных
+          <a href="/courses/" class="underline">мини-курсов</a>.
+        </div>
+
+        <div id="courses-list" class="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <!-- карточки курсов -->
+        </div>
+      </section>
+
+      <!-- ДОСТИЖЕНИЯ -->
+      <section class="space-y-3">
+        <div class="space-y-1">
+          <p class="pill-label">Достижения</p>
+          <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
+            Бейджи, медали и маленькие победы
+          </h2>
           <p class="text-xs sm:text-sm text-slate-600">
-            Аккаунт по email сохранит ваши курсы и достижения. Если ещё нет аккаунта — нажмите «Регистрация».
+            Мы постепенно добавляем в курсы бейджи и медали. Здесь будут появляться ваши награды за пройденные уроки, выполненные задания и особые активности.
           </p>
+        </div>
+        <div id="achievements-list" class="grid gap-3 sm:gap-4 md:grid-cols-2">
+          <!-- достижения -->
+        </div>
+      </section>
 
-          <form id="auth-form" class="space-y-3 text-sm">
-            <!-- honeypot -->
-            <input id="auth-website" type="text" autocomplete="off" class="hp-field" aria-hidden="true" />
+      <!-- НАСТРОЙКИ ПРОФИЛЯ (модалка) -->
+      <div id="profile-settings" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40">
+        <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
+                Профиль
+              </p>
+              <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
+                Настройки аккаунта
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-600">
+                Эти данные помогают нам персонализировать ваш опыт и, в будущем, показывать прогресс более наглядно.
+              </p>
+            </div>
+            <button id="btn-close-profile" class="text-slate-400 hover:text-slate-600 text-xl leading-none">
+              ×
+            </button>
+          </div>
 
-            <div class="grid sm:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_minmax(0,1.2fr)] gap-3">
-              <input id="auth-email" type="email" required
-                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                     placeholder="email@example.com" />
-              <input id="auth-pass" type="password" required
-                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                     placeholder="Пароль" />
-              <div class="flex gap-2">
-                <button type="submit" id="btn-login" class="btn btn-brand flex-1">Войти</button>
-                <button type="button" id="auth-register" class="btn btn-ghost flex-1">Регистрация</button>
+          <form id="profile-form" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="profile-first" class="block text-xs font-medium text-slate-600 mb-1">
+                  Имя
+                </label>
+                <input
+                  id="profile-first"
+                  name="firstName"
+                  type="text"
+                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+                  placeholder="Например, Anna"
+                />
+              </div>
+              <div>
+                <label for="profile-last" class="block text-xs font-medium text-slate-600 mb-1">
+                  Фамилия
+                </label>
+                <input
+                  id="profile-last"
+                  name="lastName"
+                  type="text"
+                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+                  placeholder="Фамилия (опционально)"
+                />
               </div>
             </div>
 
-            <!-- дополнительные поля только для регистрации -->
-            <div class="grid sm:grid-cols-2 gap-3 hidden" id="auth-extra">
-              <input id="auth-first" type="text"
-                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                     placeholder="Имя (для регистрации)" />
-              <input id="auth-last" type="text"
-                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                     placeholder="Фамилия (для регистрации)" />
-            </div>
-          </form>
-
-          <p id="auth-error" class="mt-1 text-xs text-red-500 min-h-[1.25rem]"></p>
-          <p class="mt-1 text-[11px] text-slate-500 leading-relaxed">
-            Нажимая «Регистрация», вы соглашаетесь с
-            <a class="underline" href="/legal/offer.html" target="_blank">публичной офертой</a>
-            и
-            <a class="underline" href="/legal/privacy.html" target="_blank">политикой конфиденциальности</a>.
-          </p>
-        </div>
-
-        <!-- Мини-настройки профиля (только когда вошли) -->
-        <div id="profile-settings" class="hidden pt-4 border-t border-dashed border-amber-200 mt-2">
-          <p class="text-xs font-semibold uppercase tracking-[.18em] text-amber-700 mb-2">Профиль</p>
-          <form id="profile-form" class="grid gap-3 text-xs sm:text-sm sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1.1fr)_minmax(0,1.4fr)_auto] items-end">
-            <input id="profile-first" type="text"
-                   class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                   placeholder="Имя" />
-            <input id="profile-last" type="text"
-                   class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                   placeholder="Фамилия" />
-            <input id="profile-avatar-url" type="url"
-                   class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
-                   placeholder="Ссылка на картинку для аватара (необязательно)" />
-            <button type="submit" class="btn btn-ghost text-xs px-3 py-2">Сохранить профиль</button>
-          </form>
-          <p id="profile-msg" class="mt-1 text-[11px] text-slate-500"></p>
-        </div>
-      </section>
-
-      <!-- ОСНОВНОЙ КОНТЕНТ: КУРСЫ + ДОСТИЖЕНИЯ -->
-      <section class="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1.1fr)]">
-        <!-- КУРСЫ -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between gap-3">
             <div>
-              <h2 class="text-lg sm:text-xl font-bold text-slate-900">Ваши курсы</h2>
-              <p class="text-xs text-slate-500">
-                Покупки из магазина и активированные бесплатные курсы появятся здесь автоматически.
+              <label for="profile-avatar-url" class="block text-xs font-medium text-slate-600 mb-1">
+                Фото профиля (ссылка)
+              </label>
+              <input
+                id="profile-avatar-url"
+                name="avatarUrl"
+                type="url"
+                class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+                placeholder="https://.../avatar.jpg"
+              />
+              <p class="text-[11px] text-slate-500 mt-1">
+                Вставьте ссылку на картинку (например, с Google Drive или другим хостингом).
               </p>
             </div>
-            <a href="/courses/" class="text-xs sm:text-sm text-amber-700 hover:text-amber-900 font-medium">
-              Открыть каталог →
-            </a>
-          </div>
 
-          <div id="courses-need-auth" class="soft-card p-4 text-sm text-slate-600">
-            Чтобы увидеть свои курсы, <span class="font-semibold text-slate-900">войдите в личный кабинет</span> выше.
-          </div>
+            <p id="profile-msg" class="text-xs text-slate-500"></p>
 
-          <div id="courses-list" class="grid gap-4 sm:grid-cols-2"></div>
-
-          <p id="courses-empty" class="hidden text-sm text-slate-500">
-            Пока у вас нет активированных курсов. Загляните в
-            <a href="/shop/" class="underline">магазин</a> или начните
-            <a href="/courses/" class="underline">бесплатный курс</a>.
-          </p>
+            <div class="flex items-center justify-end gap-2 pt-2">
+              <button type="button" id="btn-cancel-profile" class="btn btn-ghost text-xs sm:text-sm">
+                Отмена
+              </button>
+              <button type="submit" class="btn btn-main text-xs sm:text-sm">
+                Сохранить изменения
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
 
-        <!-- ДОСТИЖЕНИЯ -->
-        <aside class="space-y-3">
-          <div class="flex items-center justify-between gap-3">
-            <h2 class="text-lg sm:text-xl font-bold text-slate-900">Достижения</h2>
-            <span class="badge bg-amber-50 border-amber-200 text-amber-700">Бета</span>
-          </div>
-          <p class="text-xs sm:text-sm text-slate-600">
-            Медали появляются автоматически, когда вы активируете курсы и учитесь. Это маленькие поводы гордиться собой.
+      <!-- COOKIE-BANNER -->
+      <div id="cookie-banner" class="fixed bottom-3 inset-x-0 flex justify-center z-50 hidden">
+        <div class="soft-card px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-2 text-xs sm:text-sm text-slate-700 max-w-xl mx-4">
+          <p class="flex-1">
+            Мы используем куки, чтобы помнить ваши логины и прогресс по курсам. Продолжая пользоваться сайтом, вы соглашаетесь с
+            <a href="/privacy/" class="underline">политикой конфиденциальности</a>.
           </p>
-
-          <div id="achievements-list" class="grid gap-3">
-            <!-- сюда рендерятся медали -->
-          </div>
-        </aside>
-      </section>
+          <button id="cookie-accept" class="btn btn-main text-xs sm:text-sm">
+            Хорошо
+          </button>
+        </div>
+      </div>
     </div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-slate-200/70 bg-white/80 backdrop-blur py-6 text-sm text-slate-600 mt-8">
-    <div class="wrap px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-      <p>© 2025 PolyTalky. Все права защищены.</p>
-      <div class="flex flex-wrap gap-4">
-        <a href="/contact.html" class="hover:text-slate-900">Контакты</a>
-        <a href="/legal/privacy.html" class="hover:text-slate-900">Политика конфиденциальности</a>
-        <a href="/legal/offer.html" class="hover:text-slate-900">Публичная оферта</a>
-        <a href="/legal/cookies.html" class="hover:text-slate-900">Cookies</a>
-        <a href="/legal/consent.html" class="hover:text-slate-900">Согласие</a>
-      </div>
+  <footer class="border-t border-slate-200/70 bg-white/80">
+    <div class="wrap px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] sm:text-xs text-slate-500">
+      <p>© PolyTalky. Языки как стиль жизни.</p>
+      <p class="flex items-center gap-3">
+        <a href="/privacy/" class="hover:text-slate-700">Политика конфиденциальности</a>
+        <span class="hidden sm:inline text-slate-400">•</span>
+        <a href="/oferta/" class="hover:text-slate-700">Публичная оферта</a>
+      </p>
     </div>
   </footer>
 
-  <!-- COOKIE БАННЕР -->
-  <div id="cookie-banner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white shadow-lg rounded-xl px-4 py-3 text-xs sm:text-sm flex items-center gap-3 hidden">
-    <span>Мы используем cookies для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с этим.</span>
-    <button id="cookie-accept" class="btn btn-brand text-xs px-3 py-1">Понятно</button>
-  </div>
-
-  <!-- Firebase SDKs (compat) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <!-- Firebase + логика кабинета -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
   <script>
     // Твой конфиг Firebase
@@ -309,11 +585,11 @@
     const BADGE_META = {
       'english-intro-lesson-1': {
         icon: '🌟',
-        title: 'Первый шаг в English Intro',
-        desc: 'Вы прошли первый урок курса English Intro.'
+        title: 'Первый урок English Intro',
+        desc: 'Вы прошли первое занятие, и это отличный старт!'
       },
       'english-intro-lesson-2': {
-        icon: '🧭',
+        icon: '🚀',
         title: 'Продолжаем путешествие',
         desc: 'Вы завершили второй урок English Intro.'
       }
@@ -352,6 +628,38 @@
       const coursesEmpty    = document.getElementById('courses-empty');
 
       const achievementsList= document.getElementById('achievements-list');
+      // PRO баннеры
+      const proBannerSuccess = document.getElementById('pro-banner-success');
+      const proBannerError   = document.getElementById('pro-banner-error');
+      const proBannerCancel  = document.getElementById('pro-banner-cancel');
+      const proCancelButton  = document.getElementById('pro-cancel-button');
+
+      (function handleProParam() {
+        const params = new URLSearchParams(window.location.search);
+        const pro = params.get('pro');
+        if (!pro) return;
+
+        if (pro === 'success' && proBannerSuccess) {
+          proBannerSuccess.style.display = 'flex';
+        } else if (pro === 'error' && proBannerError) {
+          proBannerError.style.display = 'flex';
+        } else if (pro === 'cancel' && proBannerCancel) {
+          proBannerCancel.style.display = 'flex';
+        }
+
+        // убираем параметр из адресной строки
+        params.delete('pro');
+        const newSearch = params.toString();
+        const newUrl = window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash;
+        window.history.replaceState({}, '', newUrl);
+      })();
+
+      if (proCancelButton) {
+        proCancelButton.addEventListener('click', () => {
+          alert('Если вы хотите отменить подписку PRO, напишите нам на почту поддержки — мы поможем всё оформить.');
+        });
+      }
+
 
       // cookie
       const banner       = document.getElementById('cookie-banner');
@@ -364,41 +672,44 @@
         banner.classList.add('hidden');
       });
 
-      // режим регистрации
+      // --- Хелперы ---
       let registerMode = false;
 
-      // --- Перевод ошибок Firebase ---
-      function showAuthError(code, mode) {
-        let msg = 'Произошла ошибка. Попробуйте ещё раз.';
-
-        switch (code) {
-          case 'auth/user-not-found':
-            msg = 'Аккаунт с таким email не найден. Сначала зарегистрируйтесь.';
-            break;
-          case 'auth/wrong-password':
-            msg = 'Неверный пароль. Проверьте раскладку клавиатуры и попробуйте ещё раз.';
-            break;
-          case 'auth/invalid-email':
-            msg = 'Некорректный email. Проверьте адрес (например, name@example.com).';
-            break;
-          case 'auth/too-many-requests':
-            msg = 'Слишком много попыток входа. Подождите пару минут и попробуйте снова.';
-            break;
-          case 'auth/email-already-in-use':
-            msg = 'Аккаунт с таким email уже зарегистрирован. Войдите через кнопку «Войти».';
-            break;
-          case 'auth/weak-password':
-            msg = 'Слишком простой пароль. Придумайте пароль не короче 6 символов.';
-            break;
-          case 'auth/operation-not-allowed':
-            msg = 'Вход по email временно недоступен. Попробуйте позже или свяжитесь с нами.';
-            break;
-        }
-        if (mode === 'login' && code === 'auth/invalid-credential') {
-          msg = 'Неверный email или пароль. Проверьте данные или зарегистрируйтесь.';
+      function showAuthError(code, mode){
+        let msg = 'Что-то пошло не так. Попробуйте ещё раз.';
+        if (code === 'auth/user-not-found'){
+          msg = 'Пользователь с таким email не найден. Попробуйте зарегистрироваться.';
+        } else if (code === 'auth/wrong-password'){
+          msg = 'Неверный пароль. Попробуйте ещё раз или воспользуйтесь сбросом пароля.';
+        } else if (code === 'auth/email-already-in-use'){
+          msg = 'Этот email уже зарегистрирован. Попробуйте войти.';
+        } else if (code === 'auth/weak-password'){
+          msg = 'Пароль слишком простой. Добавьте ещё символов.';
         }
         authError.textContent = msg;
       }
+
+      function openProfileModal(){
+        profileSettings.classList.remove('hidden');
+        profileSettings.classList.add('flex');
+      }
+      function closeProfileModal(){
+        profileSettings.classList.add('hidden');
+        profileSettings.classList.remove('flex');
+      }
+
+      document.getElementById('btn-open-profile')?.addEventListener('click', openProfileModal);
+      document.getElementById('btn-close-profile')?.addEventListener('click', closeProfileModal);
+      document.getElementById('btn-cancel-profile')?.addEventListener('click', (e)=>{
+        e.preventDefault();
+        closeProfileModal();
+      });
+
+      profileSettings.addEventListener('click', (e)=>{
+        if (e.target === profileSettings){
+          closeProfileModal();
+        }
+      });
 
       // --- Обновление состояния при входе/выходе ---
       async function setAuthState(user) {
@@ -414,11 +725,6 @@
           coursesNeedAuth.classList.add('hidden');
           authUserEmail.textContent = user.email || '';
 
-          registerMode = false;
-          authExtra.classList.add('hidden');
-          authFirstEl.value = '';
-          authLastEl.value  = '';
-
           await loadUserProfile(user);
           await loadUserEnrollments(user);
         } else {
@@ -433,12 +739,9 @@
           profileSettings.classList.add('hidden');
           profileName.textContent = '';
           profileAvatar.textContent = '😊';
-          profileAvatar.style.backgroundImage = '';
-          profileAvatar.classList.remove('overflow-hidden');
-
           coursesList.innerHTML = '';
           coursesEmpty.classList.add('hidden');
-          achievementsList.innerHTML = renderAchievements([], []);
+          achievementsList.innerHTML = '';
         }
       }
 
@@ -485,30 +788,21 @@
           const first = authFirstEl.value.trim();
           const last  = authLastEl.value.trim();
 
-          if (!email || !pass) {
+          if (!email || !pass){
             authError.textContent = 'Введите email и пароль.';
-            return;
-          }
-          if (!first || !last) {
-            authError.textContent = 'Для регистрации укажите имя и фамилию.';
             return;
           }
 
           const cred = await auth.createUserWithEmailAndPassword(email, pass);
           const user = cred.user;
-
-          // Документ пользователя по email (совместимо с backend Stripe)
-          await db.collection('users').doc(email).set({
-            email: email,
-            firstName: first,
-            lastName: last,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            avatarUrl: ''
-          }, { merge: true });
-
-          // Локально тоже сразу сохраним
-          localStorage.setItem('pt_uid', user.uid || '');
-          localStorage.setItem('pt_email', email);
+          if (user) {
+            await db.collection('users').doc(email).set({
+              email,
+              firstName:first || null,
+              lastName:last || null,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge:true });
+          }
         } catch (err) {
           console.error(err);
           showAuthError(err.code, 'register');
@@ -525,16 +819,37 @@
       // --- Профиль (данные и аватар) ---
       async function loadUserProfile(user) {
         try {
-          const email = user.email;
-          if (!email) return;
+          const email = user.email || null;
+          const uid   = user.uid   || null;
+          if (!email && !uid) return;
 
-          const doc = await db.collection('users').doc(email).get();
-          let data = doc.exists ? doc.data() : null;
+          const usersCol = db.collection('users');
+          const emailRef = email ? usersCol.doc(email) : null;
+          const uidRef   = uid   ? usersCol.doc(uid)   : null;
 
-          const first = data?.firstName || '';
-          const last  = data?.lastName || '';
-          const avatarUrl = data?.avatarUrl || '';
-          const displayEmail = data?.email || email;
+          const [emailSnap, uidSnap] = await Promise.all([
+            emailRef ? emailRef.get() : Promise.resolve(null),
+            uidRef   ? uidRef.get()   : Promise.resolve(null)
+          ]);
+
+          const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
+          const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
+
+          // объединяем данные: uidData как "старые", emailData как "новые/актуальные"
+          let data = {
+            ...(uidData || {}),
+            ...(emailData || {}),
+          };
+
+          // гарантируем, что email прописан
+          if (email) {
+            data.email = data.email || email;
+          }
+
+          const first = data.firstName || '';
+          const last  = data.lastName || '';
+          const avatarUrl = data.avatarUrl || '';
+          const displayEmail = data.email || email || '';
 
           const displayName = (first || last)
             ? (first + ' ' + (last || '')).trim()
@@ -564,21 +879,41 @@
 
           profileSettings.classList.remove('hidden');
           profileMsg.textContent = '';
+
+          // миграция: сохраняем объединённые данные в документ по email
+          if (emailRef) {
+            try {
+              await emailRef.set(
+                {
+                  ...data,
+                  email: displayEmail,
+                },
+                { merge: true }
+              );
+            } catch (e) {
+              console.warn('Не удалось мигрировать профиль uid→email:', e);
+            }
+          }
         } catch (err) {
           console.error('Ошибка профиля:', err);
         }
       }
 
+      // --- Профиль: сохранение изменений ---
       profileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         profileMsg.textContent = '';
 
-        const email = localStorage.getItem('pt_email');
-        if (!email) return;
+        const user = auth.currentUser;
+        if (!user) {
+          profileMsg.textContent = 'Сначала войдите в аккаунт.';
+          return;
+        }
 
         try {
-          const first = profileFirst.value.trim();
-          const last  = profileLast.value.trim();
+          const email     = user.email;
+          const first     = profileFirst.value.trim();
+          const last      = profileLast.value.trim();
           const avatarUrl = profileAvatarUrl.value.trim();
 
           await db.collection('users').doc(email).set({
@@ -588,9 +923,9 @@
           }, { merge:true });
 
           profileMsg.textContent = 'Профиль обновлён ✔';
-          const user = auth.currentUser;
-          if (user) {
-            await loadUserProfile(user);
+          const again = auth.currentUser;
+          if (again) {
+            await loadUserProfile(again);
           }
         } catch (err) {
           console.error(err);
@@ -604,52 +939,94 @@
         coursesEmpty.classList.add('hidden');
 
         try {
-          const email = user.email;
-          if (!email) {
+          const email = user.email || null;
+          const uid   = user.uid   || null;
+
+          if (!email && !uid) {
             coursesEmpty.classList.remove('hidden');
             achievementsList.innerHTML = renderAchievements([], []);
             return;
           }
 
-          const doc = await db.collection('users').doc(email).get();
+          const usersCol = db.collection('users');
+          const emailRef = email ? usersCol.doc(email) : null;
+          const uidRef   = uid   ? usersCol.doc(uid)   : null;
 
-          if (!doc.exists) {
+          const [emailSnap, uidSnap] = await Promise.all([
+            emailRef ? emailRef.get() : Promise.resolve(null),
+            uidRef   ? uidRef.get()   : Promise.resolve(null)
+          ]);
+
+          const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
+          const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
+
+          if (!emailData && !uidData) {
             coursesEmpty.classList.remove('hidden');
             achievementsList.innerHTML = renderAchievements([], []);
             return;
           }
 
-          const data = doc.data() || {};
-          const paidIds  = Array.isArray(data.courses)     ? data.courses     : [];
-          const freeIds  = Array.isArray(data.freeCourses) ? data.freeCourses : [];
-          const progress = data.progress || {}; // { [courseId]: {percent, lastLessonId} }
-          const badgeIds = Array.isArray(data.badges) ? data.badges : [];
+          const paidFromEmail = Array.isArray(emailData && emailData.courses)     ? emailData.courses     : [];
+          const paidFromUid   = Array.isArray(uidData && uidData.courses)         ? uidData.courses       : [];
+          const freeFromEmail = Array.isArray(emailData && emailData.freeCourses) ? emailData.freeCourses : [];
+          const freeFromUid   = Array.isArray(uidData && uidData.freeCourses)     ? uidData.freeCourses   : [];
+          const badgesEmail   = Array.isArray(emailData && emailData.badges)      ? emailData.badges      : [];
+          const badgesUid     = Array.isArray(uidData && uidData.badges)          ? uidData.badges        : [];
+
+          const mergedPaid   = Array.from(new Set([...paidFromUid,  ...paidFromEmail]));
+          const mergedFree   = Array.from(new Set([...freeFromUid,  ...freeFromEmail]));
+          const mergedBadges = Array.from(new Set([...badgesUid,     ...badgesEmail]));
+
+          const progressEmail = (emailData && emailData.progress) || {};
+          const progressUid   = (uidData   && uidData.progress)   || {};
+          const mergedProgress = {
+            ...(progressUid || {}),
+            ...(progressEmail || {}),
+          };
 
           const courses = [];
 
           // Оплаченные курсы
-          for (const id of paidIds) {
+          for (const id of mergedPaid) {
             courses.push({
               id,
               isPaid: true,
               isFree: false,
-              progress: progress[id] || null
+              progress: mergedProgress[id] || null
             });
           }
 
-          // Бесплатные курсы
-          for (const id of freeIds) {
-            if (paidIds.includes(id)) continue; // не дублируем
+          // Бесплатные курсы (без дубликатов)
+          for (const id of mergedFree) {
+            if (mergedPaid.includes(id)) continue;
             courses.push({
               id,
               isPaid: false,
               isFree: true,
-              progress: progress[id] || null
+              progress: mergedProgress[id] || null
             });
           }
 
           renderCourses(courses);
-          achievementsList.innerHTML = renderAchievements(courses, badgeIds);
+          achievementsList.innerHTML = renderAchievements(courses, mergedBadges);
+
+          // миграция: складываем объединённые данные в документ по email
+          if (emailRef) {
+            try {
+              await emailRef.set(
+                {
+                  email: (emailData && emailData.email) || email || null,
+                  courses: mergedPaid,
+                  freeCourses: mergedFree,
+                  badges: mergedBadges,
+                  progress: mergedProgress
+                },
+                { merge: true }
+              );
+            } catch (e) {
+              console.warn('Не удалось мигрировать курсы uid→email:', e);
+            }
+          }
         } catch (err) {
           console.error('Ошибка загрузки курсов:', err);
           renderCourses([]);
@@ -669,7 +1046,7 @@
         courses.forEach(c => {
           const meta = COURSE_META[c.id] || {
             title: c.id,
-            href: '#',
+            href: '/courses/',
             cover: '/assets/courses/default.jpg'
           };
 
@@ -705,35 +1082,25 @@
           card.innerHTML = `
             <div class="flex gap-3 items-center">
               <div class="h-14 w-14 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0">
-                <img src="${meta.cover}" alt="${meta.title}"
-                     class="h-full w-full object-cover group-hover:scale-[1.03] transition-transform">
+                <img src="${meta.cover}" alt="" class="h-full w-full object-cover group-hover:scale-105 transition-transform" />
               </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 mb-0.5">
-                  <span class="badge ${badgeClass}">
-                    ${badgeLabel}
-                  </span>
+              <div class="flex-1 min-w-0 space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="badge text-[10px] ${badgeClass}">${badgeLabel}</span>
                 </div>
-                <p class="font-semibold text-sm text-slate-900 truncate">
-                  ${meta.title}
-                </p>
-                <p class="text-[11px] text-slate-500 truncate">
-                  ${statusLabel}
-                </p>
+                <p class="text-sm font-semibold text-slate-900 truncate">${meta.title}</p>
+                <p class="text-[11px] text-slate-500">${statusLabel}</p>
               </div>
             </div>
-            <div class="mt-1">
-              <div class="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
-                <div class="h-full bg-[var(--brand-2)]" style="width:${percent}%;"></div>
-              </div>
+            <div class="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500" style="width:${percent}%;"></div>
             </div>
           `;
 
-          coursesList.appendChild(card);
+        coursesList.appendChild(card);
         });
       }
 
-      // --- Медали / достижения ---
       function renderAchievements(courses, badgeIds){
         const total = Array.isArray(courses) ? courses.length : 0;
         const paid  = courses.filter(c => c.isPaid).length;
@@ -792,6 +1159,13 @@
           });
         }
 
+        if (!medals.length) {
+          return `
+            <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
+              Как только вы начнёте проходить уроки, здесь появятся первые бейджи и медали за ваши шаги в языках.
+            </div>`;
+        }
+
         if (!medals.some(m => m.earned)) {
           return `
             <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
@@ -808,13 +1182,13 @@
                                    : 'bg-slate-50 border-slate-200 text-slate-400';
           return `
             <article class="soft-card p-3 sm:p-4 flex items-start gap-3 ${opacity}">
-              <div class="h-10 w-10 rounded-full bg-amber-50 flex items-center justify-center text-lg sm:text-xl">
+              <div class="h-9 w-9 rounded-lg bg-slate-900/90 text-white flex items-center justify-center text-lg">
                 ${m.icon}
               </div>
-              <div class="flex-1">
-                <div class="flex items-center justify-between gap-2 mb-1">
-                  <h3 class="font-semibold text-slate-900 text-sm sm:text-base">${m.title}</h3>
-                  <span class="badge ${badgeCl}">${label}</span>
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-sm font-semibold text-slate-900">${m.title}</h3>
+                  <span class="badge text-[10px] ${badgeCl}">${label}</span>
                 </div>
                 <p class="text-xs sm:text-sm text-slate-600">${m.desc}</p>
               </div>
