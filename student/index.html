@@ -527,7 +527,27 @@
                   </button>
                 </div>
               </div>
-
+<!-- Модалка предпросмотра стандартных аватаров -->
+<div
+  id="avatar-preview-modal"
+  class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50"
+>
+  <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 max-w-xs w-full mx-4 text-center">
+    <img
+      id="avatar-preview-img"
+      src="/assets/avatarf.png"
+      alt="Предпросмотр аватара"
+      class="mx-auto h-32 w-32 sm:h-40 sm:w-40 rounded-2xl object-contain mb-3"
+    />
+    <button
+      type="button"
+      id="avatar-preview-close"
+      class="btn btn-ghost text-xs sm:text-sm"
+    >
+      Закрыть
+    </button>
+  </div>
+</div>
               <!-- скрытое поле для хранения выбора -->
               <input type="hidden" id="profile-avatar-type" value="girl">
             </div>
@@ -678,6 +698,10 @@
       const profileAvatarType = document.getElementById('profile-avatar-type');
       const avatarChoiceButtons = document.querySelectorAll('.avatar-choice');
 
+      const avatarPreviewModal = document.getElementById('avatar-preview-modal');
+const avatarPreviewImg   = document.getElementById('avatar-preview-img');
+const avatarPreviewClose = document.getElementById('avatar-preview-close');
+      
       const coursesNeedAuth = document.getElementById('courses-need-auth');
       const coursesList     = document.getElementById('courses-list');
       const coursesEmpty    = document.getElementById('courses-empty');
@@ -790,17 +814,41 @@
         });
       }
 
-      avatarChoiceButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const t = btn.getAttribute('data-avatar-type') || 'girl';
-          setAvatarChoice(t);
-          // предварительный просмотр дефолтного аватара
-          profileAvatarImg.src = t === 'girl'
-            ? '/assets/avatarf.png'
-            : '/assets/avatar.png';
-        });
-      });
+   avatarChoiceButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const t = btn.getAttribute('data-avatar-type') || 'girl';
+    setAvatarChoice(t);
 
+    const src = t === 'girl'
+      ? '/assets/avatarf.png'
+      : '/assets/avatar.png';
+
+    // обновляем маленький аватар в кабинете
+    profileAvatarImg.src = src;
+
+    // открываем модалку с увеличенным вариантом
+    if (avatarPreviewModal && avatarPreviewImg) {
+      avatarPreviewImg.src = src;
+      avatarPreviewModal.classList.remove('hidden');
+    }
+  });
+});
+
+// Закрытие модалки кликом по фону
+if (avatarPreviewModal) {
+  avatarPreviewModal.addEventListener('click', (e) => {
+    if (e.target === avatarPreviewModal) {
+      avatarPreviewModal.classList.add('hidden');
+    }
+  });
+}
+
+// Кнопка "Закрыть"
+if (avatarPreviewClose && avatarPreviewModal) {
+  avatarPreviewClose.addEventListener('click', () => {
+    avatarPreviewModal.classList.add('hidden');
+  });
+}
       /* КОИНЫ: обновление UI по данным пользователя */
       function updateCoinsUI(userData) {
         if (!coinsCard || !coinsBalanceEl || !coinsTextEl || !coinsClaimBtn) return;
