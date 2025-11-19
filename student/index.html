@@ -877,7 +877,14 @@
         if (coinModalBalance) {
           coinModalBalance.textContent = balance;
         }
-
+function pluralizeCoin(n) {
+  n = Math.abs(n) % 100;
+  const n1 = n % 10;
+  if (n > 10 && n < 20) return "коинов";
+  if (n1 === 1) return "коин";
+  if (n1 >= 2 && n1 <= 4) return "коина";
+  return "коинов";
+}
         coinsClaimBtn.disabled = false;
         coinsClaimBtn.classList.remove('opacity-60','cursor-default');
 
@@ -904,11 +911,11 @@
           coinsState.nextReward = reward;
 
           if (streak === 0 && balance === 0) {
-            coinsTextEl.textContent = 'Сегодня вы можете получить 1 коин за вход. Коины — внутренняя валюта PolyTalky. В будущем их можно будет обменять на платные курсы, аватары и секретные упражнения.';
+            coinsTextEl.textContent = 'Сегодня вы можете получить 1 коин за вход. Коины — внутренняя валюта PolyTalky. Скоро их можно будет обменять на платные курсы, аватары и секретные упражнения.';
           } else {
-            coinsTextEl.textContent = `Сегодня вы можете забрать ${reward} коинов за ежедневный вход. Продолжайте заходить каждый день, чтобы дойти до колеса удачи!`;
+            coinsTextEl.textContent = `Сегодня вы можете забрать ${reward} ${pluralizeCoin(coins)} за ежедневный вход. Продолжайте заходить каждый день, чтобы дойти до колеса удачи!`;
           }
-          coinsClaimBtn.textContent = `Забрать ${reward} коинов`;
+          coinsClaimBtn.textContent = `Забрать ${reward} ${pliralizeCoin(coins)}`;
         }
       }
 
