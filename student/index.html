@@ -1364,7 +1364,7 @@
         try {
           const earnedIds = Array.isArray(userBadgeIds) ? userBadgeIds : [];
 
-          const snap = await db.collection('badges').orderBy('order', 'asc').get();
+          const snap = await db.collection('badges').get();
           const badges = [];
           snap.forEach(doc => {
             const data = doc.data() || {};
