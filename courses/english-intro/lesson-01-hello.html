@@ -1271,42 +1271,56 @@
       const totalSteps = 4;
       let badgeAwarded = false;
 
-    const FIRST_BADGE_ID = "english-intro-lesson1"; // совпадает с именем файла .png и id в коллекции badges
+  const FIRST_BADGE_ID = "english-intro-lesson1"; // совпадает с именем файла .png и id в коллекции badges
 
 async function awardFirstHelloBadge() {
   if (!currentUser || badgeAwarded) return;
 
-  const uid = currentUser.uid;
+  const uid   = currentUser.uid;
+  const email = currentUser.email || null;
 
-  // 1) Подколлекция пользователя: /users/{uid}/badges/{FIRST_BADGE_ID}
-  const badgeRef = doc(db, `users/${uid}/badges/${FIRST_BADGE_ID}`);
+  const badgePayload = {
+    badgeId:  FIRST_BADGE_ID,
+    title:    "Первое hello",
+    courseId: "english-intro",
+    lesson:   "lesson-01-hello",
+    earnedAt: serverTimestamp()
+  };
 
-  await setDoc(
-    badgeRef,
-    {
-      badgeId:  FIRST_BADGE_ID,
-      title:    "Первое hello",
-      courseId: "english-intro",
-      lesson:   "lesson-01-hello",
-      earnedAt: serverTimestamp()
-    },
-    { merge: true }
+  const tasks = [];
+
+  // 1) Подколлекция с подробностями бейджа: /users/{uid}/badges/{FIRST_BADGE_ID}
+  tasks.push(
+    setDoc(
+      doc(db, users/${uid}/badges/${FIRST_BADGE_ID}),
+      badgePayload,
+      { merge: true }
+    )
   );
 
-  // 2) Массив badges в профиле пользователя: /users/{uid}
-  const userRef = doc(db, "users", uid);
-
-  await setDoc(
-    userRef,
-    {
-      badges: arrayUnion(FIRST_BADGE_ID)
-    },
-    { merge: true }
+  // 2) Массив badges в документе по UID
+  tasks.push(
+    setDoc(
+      doc(db, "users", uid),
+      { badges: arrayUnion(FIRST_BADGE_ID) },
+      { merge: true }
+    )
   );
 
+  // 3) Массив badges в документе по EMAIL
+  if (email) {
+    tasks.push(
+      setDoc(
+        doc(db, "users", email),
+        { badges: arrayUnion(FIRST_BADGE_ID) },
+        { merge: true }
+      )
+    );
+  }
+
+  await Promise.all(tasks);
   badgeAwarded = true;
 }
-
       async function showStep(n){
         stepPanels.forEach(p => p.classList.remove("step-panel--visible"));
         const panel = document.getElementById(`step-${n}`);
