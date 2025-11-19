@@ -43,7 +43,7 @@
     }
     .badge{
       border-radius:.6rem;
-      padding:.25рем .45рем;
+      padding:.25rem .45rem;
       font-size:.7rem;
       border:1px solid rgba(148,163,184,.3);
       background:rgba(248,250,252,.7);
@@ -197,7 +197,7 @@
   </header>
 
   <main class="flex-1">
-    <div class="wrap px-4 sm:px-6 lg:px-8 py-6 см:py-10 space-y-6">
+    <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6">
 
       <!-- PRO STATUS BANNERS -->
       <section id="pro-banner-success" class="pro-banner pro-banner--success">
@@ -334,7 +334,7 @@
                   Вы авторизованы
                 </p>
                 <div class="flex items-center gap-3">
-                  <div class="h-10 w-10 rounded-full overflow-hidden bg-slate-200 flex-shrink-0">
+                  <div class="h-10 w-10 rounded-full overflow-hidden bg-slate-200 flex-shrink-0 cursor-pointer" id="profile-avatar-wrapper">
                     <!-- ДЕФОЛТ: девочка -->
                     <img id="profile-avatar-img" src="/assets/avatarf.png" alt="Avatar" class="h-full w-full object-cover">
                   </div>
@@ -352,7 +352,7 @@
                 </p>
               </div>
 
-              <div class="flex flex-col см:flex-row gap-2">
+              <div class="flex flex-col sm:flex-row gap-2">
                 <button id="btn-open-profile" class="btn btn-ghost flex-1 text-xs sm:text-sm">
                   Настройки профиля
                 </button>
@@ -408,7 +408,6 @@
                 Здесь собраны курсы, купленные в <a href="/shop/" class="underline">магазине</a>, а также бесплатные программы, в которых вы прошли хотя бы первый урок.
               </p>
             </div>
-           
           </div>
 
           <div id="courses-need-auth" class="soft-card p-4 text-xs sm:text-sm text-slate-600">
@@ -448,7 +447,7 @@
         <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
           <div class="flex items-start justify-between gap-3">
             <div>
-              <p class="text-xs font-semibold tracking-[.18ем] uppercase text-amber-700">
+              <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
                 Профиль
               </p>
               <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
@@ -492,51 +491,29 @@
             </div>
 
             <div>
-              <label for="profile-avatar-file" class="block text-xs font-medium text-slate-600 mb-1">
-                Фото профиля
+              <label class="block text-xs font-medium text-slate-600 mb-1">
+                Аватар профиля
               </label>
-              
-                 Выберите ваш аватар:
-                </p>
-                <div class="flex gap-2">
-                  <!-- Девочка по умолчанию -->
-                  <button
-                    type="button"
-                    class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1 ring-2 ring-amber-400"
-                    data-avatar-type="girl"
-                  >
-                    <img src="/assets/avatarf.png" alt="Аватар девочка" class="h-10 w-10 object-cover rounded-lg">
-                  </button>
-                  <button
-                    type="button"
-                    class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1"
-                    data-avatar-type="boy"
-                  >
-                    <img src="/assets/avatar.png" alt="Аватар мальчик" class="h-10 w-10 object-cover rounded-lg">
-                  </button>
-                </div>
+              <p class="text-[11px] text-slate-500 mb-2">
+                Выберите один из стандартных аватаров PolyTalky.
+              </p>
+              <div class="flex gap-2">
+                <!-- Девочка по умолчанию -->
+                <button
+                  type="button"
+                  class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1 ring-2 ring-amber-400"
+                  data-avatar-type="girl"
+                >
+                  <img src="/assets/avatarf.png" alt="Аватар девочка" class="h-10 w-10 object-cover rounded-lg">
+                </button>
+                <button
+                  type="button"
+                  class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1"
+                  data-avatar-type="boy"
+                >
+                  <img src="/assets/avatar.png" alt="Аватар мальчик" class="h-10 w-10 object-cover rounded-lg">
+                </button>
               </div>
-<!-- Модалка предпросмотра стандартных аватаров -->
-<div
-  id="avatar-preview-modal"
-  class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50"
->
-  <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 max-w-xs w-full mx-4 text-center">
-    <img
-      id="avatar-preview-img"
-      src="/assets/avatarf.png"
-      alt="Предпросмотр аватара"
-      class="mx-auto h-32 w-32 sm:h-40 sm:w-40 rounded-2xl object-contain mb-3"
-    />
-    <button
-      type="button"
-      id="avatar-preview-close"
-      class="btn btn-ghost text-xs sm:text-sm"
-    >
-      Закрыть
-    </button>
-  </div>
-</div>
               <!-- скрытое поле для хранения выбора -->
               <input type="hidden" id="profile-avatar-type" value="girl">
             </div>
@@ -552,6 +529,28 @@
               </button>
             </div>
           </form>
+        </div>
+      </div>
+
+      <!-- Модалка предпросмотра стандартных аватаров (отдельно, снаружи профиля) -->
+      <div
+        id="avatar-preview-modal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50"
+      >
+        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 max-w-xs w-full mx-4 text-center">
+          <img
+            id="avatar-preview-img"
+            src="/assets/avatarf.png"
+            alt="Предпросмотр аватара"
+            class="mx-auto h-32 w-32 sm:h-40 sm:w-40 rounded-2xl object-contain mb-3"
+          />
+          <button
+            type="button"
+            id="avatar-preview-close"
+            class="btn btn-ghost text-xs sm:text-sm"
+          >
+            Закрыть
+          </button>
         </div>
       </div>
 
@@ -595,7 +594,7 @@
     </div>
   </main>
 
-  <footer class="border-т border-slate-200/70 bg-white/80">
+  <footer class="border-t border-slate-200/70 bg-white/80">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] sm:text-xs text-slate-500">
       <p>© PolyTalky. Языки как стиль жизни.</p>
       <p class="flex items-center gap-3">
@@ -610,7 +609,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -625,7 +623,6 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db   = firebase.firestore();
-    const storage = firebase.storage();
 
     const COURSE_META = {
       'spanish-a1-basics': {
@@ -676,20 +673,20 @@
       const authUserEmail   = document.getElementById('auth-user-email');
       const authExtra       = document.getElementById('auth-extra');
 
+      const profileAvatarWrapper = document.getElementById('profile-avatar-wrapper');
       const profileAvatarImg= document.getElementById('profile-avatar-img');
       const profileName     = document.getElementById('profile-name');
       const profileSettings = document.getElementById('profile-settings');
       const profileForm     = document.getElementById('profile-form');
       const profileFirst    = document.getElementById('profile-first');
       const profileLast     = document.getElementById('profile-last');
-      const profileAvatarFile = document.getElementById('profile-avatar-file');
       const profileMsg      = document.getElementById('profile-msg');
       const profileAvatarType = document.getElementById('profile-avatar-type');
       const avatarChoiceButtons = document.querySelectorAll('.avatar-choice');
 
       const avatarPreviewModal = document.getElementById('avatar-preview-modal');
-const avatarPreviewImg   = document.getElementById('avatar-preview-img');
-const avatarPreviewClose = document.getElementById('avatar-preview-close');
+      const avatarPreviewImg   = document.getElementById('avatar-preview-img');
+      const avatarPreviewClose = document.getElementById('avatar-preview-close');
       
       const coursesNeedAuth = document.getElementById('courses-need-auth');
       const coursesList     = document.getElementById('courses-list');
@@ -801,43 +798,63 @@ const avatarPreviewClose = document.getElementById('avatar-preview-close');
             btn.classList.remove('ring-2','ring-amber-400');
           }
         });
+
+        // обновляем маленький аватар в кабинете
+        if (profileAvatarImg) {
+          profileAvatarImg.src = t === 'girl'
+            ? '/assets/avatarf.png'
+            : '/assets/avatar.png';
+        }
       }
 
-   avatarChoiceButtons.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const t = btn.getAttribute('data-avatar-type') || 'girl';
-    setAvatarChoice(t);
+      // Клик по выбору аватара внутри настроек
+      avatarChoiceButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const t = btn.getAttribute('data-avatar-type') || 'girl';
+          setAvatarChoice(t);
 
-    const src = t === 'girl'
-      ? '/assets/avatarf.png'
-      : '/assets/avatar.png';
+          const src = t === 'girl'
+            ? '/assets/avatarf.png'
+            : '/assets/avatar.png';
 
-    // обновляем маленький аватар в кабинете
-    profileAvatarImg.src = src;
+          // открываем модалку с увеличенным вариантом
+          if (avatarPreviewModal && avatarPreviewImg) {
+            avatarPreviewImg.src = src;
+            avatarPreviewModal.classList.remove('hidden');
+            avatarPreviewModal.classList.add('flex');
+          }
+        });
+      });
 
-    // открываем модалку с увеличенным вариантом
-    if (avatarPreviewModal && avatarPreviewImg) {
-      avatarPreviewImg.src = src;
-      avatarPreviewModal.classList.remove('hidden');
-    }
-  });
-});
+      // Клик по аватару в блоке "Вы авторизованы"
+      if (profileAvatarWrapper && avatarPreviewModal && avatarPreviewImg) {
+        profileAvatarWrapper.addEventListener('click', () => {
+          const t = profileAvatarType ? (profileAvatarType.value || 'girl') : 'girl';
+          const src = t === 'girl'
+            ? '/assets/avatarf.png'
+            : '/assets/avatar.png';
+          avatarPreviewImg.src = src;
+          avatarPreviewModal.classList.remove('hidden');
+          avatarPreviewModal.classList.add('flex');
+        });
+      }
 
-// Закрытие модалки кликом по фону
-if (avatarPreviewModal) {
-  avatarPreviewModal.addEventListener('click', (e) => {
-    if (e.target === avatarPreviewModal) {
-      avatarPreviewModal.classList.add('hidden');
-    }
-  });
-}
+      // Закрытие модалки аватара
+      if (avatarPreviewModal) {
+        avatarPreviewModal.addEventListener('click', (e) => {
+          if (e.target === avatarPreviewModal) {
+            avatarPreviewModal.classList.add('hidden');
+            avatarPreviewModal.classList.remove('flex');
+          }
+        });
+      }
+      if (avatarPreviewClose && avatarPreviewModal) {
+        avatarPreviewClose.addEventListener('click', () => {
+          avatarPreviewModal.classList.add('hidden');
+          avatarPreviewModal.classList.remove('flex');
+        });
+      }
 
-// Кнопка "Закрыть"
-if (avatarPreviewClose && avatarPreviewModal) {
-  avatarPreviewClose.addEventListener('click', () => {
-    avatarPreviewModal.classList.add('hidden');
-  });
-}
       /* КОИНЫ: обновление UI по данным пользователя */
       function updateCoinsUI(userData) {
         if (!coinsCard || !coinsBalanceEl || !coinsTextEl || !coinsClaimBtn) return;
@@ -1168,7 +1185,6 @@ if (avatarPreviewClose && avatarPreviewModal) {
 
           const first = data.firstName || '';
           const last  = data.lastName || '';
-          const avatarUrl  = data.avatarUrl || '';
           const avatarType = data.avatarType || 'girl';
           const displayEmail = data.email || email || '';
 
@@ -1183,14 +1199,6 @@ if (avatarPreviewClose && avatarPreviewModal) {
           profileLast.value  = last;
 
           setAvatarChoice(avatarType);
-
-          if (avatarUrl) {
-            profileAvatarImg.src = avatarUrl;
-          } else {
-            profileAvatarImg.src = avatarType === 'girl'
-              ? '/assets/avatarf.png'
-              : '/assets/avatar.png';
-          }
 
           profileMsg.textContent = '';
 
@@ -1212,7 +1220,7 @@ if (avatarPreviewClose && avatarPreviewModal) {
         }
       }
 
-      /* сохранение профиля + загрузка аватара */
+      /* сохранение профиля (без загрузки фото) */
       profileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         profileMsg.textContent = '';
@@ -1227,20 +1235,7 @@ if (avatarPreviewClose && avatarPreviewModal) {
           const email = user.email;
           const first = profileFirst.value.trim();
           const last  = profileLast.value.trim();
-          const file  = profileAvatarFile.files[0] || null;
           const avatarType = profileAvatarType ? (profileAvatarType.value || 'girl') : 'girl';
-
-          let avatarUrlToSave = null;
-
-          if (file) {
-            profileMsg.textContent = 'Загружаем фото...';
-
-            const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-            const avatarRef = storage.ref().child(`avatars/${user.uid}_${Date.now()}.${ext}`);
-
-            const snap = await avatarRef.put(file);
-            avatarUrlToSave = await snap.ref.getDownloadURL();
-          }
 
           const payload = {
             firstName: first,
@@ -1248,21 +1243,15 @@ if (avatarPreviewClose && avatarPreviewModal) {
             avatarType: avatarType
           };
 
-          if (avatarUrlToSave) {
-            payload.avatarUrl = avatarUrlToSave;
-            profileAvatarImg.src = avatarUrlToSave;
-          } else {
-            // если файла нет, обновляем отображение дефолтного аватара по выбору
-            profileAvatarImg.src = avatarType === 'girl'
-              ? '/assets/avatarf.png'
-              : '/assets/avatar.png';
-          }
+          // обновляем аватар локально
+          profileAvatarImg.src = avatarType === 'girl'
+            ? '/assets/avatarf.png'
+            : '/assets/avatar.png';
 
           // сохраняем профиль в Firestore
           await db.collection('users').doc(email).set(payload, { merge: true });
 
           profileMsg.textContent = 'Профиль обновлён ✔️';
-          profileAvatarFile.value = '';     // очищаем поле файла
 
           // при желании можно ещё раз перечитать профиль
           const again = auth.currentUser;
