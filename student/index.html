@@ -11,19 +11,17 @@
   <link rel="apple-touch-icon" href="/favicon.png">
   <style>
     :root{
-      --brand-1:#FFBA08;
-      --brand-2:#F97316;
-      --brand-3:#10B981;
+      --brand-1:#FFBA08; /* жёлтый */
+      --brand-2:#F97316; /* мягкий оранжевый */
+      --brand-3:#10B981; /* зелёный для успеха */
+      --brand-bg:#FEF9C3;
 
-      --ink-1:#0F172A;
-      --ink-2:#4B5563;
-      --ink-soft:#9CA3AF;
-      --bg-soft:#F9FAFB;
+      --ink-1:#0f172a;
+      --ink-2:#475569;
+      --ink-3:#94a3b8;
+      --card-bg:#ffffff;
     }
-    *{box-sizing:border-box}
     body{
-      margin:0;
-      min-height:100vh;
       font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
       background:
         radial-gradient(circle at top left,#FEF9C3 0,#FEFCE8 40%,#F9FAFB 100%);
@@ -38,143 +36,73 @@
     }
     .soft-card{
       border-radius:1rem;
-      border:1px solid rgba(148,163,184,.18);
-      background:rgba(255,255,255,.9);
-    }
-    .badge{
-      border-radius:.6rem;
-      padding:.25rem .45rem;
-      font-size:.7rem;
-      border:1px solid rgba(148,163,184,.3);
-      background:rgba(248,250,252,.7);
+      border:1px solid rgba(148,163,184,.25);
+      background-color:rgba(255,255,255,.9);
     }
     .btn{
       border-radius:999px;
-      padding:.55rem 1.2rem;
-      font-size:.88rem;
+      padding:.55rem 1.1rem;
       font-weight:600;
-      border:1px solid transparent;
-      cursor:pointer;
+      font-size:.85rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:.4rem;
+      transition:.15s;
+      border:1px solid transparent;
+      cursor:pointer;
+      text-decoration:none;
       white-space:nowrap;
     }
-    .btn-main{
-      background:linear-gradient(135deg,var(--brand-2),var(--brand-1));
+    .btn-brand{
+      background:var(--brand-1);
       color:#111827;
-      border-color:rgba(251,191,36,0.9);
-      box-shadow:0 12px 30px rgba(234,179,8,.45);
+      border-color:#FDE68A;
     }
-    .btn-main:hover{filter:brightness(1.03);}
+    .btn-brand:hover{
+      background:#FACC15;
+    }
     .btn-ghost{
-      background:rgba(255,255,255,.7);
-      border-color:rgba(148,163,184,.5);
-      color:#374151;
+      background:transparent;
+      color:#111827;
+      border-color:rgba(148,163,184,.6);
     }
-    .btn-ghost:hover{background:white;}
-    .pill-label{
+    .btn-ghost:hover{
+      background:rgba(148,163,184,.08);
+    }
+    .badge{
       border-radius:999px;
-      padding:.18rem .6rem;
-      font-size:.7rem;
+      font-size:.65rem;
+      padding:.15rem .55rem;
+      font-weight:600;
       text-transform:uppercase;
       letter-spacing:.06em;
       border:1px solid rgba(148,163,184,.5);
       background:rgba(249,250,251,.9);
       color:#4b5563;
     }
+    .pill-label{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      border-radius:999px;
+      padding:.15rem .7rem;
+      font-size:.65rem;
+      font-weight:600;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      background:rgba(251,191,36,.12);
+      color:#92400e;
+      border:1px solid rgba(251,191,36,.35);
+    }
+
+    /* honeypot */
     .hp-field{
       position:absolute;
       left:-9999px;
       opacity:0;
       pointer-events:none;
       height:0;width:0;
-    }
-
-    /* PRO-banners */
-    .pro-banner{
-      max-width:1040px;
-      margin:0 auto 0;
-      padding:10px 14px;
-      border-radius:14px;
-      display:none;
-      align-items:flex-start;
-      gap:10px;
-      font-size:13px;
-    }
-    .pro-banner__icon{
-      flex:0 0 28px;
-      height:28px;
-      border-radius:999px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:16px;
-      font-weight:600;
-    }
-    .pro-banner__body h2{
-      margin:0 0 2px;
-      font-size:14px;
-      font-weight:600;
-    }
-    .pro-banner__body p{
-      margin:0;
-      font-size:13px;
-    }
-    .pro-banner--success{
-      border:1px solid rgba(16,185,129,.4);
-      background:linear-gradient(135deg,#ecfdf5,#f0fdf4,#ffffff);
-      color:#065f46;
-    }
-    .pro-banner--success .pro-banner__icon{
-      background:#22c55e;
-      color:#ecfdf5;
-      box-shadow:0 0 0 2px #bbf7d0;
-    }
-    .pro-banner--error{
-      border:1px solid rgba(248,113,113,.4);
-      background:linear-gradient(135deg,#fef2f2,#fee2e2,#ffffff);
-      color:#b91c1c;
-    }
-    .pro-banner--error .pro-banner__icon{
-      background:#ef4444;
-      color:#fef2f2;
-      box-shadow:0 0 0 2px #fecaca;
-    }
-    .pro-banner--cancel{
-      border:1px solid rgba(148,163,184,.4);
-      background:linear-gradient(135deg,#f9fafb,#e5e7eb,#ffffff);
-      color:#374151;
-    }
-    .pro-banner--cancel .pro-banner__icon{
-      background:#6b7280;
-      color:#f9fafb;
-      box-shadow:0 0 0 2px #e5e7eb;
-    }
-    .pro-banner__btn{
-      margin-left:auto;
-      border-radius:999px;
-      padding:6px 14px;
-      border:none;
-      font-size:12px;
-      font-weight:600;
-      cursor:pointer;
-      background:#0f172a;
-      color:#f9fafb;
-      white-space:nowrap;
-    }
-    .pro-banner__btn:hover{background:#111827;}
-    @media (max-width:640px){
-      .pro-banner{
-        margin:0 1rem;
-        flex-direction:column;
-        align-items:flex-start;
-      }
-      .pro-banner__btn{
-        margin-left:0;
-        margin-top:6px;
-      }
     }
   </style>
 </head>
@@ -183,9 +111,7 @@
   <header class="sticky top-0 z-30 backdrop-blur bg-white/80 border-b border-slate-200/60">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
       <a href="/" class="flex items-center gap-2">
-        <div class="h-9 w-9 rounded-2xl overflow-hidden bg-white shadow-md flex items-center justify-center">
-          <img src="/assets/logo.png" alt="PolyTalky" class="h-full w-full object-cover">
-        </div>
+        <img src="/assets/logo-polytalky.png" alt="PolyTalky" class="h-9 w-9 rounded-2xl shadow-md object-cover bg-[var(--brand-1)]">
         <span class="font-semibold text-slate-900 text-lg">PolyTalky</span>
       </a>
       <nav class="hidden sm:flex items-center gap-5 text-sm text-slate-700">
@@ -199,34 +125,6 @@
   <main class="flex-1">
     <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6">
 
-      <!-- PRO STATUS BANNERS -->
-      <section id="pro-banner-success" class="pro-banner pro-banner--success">
-        <div class="pro-banner__icon">✓</div>
-        <div class="pro-banner__body">
-          <h2>Подписка PRO активирована</h2>
-          <p>Теперь ваши задания будут проверяться кураторами, а вы получаете приоритет в ответах и особое внимание к прогрессу.</p>
-        </div>
-      </section>
-
-      <section id="pro-banner-error" class="pro-banner pro-banner--error">
-        <div class="pro-banner__icon">!</div>
-        <div class="pro-banner__body">
-          <h2>Оплата не прошла</h2>
-          <p>Что-то пошло не так при оформлении подписки PRO. Попробуйте ещё раз или выберите другой способ оплаты.</p>
-        </div>
-      </section>
-
-      <section id="pro-banner-cancel" class="pro-banner pro-banner--cancel">
-        <div class="pro-banner__icon">⏹</div>
-        <div class="pro-banner__body">
-          <h2>Оформление подписки отменено</h2>
-          <p>Если у вас уже есть активная подписка и вы хотите её завершить, вы можете запросить отмену.</p>
-        </div>
-        <button type="button" id="pro-cancel-button" class="pro-banner__btn">
-          Отменить подписку
-        </button>
-      </section>
-
       <!-- HERO / AUTH CARD -->
       <section class="card p-5 sm:p-7 space-y-5">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
@@ -238,379 +136,323 @@
               Личный кабинет <span class="text-amber-600">языкового героя</span>
             </h1>
             <p class="text-sm sm:text-base text-slate-600">
-              Здесь появляются все ваши курсы, прогресс и достижения. Авторизуйтесь, чтобы увидеть свою личную карту маршрутов в мире языков.
+              Здесь хранятся ваши курсы, достижения и прогресс.
+              Войдите по email, чтобы всё синхронизировалось между телефоном, планшетом и ноутбуком.
             </p>
           </div>
-          <div class="w-full max-w-sm mx-auto">
-            <div id="auth-when-logged-out" class="space-y-4">
-              <div class="soft-card p-4 space-y-3">
-                <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">
-                  Войти в кабинет
-                </p>
-                <p class="text-sm text-slate-600">
-                  Используйте тот же email, который вы указывали при покупке курсов или регистрации на сайте PolyTalky.
-                </p>
-                <p class="text-xs text-slate-500">
-                  После входа мы подберём для вас все активированные курсы и достижения.
-                </p>
+
+          <!-- блок для состояния "вошёл" -->
+          <div id="auth-when-logged-in" class="hidden soft-card px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 min-w-[260px]">
+            <div id="profile-avatar" class="h-12 w-12 rounded-full bg-[var(--brand-1)]/60 flex items-center justify-center text-xl font-bold text-slate-900 shadow-inner overflow-hidden">
+              <img id="profile-avatar-img" src="/assets/avatarf.png" alt="Avatar" class="h-full w-full object-cover hidden">
+              <span id="profile-avatar-emoji">😊</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs uppercase tracking-wide text-slate-500">Вы вошли как</div>
+              <div id="profile-name" class="font-semibold text-slate-900 text-sm"></div>
+              <div id="auth-user-email" class="text-xs text-slate-500"></div>
+            </div>
+            <button id="auth-logout" class="btn btn-ghost text-xs px-3 py-1">Выйти</button>
+          </div>
+        </div>
+
+        <!-- блок для состояния "НЕ вошёл" -->
+        <div id="auth-when-logged-out" class="soft-card p-4 sm:p-5 text-sm text-slate-700 space-y-3">
+          <p class="font-semibold text-slate-900">Войдите в PolyTalky</p>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Аккаунт по email сохранит ваши курсы и достижения. Если ещё нет аккаунта — нажмите «Регистрация».
+          </p>
+
+          <form id="auth-form" class="space-y-3 text-sm">
+            <!-- honeypot -->
+            <input id="auth-website" type="text" autocomplete="off" class="hp-field" aria-hidden="true" />
+
+            <div class="grid sm:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_minmax(0,1.2fr)] gap-3">
+              <input id="auth-email" type="email" required
+                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                     placeholder="email@example.com" />
+              <input id="auth-pass" type="password" required
+                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                     placeholder="Пароль" />
+              <div class="flex gap-2">
+                <button type="submit" id="btn-login" class="btn btn-brand flex-1">Войти</button>
+                <button type="button" id="auth-register" class="btn btn-ghost flex-1">Регистрация</button>
               </div>
-              <form id="auth-form" class="space-y-3">
-                <div>
-                  <label for="auth-email" class="block text-xs font-medium text-slate-600 mb-1">
-                    Email
-                  </label>
-                  <input
-                    id="auth-email"
-                    type="email"
-                    autocomplete="email"
-                    required
-                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                    placeholder="you@example.com"
-                  />
-                </div>
-                <div>
-                  <label for="auth-pass" class="block text-xs font-medium text-slate-600 mb-1">
-                    Пароль
-                  </label>
-                  <input
-                    id="auth-pass"
-                    type="password"
-                    autocomplete="current-password"
-                    required
-                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                    placeholder="Минимум 6 символов"
-                  />
-                </div>
-
-                <!-- honeypot -->
-                <input id="auth-website" type="text" class="hp-field" autocomplete="off" />
-
-                <div id="auth-extra" class="space-y-3 hidden">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label for="auth-first" class="block text-xs font-medium text-slate-600 mb-1">
-                        Имя
-                      </label>
-                      <input
-                        id="auth-first"
-                        type="text"
-                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                        placeholder="Например, Anna"
-                      />
-                    </div>
-                    <div>
-                      <label for="auth-last" class="block text-xs font-medium text-slate-600 mb-1">
-                        Фамилия
-                      </label>
-                      <input
-                        id="auth-last"
-                        type="text"
-                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                        placeholder="Фамилия (опционально)"
-                      />
-                    </div>
-                  </div>
-                  <p class="text-[11px] text-slate-500">
-                    Эти данные мы используем только для отображения в профиле и для более персональных писем.
-                  </p>
-                </div>
-
-                <p id="auth-error" class="text-xs text-red-500 min-h-[1rem]"></p>
-
-                <div class="flex flex-col sm:flex-row gap-2 pt-1">
-                  <button id="btn-login" type="submit" class="btn btn-main flex-1 justify-center text-sm">
-                    Войти
-                  </button>
-                  <button id="auth-register" type="button" class="btn btn-ghost flex-1 justify-center text-sm">
-                    Регистрация
-                  </button>
-                </div>
-              </form>
             </div>
 
-            <div id="auth-when-logged-in" class="hidden space-y-4">
-              <div class="soft-card p-4 space-y-3">
-                <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">
-                  Вы авторизованы
-                </p>
-                <div class="flex items-center gap-3">
-                  <div class="h-10 w-10 rounded-full overflow-hidden bg-slate-200 flex-shrink-0 cursor-pointer" id="profile-avatar-wrapper">
-                    <!-- ДЕФОЛТ: девочка -->
-                    <img id="profile-avatar-img" src="/assets/avatarf.png" alt="Avatar" class="h-full w-full object-cover">
-                  </div>
-                  <div class="min-w-0">
-                    <p id="profile-name" class="text-sm font-semibold text-slate-900 truncate">
-                      ...
-                    </p>
-                    <p id="auth-user-email" class="text-xs text-slate-500 truncate">
-                      ...
-                    </p>
-                  </div>
-                </div>
-                <p class="text-xs text-slate-500">
-                  Это ваш личный кабинет PolyTalky. Здесь вы можете управлять курсами, видеть прогресс и собирать достижения.
-                </p>
-              </div>
-
-              <div class="flex flex-col sm:flex-row gap-2">
-                <button id="btn-open-profile" class="btn btn-ghost flex-1 text-xs sm:text-sm">
-                  Настройки профиля
-                </button>
-                <button id="auth-logout" class="btn btn-main flex-1 text-xs sm:text-sm">
-                  Выйти
-                </button>
-              </div>
-
-              <!-- КОИНЫ (после кнопок) -->
-              <div id="coins-card" class="soft-card p-3 sm:p-4 space-y-2 hidden">
-                <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-2">
-                    <div class="h-7 w-7 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center overflow-hidden">
-                      <img
-                        src="/assets/coin.png"
-                        alt="Коин PolyTalky"
-                        class="h-6 w-6 object-contain"
-                      />
-                    </div>
-                    <div>
-                      <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">
-                        Ваши коины
-                      </p>
-                      <p class="text-sm text-slate-900">
-                        Баланс: <span id="coins-balance">0</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <p id="coins-text" class="text-[11px] text-slate-600">
-                  Заходите каждый день, чтобы получать больше коинов и менять их на бонусы.
-                </p>
-                <button id="coins-claim-btn" class="btn btn-main w-full text-xs sm:text-sm">
-                  Забрать ежедневный бонус
-                </button>
-              </div>
+            <!-- дополнительные поля только для регистрации -->
+            <div class="grid sm:grid-cols-2 gap-3 hidden" id="auth-extra">
+              <input id="auth-first" type="text"
+                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                     placeholder="Имя (для регистрации)" />
+              <input id="auth-last" type="text"
+                     class="w-full rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                     placeholder="Фамилия (для регистрации)" />
             </div>
+          </form>
+
+          <p id="auth-error" class="mt-1 text-xs text-red-500 min-h-[1.25rem]"></p>
+          <p class="mt-1 text-[11px] text-slate-500 leading-relaxed">
+            Нажимая «Регистрация», вы соглашаетесь с
+            <a class="underline" href="/legal/offer.html" target="_blank">публичной офертой</a>
+            и
+            <a class="underline" href="/legal/privacy.html" target="_blank">политикой конфиденциальности</a>.
+          </p>
+        </div>
+
+        <!-- Мини-настройки профиля (только когда вошли) -->
+        <div id="profile-settings" class="hidden pt-4 border-t border-dashed border-amber-200 mt-2">
+          <p class="text-xs font-semibold uppercase tracking-[.18em] text-amber-700 mb-2">Профиль</p>
+          <form id="profile-form" class="grid gap-3 text-xs sm:text-sm sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1.1fr)_minmax(0,1.4fr)_auto_auto] items-end">
+            <input id="profile-first" type="text"
+                   class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                   placeholder="Имя" />
+            <input id="profile-last" type="text"
+                   class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                   placeholder="Фамилия" />
+            <select id="profile-avatar-type"
+                    class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]">
+              <option value="girl">Аватар: девушка</option>
+              <option value="boy">Аватар: мальчик</option>
+              <option value="custom">Своя картинка</option>
+            </select>
+            <input id="profile-avatar-url" type="url"
+                   class="rounded-xl border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-1)] focus:border-[var(--brand-1)]"
+                   placeholder="Ссылка на картинку (для варианта «Своя картинка»)" />
+            <button type="submit" class="btn btn-ghost text-xs px-3 py-2">Сохранить профиль</button>
+          </form>
+          <p id="profile-msg" class="mt-1 text-[11px] text-slate-500"></p>
+        </div>
+
+        <!-- Выбор аватара (иконки) -->
+        <div id="avatar-choices" class="hidden pt-4 border-t border-dashed border-amber-200 mt-3">
+          <p class="text-xs font-semibold uppercase tracking-[.18em] text-amber-700 mb-2">
+            Быстрый выбор аватара
+          </p>
+          <div class="flex flex-wrap gap-3 text-xs">
+            <button type="button" data-avatar="girl" class="avatar-choice inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white hover:border-amber-300 hover:bg-amber-50">
+              <img src="/assets/avatarf.png" alt="Девушка" class="h-6 w-6 rounded-full object-cover">
+              <span>Девушка</span>
+            </button>
+            <button type="button" data-avatar="boy" class="avatar-choice inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white hover:border-amber-300 hover:bg-amber-50">
+              <img src="/assets/avatarm.png" alt="Мальчик" class="h-6 w-6 rounded-full object-cover">
+              <span>Мальчик</span>
+            </button>
+            <button type="button" data-avatar="custom" class="avatar-choice inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white hover:border-amber-300 hover:bg-amber-50">
+              <span class="text-lg">✨</span>
+              <span>Своя картинка</span>
+            </button>
           </div>
         </div>
       </section>
 
-      <!-- КУРСЫ + ДОСТИЖЕНИЯ: ДВЕ КОЛОНКИ НА ДЕСКТОПЕ -->
-      <section class="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start">
-        <!-- КУРСЫ (ЛЕВАЯ КОЛОНКА) -->
+      <!-- ОСНОВНОЙ КОНТЕНТ: КУРСЫ + ДОСТИЖЕНИЯ + КОИНЫ -->
+      <section class="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1.1fr)]">
+        <!-- КУРСЫ -->
         <div class="space-y-3">
           <div class="flex items-center justify-between gap-3">
-            <div class="space-y-1">
-              <p class="pill-label">Ваши курсы</p>
-              <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
-                Все активированные программы и мини-курсы
-              </h2>
-              <p class="text-xs sm:text-sm text-slate-600">
-                Здесь собраны курсы, купленные в <a href="/shop/" class="underline">магазине</a>, а также бесплатные программы, в которых вы прошли хотя бы первый урок.
-              </p>
-            </div>
-          </div>
-
-          <div id="courses-need-auth" class="soft-card p-4 text-xs sm:text-sm text-slate-600">
-            Войдите в аккаунт, чтобы увидеть список ваших курсов и прогресс.
-          </div>
-
-          <div id="courses-empty" class="soft-card p-4 text-xs sm:text-sm text-slate-600 hidden">
-            Пока здесь пусто. Загляните в
-            <a href="/shop/" class="underline">магазин</a>, чтобы выбрать курс, или начните один из бесплатных
-            <a href="/courses/" class="underline">мини-курсов</a>.
-          </div>
-
-          <div id="courses-list" class="grid gap-3 sm:gap-4 md:grid-cols-2">
-            <!-- карточки курсов -->
-          </div>
-        </div>
-
-        <!-- ДОСТИЖЕНИЯ (ПРАВАЯ КОЛОНКА) -->
-        <div class="space-y-3">
-          <div class="space-y-1">
-            <p class="pill-label">Достижения</p>
-            <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
-              Бейджи, медали и маленькие победы
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-600">
-              Мы постепенно добавляем в курсы бейджи и медали. Здесь будут появляться ваши награды за пройденные уроки, выполненные задания и особые активности.
-            </p>
-          </div>
-          <div id="achievements-list" class="grid gap-3 sm:gap-4">
-            <!-- достижения -->
-          </div>
-        </div>
-      </section>
-
-      <!-- НАСТРОЙКИ ПРОФИЛЯ (модалка) -->
-      <div id="profile-settings" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40">
-        <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
-          <div class="flex items-start justify-between gap-3">
             <div>
-              <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
-                Профиль
-              </p>
-              <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
-                Настройки аккаунта
-              </h2>
-              <p class="text-xs sm:text-sm text-slate-600">
-                Эти данные помогают нам персонализировать ваш опыт и, в будущем, показывать прогресс более наглядно.
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900">Ваши курсы</h2>
+              <p class="text-xs text-slate-500">
+                Покупки из магазина и активированные бесплатные курсы появятся здесь автоматически.
               </p>
             </div>
-            <button id="btn-close-profile" class="text-slate-400 hover:text-slate-600 text-xl leading-none">
-              ×
+            <a href="/courses/" class="text-xs sm:text-sm text-amber-700 hover:text-amber-900 font-medium">
+              Открыть каталог →
+            </a>
+          </div>
+
+          <div id="courses-need-auth" class="soft-card p-4 text-sm text-slate-600">
+            Чтобы увидеть свои курсы, <span class="font-semibold text-slate-900">войдите в личный кабинет</span> выше.
+          </div>
+
+          <div id="courses-list" class="grid gap-4 sm:grid-cols-2"></div>
+
+          <p id="courses-empty" class="hidden text-sm text-slate-500">
+            Пока у вас нет активированных курсов. Загляните в
+            <a href="/shop/" class="underline">магазин</a> или начните
+            <a href="/courses/" class="underline">бесплатный курс</a>.
+          </p>
+        </div>
+
+        <!-- ПРАВАЯ КОЛОНКА: ДОСТИЖЕНИЯ + КОИНЫ -->
+        <div class="space-y-4">
+          <!-- ДОСТИЖЕНИЯ (ПРАВАЯ КОЛОНКА) -->
+          <div class="space-y-3">
+            <div class="space-y-1">
+              <p class="pill-label">Достижения</p>
+              <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
+                Бейджи, медали и маленькие победы
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-600">
+                Здесь будут появляться ваши заработанные медали. Нажмите на любую, чтобы открыть полную коллекцию, как в Pokémon Go.
+              </p>
+            </div>
+
+            <div id="achievements-empty" class="soft-card p-4 text-xs sm:text-sm text-slate-600">
+              Как только вы получите первую медаль, она появится здесь.
+            </div>
+
+            <div id="achievements-earned" class="flex flex-wrap gap-2">
+              <!-- сюда рендерятся заработанные медали -->
+            </div>
+
+            <button
+              id="achievements-open-modal"
+              type="button"
+              class="btn btn-ghost text-xs sm:text-sm mt-1 hidden"
+            >
+              Открыть коллекцию медалей
             </button>
           </div>
 
-          <form id="profile-form" class="space-y-3">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label for="profile-first" class="block text-xs font-medium text-slate-600 mb-1">
-                  Имя
-                </label>
-                <input
-                  id="profile-first"
-                  name="firstName"
-                  type="text"
-                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                  placeholder="Например, Anna"
-                />
+          <!-- КОИНЫ -->
+          <aside id="coins-card" class="soft-card p-4 sm:p-5 space-y-3 hidden">
+            <div class="flex items-center justify-between gap-3">
+              <div class="space-y-1">
+                <p class="pill-label">PolyTalky Coins</p>
+                <h2 class="text-base sm:text-lg font-semibold text-slate-900">
+                  Ваши бонусы за обучение
+                </h2>
               </div>
-              <div>
-                <label for="profile-last" class="block text-xs font-medium text-slate-600 mb-1">
-                  Фамилия
-                </label>
-                <input
-                  id="profile-last"
-                  name="lastName"
-                  type="text"
-                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                  placeholder="Фамилия (опционально)"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-medium text-slate-600 mb-1">
-                Аватар профиля
-              </label>
-              <p class="text-[11px] text-slate-500 mb-2">
-                Выберите один из стандартных аватаров PolyTalky.
-              </p>
-              <div class="flex gap-2">
-                <!-- Девочка по умолчанию -->
-                <button
-                  type="button"
-                  class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1 ring-2 ring-amber-400"
-                  data-avatar-type="girl"
-                >
-                  <img src="/assets/avatarf.png" alt="Аватар девочка" class="h-10 w-10 object-cover rounded-lg">
-                </button>
-                <button
-                  type="button"
-                  class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1"
-                  data-avatar-type="boy"
-                >
-                  <img src="/assets/avatar.png" alt="Аватар мальчик" class="h-10 w-10 object-cover rounded-lg">
+              <div class="flex flex-col items-end">
+                <div class="inline-flex items-center gap-1 rounded-full bg-slate-900 text-amber-300 px-2 py-1 text-xs font-semibold shadow-sm">
+                  <img src="/assets/coin.png" alt="Coin" class="h-4 w-4">
+                  <span><span id="coins-balance">0</span> коинов</span>
+                </div>
+                <button id="open-coins-modal"
+                        class="mt-1 text-[11px] text-amber-700 hover:text-amber-900 underline decoration-dotted">
+                  Подробнее о коинах
                 </button>
               </div>
-              <!-- скрытое поле для хранения выбора -->
-              <input type="hidden" id="profile-avatar-type" value="girl">
             </div>
-
-            <p id="profile-msg" class="text-xs text-slate-500 min-h-[1rem]"></p>
-
-            <div class="flex items-center justify-end gap-2 pt-2">
-              <button type="button" id="btn-cancel-profile" class="btn btn-ghost text-xs sm:text-sm">
-                Отмена
-              </button>
-              <button type="submit" class="btn btn-main text-xs sm:text-sm">
-                Сохранить изменения
-              </button>
-            </div>
-          </form>
+            <p id="coins-text" class="text-xs sm:text-sm text-slate-600">
+              Здесь будет описание вашей ежедневной награды и колеса удачи.
+            </p>
+            <button id="coins-claim-btn"
+                    class="btn btn-brand w-full justify-center text-xs sm:text-sm">
+              Забрать бонус
+            </button>
+          </aside>
         </div>
-      </div>
-
-      <!-- Модалка предпросмотра стандартных аватаров (отдельно, снаружи профиля) -->
-      <div
-        id="avatar-preview-modal"
-        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50"
-      >
-        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 max-w-xs w-full mx-4 text-center">
-          <img
-            id="avatar-preview-img"
-            src="/assets/avatarf.png"
-            alt="Предпросмотр аватара"
-            class="mx-auto h-32 w-32 sm:h-40 sm:w-40 rounded-2xl object-contain mb-3"
-          />
-          <button
-            type="button"
-            id="avatar-preview-close"
-            class="btn btn-ghost text-xs sm:text-sm"
-          >
-            Закрыть
-          </button>
-        </div>
-      </div>
-
-      <!-- COIN MODAL -->
-      <div id="coin-modal" class="hidden fixed inset-0 bg-black/40 items-center justify-center z-40">
-        <div class="card max-w-xs w-full mx-6 p-6 text-center space-y-3">
-          <img
-            src="/assets/coin.png"
-            alt="PolyTalky-коин"
-            class="mx-auto mb-2 w-24 h-24"
-          >
-          <h3 class="text-lg font-extrabold mb-1">PolyTalky-коины 🪙</h3>
-          <p class="text-sm text-[var(--ink-2)]">
-            За ежедневные заходы в кабинет вы получаете внутренние коины. В будущем их можно будет обменять на платные курсы, дополнительные аватары и секретные упражнения.
-          </p>
-          <p class="text-xs text-slate-500 mt-1">
-            Текущий баланс: <span id="coin-modal-balance">0</span> коинов.
-          </p>
-          <button
-            id="coin-modal-close"
-            type="button"
-            class="btn btn-ghost px-4 py-2 mt-2"
-          >
-            Понятно
-          </button>
-        </div>
-      </div>
-
-      <!-- COOKIE-BANNER -->
-      <div id="cookie-banner" class="fixed bottom-3 inset-x-0 flex justify-center z-50 hidden">
-        <div class="soft-card px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-2 text-xs sm:text-sm text-slate-700 max-w-xl mx-4">
-          <p class="flex-1">
-            Мы используем куки, чтобы помнить ваши логины и прогресс по курсам. Продолжая пользоваться сайтом, вы соглашаетесь с
-            <a href="/privacy/" class="underline">политикой конфиденциальности</a>.
-          </p>
-          <button id="cookie-accept" class="btn btn-main text-xs sm:text-sm">
-            Хорошо
-          </button>
-        </div>
-      </div>
+      </section>
     </div>
   </main>
 
-  <footer class="border-t border-slate-200/70 bg-white/80">
-    <div class="wrap px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] sm:text-xs text-slate-500">
-      <p>© PolyTalky. Языки как стиль жизни.</p>
-      <p class="flex items-center gap-3">
-        <a href="/privacy/" class="hover:text-slate-700">Политика конфиденциальности</a>
-        <span class="hidden sm:inline text-slate-400">•</span>
-        <a href="/oferta/" class="hover:text-slate-700">Публичная оферта</a>
+  <!-- МОДАЛКА ПРО КОИНЫ -->
+  <div id="coin-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40">
+    <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
+            PolyTalky Coins
+          </p>
+          <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
+            Как работают коины
+          </h2>
+        </div>
+        <button type="button" id="coin-modal-close" class="text-slate-400 hover:text-slate-600 text-xl leading-none">
+          ×
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <img src="/assets/coin.png" alt="Coin" class="h-10 w-10">
+        <div class="text-sm text-slate-700">
+          <div>Сейчас у вас <span id="coin-modal-balance" class="font-semibold">0</span> коинов.</div>
+          <div class="text-xs text-slate-500 mt-1">
+            Коины можно будет обменять на платные курсы, аватары и секретные упражнения.
+          </div>
+        </div>
+      </div>
+
+      <ul class="text-xs sm:text-sm text-slate-700 space-y-2">
+        <li>• За ежедневный вход в личный кабинет вы получаете небольшое количество коинов.</li>
+        <li>• Если заходите несколько дней подряд, появляется возможность крутануть «колесо удачи» и получить больше коинов.</li>
+        <li>• Чем дольше ваша серия посещений, тем интереснее награды.</li>
+      </ul>
+
+      <p class="text-[11px] text-slate-500">
+        На этапе беты мы можем менять правила начисления. Но все полученные вами коины сохраняются.
       </p>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА КОЛЛЕКЦИИ МЕДАЛЕЙ -->
+  <div
+    id="achievements-modal"
+    class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40"
+  >
+    <div class="card max-w-2xl w-full mx-4 p-5 sm:p-6 space-y-4">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
+            Коллекция медалей
+          </p>
+          <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
+            Все ваши награды и те, что ещё впереди
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Золотые иконки — уже полученные медали. Полупрозрачные показывают цели, к которым вы ещё идёте.
+          </p>
+        </div>
+        <button
+          type="button"
+          id="achievements-modal-close"
+          class="text-slate-400 hover:text-slate-600 text-xl leading-none"
+        >
+          ×
+        </button>
+      </div>
+
+      <div
+        id="achievements-modal-grid"
+        class="grid grid-cols-4 sm:grid-cols-5 gap-3 text-center text-xs sm:text-sm"
+      >
+        <!-- карточки медалей -->
+      </div>
+
+      <div
+        id="achievements-modal-detail"
+        class="soft-card p-3 sm:p-4 text-xs sm:text-sm text-slate-700"
+      >
+        <p class="font-semibold mb-1" id="achievements-modal-title">
+          Выберите медаль, чтобы узнать подробности
+        </p>
+        <p id="achievements-modal-desc">
+          Наведите курсор или нажмите на любую иконку в коллекции.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-200/70 bg-white/80 backdrop-blur py-6 text-sm text-slate-600 mt-8">
+    <div class="wrap px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+      <p>© 2025 PolyTalky. Все права защищены.</p>
+      <div class="flex flex-wrap gap-4">
+        <a href="/contact.html" class="hover:text-slate-900">Контакты</a>
+        <a href="/legal/privacy.html" class="hover:text-slate-900">Политика конфиденциальности</a>
+        <a href="/legal/offer.html" class="hover:text-slate-900">Публичная оферта</a>
+        <a href="/legal/cookies.html" class="hover:text-slate-900">Cookies</a>
+        <a href="/legal/consent.html" class="hover:text-slate-900">Согласие</a>
+      </div>
     </div>
   </footer>
 
-  <!-- Firebase + логика кабинета -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <!-- COOKIE БАННЕР -->
+  <div id="cookie-banner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white shadow-lg rounded-xl px-4 py-3 text-xs sm:text-sm flex items-center gap-3 hidden">
+    <span>Мы используем cookies для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с этим.</span>
+    <button id="cookie-accept" class="btn btn-brand text-xs px-3 py-1">Понятно</button>
+  </div>
+
+  <!-- Firebase SDKs (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
+    // Твой конфиг Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
       authDomain: "polytalky-70999.firebaseapp.com",
@@ -623,41 +465,11 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db   = firebase.firestore();
-
-    const COURSE_META = {
-      'spanish-a1-basics': {
-        title: 'Испанский A1: Базовый старт',
-        href: '/courses/spanish-a1-basics/',
-        cover: '/assets/courses/spanish-a1.jpg'
-      },
-      'spanish-verbs-mini': {
-        title: 'Мини-курс: Испанские глаголы',
-        href: '/courses/spanish-verbs-mini/',
-        cover: '/assets/courses/spanish-verbs.jpg'
-      },
-      'english-intro': {
-        title: 'Интенсив по английскому',
-        href: '/courses/english-intro/',
-        cover: '/assets/courses/english.jpg'
-      }
-    };
-
-    const BADGE_META = {
-      'english-intro-lesson-1': {
-        icon: '🌟',
-        title: 'Первый урок English Intro',
-        desc: 'Вы прошли первое занятие, и это отличный старт!'
-      },
-      'english-intro-lesson-2': {
-        icon: '🚀',
-        title: 'Продолжаем путешествие',
-        desc: 'Вы завершили второй урок English Intro.'
-      }
-    };
   </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // --- DOM элементы ---
       const authBoxOut      = document.getElementById('auth-when-logged-out');
       const authBoxIn       = document.getElementById('auth-when-logged-in');
       const authEmailEl     = document.getElementById('auth-email');
@@ -673,33 +485,31 @@
       const authUserEmail   = document.getElementById('auth-user-email');
       const authExtra       = document.getElementById('auth-extra');
 
-      const profileAvatarWrapper = document.getElementById('profile-avatar-wrapper');
+      const profileAvatar   = document.getElementById('profile-avatar');
       const profileAvatarImg= document.getElementById('profile-avatar-img');
+      const profileAvatarEmoji = document.getElementById('profile-avatar-emoji');
       const profileName     = document.getElementById('profile-name');
       const profileSettings = document.getElementById('profile-settings');
       const profileForm     = document.getElementById('profile-form');
       const profileFirst    = document.getElementById('profile-first');
       const profileLast     = document.getElementById('profile-last');
-      const profileMsg      = document.getElementById('profile-msg');
       const profileAvatarType = document.getElementById('profile-avatar-type');
+      const profileAvatarUrl= document.getElementById('profile-avatar-url');
+      const profileMsg      = document.getElementById('profile-msg');
       const avatarChoiceButtons = document.querySelectorAll('.avatar-choice');
 
-      const avatarPreviewModal = document.getElementById('avatar-preview-modal');
-      const avatarPreviewImg   = document.getElementById('avatar-preview-img');
-      const avatarPreviewClose = document.getElementById('avatar-preview-close');
-      
       const coursesNeedAuth = document.getElementById('courses-need-auth');
       const coursesList     = document.getElementById('courses-list');
       const coursesEmpty    = document.getElementById('courses-empty');
-      const achievementsList= document.getElementById('achievements-list');
 
-      const cookieBanner    = document.getElementById('cookie-banner');
-      const cookieAccept    = document.getElementById('cookie-accept');
-
-      const proBannerSuccess = document.getElementById('pro-banner-success');
-      const proBannerError   = document.getElementById('pro-banner-error');
-      const proBannerCancel  = document.getElementById('pro-banner-cancel');
-      const proCancelButton  = document.getElementById('pro-cancel-button');
+      const achievementsEarned = document.getElementById('achievements-earned');
+      const achievementsEmpty  = document.getElementById('achievements-empty');
+      const achievementsOpenModalBtn = document.getElementById('achievements-open-modal');
+      const achievementsModal  = document.getElementById('achievements-modal');
+      const achievementsModalClose = document.getElementById('achievements-modal-close');
+      const achievementsModalGrid  = document.getElementById('achievements-modal-grid');
+      const achievementsModalTitle = document.getElementById('achievements-modal-title');
+      const achievementsModalDesc  = document.getElementById('achievements-modal-desc');
 
       // КОИНЫ: элементы
       const coinsCard       = document.getElementById('coins-card');
@@ -722,6 +532,9 @@
         nextReward: 0
       };
 
+      // Коллекция медалей, загруженная из Firestore
+      let currentMedals = [];
+
       function todayStr() {
         const d = new Date();
         const y = d.getFullYear();
@@ -730,192 +543,162 @@
         return `${y}-${m}-${day}`;
       }
 
-      /* PRO параметр */
-      (function handleProParam() {
-        const params = new URLSearchParams(window.location.search);
-        const pro = params.get('pro');
-        if (!pro) return;
-
-        if (pro === 'success' && proBannerSuccess) {
-          proBannerSuccess.style.display = 'flex';
-        } else if (pro === 'error' && proBannerError) {
-          proBannerError.style.display = 'flex';
-        } else if (pro === 'cancel' && proBannerCancel) {
-          proBannerCancel.style.display = 'flex';
+      function loadCookieBanner() {
+        const banner    = document.getElementById('cookie-banner');
+        const btnCookie = document.getElementById('cookie-accept');
+        if (!banner || !btnCookie) return;
+        if (!localStorage.getItem('cookieConsent')) {
+          banner.classList.remove('hidden');
         }
-
-        params.delete('pro');
-        const newSearch = params.toString();
-        const newUrl = window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash;
-        window.history.replaceState({}, '', newUrl);
-      })();
-
-      if (proCancelButton) {
-        proCancelButton.addEventListener('click', () => {
-          alert('Если вы хотите отменить подписку PRO, напишите нам на почту поддержки — мы поможем всё оформить.');
+        btnCookie.addEventListener('click', () => {
+          localStorage.setItem('cookieConsent', 'true');
+          banner.classList.add('hidden');
         });
       }
+      loadCookieBanner();
 
-      /* cookie */
-      if (!localStorage.getItem('cookieConsent')) {
-        cookieBanner.classList.remove('hidden');
-      }
-      cookieAccept.addEventListener('click', () => {
-        localStorage.setItem('cookieConsent', 'true');
-        cookieBanner.classList.add('hidden');
-      });
-
-      /* модалка профиля */
-      function openProfileModal(){
-        profileSettings.classList.remove('hidden');
-        profileSettings.classList.add('flex');
-      }
-      function closeProfileModal(){
-        profileSettings.classList.add('hidden');
-        profileSettings.classList.remove('flex');
-      }
-      document.getElementById('btn-open-profile')?.addEventListener('click', openProfileModal);
-      document.getElementById('btn-close-profile')?.addEventListener('click', closeProfileModal);
-      document.getElementById('btn-cancel-profile')?.addEventListener('click', (e)=>{
-        e.preventDefault();
-        closeProfileModal();
-      });
-      profileSettings.addEventListener('click', (e)=>{
-        if (e.target === profileSettings) closeProfileModal();
-      });
-
-      /* выбор базового аватара */
+      // Аватар: переключение типа + визуал
       function setAvatarChoice(type) {
-        if (!profileAvatarType) return;
-        const t = type || 'girl';
-        profileAvatarType.value = t;
-
-        avatarChoiceButtons.forEach((btn) => {
-          const bt = btn.getAttribute('data-avatar-type');
-          if (bt === t) {
-            btn.classList.add('ring-2','ring-amber-400');
+        avatarChoiceButtons.forEach(btn => {
+          if (btn.dataset.avatar === type) {
+            btn.classList.add('border-amber-400','bg-amber-50');
           } else {
-            btn.classList.remove('ring-2','ring-amber-400');
+            btn.classList.remove('border-amber-400','bg-amber-50');
           }
         });
-
-        // обновляем маленький аватар в кабинете
-        if (profileAvatarImg) {
-          profileAvatarImg.src = t === 'girl'
-            ? '/assets/avatarf.png'
-            : '/assets/avatar.png';
-        }
       }
 
-      // Клик по выбору аватара внутри настроек
-      avatarChoiceButtons.forEach((btn) => {
+      avatarChoiceButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-          const t = btn.getAttribute('data-avatar-type') || 'girl';
-          setAvatarChoice(t);
-
-          const src = t === 'girl'
-            ? '/assets/avatarf.png'
-            : '/assets/avatar.png';
-
-          // открываем модалку с увеличенным вариантом
-          if (avatarPreviewModal && avatarPreviewImg) {
-            avatarPreviewImg.src = src;
-            avatarPreviewModal.classList.remove('hidden');
-            avatarPreviewModal.classList.add('flex');
+          const type = btn.dataset.avatar;
+          if (!type) return;
+          if (profileAvatarType) {
+            profileAvatarType.value = type;
           }
+          if (type === 'girl') {
+            profileAvatarImg.src = '/assets/avatarf.png';
+            profileAvatarImg.classList.remove('hidden');
+            profileAvatarEmoji.classList.add('hidden');
+          } else if (type === 'boy') {
+            profileAvatarImg.src = '/assets/avatarm.png';
+            profileAvatarImg.classList.remove('hidden');
+            profileAvatarEmoji.classList.add('hidden');
+          } else {
+            profileAvatarImg.classList.add('hidden');
+            profileAvatarEmoji.classList.remove('hidden');
+            profileAvatarEmoji.textContent = '✨';
+          }
+          setAvatarChoice(type);
         });
       });
 
-      // Клик по аватару в блоке "Вы авторизованы"
-      if (profileAvatarWrapper && avatarPreviewModal && avatarPreviewImg) {
-        profileAvatarWrapper.addEventListener('click', () => {
-          const t = profileAvatarType ? (profileAvatarType.value || 'girl') : 'girl';
-          const src = t === 'girl'
-            ? '/assets/avatarf.png'
-            : '/assets/avatar.png';
-          avatarPreviewImg.src = src;
-          avatarPreviewModal.classList.remove('hidden');
-          avatarPreviewModal.classList.add('flex');
-        });
+      // КОИНЫ: загрузка состояния из Firestore
+      async function loadCoins(user) {
+        if (!user) {
+          if (coinsCard) coinsCard.classList.add('hidden');
+          return;
+        }
+        try {
+          const email = user.email || null;
+          const uid   = user.uid   || null;
+          if (!email && !uid) return;
+
+          const usersCol = db.collection('users');
+          const docRef   = usersCol.doc(email || uid);
+          const snap     = await docRef.get();
+          const data     = snap.exists ? (snap.data() || {}) : {};
+
+          const balance  = typeof data.coinsBalance === 'number' ? data.coinsBalance : 0;
+          const streak   = typeof data.coinStreak   === 'number' ? data.coinStreak   : 0;
+          const lastDate = data.lastCoinDate || null;
+
+          coinsState.balance  = balance;
+          coinsState.streak   = streak;
+          coinsState.lastDate = lastDate;
+          coinsState.alreadyClaimedToday = false;
+          coinsState.mode     = null;
+          coinsState.nextReward = 0;
+
+          updateCoinsUI({
+            coinsBalance: balance,
+            coinStreak: streak,
+            lastCoinDate: lastDate
+          });
+
+          if (coinsCard) coinsCard.classList.remove('hidden');
+        } catch (err) {
+          console.error('Ошибка загрузки коинов:', err);
+        }
       }
 
-      // Закрытие модалки аватара
-      if (avatarPreviewModal) {
-        avatarPreviewModal.addEventListener('click', (e) => {
-          if (e.target === avatarPreviewModal) {
-            avatarPreviewModal.classList.add('hidden');
-            avatarPreviewModal.classList.remove('flex');
-          }
-        });
-      }
-      if (avatarPreviewClose && avatarPreviewModal) {
-        avatarPreviewClose.addEventListener('click', () => {
-          avatarPreviewModal.classList.add('hidden');
-          avatarPreviewModal.classList.remove('flex');
-        });
-      }
+      function updateCoinsUI({ coinsBalance, coinStreak, lastCoinDate }) {
+        const balance = typeof coinsBalance === 'number' ? coinsBalance : 0;
+        const streak  = typeof coinStreak   === 'number' ? coinStreak   : 0;
+        const last    = lastCoinDate || null;
 
-      /* КОИНЫ: обновление UI по данным пользователя */
-      function updateCoinsUI(userData) {
-        if (!coinsCard || !coinsBalanceEl || !coinsTextEl || !coinsClaimBtn) return;
-
-        const balance = typeof userData.coinsBalance === 'number' ? userData.coinsBalance : 0;
-        const streak  = typeof userData.coinStreak   === 'number' ? userData.coinStreak   : 0;
-        const last    = userData.lastCoinDate || null;
-        const today   = todayStr();
-        const already = (last === today);
-
-        coinsState.balance = balance;
-        coinsState.streak  = streak;
-        coinsState.lastDate= last;
-        coinsState.alreadyClaimedToday = already;
-        coinsState.mode = null;
-        coinsState.nextReward = 0;
-
-        coinsCard.classList.remove('hidden');
-        coinsBalanceEl.textContent = balance;
+        if (coinsBalanceEl) {
+          coinsBalanceEl.textContent = balance;
+        }
         if (coinModalBalance) {
           coinModalBalance.textContent = balance;
         }
-function pluralizeCoin(n) {
-  n = Math.abs(n) % 100;
-  const n1 = n % 10;
-  if (n > 10 && n < 20) return "коинов";
-  if (n1 === 1) return "коин";
-  if (n1 >= 2 && n1 <= 4) return "коина";
-  return "коинов";
-}
+
+        function pluralizeCoin(n) {
+          n = Math.abs(n) % 100;
+          const n1 = n % 10;
+          if (n > 10 && n < 20) return "коинов";
+          if (n1 === 1) return "коин";
+          if (n1 >= 2 && n1 <= 4) return "коина";
+          return "коинов";
+        }
+
+        if (!coinsTextEl || !coinsClaimBtn) return;
+
         coinsClaimBtn.disabled = false;
         coinsClaimBtn.classList.remove('opacity-60','cursor-default');
 
-        if (already) {
-          coinsTextEl.textContent = 'Бонус за сегодня уже получен, приходите завтра 💛';
-          coinsClaimBtn.textContent = 'Бонус уже забран';
+        const today = todayStr();
+        if (last === today) {
+          coinsState.alreadyClaimedToday = true;
+          coinsState.mode = null;
+          coinsState.nextReward = 0;
+          coinsTextEl.textContent = 'На сегодня бонус уже забран. Загляните завтра, чтобы продолжить серию и приблизиться к колесу удачи!';
           coinsClaimBtn.disabled = true;
           coinsClaimBtn.classList.add('opacity-60','cursor-default');
-          coinsState.mode = null;
+          coinsClaimBtn.textContent = 'Бонус уже получен';
           return;
         }
 
-        // Ещё не получали бонус сегодня
-        if (streak >= 6) {
-          // 7-й день: колесо удачи
-          coinsTextEl.textContent = 'Сегодня 7-й день подряд! Вы можете крутить колесо удачи и получить случайное количество коинов.';
-          coinsClaimBtn.textContent = 'Крутить колесо 🎡';
-          coinsState.mode = 'wheel';
-          coinsState.nextReward = 0;
-        } else {
-          // Обычный день: 1–6 коинов
-          const reward = Math.min(streak + 1, 6);
+        if (last) {
+          const lastDateObj = new Date(last);
+          const todayObj    = new Date(today);
+          const diffMs      = todayObj - lastDateObj;
+          const diffDays    = Math.floor(diffMs / (1000*60*60*24));
+          if (diffDays === 1) {
+            coinsState.streak = streak;
+          } else if (diffDays > 1) {
+            coinsState.streak = 0;
+          }
+        }
+
+        const currentStreak = coinsState.streak || 0;
+
+        if (currentStreak < 6) {
+          const reward = 3 + currentStreak;
           coinsState.mode = 'daily';
           coinsState.nextReward = reward;
 
           if (streak === 0 && balance === 0) {
-            coinsTextEl.textContent = 'Сегодня вы можете получить 1 коин за вход. Коины — внутренняя валюта PolyTalky. Скоро их можно будет обменять на платные курсы, аватары и секретные упражнения.';
+            coinsTextEl.textContent = 'Сегодня вы можете получить свои первые коины за вход в личный кабинет. Соберите серию из 7 дней, и вы сможете крутануть колесо удачи!';
           } else {
-            coinsTextEl.textContent = `Сегодня вы можете забрать ${reward} ${pluralizeCoin(coins)} за ежедневный вход. Продолжайте заходить каждый день, чтобы дойти до колеса удачи!`;
+            coinsTextEl.textContent = `Сегодня вы можете забрать ${reward} ${pluralizeCoin(reward)} за ежедневный вход. Продолжайте заходить каждый день, чтобы дойти до колеса удачи!`;
           }
-          coinsClaimBtn.textContent = `Забрать ${reward} ${pliralizeCoin(coins)}`;
+          coinsClaimBtn.textContent = `Забрать ${reward} ${pluralizeCoin(reward)}`;
+        } else {
+          coinsState.mode = 'wheel';
+          coinsState.nextReward = 0;
+          coinsTextEl.textContent = 'Вы добрались до колеса удачи! Нажмите на кнопку ниже, чтобы получить случайное количество коинов.';
+          coinsClaimBtn.textContent = 'Крутить колесо';
         }
       }
 
@@ -934,24 +717,25 @@ function pluralizeCoin(n) {
             return;
           }
 
-          const email = user.email;
-          if (!email) {
-            alert('Не удалось определить email пользователя.');
-            return;
-          }
-
-          const docRef = db.collection('users').doc(email);
-          const today  = todayStr();
-
           coinsClaimBtn.disabled = true;
-          coinsClaimBtn.textContent = 'Подождите...';
           coinsClaimBtn.classList.add('opacity-60','cursor-default');
 
           try {
+            const email = user.email || null;
+            const uid   = user.uid   || null;
+            const usersCol = db.collection('users');
+            const docRef   = usersCol.doc(email || uid);
+            const snap     = await docRef.get();
+            const data     = snap.exists ? (snap.data() || {}) : {};
+
+            const balance  = typeof data.coinsBalance === 'number' ? data.coinsBalance : 0;
+            const streak   = typeof data.coinStreak   === 'number' ? data.coinStreak   : 0;
+            const today    = todayStr();
+
             if (coinsState.mode === 'daily') {
-              const reward = coinsState.nextReward || 1;
-              const newBalance = coinsState.balance + reward;
-              const newStreak  = Math.min(coinsState.streak + 1, 6);
+              const reward = coinsState.nextReward || 3;
+              const newBalance = balance + reward;
+              const newStreak  = streak + 1;
 
               await docRef.set({
                 coinsBalance: newBalance,
@@ -983,7 +767,7 @@ function pluralizeCoin(n) {
 
               await docRef.set({
                 coinsBalance: newBalance,
-                coinStreak: 0, // новый цикл
+                coinStreak: 0,
                 lastCoinDate: today
               }, { merge: true });
 
@@ -1025,28 +809,29 @@ function pluralizeCoin(n) {
           }
           coinModal.classList.remove('hidden');
           coinModal.classList.add('flex');
-
-          // лёгкий «бамп» маленькой иконки
-          coinImgSmall.classList.add('scale-110');
           setTimeout(() => {
-            coinImgSmall.classList.remove('scale-110');
-          }, 180);
+            coinImgSmall.classList.add('scale-110');
+          }, 10);
         };
 
         const closeCoinModal = () => {
           coinModal.classList.add('hidden');
           coinModal.classList.remove('flex');
+          coinImgSmall.classList.remove('scale-110');
         };
 
         coinImgSmall.addEventListener('click', openCoinModal);
+        const openBtn = document.getElementById('open-coins-modal');
+        if (openBtn) openBtn.addEventListener('click', openCoinModal);
+
         coinModalClose.addEventListener('click', closeCoinModal);
         coinModal.addEventListener('click', (e) => {
           if (e.target === coinModal) closeCoinModal();
         });
       })();
 
-      /* ошибки авторизации */
-      function showAuthError(code){
+      // Перевод ошибок Firebase для авторизации
+      function translateAuthError(code) {
         let msg = 'Что-то пошло не так. Попробуйте ещё раз.';
         if (code === 'auth/user-not-found') {
           msg = 'Пользователь с таким email не найден. Попробуйте зарегистрироваться.';
@@ -1062,7 +847,7 @@ function pluralizeCoin(n) {
 
       let registerMode = false;
 
-      /* вход */
+      // Вход
       authForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         authError.textContent = '';
@@ -1078,11 +863,11 @@ function pluralizeCoin(n) {
           await auth.signInWithEmailAndPassword(email, pass);
         } catch (err) {
           console.error(err);
-          showAuthError(err.code);
+          translateAuthError(err.code);
         }
       });
 
-      /* регистрация */
+      // Регистрация (двухшаговая)
       authRegister.addEventListener('click', async () => {
         authError.textContent = '';
 
@@ -1104,31 +889,46 @@ function pluralizeCoin(n) {
           const first = authFirstEl.value.trim();
           const last  = authLastEl.value.trim();
 
-          if (!email || !pass){
+          if (!email || !pass) {
             authError.textContent = 'Введите email и пароль.';
+            return;
+          }
+          if (!first || !last) {
+            authError.textContent = 'Для регистрации укажите имя и фамилию.';
             return;
           }
 
           const cred = await auth.createUserWithEmailAndPassword(email, pass);
           const user = cred.user;
           if (user) {
-            await db.collection('users').doc(email).set({
+            const uid = user.uid;
+            const usersCol = db.collection('users');
+            const docRef   = usersCol.doc(email);
+
+            await docRef.set({
               email,
-              firstName:first || null,
-              lastName:last || null,
+              firstName: first,
+              lastName: last,
+              uid: uid || null,
               createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge:true });
+            }, { merge: true });
+
+            authError.textContent = '';
+            registerMode = false;
+            authExtra.classList.add('hidden');
           }
         } catch (err) {
           console.error(err);
-          showAuthError(err.code);
+          translateAuthError(err.code);
         }
       });
 
-      /* выход */
-      authLogout?.addEventListener('click', async () => {
-        await auth.signOut();
-      });
+      // Выход
+      if (authLogout) {
+        authLogout.addEventListener('click', async () => {
+          await auth.signOut();
+        });
+      }
 
       /* состояние */
       async function setAuthState(user) {
@@ -1143,6 +943,8 @@ function pluralizeCoin(n) {
 
           await loadUserProfile(user);
           await loadUserEnrollments(user);
+          await loadAchievementsFromFirestore(user);
+          await loadCoins(user);
         } else {
           localStorage.removeItem('pt_uid');
           localStorage.removeItem('pt_email');
@@ -1157,7 +959,10 @@ function pluralizeCoin(n) {
           setAvatarChoice('girl');
           coursesList.innerHTML = '';
           coursesEmpty.classList.add('hidden');
-          achievementsList.innerHTML = '';
+          if (achievementsEarned) achievementsEarned.innerHTML = '';
+          if (achievementsEmpty) achievementsEmpty.classList.remove('hidden');
+          if (achievementsOpenModalBtn) achievementsOpenModalBtn.classList.add('hidden');
+          currentMedals = [];
           if (coinsCard) {
             coinsCard.classList.add('hidden');
           }
@@ -1192,42 +997,43 @@ function pluralizeCoin(n) {
 
           const first = data.firstName || '';
           const last  = data.lastName || '';
-          const avatarType = data.avatarType || 'girl';
-          const displayEmail = data.email || email || '';
-
-          const displayName = (first || last)
-            ? (first + ' ' + (last || '')).trim()
-            : displayEmail || 'Без имени';
-
-          profileName.textContent = displayName;
-          authUserEmail.textContent = displayEmail;
-
           profileFirst.value = first;
           profileLast.value  = last;
+          profileName.textContent = [first,last].filter(Boolean).join(' ') || (data.email || '');
+
+          const avatarType = data.avatarType || 'girl';
+          const avatarUrl  = data.avatarUrl  || '';
+          if (profileAvatarType) profileAvatarType.value = avatarType;
+          profileAvatarUrl.value = avatarUrl || '';
+
+          if (avatarType === 'girl') {
+            profileAvatarImg.src = '/assets/avatarf.png';
+            profileAvatarImg.classList.remove('hidden');
+            profileAvatarEmoji.classList.add('hidden');
+          } else if (avatarType === 'boy') {
+            profileAvatarImg.src = '/assets/avatarm.png';
+            profileAvatarImg.classList.remove('hidden');
+            profileAvatarEmoji.classList.add('hidden');
+          } else if (avatarType === 'custom' && avatarUrl) {
+            profileAvatarImg.src = avatarUrl;
+            profileAvatarImg.classList.remove('hidden');
+            profileAvatarEmoji.classList.add('hidden');
+          } else {
+            profileAvatarImg.classList.add('hidden');
+            profileAvatarEmoji.classList.remove('hidden');
+            profileAvatarEmoji.textContent = '😊';
+          }
 
           setAvatarChoice(avatarType);
-
-          profileMsg.textContent = '';
-
-          // КОИНЫ: обновляем интерфейс по данным профиля
-          updateCoinsUI(data);
-
-          if (emailRef) {
-            try {
-              await emailRef.set(
-                { ...data, email: displayEmail },
-                { merge: true }
-              );
-            } catch (e) {
-              console.warn('Не удалось мигрировать профиль uid→email:', e);
-            }
-          }
+          profileSettings.classList.remove('hidden');
+          const avatarChoices = document.getElementById('avatar-choices');
+          if (avatarChoices) avatarChoices.classList.remove('hidden');
         } catch (err) {
-          console.error('Ошибка профиля:', err);
+          console.error('Ошибка загрузки профиля:', err);
         }
       }
 
-      /* сохранение профиля (без загрузки фото) */
+      // Сохранение профиля
       profileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         profileMsg.textContent = '';
@@ -1239,38 +1045,55 @@ function pluralizeCoin(n) {
         }
 
         try {
-          const email = user.email;
-          const first = profileFirst.value.trim();
-          const last  = profileLast.value.trim();
-          const avatarType = profileAvatarType ? (profileAvatarType.value || 'girl') : 'girl';
-
-          const payload = {
-            firstName: first,
-            lastName:  last,
-            avatarType: avatarType
-          };
-
-          // обновляем аватар локально
-          profileAvatarImg.src = avatarType === 'girl'
-            ? '/assets/avatarf.png'
-            : '/assets/avatar.png';
-
-          // сохраняем профиль в Firestore
-          await db.collection('users').doc(email).set(payload, { merge: true });
-
-          profileMsg.textContent = 'Профиль обновлён ✔️';
-
-          // при желании можно ещё раз перечитать профиль
-          const again = auth.currentUser;
-          if (again) {
-            await loadUserProfile(again);
+          const email = user.email || null;
+          const uid   = user.uid   || null;
+          if (!email && !uid) {
+            profileMsg.textContent = 'Не удалось определить пользователя.';
+            return;
           }
 
-          // закрываем модалку после успешного сохранения
-          closeProfileModal();
+          const first = profileFirst.value.trim();
+          const last  = profileLast.value.trim();
+          const avatarType = profileAvatarType ? profileAvatarType.value : 'girl';
+          const avatarUrl  = profileAvatarUrl.value.trim();
+
+          const usersCol = db.collection('users');
+          const docRef   = usersCol.doc(email || uid);
+
+          await docRef.set({
+            email: email || null,
+            uid: uid || null,
+            firstName: first || null,
+            lastName: last || null,
+            avatarType: avatarType || 'girl',
+            avatarUrl: avatarUrl || null,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+
+          profileMsg.textContent = 'Профиль обновлён.';
+          profileName.textContent = [first,last].filter(Boolean).join(' ') || (email || '');
+
+          if (avatarType === 'girl') {
+            profileAvatarImg.src = '/assets/avatarf.png';
+            profileAvatarImg.classList.remove('hidden');
+            profileAvatarEmoji.classList.add('hidden');
+          } else if (avatarType === 'boy') {
+            profileAvatarImg.src = '/assets/avatarm.png';
+            profileAvatarImg.classList.remove('hidden');
+            profileAvatarEmoji.classList.add('hidden');
+          } else if (avatarType === 'custom' && avatarUrl) {
+            profileAvatarImg.src = avatarUrl;
+            profileAvatarImg.classList.remove('hidden');
+            profileAvatarEmoji.classList.add('hidden');
+          } else {
+            profileAvatarImg.classList.add('hidden');
+            profileAvatarEmoji.classList.remove('hidden');
+            profileAvatarEmoji.textContent = '😊';
+          }
+          setAvatarChoice(avatarType);
         } catch (err) {
-          console.error('profile save error', err);
-          profileMsg.textContent = 'Не удалось сохранить профиль. Проверьте соединение и попробуйте ещё раз.';
+          console.error(err);
+          profileMsg.textContent = 'Не удалось сохранить профиль. Попробуйте ещё раз.';
         }
       });
 
@@ -1285,7 +1108,6 @@ function pluralizeCoin(n) {
 
           if (!email && !uid) {
             coursesEmpty.classList.remove('hidden');
-            achievementsList.innerHTML = renderAchievements([], []);
             return;
           }
 
@@ -1301,20 +1123,11 @@ function pluralizeCoin(n) {
           const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
           const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
 
-          if (!emailData && !uidData) {
-            coursesEmpty.classList.remove('hidden');
-            achievementsList.innerHTML = renderAchievements([], []);
-            return;
-          }
-
           const paidFromEmail = Array.isArray(emailData?.courses)     ? emailData.courses     : [];
           const paidFromUid   = Array.isArray(uidData?.courses)       ? uidData.courses       : [];
           const freeFromEmail = Array.isArray(emailData?.freeCourses) ? emailData.freeCourses : [];
           const freeFromUid   = Array.isArray(uidData?.freeCourses)   ? uidData.freeCourses   : [];
-          const badgesEmail   = Array.isArray(emailData?.badges)      ? emailData.badges      : [];
-          const badgesUid     = Array.isArray(uidData?.badges)        ? uidData.badges        : [];
 
-          // прогресс по курсам (ключи = id курсов)
           const progressEmail = emailData?.progress || {};
           const progressUid   = uidData?.progress   || {};
           const mergedProgress = {
@@ -1324,43 +1137,38 @@ function pluralizeCoin(n) {
 
           const progressCourseIds = Object.keys(mergedProgress || {});
 
-          // платные / бесплатные с учётом прогресса
           let mergedPaid = Array.from(new Set([...paidFromUid, ...paidFromEmail]));
           let mergedFree = Array.from(new Set([
             ...freeFromUid,
             ...freeFromEmail,
-            // все курсы, по которым есть прогресс, но они ещё не помечены как платные
             ...progressCourseIds.filter(id => !mergedPaid.includes(id))
           ]));
 
-          const mergedBadges = Array.from(new Set([...badgesUid, ...badgesEmail]));
           const courses = [];
 
-          // платные
           for (const id of mergedPaid) {
             courses.push({
               id,
-              isPaid: true,
-              isFree: false,
+              isPaid:true,
+              isFree:false,
               progress: mergedProgress[id] || null
             });
+          }
+          for (const id of mergedFree) {
+            if (!mergedPaid.includes(id)) {
+              courses.push({
+                id,
+                isPaid:false,
+                isFree:true,
+                progress: mergedProgress[id] || null
+              });
+            }
           }
 
-          // бесплатные (включая те, где есть только прогресс)
-          for (const id of mergedFree) {
-            if (mergedPaid.includes(id)) continue;
-            courses.push({
-              id,
-              isPaid: false,
-              isFree: true,
-              progress: mergedProgress[id] || null
-            });
-          }
+          courses.sort((a,b) => (a.id || '').localeCompare(b.id || ''));
 
           renderCourses(courses);
-          achievementsList.innerHTML = renderAchievements(courses, mergedBadges);
 
-          // Миграция в основной документ по email
           if (emailRef) {
             try {
               await emailRef.set(
@@ -1368,7 +1176,6 @@ function pluralizeCoin(n) {
                   email: emailData?.email || email || null,
                   courses: mergedPaid,
                   freeCourses: mergedFree,
-                  badges: mergedBadges,
                   progress: mergedProgress
                 },
                 { merge: true }
@@ -1380,8 +1187,174 @@ function pluralizeCoin(n) {
         } catch (err) {
           console.error('Ошибка загрузки курсов:', err);
           renderCourses([]);
-          achievementsList.innerHTML = renderAchievements([], []);
         }
+      }
+
+      /* МЕДАЛИ: загрузка из Firestore и отрисовка */
+      async function loadAchievementsFromFirestore(user) {
+        if (!user) return;
+        const email = user.email || null;
+        if (!email) return;
+
+        try {
+          const usersCol = db.collection('users');
+          const userRef  = usersCol.doc(email);
+          const userSnap = await userRef.get();
+          const userData = userSnap.exists ? (userSnap.data() || {}) : {};
+
+          const earnedIds = Array.isArray(userData.earnedMedals)
+            ? userData.earnedMedals
+            : [];
+
+          const catalogRef = db.collection('medals_catalog');
+          let catalogSnap;
+          try {
+            catalogSnap = await catalogRef.orderBy('order', 'asc').get();
+          } catch (orderErr) {
+            console.warn('Не удалось отсортировать медали по полю order, пробуем без сортировки:', orderErr);
+            catalogSnap = await catalogRef.get();
+          }
+
+          const allMedals = catalogSnap.docs.map((doc) => {
+            const data = doc.data() || {};
+            return {
+              id: doc.id,
+              icon: data.icon || '🏅',
+              title: data.title || 'Медаль',
+              desc: data.description || '',
+              earned: earnedIds.includes(doc.id)
+            };
+          });
+
+          currentMedals = allMedals;
+          renderAchievementsPreview();
+        } catch (err) {
+          console.error('Ошибка загрузки медалей из Firestore:', err);
+        }
+      }
+
+      function renderAchievementsPreview() {
+        if (!achievementsEarned || !achievementsEmpty) return;
+
+        achievementsEarned.innerHTML = '';
+
+        const earned = currentMedals.filter((m) => m.earned);
+
+        if (!earned.length) {
+          achievementsEmpty.classList.remove('hidden');
+          if (achievementsOpenModalBtn) achievementsOpenModalBtn.classList.add('hidden');
+          return;
+        }
+
+        achievementsEmpty.classList.add('hidden');
+        if (achievementsOpenModalBtn) achievementsOpenModalBtn.classList.remove('hidden');
+
+        earned.forEach((m) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className =
+            'h-10 w-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-lg shadow-sm hover:-translate-y-0.5 hover:shadow-md transition';
+          btn.innerHTML = m.icon || '🏅';
+          if (m.title) btn.title = m.title;
+          btn.addEventListener('click', () => {
+            openAchievementsModal(m.id);
+          });
+          achievementsEarned.appendChild(btn);
+        });
+      }
+
+      function openAchievementsModal(focusId) {
+        if (!achievementsModal || !achievementsModalGrid) return;
+        achievementsModal.classList.remove('hidden');
+        achievementsModal.classList.add('flex');
+        renderAchievementsModalGrid(focusId);
+      }
+
+      function closeAchievementsModal() {
+        if (!achievementsModal) return;
+        achievementsModal.classList.add('hidden');
+        achievementsModal.classList.remove('flex');
+      }
+
+      function renderAchievementsModalGrid(focusId) {
+        if (!achievementsModalGrid) return;
+
+        achievementsModalGrid.innerHTML = '';
+
+        if (!currentMedals.length) {
+          achievementsModalGrid.innerHTML = '<p class="col-span-4 sm:col-span-5 text-xs text-slate-500">Пока что в системе ещё нет медалей. Они появятся, как только вы начнёте проходить курсы.</p>';
+          if (achievementsModalTitle) achievementsModalTitle.textContent = 'Пока коллекция пуста';
+          if (achievementsModalDesc) achievementsModalDesc.textContent = 'Как только будут добавлены первые медали, вы увидите их здесь.';
+          return;
+        }
+
+        let focused = null;
+
+        currentMedals.forEach((m) => {
+          const isEarned = !!m.earned;
+
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className =
+            'flex flex-col items-center gap-1 p-2 rounded-xl border text-[11px] sm:text-xs transition ' +
+            (isEarned
+              ? 'bg-amber-50 border-amber-200 text-slate-900'
+              : 'bg-slate-50 border-slate-200 text-slate-400 opacity-70');
+
+          card.innerHTML = `
+            <div class="h-9 w-9 rounded-lg flex items-center justify-center text-lg ${isEarned ? 'bg-amber-100' : 'bg-slate-100'}">
+              ${m.icon || '🏅'}
+            </div>
+            <span class="truncate max-w-[5rem]">${m.title || 'Медаль'}</span>
+          `;
+
+          const activate = () => {
+            focused = m;
+            if (achievementsModalTitle) {
+              achievementsModalTitle.textContent = m.title || 'Медаль';
+            }
+            if (achievementsModalDesc) {
+              if (isEarned) {
+                achievementsModalDesc.textContent =
+                  m.desc || 'Вы уже получили эту медаль. Спасибо, что учитесь!';
+              } else {
+                achievementsModalDesc.textContent = 'Эта медаль ещё не получена. ???';
+              }
+            }
+          };
+
+          card.addEventListener('click', activate);
+          card.addEventListener('mouseenter', activate);
+
+          achievementsModalGrid.appendChild(card);
+
+          if (!focused && focusId && m.id === focusId) {
+            focused = m;
+            setTimeout(activate, 0);
+          }
+        });
+
+        if (!focused) {
+          if (achievementsModalTitle) achievementsModalTitle.textContent =
+            'Выберите медаль, чтобы узнать подробности';
+          if (achievementsModalDesc) achievementsModalDesc.textContent =
+            'Наведите курсор или нажмите на любую иконку в коллекции.';
+        }
+      }
+
+      // Обработчики для модалки достижений
+      if (achievementsOpenModalBtn) {
+        achievementsOpenModalBtn.addEventListener('click', () => openAchievementsModal());
+      }
+      if (achievementsModalClose) {
+        achievementsModalClose.addEventListener('click', closeAchievementsModal);
+      }
+      if (achievementsModal) {
+        achievementsModal.addEventListener('click', (e) => {
+          if (e.target === achievementsModal) {
+            closeAchievementsModal();
+          }
+        });
       }
 
       function renderCourses(courses) {
@@ -1395,8 +1368,9 @@ function pluralizeCoin(n) {
         courses.forEach(c => {
           const meta = COURSE_META[c.id] || {
             title: c.id,
-            href: '/courses/',
-            cover: '/assets/courses/default.jpg'
+            short: 'Курс без описания',
+            lang: 'Язык',
+            level: ''
           };
 
           const progressData = c.progress || {};
@@ -1420,29 +1394,40 @@ function pluralizeCoin(n) {
             statusLabel = `Прогресс: ${percent}%`;
           } else if (isPaid) {
             statusLabel = 'Курс оплачен, можно начинать в любой момент.';
+          } else if (isFree) {
+            statusLabel = 'Бесплатный курс, ждёт вашего старта.';
           } else {
-            statusLabel = 'Курс открыт, можно начинать первый урок.';
+            statusLabel = '';
           }
 
-          const card = document.createElement('a');
-          card.href = meta.href;
-          card.className = 'soft-card p-3 sm:p-4 flex flex-col gap-2 hover:shadow-md transition-shadow group';
+          const href = meta.href || `/courses/${c.id}/`;
 
+          const card = document.createElement('article');
+          card.className = 'soft-card p-4 sm:p-5 space-y-3 flex flex-col justify-between';
           card.innerHTML = `
-            <div class="flex gap-3 items-center">
-              <div class="h-14 w-14 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0">
-                <img src="${meta.cover}" alt="" class="h-full w-full object-cover group-hover:scale-105 transition-transform" />
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <h3 class="text-sm sm:text-base font-semibold text-slate-900">${meta.title}</h3>
+                <p class="text-xs sm:text-sm text-slate-600">${meta.short}</p>
+                <p class="text-[11px] text-slate-400 uppercase tracking-[.18em] mt-1">
+                  ${meta.lang || ''}${meta.level ? ' · ' + meta.level : ''}
+                </p>
               </div>
-              <div class="flex-1 min-w-0 space-y-1">
-                <div class="flex items-center gap-2">
-                  <span class="badge text-[10px] ${badgeClass}">${badgeLabel}</span>
-                </div>
-                <p class="text-sm font-semibold text-slate-900 truncate">${meta.title}</p>
-                <p class="text-[11px] text-slate-500">${statusLabel}</p>
+              <span class="badge ${badgeClass} text-[10px]">${badgeLabel}</span>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs text-slate-500">
+                <span>${statusLabel}</span>
+                <span>${percent}%</span>
+              </div>
+              <div class="mt-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500" style="width:${percent}%;"></div>
               </div>
             </div>
-            <div class="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
-              <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500" style="width:${percent}%;"></div>
+            <div class="pt-1">
+              <a href="${href}" class="btn btn-brand w-full justify-center text-xs sm:text-sm">
+                Открыть курс
+              </a>
             </div>
           `;
 
@@ -1450,98 +1435,17 @@ function pluralizeCoin(n) {
         });
       }
 
-      function renderAchievements(courses, badgeIds){
-        const total = Array.isArray(courses) ? courses.length : 0;
-        const paid  = courses.filter(c => c.isPaid).length;
-        const free  = courses.filter(c => c.isFree).length;
-
-        const medals = [];
-
-        medals.push({
-          id:'first-course',
-          icon:'🥇',
-          title:'Первый шаг',
-          desc:'Вы активировали свой первый курс. Отличное начало!',
-          earned: total >= 1
-        });
-        medals.push({
-          id:'three-courses',
-          icon:'🎓',
-          title:'Мини-полиглот',
-          desc:'Три и больше активированных курсов.',
-          earned: total >= 3
-        });
-        medals.push({
-          id:'five-courses',
-          icon:'🌍',
-          title:'Будущий полиглот',
-          desc:'Пять и больше курсов в кабинете.',
-          earned: total >= 5
-        });
-        medals.push({
-          id:'free-lover',
-          icon:'🎁',
-          title:'Любитель бесплатных курсов',
-          desc:'Два и более бесплатных курса.',
-          earned: free >= 2
-        });
-        medals.push({
-          id:'investor',
-          icon:'💳',
-          title:'Инвестор в знания',
-          desc:'Два и более платных курсов.',
-          earned: paid >= 2
-        });
-
-        if (Array.isArray(badgeIds)) {
-          badgeIds.forEach(bid => {
-            const meta = BADGE_META[bid] || {};
-            medals.push({
-              id: 'badge-' + bid,
-              icon: meta.icon || '🏅',
-              title: meta.title || 'Достижение',
-              desc: meta.desc || bid,
-              earned: true
-            });
-          });
+      // Пример метаданных по курсам (оставляем как было у тебя)
+      const COURSE_META = {
+        'english-starter': {
+          title: 'Английский с нуля',
+          short: 'Первые шаги в английском, без стресса и зажимов.',
+          lang: 'Английский',
+          level: 'A0–A1',
+          href: '/courses/english-starter/'
         }
-
-        if (!medals.length) {
-          return `
-            <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
-              Как только вы начнёте проходить уроки, здесь появятся первые бейджи и медали за ваши достижения в языках.
-            </div>`;
-        }
-
-        if (!medals.some(m => m.earned)) {
-          return `
-            <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
-              Первые медали появятся, когда вы купите один из Premium-курсов в
-              <a href="/shop/" class="underline">магазине</a> или начнёте
-              <a href="/courses/" class="underline">бесплатную программу</a>.
-            </div>`;
-        }
-
-        return medals.map(m => {
-          const opacity = m.earned ? '' : 'opacity-50';
-          const label   = m.earned ? 'Получено' : 'Заблокировано';
-          const badgeCl = m.earned ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-                                   : 'bg-slate-50 border-slate-200 text-slate-400';
-          return `
-            <article class="soft-card p-3 sm:p-4 flex items-start gap-3 ${opacity}">
-              <div class="h-9 w-9 rounded-lg bg-slate-900/90 text-white flex items-center justify-center text-lg">
-                ${m.icon}
-              </div>
-              <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                  <h3 class="text-sm font-semibold text-slate-900">${m.title}</h3>
-                  <span class="badge text-[10px] ${badgeCl}">${label}</span>
-                </div>
-                <p class="text-xs sm:text-sm text-slate-600">${m.desc}</p>
-              </div>
-            </article>`;
-        }).join('');
-      }
+        // сюда можно добавить остальные курсы
+      };
 
       auth.onAuthStateChanged((user) => {
         setAuthState(user || null);
