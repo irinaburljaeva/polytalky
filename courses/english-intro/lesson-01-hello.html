@@ -1271,27 +1271,41 @@
       const totalSteps = 4;
       let badgeAwarded = false;
 
-      async function awardFirstHelloBadge(){
-        if (!currentUser || badgeAwarded) return;
+    const FIRST_BADGE_ID = "english-intro-lesson1"; // совпадает с именем файла .png и id в коллекции badges
 
-        const uid = currentUser.uid;
-        const badgeRef = doc(db, `users/${uid}/badges`, "english-intro-lesson-01");
+async function awardFirstHelloBadge() {
+  if (!currentUser || badgeAwarded) return;
 
-        await setDoc(badgeRef, {
-          badgeId:  "english-intro-lesson-01",
-          title:    "Первое hello",
-          courseId: "english-intro",
-          lesson:   "lesson-01-hello",
-          earnedAt: serverTimestamp()
-        }, { merge:true });
+  const uid = currentUser.uid;
 
-        const userRef = doc(db, "users", uid);
-        await setDoc(userRef, {
-          badges:
-        arrayUnion("english-intro-lesson-1")
-        }, { merge: true });
-        badgeAwarded = true;
-      }
+  // 1) Подколлекция пользователя: /users/{uid}/badges/{FIRST_BADGE_ID}
+  const badgeRef = doc(db, users/${uid}/badges, FIRST_BADGE_ID);
+
+  await setDoc(
+    badgeRef,
+    {
+      badgeId:  FIRST_BADGE_ID,
+      title:    "Первое hello",
+      courseId: "english-intro",
+      lesson:   "lesson-01-hello",
+      earnedAt: serverTimestamp()
+    },
+    { merge: true }
+  );
+
+  // 2) Массив badges в профиле пользователя: /users/{uid}
+  const userRef = doc(db, "users", uid);
+
+  await setDoc(
+    userRef,
+    {
+      badges: arrayUnion(FIRST_BADGE_ID)
+    },
+    { merge: true }
+  );
+
+  badgeAwarded = true;
+}
 
       async function showStep(n){
         stepPanels.forEach(p => p.classList.remove("step-panel--visible"));
