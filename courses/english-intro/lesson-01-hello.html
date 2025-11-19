@@ -1279,7 +1279,7 @@ async function awardFirstHelloBadge() {
   const uid = currentUser.uid;
 
   // 1) Подколлекция пользователя: /users/{uid}/badges/{FIRST_BADGE_ID}
-  const badgeRef = doc(db, users/${uid}/badges, FIRST_BADGE_ID);
+  const badgeRef = doc(db, `users/${uid}/badges/${FIRST_BADGE_ID}`);
 
   await setDoc(
     badgeRef,
