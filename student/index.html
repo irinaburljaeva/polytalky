@@ -220,13 +220,25 @@
     <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 page-stack-mobile">
 
       <!-- PRO STATUS BANNERS -->
-      <section id="pro-banner-success" class="pro-banner pro-banner--success">
-        <div class="pro-banner__icon">✓</div>
-        <div class="pro-banner__body">
-          <h2>Подписка PRO активирована</h2>
-          <p>Теперь ваши задания будут проверяться кураторами, и вы получите приоритет в ответах и особое внимание к прогрессу.</p>
-        </div>
-      </section>
+  <section id="pro-banner-success" class="pro-banner pro-banner--success">
+  <div class="pro-banner__icon">★</div>
+  <div class="pro-banner__body">
+    <h2>У вас активна подписка PRO</h2>
+    <p id="pro-status-text">
+      Теперь ваши задания будут проверяться куратором, а вы получите приоритет в ответах и особое внимание к прогрессу.
+    </p>
+  </div>
+
+  <!-- Кнопка отмены (только для Stripe) -->
+  <button type="button" id="pro-cancel-button" class="pro-banner__btn">
+    Отменить автопродление
+  </button>
+
+  <!-- Новая кнопка продления (только для YooKassa / ручных) -->
+  <button type="button" id="pro-renew-button" class="pro-banner__btn hidden">
+    Продлить подписку
+  </button>
+</section>
 
       <section id="pro-banner-error" class="pro-banner pro-banner--error">
         <div class="pro-banner__icon">!</div>
@@ -828,6 +840,8 @@
       const proBannerError   = document.getElementById('pro-banner-error');
       const proBannerCancel  = document.getElementById('pro-banner-cancel');
       const proCancelButton  = document.getElementById('pro-cancel-button');
+      const proStatusText   = document.getElementById('pro-status-text');
+const proRenewButton  = document.getElementById('pro-renew-button');
 
       // КОИНЫ: элементы
       const coinsCard       = document.getElementById('coins-card');
@@ -883,7 +897,40 @@
         } else if (pro === 'cancel' && proBannerCancel) {
           proBannerCancel.style.display = 'flex';
         }
+if (proRenewButton) {
+  proRenewButton.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) {
+      alert('Сначала войдите в личный кабинет.');
+      return;
+    }
 
+    try {
+      const resp = await fetch('/api/yookassa/create-pro-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: user.email || '',
+          userId: user.uid,
+        }),
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok || !data.confirmationUrl) {
+        console.error('Ошибка при создании PRO-платежа через YooKassa:', data);
+        alert('Не удалось создать платёж. Попробуйте ещё раз или напишите нам на hello@polytalky.ru');
+        return;
+      }
+
+      // Перенаправляем пользователя на страницу оплаты YooKassa
+      window.location.href = data.confirmationUrl;
+    } catch (e) {
+      console.error(e);
+      alert('Произошла ошибка при создании платежа. Попробуйте ещё раз или напишите нам на hello@polytalky.ru');
+    }
+  });
+}
         params.delete('pro');
         const newSearch = params.toString();
         const newUrl = window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash;
@@ -1522,7 +1569,137 @@ function highlightSelectedBadge(badgeId) {
     openMobile.addEventListener('click', () => openBadgesModal());
   }
 }
- 
+ async function loadProStatus(user) {
+  if (!user) {
+    // никто не залогинен — прячем все баннеры
+    if (proBannerSuccess) proBannerSuccess.style.display = 'none';
+    if (proCancelButton)  proCancelButton.classList.add('hidden');
+    if (proRenewButton)   proRenewButton.classList.add('hidden');
+    return;
+  }
+
+  const uid   = user.uid;
+  const email = user.email || null;
+
+  const usersCol = db.collection('users');
+  const emailRef = email ? usersCol.doc(email) : null;
+  const uidRef   = uid   ? usersCol.doc(uid)   : null;
+
+  const [emailSnap, uidSnap] = await Promise.all([
+    emailRef ? emailRef.get() : Promise.resolve(null),
+    uidRef   ? uidRef.get()   : Promise.resolve(null),
+  ]);
+
+  const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
+  const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
+
+  const proGlobal =
+    (emailData && emailData.proGlobal) ||
+    (uidData && uidData.proGlobal) ||
+    false;
+
+  const proValidUntil =
+    (emailData && emailData.proValidUntil) ||
+    (uidData && uidData.proValidUntil) ||
+    null;
+
+  // Если PRO нет — всё прячем и выходим
+  if (!proGlobal) {
+    if (proBannerSuccess) proBannerSuccess.style.display = 'none';
+    if (proCancelButton)  proCancelButton.classList.add('hidden');
+    if (proRenewButton)   proRenewButton.classList.add('hidden');
+    return;
+  }
+
+  // Проверяем, есть ли Stripe-подписка (enrollments с subscriptionId)
+  let hasStripeSub = false;
+
+  try {
+    const enrollSnap = await db
+      .collection('enrollments')
+      .where('userId', '==', uid)
+      .where('tier', '==', 'pro-global-monthly')
+      .where('status', 'in', ['active', 'cancel_at_period_end'])
+      .limit(1)
+      .get();
+
+    if (!enrollSnap.empty) {
+      const d = enrollSnap.docs[0].data() || {};
+      if (d.subscriptionId) {
+        hasStripeSub = true;
+      }
+    }
+  } catch (e) {
+    console.warn('Не удалось прочитать enrollments для PRO:', e);
+  }
+
+  // Считаем оставшиеся дни
+  let daysLeft = null;
+  let validUntilText = '';
+
+  if (proValidUntil && typeof proValidUntil.toDate === 'function') {
+    const end = proValidUntil.toDate();
+    validUntilText = end.toLocaleDateString('ru-RU');
+    const now = new Date();
+    const diffMs = end - now;
+    daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    window.currentProValidUntilText = validUntilText; // используем в модалке отмены
+  }
+
+  updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText });
+}
+      function updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText }) {
+  if (!proGlobal || !proBannerSuccess) {
+    if (proBannerSuccess) proBannerSuccess.style.display = 'none';
+    if (proCancelButton)  proCancelButton.classList.add('hidden');
+    if (proRenewButton)   proRenewButton.classList.add('hidden');
+    return;
+  }
+
+  // Показываем основной баннер
+  proBannerSuccess.style.display = 'flex';
+
+  // Текст по умолчанию
+  let text = 'У вас активна подписка PRO.';
+
+  if (daysLeft != null && validUntilText) {
+    text = Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}.;
+  }
+
+  // Stripe: есть автосписание → показываем кнопку отмены, прячем продление
+  if (hasStripeSub) {
+    if (proCancelButton) proCancelButton.classList.remove('hidden');
+    if (proRenewButton)  proRenewButton.classList.add('hidden');
+
+    if (daysLeft != null && validUntilText) {
+      text = Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).;
+    }
+  } else {
+    // YooKassa / ручная оплата:
+    //  - Автопродления нет
+    //  - Кнопка "Отменить" НЕ нужна
+    if (proCancelButton) proCancelButton.classList.add('hidden');
+
+    // За 3 дня до конца — показываем кнопку "Продлить"
+    if (proRenewButton) {
+      if (daysLeft != null && daysLeft <= 3 && daysLeft >= 1) {
+        proRenewButton.classList.remove('hidden');
+      } else {
+        proRenewButton.classList.add('hidden');
+      }
+    }
+
+    if (daysLeft != null && validUntilText) {
+      text = Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.;
+    } else {
+      text = 'Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.';
+    }
+  }
+
+  if (proStatusText) {
+    proStatusText.textContent = text;
+  }
+}
       async function loadAndRenderBadges(userBadgeIds) {
         try {
           const earnedIds = Array.isArray(userBadgeIds) ? userBadgeIds : [];
@@ -1912,6 +2089,7 @@ if (emailRef) {
 
       auth.onAuthStateChanged((user) => {
         setAuthState(user || null);
+        loadProStatus(user || null);
       });
     
     });
