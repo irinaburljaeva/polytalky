@@ -2,114 +2,165 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Политика конфиденциальности — PolyTalky</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Политика конфиденциальности сайта PolyTalky." />
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-    <!-- фавикон -->
-<link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-<link rel="apple-touch-icon" href="/favicon.png">
+
+  <!-- Фавикон -->
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <link rel="apple-touch-icon" href="/assets/favicon.jpg">
+
   <style>
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: #fafafa; color: #222; }
-    main { max-width: 900px; margin: auto; padding: 2rem 1rem 4rem; }
-    h1 { font-size: 1.9rem; font-weight: 800; margin-bottom: 1rem; color: #111; }
-    h2 { font-size: 1.25rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; color: #111; }
-    p, li { line-height: 1.65; margin-bottom: 0.75rem; }
-    a { color: #CF2C02; text-decoration: underline; }
-    .muted { color:#555 }
-    .btn { background:#CF2C02; color:#fff; padding:.55rem 1.1rem; border-radius:.8rem; font-weight:600; }
-    .btn:hover { background:#E85D04; }
-    footer { border-top: 1px solid #ddd; padding: 1.5rem 1rem; text-align: center; font-size: 0.875rem; color: #666; background: #f9f9f9; }
+    :root{
+      --yellow:#FFBA08;
+      --border:#e5e5e5;
+      --text:#222;
+      --text-soft:#666;
+    }
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:#fffef7;
+      color:var(--text);
+    }
+    a{ color:#CF2C02; }
+    a:hover{ text-decoration:underline; }
   </style>
 </head>
-<body>
-  <main>
-    <button class="btn" onclick="history.back()">← Назад</button>
+<body class="min-h-screen flex flex-col">
 
-    <h1 class="mt-6">Политика конфиденциальности</h1>
-    <p class="muted">Редакция от <strong>14/11/2025</strong></p>
+<!-- HEADER -->
+<header class="bg-white border-b border-[var(--border)] sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/assets/logo.png" alt="PolyTalky" class="h-10 w-auto">
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--text-soft)]">
+      <a href="/courses/" class="hover:text-[var(--text)]">Курсы</a>
+      <a href="/shop/" class="hover:text-[var(--text)]">Магазин</a>
+      <a href="/student/" class="hover:text-[var(--text)]">Личный кабинет</a>
+    </nav>
+  </div>
+</header>
 
-    <h2>1. Кто мы</h2>
-    <p>
-      Владелец сайта и оператор персональных данных — <strong>Бурляева Ирина Валерьевна</strong>, физическое лицо,
-      зарегистрированное в качестве самозанятой в соответствии с Федеральным законом №422-ФЗ (НПД), г. Москва.  
-      Контакт для связи: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+<!-- MAIN -->
+<main class="flex-1">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <h1 class="text-2xl sm:text-3xl font-bold mb-2">
+      Политика конфиденциальности
+    </h1>
+    <p class="text-sm text-[var(--text-soft)] mb-6">
+      Редакция от <strong>14/11/2025</strong>
     </p>
 
-    <h2>2. Какие данные мы обрабатываем</h2>
-    <ul class="list-disc pl-6">
-      <li><strong>Учётные данные</strong>: ФИО/никнейм, email, пароль (хранится в виде хэша), язык интерфейса.</li>
-      <li><strong>Учебные данные</strong>: прогресс по урокам, результаты квизов, отметки «пройдено», комментарии/заметки.</li>
-      <li><strong>Технические данные</strong>: cookies, IP-адрес, заголовки браузера (user-agent), тип устройства, время и страницы посещений.</li>
-      <li><strong>Платёжные данные</strong>: обрабатываются платёжным провайдером (Stripe/YooMoney/PayPal и т.п.); номера карт на стороне PolyTalky не хранятся.</li>
-    </ul>
+    <section class="space-y-5 text-sm sm:text-base leading-relaxed">
 
-    <h2>3. Цели обработки</h2>
-    <ul class="list-disc pl-6">
-      <li>создание и обслуживание учётной записи пользователя;</li>
-      <li>предоставление доступа к бесплатным и платным курсам, ведение учебного прогресса;</li>
-      <li>поддержка пользователей и обратная связь по email;</li>
-      <li>аналитика использования сервиса для улучшения материалов и интерфейса (обезличенно);</li>
-      <li>выполнение требований законодательства (налоговый учёт операций и т.п.).</li>
-    </ul>
+      <h2 class="font-semibold text-lg">1. Кто мы</h2>
+      <p>
+        Владелец сайта и оператор персональных данных — <strong>Бурляева Ирина Валерьевна</strong>, физическое лицо,
+        зарегистрированное в качестве самозанятой в соответствии с Федеральным законом №422-ФЗ (НПД), г. Москва.  
+        Контакт для связи: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+      </p>
 
-    <h2>4. Правовые основания</h2>
-    <ul class="list-disc pl-6">
-      <li>согласие пользователя (при регистрации, в формах, в баннере cookies);</li>
-      <li>исполнение договора (публичной оферты) при покупке платных курсов;</li>
-      <li>законные интересы владельца проекта — поддерживать и развивать сервис;</li>
-      <li>выполнение требований законодательства РФ.</li>
-    </ul>
+      <h2 class="font-semibold text-lg">2. Какие данные мы обрабатываем</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong>Учётные данные</strong>: ФИО/никнейм, email, пароль (хранится в виде хэша), язык интерфейса.</li>
+        <li><strong>Учебные данные</strong>: прогресс по урокам, результаты квизов, отметки «пройдено», комментарии/заметки.</li>
+        <li><strong>Технические данные</strong>: cookies, IP-адрес, заголовки браузера (user-agent), тип устройства, время и страницы посещений.</li>
+        <li><strong>Платёжные данные</strong>: обрабатываются платёжным провайдером (Stripe/YooMoney/PayPal и т.п.); номера карт на стороне PolyTalky не хранятся.</li>
+      </ul>
 
-    <h2>5. Хранение и безопасность</h2>
-    <p>
-      Данные хранятся столько, сколько необходимо для целей обработки или до удаления аккаунта/отзыва согласия.
-      Применяются технические и организационные меры защиты (шифрование при передаче, ограничение доступа, пароли).
-    </p>
+      <h2 class="font-semibold text-lg">3. Цели обработки</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>создание и обслуживание учётной записи пользователя;</li>
+        <li>предоставление доступа к бесплатным и платным курсам, ведение учебного прогресса;</li>
+        <li>поддержка пользователей и обратная связь по email;</li>
+        <li>аналитика использования сервиса для улучшения материалов и интерфейса (обезличенно);</li>
+        <li>выполнение требований законодательства (налоговый учёт операций и т.п.).</li>
+      </ul>
 
-    <h2>6. Передача третьим лицам</h2>
-    <p>
-      Данные могут передаваться подрядчикам, необходимым для работы сайта: хостинг, аналитика (при согласии), платёжные провайдеры,
-      сервисы почтовых рассылок. Передача осуществляется только в объёме, требуемом для оказания услуг и на основании договорённостей
-      о конфиденциальности/обработке данных.
-    </p>
+      <h2 class="font-semibold text-lg">4. Правовые основания</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>согласие пользователя (при регистрации, в формах, в баннере cookies);</li>
+        <li>исполнение договора (публичной оферты) при покупке платных курсов;</li>
+        <li>законные интересы владельца проекта — поддерживать и развивать сервис;</li>
+        <li>выполнение требований законодательства РФ.</li>
+      </ul>
 
-    <h2>7. Cookies и трекинг</h2>
-    <p>
-      На сайте применяются технические cookies для авторизации и сохранения прогресса. Аналитические cookies включаются только при вашем согласии.
-      Подробности см. в <a href="cookies.html">Политике cookies</a>.
-    </p>
+      <h2 class="font-semibold text-lg">5. Хранение и безопасность</h2>
+      <p>
+        Данные хранятся столько, сколько необходимо для целей обработки или до удаления аккаунта/отзыва согласия.
+        Применяются технические и организационные меры защиты (шифрование при передаче, ограничение доступа, пароли).
+      </p>
 
-    <h2>8. Права пользователя</h2>
-    <ul class="list-disc pl-6">
-      <li>получить информацию об обработке своих данных;</li>
-      <li>запросить копию, исправление или удаление данных;</li>
-      <li>отозвать согласие на обработку данных;</li>
-      <li>обратиться с вопросами на <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.</li>
-    </ul>
+      <h2 class="font-semibold text-lg">6. Передача третьим лицам</h2>
+      <p>
+        Данные могут передаваться подрядчикам, необходимым для работы сайта: хостинг, аналитика (при согласии),
+        платёжные провайдеры, сервисы почтовых рассылок. Передача осуществляется только в объёме, требуемом для
+        оказания услуг, и на основании договорённостей о конфиденциальности/обработке данных.
+      </p>
 
-    <h2>9. Трансграничная передача</h2>
-    <p>
-      Возможна при использовании зарубежных провайдеров (хостинг, аналитика, рассылки, платёжные системы) при условии обеспечения надлежащего уровня защиты.
-    </p>
+      <h2 class="font-semibold text-lg">7. Cookies и трекинг</h2>
+      <p>
+        На сайте применяются технические cookies для авторизации и сохранения прогресса. Аналитические cookies
+        включаются только при вашем согласии. Подробности см. в
+        <a href="/legal/cookies.html">Политике cookies</a>.
+      </p>
 
-    <h2>10. Изменения политики</h2>
-    <p>
-      Политика может обновляться. Актуальная версия всегда доступна на этой странице. Если изменения существенны, мы сможем уведомлять через сайт/почту.
-    </p>
+      <h2 class="font-semibold text-lg">8. Права пользователя</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>получить информацию об обработке своих данных;</li>
+        <li>запросить копию, исправление или удаление данных;</li>
+        <li>отозвать согласие на обработку данных;</li>
+        <li>обратиться с вопросами на <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.</li>
+      </ul>
 
-    <h2>11. Контакты</h2>
-    <p>
-      По вопросам персональных данных: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
-    </p>
+      <h2 class="font-semibold text-lg">9. Трансграничная передача</h2>
+      <p>
+        Возможна при использовании зарубежных провайдеров (хостинг, аналитика, рассылки, платёжные системы)
+        при условии обеспечения надлежащего уровня защиты.
+      </p>
 
-    <div class="mt-8">
-      <button class="btn" onclick="history.back()">← Вернуться назад</button>
+      <h2 class="font-semibold text-lg">10. Изменения политики</h2>
+      <p>
+        Политика может обновляться. Актуальная версия всегда доступна на этой странице. Если изменения существенны,
+        мы можем уведомлять через сайт/почту.
+      </p>
+
+      <h2 class="font-semibold text-lg">11. Контакты</h2>
+      <p>
+        По вопросам персональных данных: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+      </p>
+
+    </section>
+  </div>
+
+  <!-- КНОПКА НАЗАД -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+    <a href="javascript:history.back()"
+       class="inline-block mt-2 px-5 py-3 bg-[var(--yellow)] hover:bg-[#e0a507] text-black font-semibold rounded-xl transition">
+      ← Назад
+    </a>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-[var(--border)] py-8 text-sm text-[var(--text-soft)] bg-white">
+  <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between gap-3">
+    <p>© <span id="year"></span> PolyTalky. Все права защищены.</p>
+    <div class="flex flex-wrap gap-4">
+      <a href="/contact.html" class="hover:text-[var(--text)]">Контакты</a>
+      <a href="/legal/index.html" class="hover:text-[var(--text)]">Юридическая информация</a>
     </div>
-  </main>
+  </div>
+</footer>
 
-  <footer>
-    © 2025 PolyTalky. Все права защищены.
-  </footer>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
 </body>
 </html>
