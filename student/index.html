@@ -183,6 +183,14 @@
         box-shadow: 0 10px 24px rgba(15,23,42,0.14);
       }
 
+      #pro-chip {
+  animation: pro-chip-pulse 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes pro-chip-pulse {
+  from { transform: translateY(0); box-shadow: 0 0 0 1px rgba(16,185,129,.15); }
+  to   { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(16,185,129,.28); }
+}
       /* общий вертикальный ритм поменьше */
       .page-stack-mobile{
         padding-top: 1rem;
@@ -391,13 +399,25 @@
                     <img id="profile-avatar-img" src="/assets/avatarf.png" alt="Avatar" class="h-full w-full object-cover">
                   </div>
                   <div class="min-w-0">
-                    <p id="profile-name" class="text-sm font-semibold text-slate-900 truncate">
-                      ...
-                    </p>
-                    <p id="auth-user-email" class="text-xs text-slate-500 truncate">
-                      ...
-                    </p>
-                  </div>
+  <div class="flex items-center gap-2">
+    <p id="profile-name" class="text-sm font-semibold text-slate-900 truncate">
+      ...
+    </p>
+
+    <!-- ЯРЛЫЧОК PRO -->
+    <button
+      type="button"
+      id="pro-chip"
+      class="inline-flex items-center px-2 py-[2px] rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-semibold uppercase tracking-[.16em] border border-emerald-200 shadow-[0_0_0_1px_rgba(16,185,129,.2)] transform transition hover:-translate-y-0.5 hover:shadow-md hidden"
+    >
+      PRO
+    </button>
+  </div>
+
+  <p id="auth-user-email" class="text-xs text-slate-500 truncate">
+    ...
+  </p>
+</div>
                 </div>
                 <p class="text-xs text-slate-500">
                   Это ваш личный кабинет PolyTalky. Здесь вы можете управлять курсами, видеть прогресс и собирать достижения.
@@ -677,6 +697,26 @@
     </div>
   </div>
 </div>
+      // Клик по ярлыку PRO рядом с именем
+if (proChip) {
+  proChip.addEventListener('click', () => {
+    const hasStripe = !!window.currentProHasStripe;
+    const validText = window.currentProValidUntilText || '';
+
+    // Если Stripe — открываем нашу модалку отмены
+    if (hasStripe) {
+      openProCancelModal(validText);
+      return;
+    }
+
+    // Если YooKassa / ручная оплата — просто покажем информацию
+    const msg = validText
+      ? Подписка PRO активна до ${validText}. Автосписания нет — по окончании срока её нужно будет продлить вручную.
+      : 'Подписка PRO активна. Автосписания нет — по окончании срока её нужно будет продлить вручную.';
+
+    alert(msg);
+  });
+}
       <!-- Модалка предпросмотра стандартных аватаров -->
       <div
         id="avatar-preview-modal"
@@ -818,6 +858,7 @@
       const profileMsg      = document.getElementById('profile-msg');
       const profileAvatarType = document.getElementById('profile-avatar-type');
       const avatarChoiceButtons = document.querySelectorAll('.avatar-choice');
+      const proChip          = document.getElementById('pro-chip');
 
       const avatarPreviewModal = document.getElementById('avatar-preview-modal');
       const avatarPreviewImg   = document.getElementById('avatar-preview-img');
@@ -1648,41 +1689,48 @@ function highlightSelectedBadge(badgeId) {
 
   updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText });
 }
-      function updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText }) {
-  if (!proGlobal || !proBannerSuccess) {
-    if (proBannerSuccess) proBannerSuccess.style.display = 'none';
-    if (proCancelButton)  proCancelButton.classList.add('hidden');
-    if (proRenewButton)   proRenewButton.classList.add('hidden');
+    function updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText }) {
+  // сохраним в глобальные переменные для использования при клике на ярлык
+  window.currentProHasStripe = !!hasStripeSub;
+  window.currentProValidUntilText = validUntilText || '';
+
+  // Если PRO нет вообще
+  if (!proGlobal) {
+    if (proChip)         proChip.classList.add('hidden');
+    if (proCancelButton) proCancelButton.classList.add('hidden');
+    if (proRenewButton)  proRenewButton.classList.add('hidden');
+    if (proStatusText)   proStatusText.textContent = '';
     return;
   }
 
-  // Показываем основной баннер
-  proBannerSuccess.style.display = 'flex';
+  // PRO есть — включаем ярлык
+  if (proChip) proChip.classList.remove('hidden');
 
-  // Текст по умолчанию
   let text = 'У вас активна подписка PRO.';
 
-  if (daysLeft != null && validUntilText) {
-    text = `Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}.`;
-  }
-
-  // Stripe: есть автосписание → показываем кнопку отмены, прячем продление
+  // --- Stripe: есть автосписание ---
   if (hasStripeSub) {
+    if (daysLeft != null && validUntilText) {
+      text = Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).;
+    } else {
+      text = 'Подписка PRO активна. Автопродление включено.';
+    }
+
     if (proCancelButton) proCancelButton.classList.remove('hidden');
     if (proRenewButton)  proRenewButton.classList.add('hidden');
-
+  }
+  // --- YooKassa / ручная оплата: нет автопродления ---
+  else {
     if (daysLeft != null && validUntilText) {
-      text = `Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).`;
-  } else {
-        text = `Подписка PRO активна. Автопродление включено.`;
+      text = Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.;
+    } else {
+      text = 'Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.';
     }
-  } else {
-    // YooKassa / ручная оплата:
-    //  - Автопродления нет
-    //  - Кнопка "Отменить" НЕ нужна
+
+    // Кнопка отмены не нужна
     if (proCancelButton) proCancelButton.classList.add('hidden');
 
-    // За 3 дня до конца — показываем кнопку "Продлить"
+    // Кнопка "Продлить" — показываем за 1–3 дня до окончания
     if (proRenewButton) {
       if (daysLeft != null && daysLeft <= 3 && daysLeft >= 1) {
         proRenewButton.classList.remove('hidden');
@@ -1690,18 +1738,16 @@ function highlightSelectedBadge(badgeId) {
         proRenewButton.classList.add('hidden');
       }
     }
-
-    if (daysLeft != null && validUntilText) {
-      text = `Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. По окончании срока доступ приостановится.`;
-    } else {
-      text = `Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.`;
-    }
   }
 
+  // Этот текст будем использовать и как описание подписки
   if (proStatusText) {
     proStatusText.textContent = text;
   }
+
+  // ВАЖНО: здесь НЕ трогаем proBannerSuccess, чтобы не висел огромный баннер.
 }
+
       async function loadAndRenderBadges(userBadgeIds) {
         try {
           const earnedIds = Array.isArray(userBadgeIds) ? userBadgeIds : [];
