@@ -318,7 +318,27 @@
                     Эти данные мы используем только для отображения в профиле и для более персональных писем.
                   </p>
                 </div>
+<div class="space-y-2 text-[11px] text-slate-500">
+                  <label class="flex items-start gap-2">
+                    <input
+                      id="auth-accept-terms"
+                      type="checkbox"
+                      class="mt-0.5 h-3 w-3 flex-shrink-0"
+                      required
+                    >
+                    <span>
+                      Создавая аккаунт, вы подтверждаете, что ознакомились и
+                      соглашаетесь с
+                      <a href="/legal/terms.html" class="underline">Условиями использования</a>,
+                      <a href="/legal/privacy.html" class="underline">Политикой конфиденциальности</a>,
+                      <a href="/legal/cookies.html" class="underline">Политикой использования cookies</a>
+                      и
+                      <a href="/legal/consent.html" class="underline">Согласием на обработку персональных данных</a>.
+                    </span>
+                  </label>
+                </div>
 
+                <p id="auth-error" class="text-xs text-red-500 min-h-[1rem]"></p>
                 <p id="auth-error" class="text-xs text-red-500 min-h-[1rem]"></p>
 
                 <div class="flex flex-col sm:flex-row gap-2 pt-1">
@@ -709,6 +729,7 @@
       const authLogout      = document.getElementById('auth-logout');
       const authUserEmail   = document.getElementById('auth-user-email');
       const authExtra       = document.getElementById('auth-extra');
+      const authAcceptTerms = document.getElementById('auth-accept-terms');
 
       const profileAvatarWrapper = document.getElementById('profile-avatar-wrapper');
       const profileAvatarImg= document.getElementById('profile-avatar-img');
@@ -1137,7 +1158,11 @@
           authError.textContent = 'Произошла ошибка. Обновите страницу и попробуйте ещё раз.';
           return;
         }
-
+if (!authAcceptTerms.checked) {
+          authError.textContent =
+            'Чтобы зарегистрироваться, поставьте галочку о согласии с условиями и политикой конфиденциальности.';
+          return;
+        }
         if (!registerMode) {
           registerMode = true;
           authExtra.classList.remove('hidden');
