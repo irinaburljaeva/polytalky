@@ -1704,7 +1704,7 @@ if (emailRef) {
             try {
               await emailRef.set(
                 {
-                  email: emailData?.email  email  null,
+                  email: emailData?.email || email || null,
                   courses: mergedPaid,
                   freeCourses: mergedFree,
                   badges: mergedBadges,
@@ -1722,6 +1722,25 @@ if (emailRef) {
           await loadAndRenderBadges([]);
         }
       }
+    function renderCourses(courses) {
+        // очищаем контейнер
+        coursesList.innerHTML = '';
+
+        // если курсов нет — показываем надпись "пока пусто"
+        if (!courses || !courses.length) {
+          coursesEmpty.classList.remove('hidden');
+          return;
+        }
+
+        coursesEmpty.classList.add('hidden');
+
+        courses.forEach((c) => {
+          const meta = COURSE_META[c.id] || {
+            title: 'Курс PolyTalky',
+            href: '#',
+            cover: '/assets/courses/placeholder.jpg'
+          };
+
           const progressData = c.progress || {};
           const percent = typeof progressData.percent === 'number'
             ? Math.max(0, Math.min(100, progressData.percent))
@@ -1738,9 +1757,9 @@ if (emailRef) {
 
           let statusLabel;
           if (percent > 0 && lastLessonId) {
-            statusLabel = `Прогресс: ${percent}% · последний урок: ${lastLessonId}`;
+            statusLabel = Прогресс: ${percent}% · последний урок: ${lastLessonId};
           } else if (percent > 0) {
-            statusLabel = `Прогресс: ${percent}%`;
+            statusLabel = Прогресс: ${percent}%;
           } else if (isPaid) {
             statusLabel = 'Курс оплачен, можно начинать в любой момент.';
           } else {
@@ -1773,6 +1792,9 @@ if (emailRef) {
         });
       }
 
+      auth.onAuthStateChanged((user) => {
+        setAuthState(user || null);
+      });
       auth.onAuthStateChanged((user) => {
         setAuthState(user || null);
       });
