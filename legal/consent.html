@@ -2,91 +2,151 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Согласие на обработку персональных данных — PolyTalky</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Согласие на обработку персональных данных на сайте PolyTalky." />
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-    <!-- фавикон -->
-<link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-<link rel="apple-touch-icon" href="/favicon.png">
+
+  <!-- Фавикон -->
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg" />
+  <link rel="apple-touch-icon" href="/assets/favicon.jpg" />
+
   <style>
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: #fafafa; color: #222; }
-    main { max-width: 800px; margin: auto; padding: 2rem 1rem 4rem; }
-    h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: #111; }
-    h2 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
-    p, li { line-height: 1.6; margin-bottom: 0.75rem; }
-    a { color: #CF2C02; text-decoration: underline; }
-    footer { border-top: 1px solid #ddd; padding: 1.5rem 1rem; text-align: center; font-size: 0.875rem; color: #666; background: #f9f9f9; }
-    button { background: #CF2C02; color: #fff; padding: 0.5rem 1.25rem; border-radius: 0.75rem; font-weight: 500; }
-    button:hover { background: #E85D04; }
+    :root{
+      --yellow:#FFBA08;
+      --border:#e5e5e5;
+      --text:#222;
+      --text-soft:#666;
+    }
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:#fffef7;
+      color:var(--text);
+    }
+    a{color:#CF2C02;}
+    a:hover{text-decoration:underline;}
   </style>
 </head>
-<body>
 
-  <main>
-    <h1>Согласие на обработку персональных данных</h1>
+<body class="min-h-screen flex flex-col">
 
-    <p>
-      Настоящим, используя сайт <strong>PolyTalky</strong> (расположенный по адресу
-      <a href="https://polytalky.ru">https://polytalky.ru</a>),
-      пользователь подтверждает своё согласие на обработку персональных данных
-      в соответствии с Федеральным законом №152-ФЗ «О персональных данных».
-    </p>
+  <!-- HEADER -->
+  <header class="bg-white border-b border-[var(--border)] sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <img src="/assets/logo.png" alt="PolyTalky" class="h-10 w-auto">
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--text-soft)]">
+        <a href="/courses/" class="hover:text-[var(--text)]">Курсы</a>
+        <a href="/shop/" class="hover:text-[var(--text)]">Магазин</a>
+        <a href="/student/" class="hover:text-[var(--text)]">Личный кабинет</a>
+      </nav>
+    </div>
+  </header>
 
-    <h2>1. Цель обработки</h2>
-    <p>
-      Персональные данные обрабатываются с целью предоставления доступа к учебным материалам,
-      обратной связи, улучшения качества сервиса и информирования пользователя
-      о новостях и предложениях проекта PolyTalky.
-    </p>
+  <!-- MAIN -->
+  <main class="flex-1">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-    <h2>2. Перечень обрабатываемых данных</h2>
-    <p>
-      В рамках работы сайта могут обрабатываться следующие данные:
-      имя, адрес электронной почты, язык обучения, информация о прогрессе в курсах,
-      а также технические данные (IP-адрес, cookies, сведения об устройстве и браузере).
-    </p>
+      <h1 class="text-2xl sm:text-3xl font-bold mb-4">
+        Согласие на обработку персональных данных
+      </h1>
 
-    <h2>3. Условия обработки</h2>
-    <p>
-      Обработка данных осуществляется владельцем проекта —
-      <strong>Бурляевой Ириной Валерьевной</strong>,
-      физическим лицом, зарегистрированным в качестве самозанятой в соответствии с Федеральным законом №422-ФЗ
-      «О проведении эксперимента по установлению специального налогового режима “Налог на профессиональный доход” (НПД)»,
-      город Москва.  
-      Электронная почта для связи:
-      <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
-    </p>
+      <p class="text-sm text-[var(--text-soft)] mb-6">
+        Настоящее согласие регулирует порядок обработки персональных данных пользователей сервиса PolyTalky.
+      </p>
 
-    <h2>4. Передача третьим лицам</h2>
-    <p>
-      Персональные данные не передаются третьим лицам, за исключением случаев,
-      прямо предусмотренных законодательством Российской Федерации или необходимых
-      для предоставления услуг (например, обработка платежей платёжным оператором).
-    </p>
+      <section class="space-y-5 text-sm sm:text-base leading-relaxed">
 
-    <h2>5. Отзыв согласия</h2>
-    <p>
-      Пользователь имеет право в любой момент отозвать согласие на обработку персональных данных,
-      направив соответствующее уведомление на электронную почту
-      <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
-      После получения уведомления обработка данных будет прекращена,
-      а сведения удалены в течение 30 календарных дней.
-    </p>
+        <p>
+          Настоящим, используя сайт <strong>PolyTalky</strong> (расположенный по адресу
+          <a href="https://polytalky.ru">https://polytalky.ru</a>),
+          пользователь подтверждает своё согласие на обработку персональных данных
+          в соответствии с Федеральным законом №152-ФЗ «О персональных данных».
+        </p>
 
-    <h2>6. Срок действия согласия</h2>
-    <p>
-      Согласие действует с момента его предоставления и до момента его отзыва пользователем.
-    </p>
+        <h2 class="font-semibold text-lg mt-4">1. Цель обработки</h2>
+        <p>
+          Персональные данные обрабатываются с целью предоставления доступа к учебным материалам,
+          ведения личного кабинета, обратной связи, улучшения качества сервиса и информирования пользователя
+          о новостях и предложениях проекта PolyTalky.
+        </p>
 
-    <div class="mt-8">
-      <button onclick="history.back()">← Вернуться назад</button>
+        <h2 class="font-semibold text-lg mt-4">2. Перечень обрабатываемых данных</h2>
+        <p>
+          В рамках работы сайта могут обрабатываться следующие данные:
+          имя, адрес электронной почты, выбранные языки и курсы, информация о прогрессе в обучении,
+          а также технические данные (IP-адрес, файлы cookies, сведения об устройстве и браузере).
+        </p>
+
+        <h2 class="font-semibold text-lg mt-4">3. Условия обработки</h2>
+        <p>
+          Обработка данных осуществляется владельцем проекта —
+          <strong>Бурляевой Ириной Валерьевной</strong>,
+          физическим лицом, зарегистрированным в качестве самозанятой в соответствии
+          с Федеральным законом №422-ФЗ «О проведении эксперимента по установлению специального
+          налогового режима “Налог на профессиональный доход” (НПД)», город Москва.
+        </p>
+        <p>
+          Электронная почта для связи:
+          <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+        </p>
+
+        <h2 class="font-semibold text-lg mt-4">4. Передача третьим лицам</h2>
+        <p>
+          Персональные данные не передаются третьим лицам, за исключением случаев,
+          прямо предусмотренных законодательством Российской Федерации, а также случаев,
+          когда такая передача необходима для предоставления услуг (например, обработка платежей
+          платёжными операторами или работа сервисов рассылок).
+        </p>
+
+        <h2 class="font-semibold text-lg mt-4">5. Отзыв согласия</h2>
+        <p>
+          Пользователь имеет право в любой момент отозвать согласие на обработку персональных данных,
+          направив соответствующее уведомление на электронную почту
+          <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+        </p>
+        <p>
+          После получения уведомления обработка персональных данных будет прекращена,
+          а сами данные — удалены (если их хранение не требуется по закону)
+          в течение 30 календарных дней.
+        </p>
+
+        <h2 class="font-semibold text-lg mt-4">6. Срок действия согласия</h2>
+        <p>
+          Согласие действует с момента его предоставления пользователем и до момента его отзыва.
+          Продолжение использования сайта после обновления политики также рассматривается
+          как подтверждение согласия с её условиями.
+        </p>
+
+      </section>
+    </div>
+
+    <!-- Кнопка Назад -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+      <a href="javascript:history.back()"
+         class="inline-block mt-2 px-5 py-3 bg-[var(--yellow)] hover:bg-[#e0a507] text-black font-semibold rounded-xl transition">
+        ← Назад
+      </a>
     </div>
   </main>
 
-  <footer>
-    © 2025 PolyTalky. Все права защищены.
+  <!-- FOOTER -->
+  <footer class="border-t border-[var(--border)] py-8 text-sm text-[var(--text-soft)] bg-white">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between gap-3">
+      <p>© <span id="year"></span> PolyTalky. Все права защищены.</p>
+      <div class="flex flex-wrap gap-4">
+        <a href="/contact.html" class="hover:text-[var(--text)]">Контакты</a>
+        <a href="/legal/index.html" class="hover:text-[var(--text)]">Юридическая информация</a>
+      </div>
+    </div>
   </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 
 </body>
 </html>
