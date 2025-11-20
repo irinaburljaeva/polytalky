@@ -647,76 +647,7 @@
           </form>
         </div>
       </div>
-<!-- МОДАЛКА ОТМЕНЫ ПОДПИСКИ PRO -->
-<div
-  id="pro-cancel-modal"
-  class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40"
->
-  <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
-    <div class="flex items-start justify-between gap-3">
-      <div>
-        <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
-          Подписка PRO
-        </p>
-        <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">
-          Отменить автопродление?
-        </h2>
-      </div>
-      <button
-        type="button"
-        id="pro-cancel-modal-close"
-        class="text-slate-400 hover:text-slate-600 text-xl leading-none"
-      >
-        ×
-      </button>
-    </div>
 
-    <p class="text-sm text-slate-600" id="pro-cancel-modal-text">
-      Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.
-    </p>
-
-    <div class="text-xs text-slate-500" id="pro-cancel-modal-subtext">
-      После окончания этого периода платежи списываться не будут, и вы больше не сможете отправлять задания на проверку куратору.
-    </div>
-
-    <div class="flex flex-col sm:flex-row sm:justify-end gap-2 pt-2">
-      <button
-        type="button"
-        id="pro-cancel-modal-cancel"
-        class="btn btn-ghost w-full sm:w-auto"
-      >
-        Оставить как есть
-      </button>
-      <button
-        type="button"
-        id="pro-cancel-modal-confirm"
-        class="btn w-full sm:w-auto"
-      >
-        Отключить автопродление
-      </button>
-    </div>
-  </div>
-</div>
-      // Клик по ярлыку PRO рядом с именем
-if (proChip) {
-  proChip.addEventListener('click', () => {
-    const hasStripe = !!window.currentProHasStripe;
-    const validText = window.currentProValidUntilText || '';
-
-    // Если Stripe — открываем нашу модалку отмены
-    if (hasStripe) {
-      openProCancelModal(validText);
-      return;
-    }
-
-    // Если YooKassa / ручная оплата — просто покажем информацию
-    const msg = validText
-      ? Подписка PRO активна до ${validText}. Автосписания нет — по окончании срока её нужно будет продлить вручную.
-      : 'Подписка PRO активна. Автосписания нет — по окончании срока её нужно будет продлить вручную.';
-
-    alert(msg);
-  });
-}
       <!-- Модалка предпросмотра стандартных аватаров -->
       <div
         id="avatar-preview-modal"
@@ -1693,7 +1624,76 @@ function highlightSelectedBadge(badgeId) {
   // сохраним в глобальные переменные для использования при клике на ярлык
   window.currentProHasStripe = !!hasStripeSub;
   window.currentProValidUntilText = validUntilText || '';
+<!-- МОДАЛКА ОТМЕНЫ ПОДПИСКИ PRO -->
+<div
+  id="pro-cancel-modal"
+  class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40"
+>
+  <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
+          Подписка PRO
+        </p>
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">
+          Отменить автопродление?
+        </h2>
+      </div>
+      <button
+        type="button"
+        id="pro-cancel-modal-close"
+        class="text-slate-400 hover:text-slate-600 text-xl leading-none"
+      >
+        ×
+      </button>
+    </div>
 
+    <p class="text-sm text-slate-600" id="pro-cancel-modal-text">
+      Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.
+    </p>
+
+    <div class="text-xs text-slate-500" id="pro-cancel-modal-subtext">
+      После окончания этого периода платежи списываться не будут, и вы больше не сможете отправлять задания на проверку куратору.
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:justify-end gap-2 pt-2">
+      <button
+        type="button"
+        id="pro-cancel-modal-cancel"
+        class="btn btn-ghost w-full sm:w-auto"
+      >
+        Оставить как есть
+      </button>
+      <button
+        type="button"
+        id="pro-cancel-modal-confirm"
+        class="btn w-full sm:w-auto"
+      >
+        Отключить автопродление
+      </button>
+    </div>
+  </div>
+</div>
+      // Клик по ярлыку PRO рядом с именем
+if (proChip) {
+  proChip.addEventListener('click', () => {
+    const hasStripe = !!window.currentProHasStripe;
+    const validText = window.currentProValidUntilText || '';
+
+    // Если Stripe — открываем нашу модалку отмены
+    if (hasStripe) {
+      openProCancelModal(validText);
+      return;
+    }
+
+    // Если YooKassa / ручная оплата — просто покажем информацию
+    const msg = validText
+      ? `Подписка PRO активна до ${validText}. Автосписания нет — по окончании срока её нужно будет продлить вручную.`
+      : 'Подписка PRO активна. Автосписания нет — по окончании срока её нужно будет продлить вручную.';
+
+    alert(msg);
+  });
+}
   // Если PRO нет вообще
   if (!proGlobal) {
     if (proChip)         proChip.classList.add('hidden');
@@ -1711,7 +1711,7 @@ function highlightSelectedBadge(badgeId) {
   // --- Stripe: есть автосписание ---
   if (hasStripeSub) {
     if (daysLeft != null && validUntilText) {
-      text = Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).;
+      text = `Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).`;
     } else {
       text = 'Подписка PRO активна. Автопродление включено.';
     }
@@ -1722,7 +1722,7 @@ function highlightSelectedBadge(badgeId) {
   // --- YooKassa / ручная оплата: нет автопродления ---
   else {
     if (daysLeft != null && validUntilText) {
-      text = Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.;
+      text = `Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.`;
     } else {
       text = 'Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.';
     }
