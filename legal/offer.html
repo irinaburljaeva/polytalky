@@ -2,135 +2,187 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Публичная оферта — PolyTalky</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Публичная оферта (пользовательское соглашение) сайта PolyTalky." />
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-    <!-- фавикон -->
-<link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-<link rel="apple-touch-icon" href="/favicon.png">
+
+  <!-- Фавикон -->
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <link rel="apple-touch-icon" href="/assets/favicon.jpg">
+
   <style>
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: #fafafa; color: #222; }
-    main { max-width: 900px; margin: auto; padding: 2rem 1rem 4rem; }
-    h1 { font-size: 1.9rem; font-weight: 800; margin-bottom: 1rem; color: #111; }
-    h2 { font-size: 1.25rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; color: #111; }
-    p, li { line-height: 1.65; margin-bottom: 0.75rem; }
-    a { color: #CF2C02; text-decoration: underline; }
-    .muted { color:#555 }
-    .badge { display:inline-block; padding:.25rem .5rem; border-radius:.5rem; background:#fff3c6; border:1px solid #ffe39a; font-size:.85rem }
-    .btn { background:#CF2C02; color:#fff; padding:.55rem 1.1rem; border-radius:.8rem; font-weight:600; }
-    .btn:hover { background:#E85D04; }
-    footer { border-top: 1px solid #ddd; padding: 1.5rem 1rem; text-align: center; font-size: 0.875rem; color: #666; background: #f9f9f9; }
+    :root{
+      --yellow:#FFBA08;
+      --border:#e5e5e5;
+      --text:#222;
+      --text-soft:#666;
+    }
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:#fffef7;
+      color:var(--text);
+    }
+    a{ color:#CF2C02; }
+    a:hover{ text-decoration:underline; }
   </style>
 </head>
-<body>
-  <main>
-    <button class="btn" onclick="history.back()">← Назад</button>
+<body class="min-h-screen flex flex-col">
 
-    <h1 class="mt-6">Публичная оферта (пользовательское соглашение)</h1>
-    <p class="muted">Редакция от <strong>14/11/2025</strong></p>
+<!-- HEADER -->
+<header class="bg-white border-b border-[var(--border)] sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/assets/logo.png" alt="PolyTalky" class="h-10 w-auto">
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--text-soft)]">
+      <a href="/courses/" class="hover:text-[var(--text)]">Курсы</a>
+      <a href="/shop/" class="hover:text-[var(--text)]">Магазин</a>
+      <a href="/student/" class="hover:text-[var(--text)]">Личный кабинет</a>
+    </nav>
+  </div>
+</header>
 
-    <p>
-      Настоящий документ является публичным предложением (офертой) в адрес любых физических лиц о заключении договора
-      на оказание услуг по доступу к онлайн-курсам и учебным материалам на сайте <strong>PolyTalky</strong>
-      (<a href="/">/polytalky/</a>).
+<!-- MAIN -->
+<main class="flex-1">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <h1 class="text-2xl sm:text-3xl font-bold mb-2">
+      Публичная оферта (пользовательское соглашение)
+    </h1>
+    <p class="text-sm text-[var(--text-soft)] mb-6">
+      Редакция от <strong>14/11/2025</strong>
     </p>
 
-    <h2>1. Стороны и реквизиты</h2>
-    <p>
-      Услуги предоставляет <strong>Бурляева Ирина Валерьевна</strong>, физическое лицо,
-      зарегистрированное в качестве самозанятой в соответствии с Федеральным законом №422-ФЗ (НПД), г. Москва, ул. Свободы, д.49/1.
-      Контакты: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>, номер телефона +7 9645896966 ИНН:773389000872.
-    </p>
+    <section class="space-y-5 text-sm sm:text-base leading-relaxed">
 
-    <h2>2. Акцепт оферты и заключение договора</h2>
-    <ul class="list-disc pl-6">
-      <li>Акцептом оферты признаётся: оплата платного курса и/или фактическое использование сервиса после ознакомления с офертой.</li>
-      <li>С момента акцепта оферта считается заключённой и приобретает силу договора оказания услуг.</li>
-    </ul>
+      <p>
+        Настоящий документ является публичным предложением (офертой) в адрес любых физических лиц о заключении договора
+        на оказание услуг по доступу к онлайн-курсам и учебным материалам на сайте <strong>PolyTalky</strong>
+        (<a href="https://polytalky.ru">https://polytalky.ru</a>).
+      </p>
 
-    <h2>3. Предмет договора</h2>
-    <p>
-      Предоставление доступа к онлайн-курсам, учебным материалам, интерактивным заданиям и сопутствующим сервисам
-      (включая учёт прогресса) по иностранным языкам. Часть курсов может быть бесплатной,
-      часть — платной (<span class="badge">FREEMIUM</span> модель).
-    </p>
+      <h2 class="font-semibold text-lg mt-4">1. Стороны и реквизиты</h2>
+      <p>
+        Услуги предоставляет <strong>Бурляева Ирина Валерьевна</strong>, физическое лицо,
+        зарегистрированное в качестве самозанятой в соответствии с Федеральным законом №422-ФЗ (НПД),
+        г. Москва, ул. Свободы, д.49/1.
+        Контакты: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>,
+        номер телефона +7&nbsp;964&nbsp;589&nbsp;69&nbsp;66, ИНН: 773389000872.
+      </p>
 
-    <h2>4. Регистрация и доступ</h2>
-    <ul class="list-disc pl-6">
-      <li>Для персонализированного доступа и сохранения прогресса может потребоваться регистрация (email и пароль, имя и фамилия пользователя).</li>
-      <li>Бесплатные курсы доступны после регистрации (если требуется) без оплаты.</li>
-      <li>Платные курсы открываются после успешной оплаты и действуют на заявленных условиях (срок, пакет, объём).</li>
-    </ul>
+      <h2 class="font-semibold text-lg mt-4">2. Акцепт оферты и заключение договора</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Акцептом оферты признаётся: оплата платного курса и/или фактическое использование сервиса после ознакомления с офертой.</li>
+        <li>С момента акцепта оферта считается заключённой и приобретает силу договора оказания услуг.</li>
+      </ul>
 
-    <h2>5. Оплата</h2>
-    <ul class="list-disc pl-6">
-      <li>Оплата производится через платёжных провайдеров (например, Stripe / YooMoney / PayPal). Данные карт не хранятся на стороне PolyTalky.</li>
-      <li>Стоимость и состав включённых материалов указываются на странице соответствующего курса до оплаты.</li>
-      <li>Цены могут меняться без ретроактивного эффекта (на уже купленные доступы не влияет).</li>
-    </ul>
+      <h2 class="font-semibold text-lg mt-4">3. Предмет договора</h2>
+      <p>
+        Предметом договора является предоставление доступа к онлайн-курсам, учебным материалам,
+        интерактивным заданиям и сопутствующим сервисам (включая учёт прогресса) по иностранным языкам.
+        Часть курсов может быть бесплатной, часть — платной (модель <strong>freemium</strong>).
+      </p>
 
-    <h2>6. Возвраты и отмена</h2>
-    <p>
-      В течение 14 календарных дней с момента оплаты Пользователь может запросить возврат при наличии уважительной причины
-      (например, существенные технические проблемы, не позволяющие пользоваться курсом) — напишите на
-      <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>. Возврат производится тем же способом, каким была оплата,
-      в разумный срок. Индивидуальные ситуации рассматриваются отдельно.
-    </p>
+      <h2 class="font-semibold text-lg mt-4">4. Регистрация и доступ</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Для персонализированного доступа и сохранения прогресса может потребоваться регистрация (email и пароль, имя и фамилия пользователя).</li>
+        <li>Бесплатные курсы доступны после регистрации (если требуется) без оплаты.</li>
+        <li>Платные курсы открываются после успешной оплаты и действуют на заявленных условиях (срок, пакет, объём).</li>
+      </ul>
 
-    <h2>7. Права пользователя</h2>
-    <ul class="list-disc pl-6">
-      <li>Использовать оплаченные материалы исключительно для личного обучения.</li>
-      <li>Получать обновления и исправления, относящиеся к приобретённому курсу, в пределах заявленного пакета.</li>
-      <li>Обращаться в поддержку по вопросам доступа и работы материалов.</li>
-    </ul>
+      <h2 class="font-semibold text-lg mt-4">5. Оплата</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Оплата производится через платёжных провайдеров (например, Stripe / YooMoney / PayPal). Данные банковских карт не хранятся на стороне PolyTalky.</li>
+        <li>Стоимость и состав включённых материалов указываются на странице соответствующего курса до оплаты.</li>
+        <li>Цены могут меняться без ретроактивного эффекта и не влияют на уже приобретённые доступы.</li>
+      </ul>
 
-    <h2>8. Ограничения</h2>
-    <ul class="list-disc pl-6">
-      <li>Запрещены распространение материалов, передача доступа третьим лицам, массовое копирование/скачивание.</li>
-      <li>Контент и структура курсов защищены авторским правом. Любое использование вне личного обучения запрещено без письменного согласия.</li>
-    </ul>
+      <h2 class="font-semibold text-lg mt-4">6. Возвраты и отмена</h2>
+      <p>
+        В течение 14 календарных дней с момента оплаты Пользователь может запросить возврат при наличии уважительной причины
+        (например, существенные технические проблемы, не позволяющие пользоваться курсом) —
+        напишите на <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+        Возврат, как правило, производится тем же способом, каким была оплата, в разумный срок.
+        Индивидуальные ситуации рассматриваются отдельно.
+      </p>
 
-    <h2>9. Ответственность и отказ от гарантий</h2>
-    <ul class="list-disc pl-6">
-      <li>Сервис предоставляется «как есть». Не гарантируется отсутствие ошибок или полная совместимость с любой техникой/ПО.</li>
-      <li>Владелец не несёт ответственности за сбои провайдеров хостинга, связей, платёжных систем и форс-мажор.</li>
-      <li>Ответственность ограничена фактически уплаченной стоимостью доступа к соответствующему курсу.</li>
-    </ul>
+      <h2 class="font-semibold text-lg mt-4">7. Права пользователя</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Использовать оплаченные материалы исключительно для личного обучения.</li>
+        <li>Получать обновления и исправления, относящиеся к приобретённому курсу, в пределах заявленного пакета.</li>
+        <li>Обращаться в поддержку по вопросам доступа и работы материалов.</li>
+      </ul>
 
-    <h2>10. Персональные данные и cookies</h2>
-    <p>
-      Обработка данных осуществляется в соответствии с
-      <a href="/legal/privacy.html">Политикой конфиденциальности</a> и
-      <a href="/legal/cookies.html">Политикой cookies</a>.
-      Минимально необходимые технические cookies применяются для работы авторизации и прогресса.
-    </p>
+      <h2 class="font-semibold text-lg mt-4">8. Ограничения</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Запрещены распространение материалов, передача доступа третьим лицам, массовое копирование/скачивание.</li>
+        <li>Контент и структура курсов защищены авторским правом. Любое использование вне личного обучения запрещено без письменного согласия правообладателя.</li>
+      </ul>
 
-    <h2>11. Изменение условий</h2>
-    <p>
-      Оферта может быть обновлена. Новая редакция вступает в силу с момента публикации и применяется к новым покупкам/регистрациям.
-      Для действующих платных доступов условия не ухудшаются в пределах уже оплаченного периода/пакета.
-    </p>
+      <h2 class="font-semibold text-lg mt-4">9. Ответственность и отказ от гарантий</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Сервис предоставляется «как есть». Не гарантируется отсутствие ошибок или полная совместимость с любыми устройствами и программным обеспечением.</li>
+        <li>Владелец не несёт ответственности за сбои провайдеров хостинга, связи, платёжных систем, а также за форс-мажорные обстоятельства.</li>
+        <li>Ответственность ограничена фактически уплаченной стоимостью доступа к соответствующему курсу.</li>
+      </ul>
 
-    <h2>12. Применимое право и споры</h2>
-    <p>
-      Применяется право Российской Федерации. Споры по возможности решаются в досудебном порядке через обращение
-      на <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>. При недостижении согласия — по подсудности,
-      установленной действующим законодательством РФ.
-    </p>
+      <h2 class="font-semibold text-lg mt-4">10. Персональные данные и cookies</h2>
+      <p>
+        Обработка персональных данных осуществляется в соответствии с
+        <a href="/legal/privacy.html">Политикой конфиденциальности</a> и
+        <a href="/legal/cookies.html">Политикой использования cookies</a>.
+        Минимально необходимые технические cookies используются для работы авторизации и учёта прогресса.
+      </p>
 
-    <h2>13. Контакты для связи</h2>
-    <p>
-      Вопросы по доступу, оплате и работе сервиса: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
-    </p>
+      <h2 class="font-semibold text-lg mt-4">11. Изменение условий</h2>
+      <p>
+        Оферта может быть обновлена. Новая редакция вступает в силу с момента публикации и применяется
+        к новым покупкам и регистрациям. Для уже действующих платных доступов условия не ухудшаются
+        в пределах оплаченного периода/пакета.
+      </p>
 
-    <div class="mt-8">
-      <button class="btn" onclick="history.back()">← Вернуться назад</button>
+      <h2 class="font-semibold text-lg mt-4">12. Применимое право и споры</h2>
+      <p>
+        Применяется право Российской Федерации. Споры по возможности решаются в досудебном порядке
+        через обращение на <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+        При недостижении согласия они подлежат рассмотрению в порядке, установленном действующим законодательством РФ.
+      </p>
+
+      <h2 class="font-semibold text-lg mt-4">13. Контакты для связи</h2>
+      <p>
+        Вопросы по доступу, оплате и работе сервиса:
+        <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+      </p>
+
+    </section>
+  </div>
+
+  <!-- КНОПКА НАЗАД -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+    <a href="javascript:history.back()"
+       class="inline-block mt-2 px-5 py-3 bg-[var(--yellow)] hover:bg-[#e0a507] text-black font-semibold rounded-xl transition">
+      ← Назад
+    </a>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-[var(--border)] py-8 text-sm text-[var(--text-soft)] bg-white">
+  <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between gap-3">
+    <p>© <span id="year"></span> PolyTalky. Все права защищены.</p>
+    <div class="flex flex-wrap gap-4">
+      <a href="/contact.html" class="hover:text-[var(--text)]">Контакты</a>
+      <a href="/legal/index.html" class="hover:text-[var(--text)]">Юридическая информация</a>
     </div>
-  </main>
+  </div>
+</footer>
 
-  <footer>
-    © 2025 PolyTalky. Все права защищены.
-  </footer>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
 </body>
 </html>
