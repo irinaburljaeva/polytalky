@@ -1757,9 +1757,9 @@ if (emailRef) {
 
           let statusLabel;
           if (percent > 0 && lastLessonId) {
-            statusLabel = Прогресс: ${percent}% · последний урок: ${lastLessonId};
+            statusLabel = `Прогресс: ${percent}% · последний урок: ${lastLessonId}`;
           } else if (percent > 0) {
-            statusLabel = Прогресс: ${percent}%;
+            statusLabel = 'Прогресс: ${percent}%';
           } else if (isPaid) {
             statusLabel = 'Курс оплачен, можно начинать в любой момент.';
           } else {
@@ -1795,9 +1795,7 @@ if (emailRef) {
       auth.onAuthStateChanged((user) => {
         setAuthState(user || null);
       });
-      auth.onAuthStateChanged((user) => {
-        setAuthState(user || null);
-      });
+    
     });
   </script>
 </body>
