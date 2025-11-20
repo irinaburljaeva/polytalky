@@ -175,7 +175,26 @@
         margin-left:0;
         margin-top:6px;
       }
-     
+     /* --- Мобильная подстройка кабинета --- */
+    @media (max-width: 640px) {
+      /* чуть меньше тени и закругления у карт на телефоне */
+      .card{
+        border-radius: 1rem;
+        box-shadow: 0 10px 24px rgba(15,23,42,0.14);
+      }
+
+      /* общий вертикальный ритм поменьше */
+      .page-stack-mobile{
+        padding-top: 1rem;
+        padding-bottom: 2.5rem;
+        row-gap: 1.25rem;
+      }
+
+      /* длинные описания прячем на телефоне */
+      .mobile-desc{
+        display: none;
+      }
+    }
     }
   </style>
 </head>
@@ -198,7 +217,7 @@
   </header>
 
   <main class="flex-1">
-    <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6">
+    <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 page-stack-mobile">
 
       <!-- PRO STATUS BANNERS -->
       <section id="pro-banner-success" class="pro-banner pro-banner--success">
@@ -238,7 +257,7 @@
             <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
               Личный кабинет <span class="text-amber-600">языкового героя</span>
             </h1>
-            <p class="text-sm sm:text-base text-slate-600">
+            <p class="text-sm sm:text-base text-slate-600 mobile-desc">
               Здесь появляются все ваши курсы, прогресс и достижения. Авторизуйтесь, чтобы увидеть свою личную карту маршрутов в мире языков.
             </p>
           </div>
@@ -425,7 +444,7 @@
               <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
                 Все активированные программы и курсы
               </h2>
-              <p class="text-xs sm:text-sm text-slate-600">
+              <p class="text-xs sm:text-sm text-slate-600 mobile-desc">
                 Здесь собраны курсы, купленные в <a href="/shop/" class="underline">магазине</a>, а также бесплатные программы, в которых вы прошли хотя бы первый урок.
               </p>
             </div>
@@ -453,7 +472,7 @@
             <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
               Бейджи, медали и маленькие победы
             </h2>
-            <p class="text-xs sm:text-sm text-slate-600">
+            <p class="text-xs sm:text-sm text-slate-600 mobile-desc">
            Здесь будут появляться ваши награды за пройденные уроки, выполненные задания и особые активности. Сможете собрать все?
             </p>
           </div>
@@ -1384,14 +1403,7 @@ if (!authAcceptTerms.checked) {
     openMobile.addEventListener('click', () => openBadgesModal());
   }
 }
-        if (openDesktop) {
-          openDesktop.addEventListener('click', () => openBadgesModal());
-        }
-        if (openMobile) {
-          openMobile.addEventListener('click', () => openBadgesModal());
-        }
-      }
-
+ 
       async function loadAndRenderBadges(userBadgeIds) {
         try {
           const earnedIds = Array.isArray(userBadgeIds) ? userBadgeIds : [];
