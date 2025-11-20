@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Оплата и безопасность — PolyTalky</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Информация об оплате и безопасности платежей на сайте PolyTalky." />
+  <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --yellow:#FFBA08;
+      --border:#e5e5e5;
+      --text:#222;
+      --text-soft:#666;
+    }
+    body{
+      font-family:Inter,system-ui,sans-serif;
+      background:#fafafa;
+      color:var(--text);
+    }
+    a{color:#CF2C02;}
+    a:hover{text-decoration:underline;}
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<header class="bg-white border-b border-[var(--border)] sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 font-semibold text-lg">
+      <span class="inline-flex h-9 w-9 rounded-xl bg-[var(--yellow)] text-white items-center justify-center text-xl shadow">
+        🐤
+      </span>
+      PolyTalky
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--text-soft)]">
+      <a href="/courses/" class="hover:text-[var(--text)]">Курсы</a>
+      <a href="/shop/" class="hover:text-[var(--text)]">Магазин</a>
+      <a href="/student/" class="hover:text-[var(--text)]">Личный кабинет</a>
+    </nav>
+  </div>
+</header>
+
+<main class="flex-1">
+  <div class="max-w-3xl mx-auto px-4 py-10 sm:py-14 bg-white mt-6 mb-10 rounded-2xl border border-[var(--border)] shadow-sm">
+    <button onclick="history.back()" class="text-sm text-[var(--text-soft)] mb-4 hover:text-[var(--text)]">
+      ⬅ Вернуться назад
+    </button>
+
+    <h1 class="text-2xl sm:text-3xl font-bold mb-4">Оплата и безопасность платежей</h1>
+    <p class="text-sm text-[var(--text-soft)] mb-6">
+      Ниже описаны доступные способы оплаты и основные принципы безопасности обработки платежей.
+    </p>
+
+    <section class="space-y-4 text-sm sm:text-base text-[var(--text)] leading-relaxed">
+      <h2 class="font-semibold text-lg">1. Способы оплаты</h2>
+      <p>В зависимости от вашего региона доступны следующие варианты:</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>Для пользователей из РФ:</strong> СБП (Система быстрых платежей), ЮMoney и другие локальные способы оплаты, указанные в магазине.</li>
+        <li><strong>Для пользователей из других стран:</strong> банковские карты через Stripe, PayPal и иные международные способы оплаты, если они доступны на момент покупки.</li>
+      </ul>
+
+      <h2 class="font-semibold text-lg mt-6">2. Обработка платежей</h2>
+      <p>
+        Оплата обрабатывается через сторонние платёжные сервисы (Stripe, PayPal, ЮMoney, банки-партнёры).
+        Данные вашей банковской карты не передаются и не хранятся на стороне сайта PolyTalky.
+      </p>
+
+      <h2 class="font-semibold text-lg mt-6">3. Безопасность</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <li>Передача платёжных данных осуществляется по защищённому соединению (https).</li>
+        <li>Вся обработка реквизитов карты происходит на стороне платёжного сервиса, соответствующего требованиям безопасности (например, PCI DSS для Stripe).</li>
+        <li>PolyTalky получает только информацию о статусе операции (успешно/отклонено) и базовые данные заказа (какой продукт был приобретён).</li>
+      </ul>
+
+      <h2 class="font-semibold text-lg mt-6">4. Чеки и подтверждения</h2>
+      <p>
+        По запросу вы можете получить подтверждение оплаты и/или электронный чек. Для этого отправьте письмо на
+        <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a> с указанием:
+      </p>
+      <ul class="list-disc list-inside space-y-1">
+        <li>ФИО;</li>
+        <li>email, указанный при оплате;</li>
+        <li>дату и сумму платежа;</li>
+        <li>название приобретённого курса.</li>
+      </ul>
+
+      <h2 class="font-semibold text-lg mt-6">5. Возвраты</h2>
+      <p>
+        Условия и порядок возврата описаны подробно в разделе
+        <a href="/legal/refund.html">«Политика возвратов»</a>.
+      </p>
+
+      <h2 class="font-semibold text-lg mt-6">6. Контакты по вопросам оплаты</h2>
+      <p>
+        Если у вас возникли вопросы по оплате или статусу платежа, напишите на
+        <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+      </p>
+    </section>
+  </div>
+</main>
+
+<footer class="border-t border-[var(--border)] py-8 text-sm text-[var(--text-soft)] bg-white">
+  <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between gap-3">
+    <p>© <span id="year"></span> PolyTalky. Все права защищены.</p>
+    <div class="flex gap-4 flex-wrap">
+      <a href="/contact.html" class="hover:text-[var(--text)]">Контакты</a>
+      <a href="/legal/privacy.html" class="hover:text-[var(--text)]">Политика конфиденциальности</a>
+      <a href="/legal/offer.html" class="hover:text-[var(--text)]">Публичная оферта</a>
+      <a href="/legal/cookies.html" class="hover:text-[var(--text)]">Cookies</a>
+      <a href="/legal/consent.html" class="hover:text-[var(--text)]">Согласие</a>
+      <a href="/legal/refund.html" class="hover:text-[var(--text)]">Возврат</a>
+      <a href="/legal/terms.html" class="hover:text-[var(--text)]">Пользовательское соглашение</a>
+      <a href="/legal/payment.html" class="hover:text-[var(--text)]">Оплата</a>
+      <a href="/legal/disclaimer.html" class="hover:text-[var(--text)]">Отказ от ответственности</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
