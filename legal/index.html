@@ -4,24 +4,132 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Юридические документы — PolyTalky</title>
+
+  <!-- Tailwind CDN (как и на остальных страницах) -->
   <script src="https://cdn.tailwindcss.com"></script>
-    <!-- фавикон -->
-<link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-<link rel="apple-touch-icon" href="/favicon.png">
+
+  <!-- Фавикон -->
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <link rel="apple-touch-icon" href="/assets/favicon.jpg">
 </head>
-<body class="min-h-screen bg-[#fffef7] text-[#0F172A]">
-  <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-3xl font-extrabold">Юридические документы</h1>
-    <p class="mt-2 text-gray-600">Здесь собраны обязательные политики и соглашения сервиса PolyTalky.</p>
+<body class="min-h-screen bg-[#fffef7] text-slate-900 flex flex-col">
 
-    <ul class="mt-6 space-y-3">
-      <li><a class="underline" href="privacy.html">Политика конфиденциальности</a></li>
-      <li><a class="underline" href="offer.html">Публичная оферта / Пользовательское соглашение</a></li>
-      <li><a class="underline" href="cookies.html">Политика использования cookies</a></li>
-      <li><a class="underline" href="consent.html">Согласие на обработку персональных данных</a></li>
-    </ul>
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <header class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+        Юридические документы PolyTalky
+      </h1>
+      <p class="mt-3 text-sm sm:text-base text-slate-600 max-w-2xl">
+        Здесь собраны все основные политики, оферты и соглашения,
+        регулирующие использование сайта и сервисов PolyTalky.
+      </p>
+    </header>
 
-    <p class="mt-8 text-sm text-gray-500">Для вопросов напишите на: <a class="underline" href="mailto:[ВСТАВЬТЕ-EMAIL]">[ВСТАВЬТЕ-EMAIL]</a></p>
+    <!-- Блок: Основные документы -->
+    <section class="mt-6">
+      <h2 class="text-xl font-semibold mb-3">Основные документы</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="privacy.html"
+           class="block rounded-xl border border-yellow-200 bg-white/80 px-4 py-3 hover:border-yellow-400 hover:bg-yellow-50 transition">
+          <div class="font-medium">Политика конфиденциальности</div>
+          <p class="mt-1 text-sm text-slate-600">
+            Как мы обрабатываем и защищаем ваши персональные данные.
+          </p>
+        </a>
+
+        <a href="offer.html"
+           class="block rounded-xl border border-yellow-200 bg-white/80 px-4 py-3 hover:border-yellow-400 hover:bg-yellow-50 transition">
+          <div class="font-medium">Публичная оферта / Пользовательское соглашение</div>
+          <p class="mt-1 text-sm text-slate-600">
+            Условия использования курсов, подписок и сервиса PolyTalky.
+          </p>
+        </a>
+
+        <a href="terms.html"
+           class="block rounded-xl border border-yellow-200 bg-white/80 px-4 py-3 hover:border-yellow-400 hover:bg-yellow-50 transition">
+          <div class="font-medium">Общие условия использования сайта</div>
+          <p class="mt-1 text-sm text-slate-600">
+            Правила пользования сайтом, ограничение ответственности и права сторон.
+          </p>
+        </a>
+
+        <a href="disclaimer.html"
+           class="block rounded-xl border border-yellow-200 bg-white/80 px-4 py-3 hover:border-yellow-400 hover:bg-yellow-50 transition">
+          <div class="font-medium">Отказ от ответственности</div>
+          <p class="mt-1 text-sm text-slate-600">
+            Информация о характере предоставляемых материалов и ограничениях наших обязательств.
+          </p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Блок: Персональные данные и cookies -->
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold mb-3">Персональные данные и cookies</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="cookies.html"
+           class="block rounded-xl border border-yellow-200 bg-white/80 px-4 py-3 hover:border-yellow-400 hover:bg-yellow-50 transition">
+          <div class="font-medium">Политика использования cookies</div>
+          <p class="mt-1 text-sm text-slate-600">
+            Какие файлы cookies мы используем и как вы можете управлять ими.
+          </p>
+        </a>
+
+        <a href="consent.html"
+           class="block rounded-xl border border-yellow-200 bg-white/80 px-4 py-3 hover:border-yellow-400 hover:bg-yellow-50 transition">
+          <div class="font-medium">Согласие на обработку персональных данных</div>
+          <p class="mt-1 text-sm text-slate-600">
+            Формулировка вашего согласия на обработку персональных данных.
+          </p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Блок: Оплата и возвраты -->
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold mb-3">Оплата и возвраты</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="payment.html"
+           class="block rounded-xl border border-yellow-200 bg-white/80 px-4 py-3 hover:border-yellow-400 hover:bg-yellow-50 transition">
+          <div class="font-medium">Условия оплаты</div>
+          <p class="mt-1 text-sm text-slate-600">
+            Способы оплаты, валюты, автоматические списания и продление подписок.
+          </p>
+        </a>
+
+        <a href="refund.html"
+           class="block rounded-xl border border-yellow-200 bg-white/80 px-4 py-3 hover:border-yellow-400 hover:bg-yellow-50 transition">
+          <div class="font-medium">Политика возвратов</div>
+          <p class="mt-1 text-sm text-slate-600">
+            Условия возврата средств, отмены подписок и гарантий.
+          </p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Блок: Авторские права -->
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold mb-3">Авторские права</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="copyright.html"
+           class="block rounded-xl border border-yellow-200 bg-white/80 px-4 py-3 hover:border-yellow-400 hover:bg-yellow-50 transition">
+          <div class="font-medium">Политика по авторским правам</div>
+          <p class="mt-1 text-sm text-slate-600">
+            Права на материалы PolyTalky, правила цитирования и порядок направления претензий.
+          </p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Контакты -->
+    <section class="mt-10 border-t border-yellow-100 pt-6">
+      <p class="text-sm text-slate-600">
+        Если у вас есть вопросы по любому из документов,
+        вы можете написать на <a class="underline decoration-yellow-500 decoration-2 underline-offset-2"
+                                href="mailto:hello@polytalky.ru">hello@polytalky.ru</a>.
+      </p>
+    </section>
   </main>
+
 </body>
 </html>
