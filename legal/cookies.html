@@ -2,89 +2,119 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Политика использования cookies — PolyTalky</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Политика использования файлов cookies на сайте PolyTalky." />
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-    <!-- фавикон -->
-<link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-<link rel="apple-touch-icon" href="/favicon.png">
+
+  <!-- Фавикон -->
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <link rel="apple-touch-icon" href="/assets/favicon.jpg">
+
   <style>
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: #fafafa; color: #222; }
-    main { max-width: 800px; margin: auto; padding: 2rem 1rem 4rem; }
-    h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: #111; }
-    h2 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
-    p, li { line-height: 1.6; margin-bottom: 0.75rem; }
-    a { color: #CF2C02; text-decoration: underline; }
-    footer { border-top: 1px solid #ddd; padding: 1.5rem 1rem; text-align: center; font-size: 0.875rem; color: #666; background: #f9f9f9; }
-    button { background: #CF2C02; color: #fff; padding: 0.5rem 1.25rem; border-radius: 0.75rem; font-weight: 500; }
-    button:hover { background: #E85D04; }
+    :root{
+      --yellow:#FFBA08;
+      --border:#e5e5e5;
+      --text:#222;
+      --text-soft:#666;
+    }
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:#fffef7;
+      color:var(--text);
+    }
+    a{ color:#CF2C02; }
+    a:hover{ text-decoration:underline; }
   </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-  <main>
-    <h1>Политика использования файлов cookies</h1>
+<!-- HEADER -->
+<header class="bg-white border-b border-[var(--border)] sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/assets/logo.png" alt="PolyTalky" class="h-10 w-auto">
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--text-soft)]">
+      <a href="/courses/" class="hover:text-[var(--text)]">Курсы</a>
+      <a href="/shop/" class="hover:text-[var(--text)]">Магазин</a>
+      <a href="/student/" class="hover:text-[var(--text)]">Личный кабинет</a>
+    </nav>
+  </div>
+</header>
 
-    <p>
-      Настоящая политика объясняет, как сайт <strong>PolyTalky</strong>
-      использует файлы cookies и аналогичные технологии для обеспечения корректной работы,
-      персонализации контента и анализа взаимодействия пользователей с сервисом.
+<!-- MAIN -->
+<main class="flex-1">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <h1 class="text-2xl sm:text-3xl font-bold mb-4">Политика использования файлов cookies</h1>
+
+    <p class="text-sm text-[var(--text-soft)] mb-6">
+      Настоящая политика объясняет, как сайт <strong>PolyTalky</strong> использует cookies и аналогичные технологии.
     </p>
 
-    <h2>1. Что такое cookies</h2>
-    <p>
-      Cookies — это небольшие текстовые файлы, которые сохраняются на устройстве пользователя
-      при посещении сайта. Они помогают запомнить ваши действия, настройки и предпочтения
-      (например, язык интерфейса или прогресс обучения).
-    </p>
+    <section class="space-y-5 text-sm sm:text-base leading-relaxed">
 
-    <h2>2. Какие cookies мы используем</h2>
-    <ul class="list-disc pl-6">
-      <li><strong>Технические cookies</strong> — обеспечивают корректную работу сайта (навигация, авторизация, сохранение сессии).</li>
-      <li><strong>Функциональные cookies</strong> — сохраняют ваши настройки и прогресс в курсах, чтобы улучшить удобство обучения.</li>
-      <li><strong>Аналитические cookies</strong> — помогают понять, как пользователи взаимодействуют с сайтом (например, через Google Analytics или Яндекс.Метрику).</li>
-    </ul>
+      <p>
+        Cookies — это небольшие текстовые файлы, которые сохраняются на устройстве пользователя при посещении сайта.
+        Они помогают обеспечивать корректную работу платформы, сохранять настройки и анализировать взаимодействие
+        пользователей с сервисом.
+      </p>
 
-    <h2>3. Как можно управлять cookies</h2>
-    <p>
-      Вы можете в любой момент изменить настройки браузера и запретить использование файлов cookies
-      или удалить уже сохранённые. Однако это может привести к ограничению функциональности сайта.
-    </p>
-
-    <p>
-      Инструкции для популярных браузеров:
-      <ul class="list-disc pl-6">
-        <li><a href="https://support.google.com/chrome/answer/95647" target="_blank">Google Chrome</a></li>
-        <li><a href="https://support.mozilla.org/ru/kb/udalenie-kukov" target="_blank">Mozilla Firefox</a></li>
-        <li><a href="https://support.apple.com/ru-ru/guide/safari/sfri11471/mac" target="_blank">Safari</a></li>
-        <li><a href="https://support.microsoft.com/ru-ru/microsoft-edge" target="_blank">Microsoft Edge</a></li>
+      <h2 class="font-semibold text-lg">1. Какие cookies мы используем</h2>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong>Технические cookies</strong> — авторизация, навигация, поддержание сессии.</li>
+        <li><strong>Функциональные cookies</strong> — ваши настройки, прогресс обучения, язык интерфейса.</li>
+        <li><strong>Аналитические cookies</strong> — данные о том, как пользователи взаимодействуют с сайтом.</li>
       </ul>
-    </p>
 
-    <h2>4. Кто обрабатывает данные</h2>
-    <p>
-      Обработка файлов cookies и связанных технических данных осуществляется владельцем проекта —
-      <strong>Бурляевой Ириной Валерьевной</strong>, физическим лицом, зарегистрированным в качестве самозанятой (НПД, РФ),
-      город Москва.  
-      Контакт для связи: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
-    </p>
+      <h2 class="font-semibold text-lg">2. Управление cookies</h2>
+      <p>
+        Вы можете изменить настройки браузера, отключить cookies или удалить их.  
+        Однако это может ограничить корректность работы сайта и личного кабинета.
+      </p>
 
-    <h2>5. Согласие на использование cookies</h2>
-    <p>
-      Продолжая использование сайта PolyTalky, вы соглашаетесь с применением файлов cookies
-      в соответствии с настоящей политикой. Если вы не согласны, пожалуйста,
-      измените настройки браузера или покиньте сайт.
-    </p>
+      <h2 class="font-semibold text-lg">3. Кто обрабатывает данные</h2>
+      <p>
+        Обработка файлов cookies осуществляется владельцем проекта —
+        <strong>Бурляевой Ириной Валерьевной</strong>, физическим лицом (НПД, РФ), город Москва.  
+        Контакт: <a href="mailto:iraburljaeva@gmail.com">iraburljaeva@gmail.com</a>.
+      </p>
 
-    <div class="mt-8">
-      <button onclick="history.back()">← Вернуться назад</button>
+      <h2 class="font-semibold text-lg">4. Согласие на использование cookies</h2>
+      <p>
+        Продолжая пользоваться сайтом PolyTalky, вы соглашаетесь с применением cookies согласно настоящей политике.
+      </p>
+
+    </section>
+
+  </div>
+
+  <!-- КНОПКА НАЗАД -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+    <a href="javascript:history.back()"
+       class="inline-block mt-2 px-5 py-3 bg-[var(--yellow)] hover:bg-[#e0a507] text-black font-semibold rounded-xl transition">
+      ← Назад
+    </a>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-[var(--border)] py-8 text-sm text-[var(--text-soft)] bg-white">
+  <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between gap-3">
+    <p>© <span id="year"></span> PolyTalky. Все права защищены.</p>
+    <div class="flex flex-wrap gap-4">
+      <a href="/contact.html" class="hover:text-[var(--text)]">Контакты</a>
+      <a href="/legal/index.html" class="hover:text-[var(--text)]">Юридическая информация</a>
     </div>
-  </main>
+  </div>
+</footer>
 
-  <footer>
-    © 2025 PolyTalky. Все права защищены.
-  </footer>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 
 </body>
 </html>
