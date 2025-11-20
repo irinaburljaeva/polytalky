@@ -615,7 +615,56 @@
           </form>
         </div>
       </div>
+<!-- МОДАЛКА ОТМЕНЫ ПОДПИСКИ PRO -->
+<div
+  id="pro-cancel-modal"
+  class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40"
+>
+  <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
+          Подписка PRO
+        </p>
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">
+          Отменить автопродление?
+        </h2>
+      </div>
+      <button
+        type="button"
+        id="pro-cancel-modal-close"
+        class="text-slate-400 hover:text-slate-600 text-xl leading-none"
+      >
+        ×
+      </button>
+    </div>
 
+    <p class="text-sm text-slate-600" id="pro-cancel-modal-text">
+      Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.
+    </p>
+
+    <div class="text-xs text-slate-500" id="pro-cancel-modal-subtext">
+      После окончания этого периода платежи списываться не будут, и вы больше не сможете отправлять задания на проверку куратору.
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:justify-end gap-2 pt-2">
+      <button
+        type="button"
+        id="pro-cancel-modal-cancel"
+        class="btn btn-ghost w-full sm:w-auto"
+      >
+        Оставить как есть
+      </button>
+      <button
+        type="button"
+        id="pro-cancel-modal-confirm"
+        class="btn w-full sm:w-auto"
+      >
+        Отключить автопродление
+      </button>
+    </div>
+  </div>
+</div>
       <!-- Модалка предпросмотра стандартных аватаров -->
       <div
         id="avatar-preview-modal"
@@ -841,11 +890,80 @@
         window.history.replaceState({}, '', newUrl);
       })();
 
-      if (proCancelButton) {
-        proCancelButton.addEventListener('click', () => {
-          alert('Если вы хотите отменить подписку PRO, напишите нам на почту hello@polytalky.ru — мы поможем всё оформить.');
-        });
+    const proCancelModal      = document.getElementById('pro-cancel-modal');
+const proCancelModalClose = document.getElementById('pro-cancel-modal-close');
+const proCancelModalCancel = document.getElementById('pro-cancel-modal-cancel');
+const proCancelModalConfirm = document.getElementById('pro-cancel-modal-confirm');
+const proCancelModalText  = document.getElementById('pro-cancel-modal-text');
+
+function openProCancelModal(validUntilText) {
+  if (validUntilText) {
+    proCancelModalText.textContent =
+      Мы отключим автопродление подписки PRO. Доступ останется активным до ${validUntilText}.;
+  } else {
+    proCancelModalText.textContent =
+      'Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.';
+  }
+  proCancelModal.classList.remove('hidden');
+}
+
+function closeProCancelModal() {
+  proCancelModal.classList.add('hidden');
+}
+
+if (proCancelButton) {
+  proCancelButton.addEventListener('click', async () => {
+    // здесь можно подставить дату, если она у тебя уже есть в user.proValidUntil
+    openProCancelModal(window.currentProValidUntilText || '');
+  });
+}
+
+[proCancelModalClose, proCancelModalCancel].forEach((btn) => {
+  if (btn) btn.addEventListener('click', closeProCancelModal);
+});
+
+if (proCancelModalConfirm) {
+  proCancelModalConfirm.addEventListener('click', async () => {
+    proCancelModalConfirm.disabled = true;
+    proCancelModalConfirm.textContent = 'Отменяем...';
+
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        alert('Сначала войдите в личный кабинет.');
+        return;
       }
+
+      const token = await user.getIdToken();
+
+      const resp = await fetch('/api/pro/cancel-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+        },
+        body: JSON.stringify({}),
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok || !data.ok) {
+        console.error('Ошибка отмены:', data);
+        alert(data.error || 'Не удалось отменить подписку. Напишите нам на hello@polytalky.ru');
+      } else {
+        alert('Автопродление отключено. Доступ к PRO останется до конца оплаченного периода.');
+        closeProCancelModal();
+        // здесь по желанию можно обновить баннер / скрыть кнопку и т.п.
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Произошла ошибка при отмене. Напишите нам на hello@polytalky.ru');
+    } finally {
+      proCancelModalConfirm.disabled = false;
+      proCancelModalConfirm.textContent = 'Отключить автопродление';
+    }
+  });
+}
 
       /* cookie */
       if (!localStorage.getItem('cookieConsent')) {
