@@ -899,7 +899,7 @@ const proCancelModalText  = document.getElementById('pro-cancel-modal-text');
 function openProCancelModal(validUntilText) {
   if (validUntilText) {
     proCancelModalText.textContent =
-      Мы отключим автопродление подписки PRO. Доступ останется активным до ${validUntilText}.;
+      'Мы отключим автопродление подписки PRO. Доступ останется активным до ${validUntilText}.';
   } else {
     proCancelModalText.textContent =
       'Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.';
@@ -1877,7 +1877,7 @@ if (emailRef) {
           if (percent > 0 && lastLessonId) {
             statusLabel = `Прогресс: ${percent}% · последний урок: ${lastLessonId}`;
           } else if (percent > 0) {
-            statusLabel = 'Прогресс: ${percent}%';
+            statusLabel = `Прогресс: ${percent}%`;
           } else if (isPaid) {
             statusLabel = 'Курс оплачен, можно начинать в любой момент.';
           } else {
