@@ -725,6 +725,8 @@
         cover: '/assets/courses/english.jpg'
       }
     };
+        // 🔸 ID бейджа за первый активированный курс
+    const FIRST_STEP_BADGE_ID = 'first-step';
   </script>
 
   <script>
@@ -1307,10 +1309,10 @@ function highlightSelectedBadge(badgeId) {
             (badge.earned ? '' : 'opacity-70');
 
           const imgSrc = badge.earned
-            ? /assets/badges/${badge.id}.png
-            : '/assets/badges/medalunknown.png`;
+            ? `/assets/badges/${badge.id}.png`
+            : `/assets/badges/medalunknown.png`;
 
-          // ❗️ только иконка — без подписи
+          // только иконка — без подписи
           btn.innerHTML = `
             <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center">
               <img src="${imgSrc}" alt="${badge.title}" class="h-full w-full object-contain" />
@@ -1589,7 +1591,8 @@ function highlightSelectedBadge(badgeId) {
         }
       });
 
-      /* курсы + медали: чтение и слияние email+uid */
+
+/* курсы + медали: чтение и слияние email+uid */
       async function loadUserEnrollments(user) {
         coursesList.innerHTML = '';
         coursesEmpty.classList.add('hidden');
@@ -1645,7 +1648,32 @@ function highlightSelectedBadge(badgeId) {
             ...progressCourseIds.filter(id => !mergedPaid.includes(id))
           ]));
 
-          const mergedBadges = Array.from(new Set([...badgesUid, ...badgesEmail]));
+          // 🎖 объединяем бейджи из обоих документов
+          let mergedBadges = Array.from(new Set([...badgesUid, ...badgesEmail]));
+
+          // 🔥 АВТОВЫДАЧА БЕЙДЖА "FIRST STEP":
+          // если есть хотя бы один курс (платный или бесплатный),
+          // а бейджа ещё нет — добавляем его
+          const hasAnyCourse = mergedPaid.length > 0 || mergedFree.length > 0;
+
+          if (hasAnyCourse && !mergedBadges.includes(FIRST_STEP_BADGE_ID)) {
+            mergedBadges.push(FIRST_STEP_BADGE_ID);
+
+            const badgeUpdate = {
+              badges: firebase.firestore.FieldValue.arrayUnion(FIRST_STEP_BADGE_ID),
+            };
+
+            const updates = [];
+            if (uidRef)   updates.push(uidRef.set(badgeUpdate,   { merge: true }));
+            if (emailRef) updates.push(emailRef.set(badgeUpdate, { merge: true }));
+
+            try {
+              await Promise.all(updates);
+            } catch (e) {
+              console.warn('Не удалось сохранить бейдж first-step:', e);
+            }
+          }
+
           const courses = [];
 
           for (const id of mergedPaid) {
@@ -1670,11 +1698,13 @@ function highlightSelectedBadge(badgeId) {
           renderCourses(courses);
           await loadAndRenderBadges(mergedBadges);
 
-          if (emailRef) {
+          // миграция данных из uid-документа в email-документ
+
+if (emailRef) {
             try {
               await emailRef.set(
                 {
-                  email: emailData?.email || email || null,
+                  email: emailData?.email  email  null,
                   courses: mergedPaid,
                   freeCourses: mergedFree,
                   badges: mergedBadges,
@@ -1692,22 +1722,6 @@ function highlightSelectedBadge(badgeId) {
           await loadAndRenderBadges([]);
         }
       }
-
-      function renderCourses(courses) {
-        coursesList.innerHTML = '';
-        if (!courses || courses.length === 0) {
-          coursesEmpty.classList.remove('hidden');
-          return;
-        }
-        coursesEmpty.classList.add('hidden');
-
-        courses.forEach(c => {
-          const meta = COURSE_META[c.id] || {
-            title: c.id,
-            href: '/courses/',
-            cover: '/assets/courses/default.jpg'
-          };
-
           const progressData = c.progress || {};
           const percent = typeof progressData.percent === 'number'
             ? Math.max(0, Math.min(100, progressData.percent))
