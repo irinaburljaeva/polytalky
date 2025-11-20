@@ -946,10 +946,10 @@ const proCancelModalText  = document.getElementById('pro-cancel-modal-text');
 function openProCancelModal(validUntilText) {
   if (validUntilText) {
     proCancelModalText.textContent =
-      'Мы отключим автопродление подписки PRO. Доступ останется активным до ${validUntilText}.';
+      `Мы отключим автопродление подписки PRO. Доступ останется активным до ${validUntilText}.`;
   } else {
     proCancelModalText.textContent =
-      'Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.';
+      `Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.`;
   }
   proCancelModal.classList.remove('hidden');
 }
@@ -1663,7 +1663,7 @@ function highlightSelectedBadge(badgeId) {
   let text = 'У вас активна подписка PRO.';
 
   if (daysLeft != null && validUntilText) {
-    text = Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}.;
+    text = `Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}.`;
   }
 
   // Stripe: есть автосписание → показываем кнопку отмены, прячем продление
@@ -1672,7 +1672,9 @@ function highlightSelectedBadge(badgeId) {
     if (proRenewButton)  proRenewButton.classList.add('hidden');
 
     if (daysLeft != null && validUntilText) {
-      text = Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).;
+      text = `Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).`;
+  } else {
+        text = `Подписка PRO активна. Автопродление включено.`;
     }
   } else {
     // YooKassa / ручная оплата:
@@ -1690,9 +1692,9 @@ function highlightSelectedBadge(badgeId) {
     }
 
     if (daysLeft != null && validUntilText) {
-      text = Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.;
+      text = `Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. По окончании срока доступ приостановится.`;
     } else {
-      text = 'Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.';
+      text = `Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.`;
     }
   }
 
