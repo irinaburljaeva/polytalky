@@ -1749,7 +1749,7 @@ function highlightSelectedBadge(badgeId) {
   // --- Stripe: есть автосписание ---
   if (hasStripeSub) {
     if (daysLeft != null && validUntilText) {
-      text = 'Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).';
+      text = `Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).`;
     } else {
       text = 'Подписка PRO активна. Автопродление включено.';
     }
@@ -1760,7 +1760,7 @@ function highlightSelectedBadge(badgeId) {
   // --- YooKassa / ручная оплата: нет автопродления ---
   else {
     if (daysLeft != null && validUntilText) {
-      text = 'Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.';
+      text = `Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.`;
     } else {
       text = 'Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.';
     }
@@ -1805,7 +1805,6 @@ if (proChip) {
   });
 }
   // ВАЖНО: здесь НЕ трогаем proBannerSuccess, чтобы не висел огромный баннер.
-}
 
       async function loadAndRenderBadges(userBadgeIds) {
         try {
