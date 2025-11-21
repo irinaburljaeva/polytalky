@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polyglot Pack — Новогодний курс | PolyTalky</title>
+
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: linear-gradient(180deg, #1b1f3b, #2e3354, #3d3a6a);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+  }
+
+  .wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    opacity: .9;
+    margin-bottom: 40px;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  }
+
+  .timer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0 10px;
+  }
+
+  .timer-box {
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 70px;
+  }
+
+  .timer-number {
+    font-size: 1.8rem;
+    font-weight: bold;
+    line-height: 1.1;
+  }
+
+  .timer-label {
+    font-size: .8rem;
+    opacity: .8;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 14px 22px;
+    margin-top: 20px;
+    border-radius: 14px;
+    background: #ffd34e;
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: .2s;
+  }
+
+  .btn:hover {
+    background: #ffe27b;
+  }
+
+  .lang-icons {
+    display: flex;
+    gap: 10px;
+    font-size: 2rem;
+    justify-content: center;
+    margin: 10px 0 20px;
+  }
+
+  .snow {
+    position: fixed;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 999;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="snow" id="snow"></div>
+
+<div class="wrap">
+
+<h1>Polyglot Pack: MCHNY 🎄✨</h1>
+<div class="subtitle">Новогодний полиглотический курс • Премиум-доступ</div>
+
+<div class="card">
+  <h2>⏳ До открытия курса осталось:</h2>
+
+  <div id="timer" class="timer">
+    <div class="timer-box"><div class="timer-number" id="days">00</div><div class="timer-label">дней</div></div>
+    <div class="timer-box"><div class="timer-number" id="hours">00</div><div class="timer-label">часов</div></div>
+    <div class="timer-box"><div class="timer-number" id="minutes">00</div><div class="timer-label">минут</div></div>
+    <div class="timer-box"><div class="timer-number" id="seconds">00</div><div class="timer-label">секунд</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🎁 Что такое Polyglot Pack?</h2>
+  <p>
+    Это новогодний полиглотический курс, созданный, чтобы подарить тебе настроение
+    праздника, волшебства и международной атмосферы.  
+    Ты отправишься в мини-путешествие по традициям разных стран и узнаешь:
+  </p>
+
+  <ul>
+    <li>🎄 как встречают Новый Год в Европе, Азии, Латинской Америке;</li>
+    <li>✨ какие новогодние слова существуют в разных языках мира;</li>
+    <li>🛷 какие традиции перенести в свою семью;</li>
+    <li>🔔 чем отличаются новогодние поздравления в культурах мира;</li>
+    <li>🌍 мини-уроки слов на 5–7 языках.</li>
+  </ul>
+
+  <div class="lang-icons">🇬🇧 🇪🇸 🇨🇳 🇫🇷 🇯🇵 🇰🇷 🇩🇪</div>
+
+  <p>
+    Каждый день ты будешь открывать новое мини-занятие, получать магическую порцию
+    знаний и ощущение праздника — даже если за окном нет снега.
+  </p>
+
+  <a href="#buy" class="btn">Купить доступ к курсу 🎁</a>
+</div>
+
+<div class="card" id="buy">
+  <h2>💎 Доступ к курсу</h2>
+  <p>
+    <strong>Polyglot Pack — PREMIUM курс.</strong><br>
+    Он откроется 25 декабря, но оплатить участие можно уже сейчас.
+  </p>
+
+  <p>
+    После оплаты ты получишь:
+  </p>
+
+  <ul>
+    <li>✔ доступ к курсу 25 декабря;</li>
+    <li>✔ полный премиум-контент;</li>
+    <li>✔ 10+ мини-уроков с разными языками мира;</li>
+    <li>✔ праздничные интерактивы и задания;</li>
+    <li>✔ доступ в личный кабинет участников PolyTalky.</li>
+  </ul>
+
+  <a href="/checkout/polyglot-pack" class="btn">Купить за 1490₽ 🎄</a>
+</div>
+
+</div>
+
+<script>
+// =============== ТАЙМЕР ДО 25 ДЕКАБРЯ ===============
+const targetDate = new Date('2024-12-25T00:00:00').getTime();
+
+function updateTimer() {
+  const now = Date.now();
+  const diff = targetDate - now;
+
+  if (diff <= 0) {
+    document.getElementById('timer').innerHTML = "<div>Курс открыт! 🎉</div>";
+    return;
+  }
+
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const m = Math.floor((diff / (1000 * 60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+
+  document.getElementById('days').textContent = d.toString().padStart(2, '0');
+  document.getElementById('hours').textContent = h.toString().padStart(2, '0');
+  document.getElementById('minutes').textContent = m.toString().padStart(2, '0');
+  document.getElementById('seconds').textContent = s.toString().padStart(2, '0');
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+
+// =============== ПАДАЮЩИЙ СНЕГ ===============
+const snow = document.getElementById("snow");
+for (let i = 0; i < 80; i++) {
+  const s = document.createElement("div");
+  s.style.position = "absolute";
+  s.style.top = Math.random() * -500 + "px";
+  s.style.left = Math.random() * 100 + "%";
+  s.style.opacity = Math.random();
+  s.style.width = s.style.height = 4 + Math.random() * 4 + "px";
+  s.style.background = "white";
+  s.style.borderRadius = "50%";
+  s.style.animation = `fall ${5 + Math.random() * 7}s linear infinite`;
+  snow.appendChild(s);
+}
+
+</script>
+
+<style>
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+  }
+}
+</style>
+
+</body>
+</html>
