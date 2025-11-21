@@ -121,8 +121,7 @@
     <!-- Бренд -->
     <div>
       <a href="/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
-        <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-2)] items-center justify-center">🏷️</span>
-        PolyTalky
+        <img src="assets/logo.png" alt="PolyTalky"> class="h-8 w-8 rounded-x1"> PolyTalky
       </a>
       <p class="mt-3 text-gray-500">Изучайте языки для жизни, а не только для тестов.</p>
       <p class="mt-4 text-gray-400">© 2025 PolyTalky. Все права защищены.</p>
@@ -253,16 +252,16 @@ function courseCard(c) {
   const isSeasonal = !!c.seasonalStart;
 
   const badge = c.type === 'free'
-    ? <span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>
-    : <span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PREMIUM</span>;
+    ? '<span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>'
+    : '<span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PREMIUM</span>';
 
   const lang = langMap[c.lang] || 'Язык';
 
   const lvl = c.level
-    ? <div class="text-xs text-[var(--ink-2)] mt-1">${c.level}</div>
+    ? `<div class="text-xs text-[var(--ink-2)] mt-1">${c.level}</div>`
     : '';
 
-  const href = courses/${c.slug}/;
+  const href = `courses/${c.slug}/`;
 
   // подпись на кнопке: для PRO — "Купить", для бесплатных — "Начать"
   const btnLabel = c.type === 'pro' ? 'Купить →' : 'Начать →';
@@ -286,17 +285,17 @@ function courseCard(c) {
     <div class="mt-3 relative">${imgHTML}</div>
     <div class="mt-4">
       ${isSoon
-        ? <span class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-black/10 bg-white text-sm opacity-70 select-none">Скоро</span>
-        : <a href="${href}" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] text-sm">${btnLabel}</a>
+        ? '<span class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-black/10 bg-white text-sm opacity-70 select-none">Скоро</span>'
+        : `<a href="${href}" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] text-sm">${btnLabel}</a>`
       }
     </div>`;
 
   if (isSoon) {
-    return <div class="relative p-5 rounded-2xl bg-white border border-black/10 shadow-soft card">${inner}<div class="soon-overlay rounded-2xl">Скоро</div></div>;
+    return `<div class="relative p-5 rounded-2xl bg-white border border-black/10 shadow-soft card">${inner}<div class="soon-overlay rounded-2xl">Скоро</div></div>`;
   } else {
-    const cls    = p-5 rounded-2xl bg-white border border-black/10 shadow-soft card ${isSeasonal ? 'seasonal' : ''};
-    const ribbon = isSeasonal ? <div class="ribbon">Старт ${c.seasonalStart}</div> : '';
-    return <div class="${cls}">${ribbon}${inner}</div>;
+    const cls    = `p-5 rounded-2xl bg-white border border-black/10 shadow-soft card ${isSeasonal ? 'seasonal' : ''}`;
+    const ribbon = isSeasonal ? `<div class="ribbon">Старт ${c.seasonalStart}</div>` : '';
+    return `<div class="${cls}">${ribbon}${inner}</div>`;
   }
 }
 function render(){
