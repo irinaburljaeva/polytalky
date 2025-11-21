@@ -90,13 +90,13 @@
   <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
     <a href="/" class="flex items-center gap-2">
       <div class="h-9 w-9 rounded-2xl overflow-hidden shadow">
-        <img src="/assets/logo.png" class="object-cover h-full w-full">
+        <img src="/assets/logo.png" class="object-cover h-full w-full" alt="PolyTalky">
       </div>
       <span class="font-semibold text-slate-900 text-lg">PolyTalky</span>
     </a>
 
     <nav class="hidden sm:flex items-center gap-6 text-sm">
-      <a href="/courses/" class="hover:text-slate-900">Курсы</a>
+      <span class="font-semibold text-slate-900">Курсы</span>
       <a href="/shop/" class="hover:text-slate-900">Магазин</a>
       <a href="/student/" class="hover:text-slate-900">Личный кабинет</a>
     </nav>
@@ -132,7 +132,7 @@
           </div>
 
           <p class="text-sm sm:text-base text-slate-700">
-            Новогодний полиглотический курс с традициями, фразами, ритуалами и культурой разных стран.  
+            Новогодний полиглотический курс с традициями, фразами, ритуалами и культурой разных стран.
             Атмосферный, праздничный и полезный.
           </p>
 
@@ -174,37 +174,39 @@
     </section>
 
 
-    <!-- Вступительное изображение -->
-    <section class="mt-4">
-      <div class="soft-card p-3 flex justify-center">
-        <img src="/assets/mchny/mchny-intro.jpg"
-             alt="Polyglot Pack MCHNY"
-             class="rounded-xl shadow max-w-md w-full object-cover" />
-      </div>
-    </section>
-
-
     <!-- Описание курса + Покупка -->
     <section class="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start">
 
-      <!-- Описание -->
+      <!-- Описание с встроенным изображением -->
       <div class="space-y-4">
-        <div class="soft-card p-5 space-y-3">
-          <h2 class="text-lg font-semibold text-slate-900">
-            Что вас ждёт в Polyglot Pack: MCHNY
-          </h2>
+        <div class="soft-card p-5">
+          <div class="flex flex-col md:flex-row gap-4 md:items-start">
+            <div class="md:w-1/3 flex justify-center md:justify-start">
+              <img
+                src="/assets/mchny/mchny-intro.jpg"
+                alt="Polyglot Pack MCHNY"
+                class="rounded-xl shadow max-h-64 w-auto object-cover"
+              />
+            </div>
+            <div class="space-y-3 md:w-2/3">
+              <h2 class="text-lg font-semibold text-slate-900">
+                Что вас ждёт в Polyglot Pack: MCHNY
+              </h2>
 
-          <p class="text-sm text-slate-700">
-            Каждый модуль — это маленькое новогоднее путешествие по миру.
-          </p>
+              <p class="text-sm text-slate-700">
+              Этот курс — как адвент-календарь для полиглота. Каждый модуль — это маленькое путешествие в новую страну:
+              вы узнаете, как там встречают Новый год, какие фразы говорят, что кладут под ёлку и какие символы приносят удачу
+              </p>
 
-          <ul class="text-sm text-slate-700 list-disc pl-4 space-y-2">
-            <li>🎄 Традиции празднования Нового года в разных странах</li>
-            <li>🌍 Мини-уроки слов на 6–8 языках</li>
-            <li>🕯 Атмосферные ритуалы и идеи, которые можно забрать в свою семью</li>
-            <li>📜 Лёгкие новогодние задания без зубрёжки</li>
-            <li>🎧 Видеофрагменты и аудио с живой речью</li>
-          </ul>
+              <ul class="text-sm text-slate-700 list-disc pl-4 space-y-2">
+                <li>🎄 Традиции празднования Нового года в разных странах</li>
+                <li>🌍 Мини-уроки и 6–8 языках</li>
+                <li>🕯 Атмосферные ритуалы и идеи, которые можно забрать в свою семью</li>
+                <li>📜 Лёгкие новогодние задания без зубрёжки</li>
+                <li>🎧 Видеофрагменты и аудио с живой речью</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 
