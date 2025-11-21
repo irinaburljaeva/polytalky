@@ -1701,7 +1701,7 @@ function highlightSelectedBadge(badgeId) {
   // --- Stripe: есть автосписание ---
   if (hasStripeSub) {
     if (daysLeft != null && validUntilText) {
-      text = Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).;
+      text = 'Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).';
     } else {
       text = 'Подписка PRO активна. Автопродление включено.';
     }
@@ -1712,7 +1712,7 @@ function highlightSelectedBadge(badgeId) {
   // --- YooKassa / ручная оплата: нет автопродления ---
   else {
     if (daysLeft != null && validUntilText) {
-      text = Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.;
+      text = 'Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.';
     } else {
       text = 'Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.';
     }
@@ -1750,7 +1750,7 @@ if (proChip) {
 
     // Если YooKassa / ручная оплата — просто показываем информацию
     const msg = validText
-      ? Подписка PRO активна до ${validText}. Автосписания нет — по окончании срока её нужно будет продлить вручную.
+      ? `Подписка PRO активна до ${validText}. Автосписания нет — по окончании срока её нужно будет продлить вручную.`
       : 'Подписка PRO активна. Автосписания нет — по окончании срока её нужно будет продлить вручную.';
 
     alert(msg);
