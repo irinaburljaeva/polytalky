@@ -1151,12 +1151,37 @@ if (proCancelModalConfirm) {
       /* КОИНЫ: обновление UI по данным пользователя */
       function updateCoinsUI(userData) {
         if (!coinsCard || !coinsBalanceEl || !coinsTextEl || !coinsClaimBtn) return;
+const balance = typeof userData.coinsBalance === 'number' ? userData.coinsBalance : 0;
+  let streak    = typeof userData.coinStreak   === 'number' ? userData.coinStreak   : 0;
+  const last    = userData.lastCoinDate || null;
+  const today   = todayStr();
 
-        const balance = typeof userData.coinsBalance === 'number' ? userData.coinsBalance : 0;
-        const streak  = typeof userData.coinStreak   === 'number' ? userData.coinStreak   : 0;
-        const last    = userData.lastCoinDate || null;
-        const today   = todayStr();
-        const already = (last === today);
+  // Проверяем пропуск дня:
+  // - если последний бонус был СЕГОДНЯ → already = true
+  // - если последний бонус был ВЧЕРА → стрик сохраняем
+  // - если раньше, чем вчера → стрик обнуляем
+  let already = false;
+
+  if (last) {
+    if (last === today) {
+      already = true;
+    } else {
+      try {
+        const lastDate  = new Date(last  + 'T00:00:00');
+        const todayDate = new Date(today + 'T00:00:00');
+        const diffMs    = todayDate - lastDate;
+        const diffDays  = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        // Пропущен один или больше дней (т.е. последний вход не вчера и не сегодня)
+        if (diffDays > 1) {
+          streak = 0;
+        }
+      } catch (e) {
+        console.error('Ошибка разбора lastCoinDate', last, e);
+        streak = 0; // на всякий случай
+      }
+    }
+  }
 
         coinsState.balance = balance;
         coinsState.streak  = streak;
