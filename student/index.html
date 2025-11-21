@@ -299,73 +299,8 @@
                   После входа мы покажем все ваши активированные курсы и достижения.
                 </p>
               </div>
-              <form id="auth-form" class="space-y-3">
-                <div>
-                  <label for="auth-email" class="block text-xs font-medium text-slate-600 mb-1">
-                    Email
-                  </label>
-                  <input
-                    id="auth-email"
-                    type="email"
-                    autocomplete="email"
-                    required
-                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                    placeholder="you@example.com"
-                  />
-                </div>
-                <div>
-                  <label for="auth-pass" class="block text-xs font-medium text-slate-600 mb-1">
-                    Пароль
-                  </label>
-                  <input
-                    id="auth-pass"
-                    type="password"
-                    autocomplete="current-password"
-                    required
-                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                    placeholder="Минимум 6 символов"
-                  />
-                </div>
-
-                <!-- honeypot -->
-                <input id="auth-website" type="text" class="hp-field" autocomplete="off" />
-
-                <div id="auth-extra" class="space-y-3 hidden">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label for="auth-first" class="block text-xs font-medium text-slate-600 mb-1">
-                        Имя
-                      </label>
-                      <input
-                        id="auth-first"
-                        type="text"
-                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                        placeholder="Например, Анна"
-                      />
-                    </div>
-                    <div>
-                      <label for="auth-last" class="block text-xs font-medium text-slate-600 mb-1">
-                        Фамилия
-                      </label>
-                      <input
-                        id="auth-last"
-                        type="text"
-                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                        placeholder="Фамилия (или ник)"
-                      />
-                    </div>
-                  </div>
-                  <p class="text-[1ото1px] text-slate-500">
-                    Заполните, чтобы мы знали, как к вам обращаться
-                  </p>
-                </div>
-<div class="space-y-2 text-[11px] text-slate-500">
-                  <label class="flex items-start gap-2">
-                    <input
-                      id="auth-accept-terms"
-                      type="checkbox"
+            type="checkbox"
                       class="mt-0.5 h-3 w-3 flex-shrink-0"
-                      required
                     >
                     <span>
                       Создавая аккаунт, вы подтверждаете, что ознакомились и
@@ -377,23 +312,15 @@
                       <a href="/legal/consent.html" class="underline">Согласием на обработку персональных данных</a>.
                     </span>
                   </label>
+                  <p>
+                    Чтобы зарегистрироваться, подтвердите галочкой, что вы согласны с условиями и политиками.
+                  </p>
                 </div>
 
                 <p id="auth-error" class="text-xs text-red-500 min-h-[1rem]"></p>
-                <p id="auth-error" class="text-xs text-red-500 min-h-[1rem]"></p>
 
-                <div class="flex justify-end">
-                  <button
-                    type="button"
-                    id="auth-forgot"
-                    class="text-xs text-slate-500 hover:text-amber-600 underline underline-offset-2"
-                  >
-                    Забыли пароль?
-                  </button>
-                </div>
-             
                 <div class="flex flex-col sm:flex-row gap-2 pt-1">
-                  <button id="btn-login" type="submit" class="btn btn-main flex-1 justify-center text-sm">
+                  <button id="btn-login" type="button" class="btn btn-main flex-1 justify-center text-sm">
                     Войти
                   </button>
                   <button id="auth-register" type="button" class="btn btn-ghost flex-1 justify-center text-sm">
@@ -401,7 +328,6 @@
                   </button>
                 </div>
               </form>
-            </div>
 
             <div id="auth-when-logged-in" class="hidden space-y-4">
               <div class="soft-card p-4 space-y-3">
@@ -843,6 +769,11 @@
       const authUserEmail   = document.getElementById('auth-user-email');
       const authExtra       = document.getElementById('auth-extra');
       const authAcceptTerms = document.getElementById('auth-accept-terms');
+      const authForgotRow   = document.getElementById('auth-forgot-row');
+
+      const authForgot      = document.getElementById('auth-forgot');
+const authNamesBlock  = document.getElementById('auth-names-block');
+const authTermsBlock  = document.getElementById('auth-terms-block');
 
       const profileAvatarWrapper = document.getElementById('profile-avatar-wrapper');
       const profileAvatarImg= document.getElementById('profile-avatar-img');
@@ -1371,50 +1302,49 @@ const balance = typeof userData.coinsBalance === 'number' ? userData.coinsBalanc
         authError.textContent = msg;
       }
 
-      let registerMode = false;
-// СБРОС ПАРОЛЯ
-      if (authForgot) {
-        authForgot.addEventListener('click', async () => {
-          authError.textContent = '';
+let registerMode = false;
 
-          const email = (authEmailEl.value || '').trim();
+      function setAuthMode(isRegister) {
+        registerMode = isRegister;
 
-          if (!email) {
-            authError.textContent =
-              'Введите email в поле выше и нажмите «Забыли пароль?» ещё раз.';
-            return;
+        if (isRegister) {
+          // режим РЕГИСТРАЦИИ
+          authNamesBlock?.classList.remove('hidden');
+          authTermsBlock?.classList.remove('hidden');
+          authForgotRow?.classList.add('hidden');
+
+          if (authPassEl) authPassEl.placeholder = 'Минимум 6 символов';
+          if (authAcceptTerms) authAcceptTerms.required = true;
+
+          // подсветим кнопку "Регистрация"
+          btnLogin?.classList.remove('btn-main');
+          btnLogin?.classList.add('btn-ghost');
+          authRegister?.classList.remove('btn-ghost');
+          authRegister?.classList.add('btn-main');
+        } else {
+          // режим ВХОДА
+          authNamesBlock?.classList.add('hidden');
+          authTermsBlock?.classList.add('hidden');
+          authForgotRow?.classList.remove('hidden');
+
+          if (authPassEl) authPassEl.placeholder = 'Пароль';
+          if (authAcceptTerms) {
+            authAcceptTerms.required = false;
+            authAcceptTerms.checked = false;
           }
 
-          try {
-            await auth.sendPasswordResetEmail(email);
-            authError.textContent =
-              'Мы отправили письмо для сброса пароля. Проверьте почту и папку «Спам».';
-            // сделаем сообщение зелёным
-            authError.classList.remove('text-red-500');
-            authError.classList.add('text-emerald-600');
-          } catch (err) {
-            console.error(err);
-
-            let msg = 'Не удалось отправить письмо для сброса пароля. Попробуйте ещё раз.';
-            if (err.code === 'auth/user-not-found') {
-              msg = 'Пользователь с таким email не найден.';
-            } else if (err.code === 'auth/invalid-email') {
-              msg = 'Некорректный email. Проверьте адрес.';
-            }
-
-            authError.textContent = msg;
-            authError.classList.remove('text-emerald-600');
-            authError.classList.add('text-red-500');
-          }
-        });
+          // подсветим кнопку "Войти"
+          btnLogin?.classList.add('btn-main');
+          btnLogin?.classList.remove('btn-ghost');
+          authRegister?.classList.add('btn-ghost');
+          authRegister?.classList.remove('btn-main');
+        }
       }
 
-     
-      /* вход */
-      authForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        authError.textContent = '';
+      // по умолчанию — режим ВХОДА
+      setAuthMode(false);
 
+      async function handleLogin() {
         if (honeypotEl.value && honeypotEl.value.trim() !== '') {
           authError.textContent = 'Произошла ошибка. Обновите страницу и попробуйте ещё раз.';
           return;
@@ -1428,25 +1358,16 @@ const balance = typeof userData.coinsBalance === 'number' ? userData.coinsBalanc
           console.error(err);
           showAuthError(err.code);
         }
-      });
+      }
 
-      /* регистрация */
-      authRegister.addEventListener('click', async () => {
-        authError.textContent = '';
-
+      async function handleRegister() {
         if (honeypotEl.value && honeypotEl.value.trim() !== '') {
           authError.textContent = 'Произошла ошибка. Обновите страницу и попробуйте ещё раз.';
           return;
         }
-if (!authAcceptTerms.checked) {
-          authError.textContent =
-            'Чтобы зарегистрироваться, поставьте галочку о согласии с условиями и политикой конфиденциальности.';
-          return;
-        }
-        if (!registerMode) {
-          registerMode = true;
-          authExtra.classList.remove('hidden');
-          authError.textContent = 'Заполните имя и фамилию, затем снова нажмите «Регистрация».';
+
+        if (!authAcceptTerms || !authAcceptTerms.checked) {
+          authError.textContent = 'Чтобы зарегистрироваться, подтвердите согласие с условиями и политиками.';
           return;
         }
 
@@ -1456,7 +1377,7 @@ if (!authAcceptTerms.checked) {
           const first = authFirstEl.value.trim();
           const last  = authLastEl.value.trim();
 
-          if (!email || !pass){
+          if (!email || !pass) {
             authError.textContent = 'Введите email и пароль.';
             return;
           }
@@ -1475,7 +1396,84 @@ if (!authAcceptTerms.checked) {
           console.error(err);
           showAuthError(err.code);
         }
+      }
+
+      // submit по Enter в форме
+      authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        authError.textContent = '';
+
+        if (registerMode) {
+          await handleRegister();
+        } else {
+          await handleLogin();
+        }
       });
+
+      // Кнопка "Войти"
+      if (btnLogin) {
+        btnLogin.addEventListener('click', async () => {
+          authError.textContent = '';
+
+          // если сейчас режим регистрации — сначала просто переключаемся в режим входа
+          if (registerMode) {
+            setAuthMode(false);
+            return;
+          }
+
+          await handleLogin();
+        });
+      }
+
+      // Кнопка "Регистрация"
+      if (authRegister) {
+        authRegister.addEventListener('click', async () => {
+          authError.textContent = '';
+
+// если сейчас режим входа — сначала показываем поля регистрации
+          if (!registerMode) {
+            setAuthMode(true);
+            return;
+          }
+
+          await handleRegister();
+        });
+      }
+
+      // "Забыли пароль?"
+      if (authForgot) {
+        authForgot.addEventListener('click', async () => {
+          authError.textContent = '';
+
+          const email = (authEmailEl.value || '').trim();
+          if (!email) {
+            authError.textContent =
+              'Введите email в поле выше и нажмите «Забыли пароль?» ещё раз.';
+            return;
+          }
+
+          try {
+            await auth.sendPasswordResetEmail(email);
+            authError.textContent =
+              'Мы отправили письмо для сброса пароля. Проверьте почту и папку «Спам».';
+            authError.classList.remove('text-red-500');
+            authError.classList.add('text-emerald-600');
+          } catch (err) {
+            console.error(err);
+
+            let msg = 'Не удалось отправить письмо для сброса пароля. Попробуйте ещё раз.';
+            if (err.code === 'auth/user-not-found') {
+              msg = 'Пользователь с таким email не найден.';
+            } else if (err.code === 'auth/invalid-email') {
+              msg = 'Некорректный email. Проверьте адрес.';
+            }
+
+            authError.textContent = msg;
+            authError.classList.remove('text-emerald-600');
+            authError.classList.add('text-red-500');
+          }
+        });
+      }
 
       /* выход */
       authLogout?.addEventListener('click', async () => {
