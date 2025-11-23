@@ -710,15 +710,25 @@
         <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
         PolyTalky
       </a>
+<div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+  <div id="user-status"></div>
 
-      <div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
-        <div id="user-status"></div>
-        <button id="logout-btn"
-                class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
-          Выйти
-        </button>
-        <a href="/courses/english-intro/" class="back-to-course-btn"> Назад к курсу</a>
-      </div>
+  <!-- Иконка писем -->
+  <a href="/student/feedback.html"
+     id="feedback-link"
+     class="relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white">
+    📩
+    <span id="feedback-dot"
+          class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+  </a>
+
+  <button id="logout-btn"
+          class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
+    Выйти
+  </button>
+
+  <a href="/courses/english-intro/" class="back-to-course-btn"> Назад к курсу</a>
+</div>
     </div>
   </header>
 
@@ -1007,6 +1017,10 @@
 
             <p class="soft-note mb-1">
               Нажмите «Записать», произнесите несколько слов, затем остановите запись.
+            </p>
+            <p class="soft-note mt-2">
+  На тарифе <b>PRO</b> ваша запись попадёт куратору — он послушает и подскажет,
+  над какими звуками стоит поработать.
             </p>
           </div>
         </div>
