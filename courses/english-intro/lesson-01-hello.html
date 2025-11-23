@@ -1374,6 +1374,28 @@
     isProUser = false;
   }
 }
+      async function loadProAnswers() {
+  if (!currentUser || !isProUser) return;
+
+  const userKey = getUserKey();
+  const ref = doc(db, "lessonSubmissions", LESSON_ID, "answers", userKey);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) return;
+  const data = snap.data();
+
+  // загрузка hello
+  if (data.helloAnswer) {
+    helloInput.value = data.helloAnswer;
+  }
+
+  // загрузка аудио
+  if (data.audioAnswerBase64) {
+    const url = "data:audio/webm;base64," + data.audioAnswerBase64;
+    audioPlay.src = url;
+    audioPlay.style.display = "block";
+  }
+}
 const feedbackLink = document.getElementById("feedback-link");
 const loginBtn     = document.getElementById("login-btn");
 const userStatus   = document.getElementById("user-status");
@@ -1385,6 +1407,7 @@ onAuthStateChanged(auth, async (user) => {
     loginBtn.classList.add("hidden");
 
     await loadUserProfile(user);
+    await loadProAnswers();
 
     // === показываем/скрываем кнопку проверенных заданий ===
     if (isProUser) {
@@ -1555,6 +1578,15 @@ onAuthStateChanged(auth, async (user) => {
       const helloInput = document.getElementById("task-hello-input");
       const helloBtn   = document.getElementById("task-hello-submit");
 
+      // ====== LOCAL STORAGE для НЕ-PRO ======
+function saveLocalAnswer(key, value) {
+  localStorage.setItem(`lesson1_${key}`, value);
+}
+
+function loadLocalAnswer(key) {
+  return localStorage.getItem(`lesson1_${key}`) || "";
+}
+      
       helloBtn.addEventListener("click", async () => {
         const val = helloInput.value.trim();
         if (!val) {
@@ -1569,6 +1601,8 @@ onAuthStateChanged(auth, async (user) => {
         // если PRO — сохраняем ответ для куратора
         if (isProUser && currentUser) {
           saveProSubmission({ helloAnswer: val }).catch(console.error);
+        } else {
+          saveLocalAnswer("hello", val);
         }
 
         setTimeout(() => {
@@ -1659,7 +1693,7 @@ if (recordBtn && stopBtn && audioPlay) {
         recordingInterval = null;
       }
 
-      mediaRecorder.addEventListener("stop", () => {
+      mediaRecorder.onstop = () => {
         // Если по какой-то причине данных нет — не переводим на следующий шаг
         if (!audioChunks.length) {
           if (recordingWrapper) recordingWrapper.classList.add("hidden");
@@ -1834,15 +1868,11 @@ if (recordBtn && stopBtn && audioPlay) {
       // ====== Озвучка слов (Только английский голос) ======
 let englishVoices = [];
 
-// Подгружаем список голосов
-function loadVoices() {
-  const voices = window.speechSynthesis.getVoices();
-  // Берём только английские
-  englishVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
-}
-
-// Некоторые браузеры загружают голоса асинхронно
-window.speechSynthesis.onvoiceschanged = loadVoices;
+// загружаем голоса корректно
+window.speechSynthesis.onvoiceschanged = () => {
+  loadVoices();
+};
+setTimeout(loadVoices, 300);
 loadVoices();
 
 function speakWord(word) {
@@ -1984,7 +2014,11 @@ function speakWord(word) {
           vocabSaveBtn.textContent = "Добавить выбранные →";
         }, 700);
       });
-
+// загрузка локального ответа для НЕ-PRO
+if (!isProUser) {
+  const savedHello = loadLocalAnswer("hello");
+  if (savedHello) helloInput.value = savedHello;
+}
       // Старт
       showStep(1);
                   </script>
