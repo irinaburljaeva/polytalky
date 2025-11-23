@@ -842,7 +842,6 @@
 </div>
    
 
-    </nav>
 
     <!-- STEP PANELS -->
 
@@ -1578,60 +1577,6 @@ onAuthStateChanged(auth, async (user) => {
         }, 1100);
       });
 
-   // ====== Аудиозапись ======
-      let mediaRecorder;
-      let audioChunks = [];
-
-      const recordBtn = document.getElementById("record-btn");
-      const stopBtn   = document.getElementById("stop-btn");
-      const audioPlay = document.getElementById("audio-playback");
-      const recordingWrapper = document.getElementById("recording-wrapper");
-      const recordingBar     = document.getElementById("recording-bar");
-      const recordingStatus  = document.getElementById("recording-status");
-
-      let recordingInterval = null;
-      let recordingProgress = 0;
-
-      if (recordBtn && stopBtn && audioPlay) {
-        recordBtn.addEventListener("click", async () => {
-          try {
-            audioChunks = [];
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-
-            mediaRecorder.start();
-            recordBtn.disabled = true;
-            stopBtn.disabled   = false;
-            audioFeedback?.classList.add("hidden");
-
-            // показать индикатор записи
-            if (recordingWrapper && recordingBar && recordingStatus) {
-              recordingWrapper.classList.remove("hidden");
-              recordingStatus.classList.remove("hidden");
-              recordingProgress = 0;
-              recordingBar.style.width = "0%";
-
-              if (recordingInterval) {
-                clearInterval(recordingInterval);
-              }
-              recordingInterval = setInterval(() => {
-                recordingProgress += 3;
-                if (recordingProgress > 100) recordingProgress = 100;
-                recordingBar.style.width = recordingProgress + "%";
-              }, 200);
-            }
-
-            mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
-          } catch (err) {
-            alert("Не удалось получить доступ к микрофону :(");
-            console.error(err);
-          }
-        });
-
-        stopBtn.addEventListener("click", () => {
-          if (!mediaRecorder) return;
-          mediaRecorder.stop();
-          recordBtn.disabled = false;
 // ====== Аудиозапись ======
 let mediaRecorder;
 let audioChunks = [];
