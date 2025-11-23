@@ -1871,15 +1871,29 @@ if (recordBtn && stopBtn && audioPlay) {
           qaList.appendChild(item);
         });
       }
+let englishVoices = [];
 
-      let englishVoices = [];
-      window.speechSynthesis.onvoiceschanged = () => {
-  englishVoices = window.speechSynthesis
-    .getVoices()
-    .filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
-};
+if ("speechSynthesis" in window && window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = () => {
+    englishVoices = window.speechSynthesis
+      .getVoices()
+      .filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+  };
+}
+
 function speakWord(word) {
-  if (!("speechSynthesis" in window)) return;
+  if (!("speechSynthesis" in window) || !window.speechSynthesis) return;
+
+  const utter = new SpeechSynthesisUtterance(word);
+  utter.lang = "en-US";
+
+  if (englishVoices.length > 0) {
+    utter.voice = englishVoices[0];
+  }
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
   
 // Включаем озвучку по клику на слова из таблицы
 document.querySelectorAll(".word-tip").forEach(tip => {
@@ -1890,19 +1904,7 @@ document.querySelectorAll(".word-tip").forEach(tip => {
     }
   });
 });
-  const utter = new SpeechSynthesisUtterance(word);
 
-  // ЖЁСТКО фиксируем английский язык
-  utter.lang = "en-US";
-
-  // Если есть английский голос — используем его
-  if (englishVoices.length > 0) {
-    utter.voice = englishVoices[0];
-  }
-
-  window.speechSynthesis.cancel(); // на всякий случай сброс предыдущего
-  window.speechSynthesis.speak(utter);
-}
 
       // ====== Словарик: вытянуть слова из таблицы ======
       function extractVowelEntries() {
