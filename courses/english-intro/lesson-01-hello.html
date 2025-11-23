@@ -1194,7 +1194,6 @@
       </div>
     </div>
 
-    <!-- ОСНОВНОЙ СКРИПТ -->
     <script type="module">
       import {
         getAuth,
@@ -1212,13 +1211,62 @@
         orderBy,
         doc,
         setDoc,
-        arrayUnion
+        arrayUnion,
+        getDoc
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
       const auth = window.firebaseAuth;
       const db   = window.firebaseDb;
 
-      /* UI */
+      // ====== ХЕЛПЕРЫ ПО ПОЛЬЗОВАТЕЛЮ ======
+      let currentUser = null;
+      let isProUser   = false;
+
+      const LESSON_ID          = "english-intro-lesson-1";
+      const LESSON_SLUG        = "lesson-01-hello";
+      const COURSE_ID          = "english-intro";
+      const FIRST_BADGE_ID     = "english-intro-lesson1"; // совпадает с файлом .png
+      const LESSON_QA_DOC_ID   = LESSON_ID;               // для /lessons/{id}/questions
+      const SUBMISSIONS_ROOT   = "lessonSubmissions";
+
+      function getUserKey() {
+        if (!currentUser) return null;
+        // используем email как основной ключ
+        if (currentUser.email) return currentUser.email.toLowerCase();
+        return currentUser.uid;
+      }
+
+      async function loadUserProfile(user) {
+        const key = (user.email || "").toLowerCase();
+        if (!key) {
+          isProUser = false;
+          return;
+        }
+
+        try {
+          const userRef = doc(db, "users", key);
+          const snap    = await getDoc(userRef);
+
+          if (!snap.exists()) {
+            isProUser = false;
+            return;
+          }
+
+          const data = snap.data();
+          // поддерживаем несколько возможных полей, чтобы не ломаться
+          isProUser = Boolean(
+            data.proActive ||
+            data.isPro ||
+            data.hasPro ||
+            (data.pro && data.pro.active)
+          );
+        } catch (e) {
+          console.error("Не удалось загрузить профиль пользователя:", e);
+          isProUser = false;
+        }
+      }
+
+      // ====== UI-элементы ======
       const stepPanels = document.querySelectorAll(".step-panel");
       const stepDots   = document.querySelectorAll(".step-dot");
 
@@ -1245,18 +1293,16 @@
       const qaSubmitBtn  = document.getElementById("qa-submit");
       const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
 
-      const LESSON_QA_ID = "english-intro-lesson-1";
-
-      let currentUser = null;
-
-      /* АВТОРИЗАЦИЯ */
+      // ====== Авторизация ======
       onAuthStateChanged(auth, (user) => {
         if (user) {
           currentUser = user;
           userStatus.textContent = `Вы вошли как: ${user.email}`;
           logoutBtn.classList.remove("hidden");
+          loadUserProfile(user).catch(console.error);
         } else {
           currentUser = null;
+          isProUser   = false;
           userStatus.textContent = "Вы не авторизованы";
           logoutBtn.classList.add("hidden");
         }
@@ -1266,110 +1312,148 @@
         signOut(auth);
       });
 
-      /* СИСТЕМА ШАГОВ */
-      let currentStep = 1;
+      // ====== Прогресс по шагам + бейдж ======
+      let currentStep  = 1;
       const totalSteps = 4;
       let badgeAwarded = false;
 
-  const FIRST_BADGE_ID = "english-intro-lesson1"; // совпадает с именем файла .png и id в коллекции badges
+      async function awardFirstHelloBadge() {
+        if (!currentUser || badgeAwarded) return;
 
-async function awardFirstHelloBadge() {
-  if (!currentUser || badgeAwarded) return;
+        const userKey = getUserKey();
+        if (!userKey) return;
 
-  const uid   = currentUser.uid;
-  const email = currentUser.email || null;
+        const badgePayload = {
+          badgeId:  FIRST_BADGE_ID,
+          title:    "Первое hello",
+          courseId: COURSE_ID,
+          lesson:   LESSON_SLUG,
+          earnedAt: serverTimestamp()
+        };
 
-  const badgePayload = {
-    badgeId:  FIRST_BADGE_ID,
-    title:    "Первое hello",
-    courseId: "english-intro",
-    lesson:   "lesson-01-hello",
-    earnedAt: serverTimestamp()
-  };
+        const tasks = [];
 
-  const tasks = [];
+        // 1) подробности бейджа
+        tasks.push(
+          setDoc(
+            doc(db, `users/${userKey}/badges/${FIRST_BADGE_ID}`),
+            badgePayload,
+            { merge: true }
+          )
+        );
 
-  // 1) Подколлекция с подробностями бейджа: /users/{uid}/badges/{FIRST_BADGE_ID}
-  tasks.push(
-    setDoc(
-      doc(db, users/${uid}/badges/${FIRST_BADGE_ID}),
-      badgePayload,
-      { merge: true }
-    )
-  );
+        // 2) список бейджей в документе пользователя
+        tasks.push(
+          setDoc(
+            doc(db, "users", userKey),
+            { badges: arrayUnion(FIRST_BADGE_ID) },
+            { merge: true }
+          )
+        );
 
-  // 2) Массив badges в документе по UID
-  tasks.push(
-    setDoc(
-      doc(db, "users", uid),
-      { badges: arrayUnion(FIRST_BADGE_ID) },
-      { merge: true }
-    )
-  );
+        await Promise.all(tasks);
+        badgeAwarded = true;
+      }
 
-  // 3) Массив badges в документе по EMAIL
-  if (email) {
-    tasks.push(
-      setDoc(
-        doc(db, "users", email),
-        { badges: arrayUnion(FIRST_BADGE_ID) },
-        { merge: true }
-      )
-    );
-  }
+      async function saveLessonProgress() {
+        if (!currentUser) return;
+        const userKey = getUserKey();
+        if (!userKey) return;
 
-  await Promise.all(tasks);
-  badgeAwarded = true;
-}
-      async function showStep(n){
+        try {
+          await setDoc(
+            doc(db, "users", userKey),
+            {
+              progress: {
+                [COURSE_ID]: {
+                  percent: 25,                // 1 урок из 4+ и т.п.
+                  lastLessonId: LESSON_SLUG
+                }
+              }
+            },
+            { merge: true }
+          );
+        } catch (e) {
+          console.error("Не удалось сохранить прогресс:", e);
+        }
+      }
+
+      function showStep(n) {
         stepPanels.forEach(p => p.classList.remove("step-panel--visible"));
         const panel = document.getElementById(`step-${n}`);
         if (panel) panel.classList.add("step-panel--visible");
 
         stepDots.forEach(dot => {
-          dot.classList.remove("step-dot--active","step-dot--done");
+          dot.classList.remove("step-dot--active", "step-dot--done");
           const step = Number(dot.dataset.step);
-          if (step < n) dot.classList.add("step-dot--done");
+          if (step < n)  dot.classList.add("step-dot--done");
           if (step === n) dot.classList.add("step-dot--active");
         });
 
-        if (n === 4){
+        if (n === 4) {
           awardFirstHelloBadge().catch(console.error);
+          saveLessonProgress().catch(console.error);
         }
-if (n === 4 && currentUser) {
-  const uid = currentUser.uid;
-  const userRef = doc(db, "users", uid);
 
-  await setDoc(userRef, {
-    progress: {
-      "english-intro": {
-        percent: 25,
-        lastLessonId: "lesson-01-hello"
-      }
-    }
-  }, { merge: true });
-}
         currentStep = n;
       }
 
       document.querySelectorAll(".next-step-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-          if (btn.id === "task-hello-submit") return;
+          if (btn.id === "task-hello-submit") return; // для него отдельная логика
           const next = Number(btn.dataset.next);
           if (next) showStep(next);
         });
       });
 
-      /* МИНИ-ЗАДАНИЕ ПРИВЕТСТВИЯ */
-      document.getElementById("task-hello-submit").addEventListener("click", () => {
-        const val = document.getElementById("task-hello-input").value.trim();
-        if (!val){
+      // ====== Сохранение заданий PRO ======
+      async function saveProSubmission(partialData) {
+        if (!currentUser || !isProUser) return;
+        const userKey = getUserKey();
+        if (!userKey) return;
+
+        const answerRef = doc(
+          db,
+          SUBMISSIONS_ROOT,
+          LESSON_ID,
+          "answers",
+          userKey
+        );
+
+        const baseData = {
+          userEmail: currentUser.email || null,
+          userUid: currentUser.uid,
+          isPro: true,
+          courseId: COURSE_ID,
+          lessonSlug: LESSON_SLUG,
+          updatedAt: serverTimestamp()
+        };
+
+        await setDoc(
+          answerRef,
+          { createdAt: serverTimestamp(), ...baseData, ...partialData },
+          { merge: true }
+        );
+      }
+
+      // ====== Мини-задание: приветствие ======
+      const helloInput = document.getElementById("task-hello-input");
+      const helloBtn   = document.getElementById("task-hello-submit");
+
+      helloBtn.addEventListener("click", async () => {
+        const val = helloInput.value.trim();
+        if (!val) {
           alert("Напишите любое английское приветствие :)");
           return;
         }
 
-        if (helloFeedback){
+        if (helloFeedback) {
           helloFeedback.classList.remove("hidden");
+        }
+
+        // если PRO — сохраняем ответ для куратора
+        if (isProUser && currentUser) {
+          saveProSubmission({ helloAnswer: val }).catch(console.error);
         }
 
         setTimeout(() => {
@@ -1378,7 +1462,7 @@ if (n === 4 && currentUser) {
         }, 1100);
       });
 
-      /* АУДИОЗАПИСЬ */
+      // ====== Аудиозапись ======
       let mediaRecorder;
       let audioChunks = [];
 
@@ -1386,20 +1470,20 @@ if (n === 4 && currentUser) {
       const stopBtn   = document.getElementById("stop-btn");
       const audioPlay = document.getElementById("audio-playback");
 
-      if (recordBtn && stopBtn && audioPlay){
+      if (recordBtn && stopBtn && audioPlay) {
         recordBtn.addEventListener("click", async () => {
-          try{
+          try {
             audioChunks = [];
-            const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
 
             mediaRecorder.start();
             recordBtn.disabled = true;
-            stopBtn.disabled = false;
+            stopBtn.disabled   = false;
             audioFeedback?.classList.add("hidden");
 
             mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
-          }catch(err){
+          } catch (err) {
             alert("Не удалось получить доступ к микрофону :(");
             console.error(err);
           }
@@ -1409,15 +1493,33 @@ if (n === 4 && currentUser) {
           if (!mediaRecorder) return;
           mediaRecorder.stop();
           recordBtn.disabled = false;
-          stopBtn.disabled = true;
+          stopBtn.disabled   = true;
 
           mediaRecorder.addEventListener("stop", () => {
             const audioBlob = new Blob(audioChunks);
-            const url = URL.createObjectURL(audioBlob);
-            audioPlay.src = url;
+            const url       = URL.createObjectURL(audioBlob);
+            audioPlay.src   = url;
             audioPlay.style.display = "block";
 
-            if (audioFeedback){
+            // Если PRO — сохраняем аудио (base64) для проверки куратором
+            if (isProUser && currentUser) {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                const res = reader.result || "";
+                const base64 = typeof res === "string"
+                  ? res.split(",")[1] || ""
+                  : "";
+
+                if (base64) {
+                  saveProSubmission({
+                    audioAnswerBase64: base64
+                  }).catch(console.error);
+                }
+              };
+              reader.readAsDataURL(audioBlob);
+            }
+
+            if (audioFeedback) {
               audioFeedback.classList.remove("hidden");
             }
 
@@ -1429,15 +1531,12 @@ if (n === 4 && currentUser) {
         });
       }
 
-      /* -----------------------------------------
-         Q&A: модалка + сохранение вопросов
-      ----------------------------------------- */
-
+      // ====== Q&A: модалка + Firestore ======
       qaOpenBtns.forEach(btn => {
         btn.addEventListener("click", () => {
           qaModal.classList.remove("hidden");
           qaModal.classList.add("flex");
-          loadQuestions();
+          loadQuestions().catch(console.error);
         });
       });
 
@@ -1445,28 +1544,28 @@ if (n === 4 && currentUser) {
         e.preventDefault();
 
         const text = qaText.value.trim();
-        if (!text){
+        if (!text) {
           alert("Напишите вопрос, пожалуйста 🙂");
           return;
         }
 
-        if (!currentUser){
+        if (!currentUser) {
           alert("Чтобы задать вопрос, нужно войти в аккаунт на странице /student/.");
           return;
         }
 
-        qaSubmitBtn.disabled = true;
+        qaSubmitBtn.disabled  = true;
         qaSubmitBtn.textContent = "Отправляем...";
 
         try {
-          const colRef = collection(db, "lessons", LESSON_QA_ID, "questions");
+          const colRef = collection(db, "lessons", LESSON_QA_DOC_ID, "questions");
 
           await addDoc(colRef, {
             text,
-            userId: currentUser.uid,
+            userId:    currentUser.email || currentUser.uid,
             userEmail: currentUser.email || null,
             createdAt: serverTimestamp(),
-            answer: null
+            answer:    null
           });
 
           qaText.value = "";
@@ -1475,7 +1574,7 @@ if (n === 4 && currentUser) {
           console.error(err);
           alert("Не получилось отправить вопрос. Попробуйте ещё раз позже.");
         } finally {
-          qaSubmitBtn.disabled = false;
+          qaSubmitBtn.disabled   = false;
           qaSubmitBtn.textContent = "Отправить вопрос →";
         }
       });
@@ -1492,15 +1591,15 @@ if (n === 4 && currentUser) {
         }
       });
 
-      async function loadQuestions(){
-        const colRef = collection(db, "lessons", LESSON_QA_ID, "questions");
+      async function loadQuestions() {
+        const colRef = collection(db, "lessons", LESSON_QA_DOC_ID, "questions");
         const qRef   = query(colRef, orderBy("createdAt", "desc"));
 
         const snapshot = await getDocs(qRef);
 
         qaList.innerHTML = "";
 
-        if (snapshot.empty){
+        if (snapshot.empty) {
           qaList.innerHTML = `
             <p class="text-xs text-gray-500">
               Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
@@ -1538,8 +1637,8 @@ if (n === 4 && currentUser) {
         });
       }
 
-      /* ОЗВУЧКА СЛОВ (speechSynthesis) */
-      if ("speechSynthesis" in window){
+      // ====== Озвучка слов ======
+      if ("speechSynthesis" in window) {
         document.querySelectorAll(".word-tip").forEach(el => {
           el.addEventListener("click", () => {
             const text = el.textContent.trim();
@@ -1552,15 +1651,15 @@ if (n === 4 && currentUser) {
         });
       }
 
-      /* СЛОВАРЬ — слово + перевод из таблицы */
-      function extractVowelEntries(){
+      // ====== Словарик: вытянуть слова из таблицы ======
+      function extractVowelEntries() {
         const tips = document.querySelectorAll("#step-3 .word-tip");
-        const map = new Map();
+        const map  = new Map();
 
         tips.forEach(tip => {
           const w  = tip.textContent.trim().toLowerCase();
           const ru = (tip.dataset.ru || "").trim();
-          if (/^[a-z]+$/.test(w) && !map.has(w)){
+          if (/^[a-z]+$/.test(w) && !map.has(w)) {
             map.set(w, ru);
           }
         });
@@ -1571,7 +1670,7 @@ if (n === 4 && currentUser) {
         }));
       }
 
-      function renderVowelWords(){
+      function renderVowelWords() {
         const entries = extractVowelEntries();
         vocabListVowels.innerHTML = "";
 
@@ -1597,14 +1696,14 @@ if (n === 4 && currentUser) {
         });
       }
 
-      /* ОКНО СЛОВАРИКА */
+      // ====== Окно словаря ======
       openVocabBtn.addEventListener("click", () => {
         vocabModal.classList.remove("hidden");
         vocabModal.classList.add("flex");
 
         renderVowelWords();
 
-        if (!currentUser){
+        if (!currentUser) {
           vocabAuthWarn.classList.remove("hidden");
           vocabSaveBtn.disabled = true;
         } else {
@@ -1624,25 +1723,27 @@ if (n === 4 && currentUser) {
         boxes.forEach(b => b.checked = anyUnchecked);
       });
 
-      async function saveWordsToFirestore(entries){
+      async function saveWordsToFirestore(entries) {
         if (!currentUser) return;
-        const uid = currentUser.uid;
-        const colRef = collection(db, `users/${uid}/vocabulary`);
+        const userKey = getUserKey();
+        if (!userKey) return;
 
-        for (const { word, translation } of entries){
+        const colRef = collection(db, `users/${userKey}/vocabulary`);
+
+        for (const { word, translation } of entries) {
           await addDoc(colRef, {
             word,
             translation: translation || "",
-            lesson: "lesson-01-hello",
-            courseId: "english-intro",
-            category: "Гласные буквосочетания",
-            addedAt: serverTimestamp()
+            lesson:      LESSON_SLUG,
+            courseId:    COURSE_ID,
+            category:    "Гласные буквосочетания",
+            addedAt:     serverTimestamp()
           });
         }
       }
 
       vocabSaveBtn.addEventListener("click", async () => {
-        if (!currentUser){
+        if (!currentUser) {
           alert("Войдите, чтобы сохранить слова.");
           return;
         }
@@ -1654,12 +1755,12 @@ if (n === 4 && currentUser) {
             translation: cb.dataset.ru || ""
           }));
 
-        if (checked.length === 0){
+        if (checked.length === 0) {
           alert("Выберите хотя бы одно слово.");
           return;
         }
 
-        vocabSaveBtn.disabled = true;
+        vocabSaveBtn.disabled  = true;
         vocabSaveBtn.textContent = "Сохраняем...";
 
         await saveWordsToFirestore(checked);
@@ -1668,77 +1769,14 @@ if (n === 4 && currentUser) {
         setTimeout(() => {
           vocabModal.classList.add("hidden");
           vocabModal.classList.remove("flex");
-          vocabSaveBtn.disabled = false;
+          vocabSaveBtn.disabled   = false;
           vocabSaveBtn.textContent = "Добавить выбранные →";
         }, 700);
       });
 
-      /* старт */
+      // Старт
       showStep(1);
-    </script>
-
-    <!-- ПОЗДРАВИТЕЛЬНАЯ МОДАЛКА -->
-    <div id="congrats-modal"
-         class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-
-      <div class="bg-white max-w-sm w-full rounded-2xl shadow-xl relative overflow-hidden">
-
-        <div class="absolute -top-10 -left-10 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
-        <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
-
-        <div class="relative p-6">
-
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            🎉 Ура!
-          </h2>
-
-          <p class="text-[0.9rem] text-gray-700 leading-relaxed">
-            Вы полностью прошли первый урок 🤩  
-            Это отличный старт — с таким настроем вы очень быстро заговорите уверенно!
-          </p>
-
-          <p class="text-[0.8rem] text-gray-500 mt-2">
-            Каждый шаг — это вклад в ваше будущее путешествие на английском ✈️
-          </p>
-
-          <div class="mt-5 flex justify-end gap-3">
-            <button id="congrats-add-words" class="btn-ghost">
-              Добавить слова в словарик
-            </button>
-            <a href="/courses/english-intro/lesson-02.html" id="congrats-next" class="btn-main">
-              Следующий урок →
-            </a>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <script type="module">
-      const congratsModal   = document.getElementById("congrats-modal");
-      const congratsAdd     = document.getElementById("congrats-add-words");
-      const step4           = document.getElementById("step-4");
-      const openVocabButton = document.getElementById("open-vocab-btn");
-
-      if (step4){
-        const observer = new MutationObserver(() => {
-          if (step4.classList.contains("step-panel--visible")){
-            setTimeout(() => {
-              congratsModal.classList.remove("hidden");
-              congratsModal.classList.add("flex");
-            }, 400);
-          }
-        });
-
-        observer.observe(step4, { attributes:true, attributeFilter:["class"] });
-      }
-
-      congratsAdd.addEventListener("click", () => {
-        congratsModal.classList.add("hidden");
-        congratsModal.classList.remove("flex");
-        openVocabButton?.click();
-      });
-    </script>
+                  </script>
 
   </main>
 
