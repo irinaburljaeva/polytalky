@@ -1423,7 +1423,12 @@ onAuthStateChanged(auth, async (user) => {
     loginBtn.classList.remove("hidden");
     feedbackLink.classList.add("hidden");
   }
+  if (!isProUser) {
+    const savedHello = loadLocalAnswer("hello");
+    if (savedHello && helloInput) helloInput.value = savedHello;
+  }
 });
+      
       // ====== UI-элементы ======
       const stepPanels = document.querySelectorAll(".step-panel");
       const stepDots   = document.querySelectorAll(".step-dot");
@@ -2010,11 +2015,7 @@ function speakWord(word) {
           vocabSaveBtn.textContent = "Добавить выбранные →";
         }, 700);
       });
-// загрузка локального ответа для НЕ-PRO
-if (!isProUser) {
-  const savedHello = loadLocalAnswer("hello");
-  if (savedHello) helloInput.value = savedHello;
-}
+
       // Старт
       showStep(1);
                   </script>
