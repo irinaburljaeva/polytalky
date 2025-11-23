@@ -570,7 +570,24 @@
       box-shadow:0 10px 24px rgba(248,113,113,0.45);
       font-size:1.2rem;
     }
-
+.recording-bar-wrapper{
+      margin-top:0.6rem;
+      height:4px;
+      border-radius:999px;
+      background:rgba(252,211,77,0.35);
+      overflow:hidden;
+    }
+    .recording-bar-fill{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,#f97316,#facc15);
+      transition:width 0.18s ease-out;
+    }
+    .recording-status{
+      font-size:0.75rem;
+      color:#6b7280;
+      margin-top:0.25rem;
+    }
     /* Бейдж */
     .badge-icon-wrapper{
       width:44px;
@@ -1026,16 +1043,24 @@
           </div>
         </div>
 
-        <div class="mt-2 flex gap-3">
-          <button class="btn-main" id="record-btn">⏺ Записать</button>
-          <button class="btn-ghost" id="stop-btn" disabled>⏹ Стоп</button>
-        </div>
+      <div class="mt-2 flex gap-3">
+  <button class="btn-main" id="record-btn">⏺️ Записать</button>
+  <button class="btn-ghost" id="stop-btn" disabled>⏹️ Стоп</button>
+</div>
 
-        <audio id="audio-playback" class="mt-4 w-full" controls style="display:none;"></audio>
+<!-- Индикатор записи -->
+<div class="recording-bar-wrapper hidden" id="recording-wrapper">
+  <div class="recording-bar-fill" id="recording-bar"></div>
+</div>
+<p class="recording-status hidden" id="recording-status">
+  ● Идёт запись…
+</p>
 
-        <p id="audio-feedback" class="mini-toast mt-3 hidden">
-          ⭐ Отлично получилось! Вы молодец.
-        </p>
+<audio id="audio-playback" class="mt-4 w-full" controls style="display:none;"></audio>
+
+<p id="audio-feedback" class="mini-toast mt-3 hidden">
+  ⭐️ Отлично получилось! Вы молодец.
+</p>
       </div>
 
     </section>
@@ -1055,7 +1080,7 @@
 
       <div class="mt-3 flex justify-center">
         <img src="/assets/gifs/english-lesson1-finish.gif" alt="Finish gif"
-             class="max-w-xs w-full h-auto rounded-2xl border border-yellow-100 bg-white/70 shadow-md">
+             class="w-64 h-auto rounded-2xl shadow-md">
       </div>
 
       <p class="step-body-text mt-3">
@@ -1521,7 +1546,13 @@
       const recordBtn = document.getElementById("record-btn");
       const stopBtn   = document.getElementById("stop-btn");
       const audioPlay = document.getElementById("audio-playback");
+      const recordingWrapper = document.getElementById("recording-wrapper");
+      const recordingBar = document.getElementById("recording-bar");
+      const recordingStatus = document.getElementById("recording-status");
 
+      let recordingInterval = null;
+        let recordingProgress = 0;
+      
       if (recordBtn && stopBtn && audioPlay) {
         recordBtn.addEventListener("click", async () => {
           try {
@@ -1534,6 +1565,17 @@
             stopBtn.disabled   = false;
             audioFeedback?.classList.add("hidden");
 
+            if (recordingWrapper && recordingBar && recordingStatus){
+              recordingWrapper.classList.remove("hidden");
+              recordingStatus.classList.remove('hidden");
+                                recordingProgress = 0;
+              recordingBar.style.width = "0%";
+              if (recordingInterval = setInterval(() => {
+                recordingProgress = 100;
+                recordingBar.style.width = recordingProgress + "%";
+              }, 200);
+            }
+            
             mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
           } catch (err) {
             alert("Не удалось получить доступ к микрофону :(");
@@ -1547,12 +1589,34 @@
           recordBtn.disabled = false;
           stopBtn.disabled   = true;
 
+          if (recordingInterval){
+            clearInterval(recordingInterval);
+            recordingInterval = null;
+          }
+          if (recordingBar){
+            recordingBar.style.width = "100%";
+          }
+          if (recordingStatus){
+            recordingStatus.textContent = " Запись завершена";
+          }
           mediaRecorder.addEventListener("stop", () => {
             const audioBlob = new Blob(audioChunks);
             const url       = URL.createObjectURL(audioBlob);
             audioPlay.src   = url;
             audioPlay.style.display = "block";
 
+            setTimeout(() => {
+              if (recordingWrapper) recordingWrapper.classList.add("hidden");
+              if (recordingStatus)[
+                recordingStatus.classList.add("hidden");
+              recordingStatus.textContent = "Идёт запись...";
+            }
+                       if (recordingBar)
+              recordingBar.style.width = "0%";
+          }, 2200);
+        });
+      });
+      }
             // Если PRO — сохраняем аудио (base64) для проверки куратором
             if (isProUser && currentUser) {
               const reader = new FileReader();
