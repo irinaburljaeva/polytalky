@@ -726,32 +726,59 @@
       console.warn("Не удалось получить custom claims:", e);
     }
 
-    // Проверяем Firestore профиль /users/{uid} и /users/{email}
-    let profileHasPro = false;
-    try {
-      const uidRef   = doc(db, "users", user.uid);
-      const uidSnap  = await getDoc(uidRef);
-      let profile = uidSnap.exists() ? uidSnap.data() : null;
+   // --- Проверяем Firestore профиль /users/{uid} и /users/{email}
+let profileHasPro = false;
+try {
+  const email = user.email || null;
+  const uid   = user.uid   || null;
 
-      if (!profile && user.email) {
-        const emailRef  = doc(db, "users", user.email);
-        const emailSnap = await getDoc(emailRef);
-        if (emailSnap.exists()) profile = emailSnap.data();
+  if (email || uid) {
+    const usersCol = collection(db, "users");
+    const emailRef = email ? doc(usersCol, email) : null;
+    const uidRef   = uid   ? doc(usersCol, uid)   : null;
+
+    const [emailSnap, uidSnap] = await Promise.all([
+      emailRef ? getDoc(emailRef) : Promise.resolve(null),
+      uidRef   ? getDoc(uidRef)   : Promise.resolve(null),
+    ]);
+
+    const emailData = emailSnap && emailSnap.exists() ? (emailSnap.data() || {}) : null;
+    const uidData   = uidSnap   && uidSnap.exists()   ? (uidSnap.data()   || {}) : null;
+
+    const merged = {
+      ...(uidData || {}),
+      ...(emailData || {}),
+    };
+
+    if (Object.keys(merged).length) {
+      const proGlobal = merged.proGlobal === true;
+
+      let proValidUntil = merged.proValidUntil  merged.proUntil  null;
+      if (proValidUntil && typeof proValidUntil.toDate === "function") {
+        proValidUntil = proValidUntil.toDate();
       }
 
-      if (profile) {
+      const legacyPro =
+        merged.proActive ||
+        merged.isPro ||
+        merged.hasPro ||
+        (merged.pro && merged.pro.active);
+
+      let active = !!(proGlobal || legacyPro);
+
+      if (proValidUntil instanceof Date) {
         const now = new Date();
-        const proUntil = profile.proUntil && profile.proUntil.toDate
-          ? profile.proUntil.toDate()
-          : null;
-
-        profileHasPro =
-          profile.hasPro === true ||
-          (proUntil && proUntil > now);
+        if (proValidUntil <= now) {
+          active = false;
+        }
       }
-    } catch (e) {
-      console.warn("Не удалось прочитать профиль пользователя:", e);
+
+      profileHasPro = active;
     }
+  }
+} catch (e) {
+  console.warn("Не удалось прочитать профиль пользователя:", e);
+}
 
     hasPro = claimsHasPro || profileHasPro;
 
