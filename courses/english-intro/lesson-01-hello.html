@@ -1865,16 +1865,7 @@ if (recordBtn && stopBtn && audioPlay) {
         });
       }
 
-      // ====== Озвучка слов (Только английский голос) ======
-let englishVoices = [];
-
-// загружаем голоса корректно
-window.speechSynthesis.onvoiceschanged = () => {
-  loadVoices();
-};
-setTimeout(loadVoices, 300);
-loadVoices();
-
+      
 function speakWord(word) {
   if (!("speechSynthesis" in window)) return;
 
