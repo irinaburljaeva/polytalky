@@ -371,10 +371,10 @@
       font-size:.8rem;
     }
 
-    .soft-block--blue{
-      background:linear-gradient(135deg,#ECFEFF,#F0F9FF);
-      border-color:#BAE6FD;
-    }
+.soft-block--blue{
+  background:linear-gradient(135deg,#FFE4E6,#FFF1F2); /* нежно-розовый */
+  border-color:#fecaca;
+}
 
     .soft-block--green{
       background:linear-gradient(135deg,#ecfdf5,#f0fdf4);
@@ -407,23 +407,23 @@
       min-height:90px;
     }
 
-    .btn-main{
-      border-radius:999px;
-      border:none;
-      padding:.55rem 1.2rem;
-      font-size:.8rem;
-      font-weight:600;
-      background:linear-gradient(135deg,#FFBA08,#FFDE59);
-      color:#78350f;
-      cursor:pointer;
-      box-shadow:0 12px 26px rgba(22,163,74,.35);
-      transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
-    }
+.btn-main{
+  border-radius:999px;
+  border:none;
+  padding:.55rem 1.2rem;
+  font-size:.8rem;
+  font-weight:600;
+  background:linear-gradient(135deg,#FF9F1C,#FFDE59);
+  color:#78350f;
+  cursor:pointer;
+  box-shadow:0 12px 26px rgba(249,115,22,0.45); /* тёплая оранжевая подсветка */
+  transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
 
-    .btn-main:active{
-      transform:translateY(1px);
-      box-shadow:0 6px 16px rgba(22,163,74,.5);
-    }
+.btn-main:active{
+  transform:translateY(1px);
+  box-shadow:0 6px 16px rgba(249,115,22,0.6);
+}
 
     .btn-main:disabled{
       opacity:.4;
@@ -1632,65 +1632,153 @@ onAuthStateChanged(auth, async (user) => {
           if (!mediaRecorder) return;
           mediaRecorder.stop();
           recordBtn.disabled = false;
-          stopBtn.disabled   = true;
+// ====== Аудиозапись ======
+let mediaRecorder;
+let audioChunks = [];
 
-          // остановить анимацию полоски
+const recordBtn        = document.getElementById("record-btn");
+const stopBtn          = document.getElementById("stop-btn");
+const audioPlay        = document.getElementById("audio-playback");
+const recordingWrapper = document.getElementById("recording-wrapper");
+const recordingBar     = document.getElementById("recording-bar");
+const recordingStatus  = document.getElementById("recording-status");
+
+let recordingInterval = null;
+let recordingProgress = 0;
+
+if (recordBtn && stopBtn && audioPlay) {
+  // Проверяем, поддерживает ли браузер запись
+  const canRecord =
+    navigator.mediaDevices &&
+    typeof navigator.mediaDevices.getUserMedia === "function" &&
+    typeof MediaRecorder !== "undefined";
+
+  if (!canRecord) {
+    // Красиво отключаем фичу, чтобы не было ошибок и странных переходов
+    recordBtn.disabled = true;
+    stopBtn.disabled   = true;
+    recordBtn.textContent = "Запись недоступна в этом браузере";
+
+    if (recordingWrapper) recordingWrapper.classList.add("hidden");
+  } else {
+    recordBtn.addEventListener("click", async () => {
+      try {
+        audioChunks = [];
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.start();
+        recordBtn.disabled = true;
+        stopBtn.disabled   = false;
+        audioFeedback?.classList.add("hidden");
+
+        // Показать индикатор записи
+        if (recordingWrapper && recordingBar && recordingStatus) {
+          recordingWrapper.classList.remove("hidden");
+          recordingStatus.classList.remove("hidden");
+          recordingStatus.textContent = "● Идёт запись…";
+          recordingProgress = 0;
+          recordingBar.style.width = "0%";
+
           if (recordingInterval) {
             clearInterval(recordingInterval);
-            recordingInterval = null;
           }
-          if (recordingBar) {
-            recordingBar.style.width = "100%";
+          recordingInterval = setInterval(() => {
+            recordingProgress += 3;
+            if (recordingProgress > 100) recordingProgress = 100;
+            recordingBar.style.width = recordingProgress + "%";
+          }, 200);
+        }
+
+        mediaRecorder.addEventListener("dataavailable", e => {
+          if (e.data && e.data.size > 0) {
+            audioChunks.push(e.data);
           }
-          if (recordingStatus) {
-            recordingStatus.textContent = "✓ Запись завершена";
-          }
-
-          mediaRecorder.addEventListener("stop", () => {
-            const audioBlob = new Blob(audioChunks);
-            const url       = URL.createObjectURL(audioBlob);
-            audioPlay.src   = url;
-            audioPlay.style.display = "block";
-
-            // Если PRO — сохраняем аудио (base64) для проверки куратором
-            if (isProUser && currentUser) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                const res = reader.result || "";
-                const base64 = typeof res === "string"
-                  ? (res.split(",")[1] || "")
-                  : "";
-
-                if (base64) {
-                  saveProSubmission({
-                    audioAnswerBase64: base64
-                  }).catch(console.error);
-                }
-              };
-              reader.readAsDataURL(audioBlob);
-            }
-
-            if (audioFeedback) {
-              audioFeedback.classList.remove("hidden");
-            }
-
-            setTimeout(() => {
-              if (audioFeedback) audioFeedback.classList.add("hidden");
-
-              if (recordingWrapper) recordingWrapper.classList.add("hidden");
-              if (recordingStatus) {
-                recordingStatus.classList.add("hidden");
-                recordingStatus.textContent = "● Идёт запись…";
-              }
-              if (recordingBar) {
-                recordingBar.style.width = "0%";
-              }
-              // после аудио плавно переходим к финальному шагу
-              showStep(4);
-            }, 1800);
-          });
         });
+      } catch (err) {
+        console.error(err);
+        alert("Не удалось получить доступ к микрофону. Проверьте доступ к микрофону и попробуйте ещё раз.");
       }
+    });
+
+    stopBtn.addEventListener("click", () => {
+      if (!mediaRecorder || mediaRecorder.state !== "recording") return;
+
+      mediaRecorder.stop();
+      recordBtn.disabled = false;
+      stopBtn.disabled   = true;
+
+      // Останавливаем анимацию полоски
+      if (recordingInterval) {
+        clearInterval(recordingInterval);
+        recordingInterval = null;
+      }
+
+      mediaRecorder.addEventListener("stop", () => {
+        // Если по какой-то причине данных нет — не переводим на следующий шаг
+        if (!audioChunks.length) {
+          if (recordingWrapper) recordingWrapper.classList.add("hidden");
+          if (recordingStatus) {
+            recordingStatus.classList.add("hidden");
+            recordingStatus.textContent = "● Идёт запись…";
+          }
+          if (recordingBar) recordingBar.style.width = "0%";
+
+          if (audioFeedback) {
+            audioFeedback.textContent = "Кажется, запись не сохранилась. Попробуйте ещё раз 😊";
+            audioFeedback.classList.remove("hidden");
+            setTimeout(() => audioFeedback.classList.add("hidden"), 2500);
+          }
+          return;
+        }
+
+        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        const url       = URL.createObjectURL(audioBlob);
+        audioPlay.src   = url;
+        audioPlay.style.display = "block";
+
+        if (recordingWrapper) recordingWrapper.classList.add("hidden");
+        if (recordingStatus) {
+          recordingStatus.textContent = "✓ Запись завершена";
+          setTimeout(() => {
+            recordingStatus.classList.add("hidden");
+            recordingStatus.textContent = "● Идёт запись…";
+          }, 1500);
+        }
+        if (recordingBar) recordingBar.style.width = "100%";
+
+        // Если PRO — сохраняем аудио (base64) для проверки куратором
+        if (isProUser && currentUser) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const res = reader.result || "";
+            const base64 = typeof res === "string"
+              ? (res.split(",")[1] || "")
+              : "";
+
+            if (base64) {
+              saveProSubmission({
+                audioAnswerBase64: base64
+              }).catch(console.error);
+            }
+          };
+          reader.readAsDataURL(audioBlob);
+        }
+
+        if (audioFeedback) {
+          audioFeedback.textContent = "⭐️ Отлично получилось! Вы молодец.";
+          audioFeedback.classList.remove("hidden");
+        }
+
+        // Переход на финальный шаг — только после успешной записи
+        setTimeout(() => {
+          if (audioFeedback) audioFeedback.classList.add("hidden");
+          showStep(4);
+        }, 1800);
+      });
+    });
+  }
+}
 
       // ====== Q&A: модалка + Firestore ======
       qaOpenBtns.forEach(btn => {
@@ -1798,19 +1886,36 @@ onAuthStateChanged(auth, async (user) => {
         });
       }
 
-      // ====== Озвучка слов ======
-      if ("speechSynthesis" in window) {
-        document.querySelectorAll(".word-tip").forEach(el => {
-          el.addEventListener("click", () => {
-            const text = el.textContent.trim();
-            if (!text) return;
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = "en-US";
-            window.speechSynthesis.cancel();
-            window.speechSynthesis.speak(u);
-          });
-        });
-      }
+      // ====== Озвучка слов (Только английский голос) ======
+let englishVoices = [];
+
+// Подгружаем список голосов
+function loadVoices() {
+  const voices = window.speechSynthesis.getVoices();
+  // Берём только английские
+  englishVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+}
+
+// Некоторые браузеры загружают голоса асинхронно
+window.speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+function speakWord(word) {
+  if (!("speechSynthesis" in window)) return;
+
+  const utter = new SpeechSynthesisUtterance(word);
+
+  // ЖЁСТКО фиксируем английский язык
+  utter.lang = "en-US";
+
+  // Если есть английский голос — используем его
+  if (englishVoices.length > 0) {
+    utter.voice = englishVoices[0];
+  }
+
+  window.speechSynthesis.cancel(); // на всякий случай сброс предыдущего
+  window.speechSynthesis.speak(utter);
+}
 
       // ====== Словарик: вытянуть слова из таблицы ======
       function extractVowelEntries() {
