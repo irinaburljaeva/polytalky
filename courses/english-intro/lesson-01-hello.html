@@ -1250,35 +1250,72 @@
         return currentUser.uid;
       }
 
-      async function loadUserProfile(user) {
-        const key = (user.email || "").toLowerCase();
-        if (!key) {
-          isProUser = false;
-          return;
-        }
+     async function loadUserProfile(user) {
+  // по умолчанию считаем, что PRO нет
+  isProUser = false;
 
-        try {
-          const userRef = doc(db, "users", key);
-          const snap    = await getDoc(userRef);
+  if (!user) return;
 
-          if (!snap.exists()) {
-            isProUser = false;
-            return;
-          }
+  try {
+    const email = user.email || null;
+    const uid   = user.uid   || null;
 
-          const data = snap.data();
-          // поддерживаем несколько возможных полей, чтобы не ломаться
-          isProUser = Boolean(
-            data.proActive ||
-            data.isPro ||
-            data.hasPro ||
-            (data.pro && data.pro.active)
-          );
-        } catch (e) {
-          console.error("Не удалось загрузить профиль пользователя:", e);
-          isProUser = false;
-        }
+    if (!email && !uid) return;
+
+    const usersCol = collection(db, "users");
+    const emailRef = email ? doc(usersCol, email) : null;
+    const uidRef   = uid   ? doc(usersCol, uid)   : null;
+
+    const [emailSnap, uidSnap] = await Promise.all([
+      emailRef ? getDoc(emailRef) : Promise.resolve(null),
+      uidRef   ? getDoc(uidRef)   : Promise.resolve(null),
+    ]);
+
+    const emailData = emailSnap && emailSnap.exists() ? (emailSnap.data() || {}) : null;
+    const uidData   = uidSnap   && uidSnap.exists()   ? (uidSnap.data()   || {}) : null;
+
+    // объединяем данные, как в личном кабинете
+    const merged = {
+      ...(uidData || {}),
+      ...(emailData || {}),
+    };
+
+    if (!Object.keys(merged).length) {
+      isProUser = false;
+      return;
+    }
+
+    // основная логика PRO — как в student/index.html
+    const proGlobal = merged.proGlobal === true;
+
+    // поддерживаем и новое поле, и возможные старые варианты
+    let proValidUntil = merged.proValidUntil  merged.proUntil  null;
+    if (proValidUntil && typeof proValidUntil.toDate === "function") {
+      proValidUntil = proValidUntil.toDate();
+    }
+
+    // запасной вариант: старые поля (на случай старых пользователей)
+    const legacyPro =
+      merged.proActive ||
+      merged.isPro ||
+      merged.hasPro ||
+      (merged.pro && merged.pro.active);
+
+    let active = !!(proGlobal || legacyPro);
+
+    if (proValidUntil instanceof Date) {
+      const now = new Date();
+      if (proValidUntil <= now) {
+        active = false;
       }
+    }
+
+    isProUser = active;
+  } catch (e) {
+    console.error("Не удалось загрузить профиль пользователя:", e);
+    isProUser = false;
+  }
+}
 
       // ====== UI-элементы ======
       const stepPanels = document.querySelectorAll(".step-panel");
