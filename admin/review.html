@@ -5,8 +5,9 @@
   <title>Проверка заданий — PolyTalky</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Шрифты и базовый стиль похожий на курс -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <!-- Шрифты -->
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 
   <style>
     :root {
@@ -51,7 +52,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
       gap: 12px;
     }
 
@@ -87,6 +88,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      margin-bottom: 12px;
     }
 
     .admin-user-pill {
@@ -95,6 +97,78 @@
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+
+    /* КАРТОЧКА ВХОДА */
+
+    .login-card {
+      margin: 16px 0 18px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .login-card-inner {
+      max-width: 420px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 20px 20px;
+    }
+
+    .login-card-inner h1 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .login-card-inner p {
+      margin: 0 0 14px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .login-field label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 4px;
+      color: var(--text-soft);
+    }
+
+    .login-field input {
+      width: 100%;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-soft);
+      padding: 7px 11px;
+      font-size: 13px;
+    }
+
+    .login-submit {
+      margin-top: 6px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: var(--accent-strong);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+
+    .login-submit:hover {
+      filter: brightness(1.03);
+    }
+
+    .login-error {
+      margin: 6px 0 0;
+      min-height: 16px;
+      font-size: 12px;
+      color: #b91c1c;
     }
 
     /* HERO */
@@ -113,8 +187,8 @@
     }
 
     .hero-text h1 {
+      margin: 0 0 4px;
       font-size: 22px;
-      margin: 0 0 6px;
     }
 
     .hero-text p {
@@ -125,256 +199,243 @@
 
     .hero-stats {
       display: flex;
-      gap: 16px;
       flex-wrap: wrap;
-      font-size: 13px;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
     }
 
     .hero-stat-pill {
-      background: #fff9e5;
       border-radius: var(--radius-pill);
-      padding: 6px 12px;
+      border: 1px dashed var(--border-soft);
+      background: #ffffff;
+      font-size: 12px;
+      padding: 6px 10px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      border: 1px solid #ffe4a6;
+      gap: 4px;
     }
 
-    .hero-stat-pill strong {
-      font-weight: 600;
-      color: var(--accent-strong);
-    }
-
-    /* ФИЛЬТРЫ */
+    /* FILTERS */
 
     .filters {
+      background: #ffffff;
+      border-radius: var(--radius-l);
+      box-shadow: var(--shadow-soft);
+      padding: 12px 16px;
+      margin-bottom: 18px;
       display: flex;
       flex-wrap: wrap;
+      justify-content: space-between;
       gap: 12px;
-      align-items: center;
-      margin-bottom: 16px;
     }
 
     .filters-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
       align-items: center;
-    }
-
-    .filters label {
+      gap: 8px;
       font-size: 13px;
-      color: var(--text-soft);
     }
 
-    .filters select,
-    .filters input[type="text"] {
+    .filters-group label {
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+
+    select,
+    input[type="text"] {
       border-radius: var(--radius-pill);
       border: 1px solid var(--border-soft);
-      padding: 6px 12px;
+      padding: 6px 10px;
       font-size: 13px;
       background: #ffffff;
-      min-width: 160px;
     }
 
     .btn-refresh {
       border-radius: var(--radius-pill);
-      background: var(--accent);
       border: none;
-      padding: 8px 14px;
+      background: var(--accent-soft);
       font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
+      padding: 6px 12px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
+      cursor: pointer;
     }
 
     .btn-refresh span {
-      font-size: 14px;
+      display: inline-block;
+      transform-origin: center;
     }
 
-    /* СПИСОК ЗАДАНИЙ */
+    /* COLUMNS */
 
     .columns {
       display: grid;
-      grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
       gap: 16px;
-      align-items: flex-start;
     }
 
-    /* Левая колонка — список курсов */
-
     .courses-list {
-      background: rgba(255,255,255,0.85);
-      border-radius: var(--radius-xl);
+      background: #ffffff;
+      border-radius: var(--radius-l);
       box-shadow: var(--shadow-soft);
-      padding: 12px 12px 14px;
-      max-height: 520px;
-      overflow-y: auto;
+      padding: 14px 14px 10px;
+      max-height: 420px;
+      overflow: auto;
     }
 
     .courses-list h2 {
-      font-size: 14px;
       margin: 0 0 8px;
-      color: var(--text-soft);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      font-size: 15px;
     }
 
     .course-pill {
-      border-radius: var(--radius-l);
-      padding: 8px 10px;
-      margin-bottom: 6px;
-      font-size: 13px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 6px;
       cursor: pointer;
-      border: 1px solid transparent;
     }
 
-    .course-pill span.title {
-      font-weight: 500;
+    .course-pill .title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 170px;
     }
 
-    .course-pill span.count {
-      background: #fff3cc;
-      border-radius: 999px;
-      padding: 2px 8px;
-      font-size: 11px;
-      color: var(--accent-strong);
+    .course-pill .count {
+      font-weight: 600;
+      font-size: 12px;
     }
 
     .course-pill.active {
-      background: #fff3cc;
-      border-color: #ffdd7a;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
     }
 
     .course-pill.inactive {
-      opacity: 0.6;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
     }
 
-    /* Правая колонка — карточки */
-
     .submissions {
-      background: rgba(255,255,255,0.9);
-      border-radius: var(--radius-xl);
+      background: #ffffff;
+      border-radius: var(--radius-l);
       box-shadow: var(--shadow-soft);
-      padding: 14px 16px 20px;
+      padding: 14px 14px 12px;
       max-height: 520px;
-      overflow-y: auto;
+      overflow: auto;
     }
 
     .submissions-empty {
       font-size: 14px;
       color: var(--text-soft);
       text-align: center;
-      padding: 40px 0;
+      padding: 24px 0;
     }
 
     .lesson-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .lesson-group h3 {
-      font-size: 14px;
-      margin: 0 0 8px;
+      margin: 0 0 6px;
+      font-size: 13px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .lesson-tag {
       font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      border-radius: var(--radius-pill);
       padding: 2px 8px;
-      border-radius: 999px;
       background: #f3f4ff;
-      color: #5553c3;
+      color: #4338ca;
     }
 
     .submission-card {
-      border-radius: var(--radius-l);
-      border: 1px solid var(--border-soft);
-      padding: 10px 12px;
-      font-size: 13px;
+      border-radius: var(--radius-m);
+      border: 1px solid #e5e7eb;
+      padding: 8px 10px;
       margin-bottom: 8px;
-      background: #ffffff;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      background: #f9fafb;
     }
 
     .submission-main p {
-      margin: 2px 0;
+      margin: 0 0 3px;
     }
 
     .submission-meta {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-soft);
     }
 
     .status-chip {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      border-radius: 999px;
+      border-radius: var(--radius-pill);
       padding: 2px 8px;
       font-size: 11px;
+      margin-top: 4px;
     }
 
     .status-pending {
-      background: #fff3cc;
-      color: #b15a00;
+      background: #fffbeb;
+      color: #854d0e;
     }
 
     .status-approved {
-      background: #dcfce7;
+      background: #ecfdf5;
       color: #166534;
     }
 
     .status-needs-fix {
-      background: #fee2e2;
+      background: #fef2f2;
       color: #b91c1c;
     }
 
     .submission-actions {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
       align-items: flex-end;
+      justify-content: center;
+      white-space: nowrap;
     }
 
     .btn-xs {
       border-radius: var(--radius-pill);
-      padding: 4px 10px;
-      border: 1px solid var(--border-soft);
-      font-size: 12px;
-      cursor: pointer;
+      border: 1px solid #e5e7eb;
       background: #ffffff;
-    }
-
-    .btn-xs.primary {
-      background: var(--accent);
-      border-color: #ffdd7a;
-      font-weight: 600;
+      font-size: 11px;
+      padding: 4px 8px;
+      cursor: pointer;
     }
 
     .btn-xs.success {
-      background: #16a34a;
-      color: #ffffff;
-      border-color: #16a34a;
+      background: #ecfdf5;
+      color: #166534;
+      border-color: #bbf7d0;
     }
 
     .btn-xs.warn {
-      background: #f97316;
-      color: #ffffff;
-      border-color: #f97316;
+      background: #fef2f2;
+      color: #b91c1c;
+      border-color: #fecaca;
     }
 
-    /* МОДАЛКА ДЛЯ ПРОСМОТРА/ФИДБЕКА */
+    /* МОДАЛКА */
 
     .modal-backdrop {
       position: fixed;
@@ -490,63 +551,90 @@
       ← Назад к курсу
     </a>
 
-    <section class="hero">
-      <div class="hero-text">
-        <h1>Все задания с курсов</h1>
-        <p>Фильтруйте по курсу, статусу и email, открывайте ответы и отправляйте обратную связь.</p>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat-pill">
-          🔔 В ожидании: <strong id="statPending">0</strong>
-        </div>
-        <div class="hero-stat-pill">
-          ✅ Проверены: <strong id="statChecked">0</strong>
-        </div>
-        <div class="hero-stat-pill">
-          📚 Курсов в списке: <strong id="statCourses">0</strong>
-        </div>
-      </div>
-    </section>
+    <!-- КАРТОЧКА ВХОДА -->
+    <section class="login-card" id="loginCard">
+      <div class="login-card-inner">
+        <h1>Вход для куратора</h1>
+        <p>
+          Войдите под аккаунтом куратора или администратора, чтобы увидеть отправленные задания
+          и отправлять ученикам обратную связь.
+        </p>
 
-    <section class="filters">
-      <div class="filters-group">
-        <label for="filterCourse">Курс:</label>
-        <select id="filterCourse">
-          <option value="all">Все курсы</option>
-        </select>
+        <form id="loginForm" class="login-form">
+          <div class="login-field">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" required placeholder="you@example.com" />
+          </div>
 
-        <label for="filterStatus">Статус:</label>
-        <select id="filterStatus">
-          <option value="pending">Ожидают проверки</option>
-          <option value="all">Все</option>
-          <option value="approved">Одобрены</option>
-          <option value="needs-fix">Нужны правки</option>
-        </select>
-      </div>
+          <div class="login-field">
+            <label for="loginPassword">Пароль</label>
+            <input type="password" id="loginPassword" required placeholder="Ваш пароль" />
+          </div>
 
-      <div class="filters-group">
-        <label for="filterEmail">Email:</label>
-        <input type="text" id="filterEmail" placeholder="поиск по email…" />
-        <button class="btn-refresh" id="btnRefresh">
-          <span>⟳</span> Обновить
-        </button>
+          <button type="submit" class="login-submit">Войти</button>
+
+          <p id="loginError" class="login-error" aria-live="polite"></p>
+        </form>
       </div>
     </section>
 
-    <section class="columns">
-      <!-- ЛЕВАЯ КОЛОНКА: курсы + количество задач -->
-      <aside class="courses-list" id="coursesList">
-        <h2>Курсы</h2>
-        <!-- сюда JS вставит пилюли курсов -->
-      </aside>
-
-      <!-- ПРАВАЯ КОЛОНКА: задания -->
-      <div class="submissions" id="submissionsContainer">
-        <div class="submissions-empty">
-          Задания не найдены. Попробуйте изменить фильтры.
+    <!-- КОНТЕНТ ДЛЯ АВТОРИЗОВАННОГО КУРАТОРА -->
+    <div id="adminContent" style="display:none;">
+      <section class="hero">
+        <div class="hero-text">
+          <h1>Все задания с курсов</h1>
+          <p>Фильтруйте по курсу, статусу и email, открывайте ответы и отправляйте обратную связь.</p>
         </div>
-      </div>
-    </section>
+        <div class="hero-stats">
+          <div class="hero-stat-pill">
+            🔔 В ожидании: <strong id="statPending">0</strong>
+          </div>
+          <div class="hero-stat-pill">
+            ✅ Проверены: <strong id="statChecked">0</strong>
+          </div>
+          <div class="hero-stat-pill">
+            📚 Курсов в списке: <strong id="statCourses">0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="filters">
+        <div class="filters-group">
+          <label for="filterCourse">Курс:</label>
+          <select id="filterCourse">
+            <option value="all">Все курсы</option>
+          </select>
+
+          <label for="filterStatus">Статус:</label>
+          <select id="filterStatus">
+            <option value="pending">Ожидают проверки</option>
+            <option value="all">Все</option>
+            <option value="approved">Одобрены</option>
+            <option value="needs-fix">Нужны правки</option>
+          </select>
+        </div>
+
+        <div class="filters-group">
+          <label for="filterEmail">Email:</label>
+          <input type="text" id="filterEmail" placeholder="поиск по email…" />
+          <button class="btn-refresh" id="btnRefresh">
+            <span>⟳</span> Обновить
+          </button>
+        </div>
+      </section>
+
+      <section class="columns">
+        <aside class="courses-list" id="coursesList">
+          <h2>Курсы</h2>
+        </aside>
+
+        <div class="submissions" id="submissionsContainer">
+          <div class="submissions-empty">
+            Задания не найдены. Попробуйте изменить фильтры.
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 
   <!-- Модалка просмотра задания -->
@@ -589,9 +677,12 @@
 
   <!-- Firebase + логика -->
   <script type="module">
-    // --- Firebase imports ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
     import {
       getFirestore,
       collection,
@@ -603,12 +694,12 @@
       orderBy
     } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-    // TODO: вставь сюда ТВОЙ реальный конфиг
+    // TODO: сюда подставь свой реальный конфиг
     const firebaseConfig = {
-      apiKey: "YOUR_KEY",
-      authDomain: "YOUR_DOMAIN",
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
       projectId: "YOUR_PROJECT_ID",
-      // и т.д.
+      // ...
     };
 
     const app = initializeApp(firebaseConfig);
@@ -627,32 +718,102 @@
     const statCheckedEl  = document.getElementById("statChecked");
     const statCoursesEl  = document.getElementById("statCourses");
 
-    // Модалка
     const modalBackdrop   = document.getElementById("modalBackdrop");
-    const modalCloseBtn   = document.getElementById("modalCloseBtn");
     const modalTitleEl    = document.getElementById("modalTitle");
     const modalStudentEl  = document.getElementById("modalStudent");
     const modalTaskEl     = document.getElementById("modalTask");
     const modalAnswerEl   = document.getElementById("modalAnswer");
     const modalFeedbackEl = document.getElementById("modalFeedback");
     const modalMetaEl     = document.getElementById("modalMeta");
+    const modalCloseBtn   = document.getElementById("modalCloseBtn");
     const btnApproveModal = document.getElementById("btnApproveModal");
     const btnNeedFixModal = document.getElementById("btnNeedFixModal");
+
+    const loginCardEl     = document.getElementById("loginCard");
+    const adminContentEl  = document.getElementById("adminContent");
+    const loginFormEl     = document.getElementById("loginForm");
+    const loginEmailEl    = document.getElementById("loginEmail");
+    const loginPasswordEl = document.getElementById("loginPassword");
+    const loginErrorEl    = document.getElementById("loginError");
 
     let currentUser = null;
     let currentSubmissions = [];
     let currentModalSubmissionId = null;
+    let isAdminOrCurator = false;
 
-    onAuthStateChanged(auth, (user) => {
+    async function checkAdminClaims(user) {
+      try {
+        const token = await user.getIdTokenResult();
+        const claims = token.claims || {};
+
+        isAdminOrCurator =
+          claims.role === "admin" ||
+          claims.role === "curator" ||
+          claims.admin === true ||
+          claims.curator === true;
+      } catch (e) {
+        console.error("Ошибка чтения custom claims:", e);
+        isAdminOrCurator = false;
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        adminUserInfoEl.textContent = "Войдите в аккаунт с правами куратора/админа.";
+        currentUser = null;
+        isAdminOrCurator = false;
+        adminUserInfoEl.textContent = "Вы не авторизованы. Войдите как куратор.";
+        loginCardEl.style.display   = "flex";
+        adminContentEl.style.display = "none";
+        submissionsContainer.innerHTML =
+          "<div class='submissions-empty'>Войдите, чтобы видеть задания.</div>";
         return;
       }
-      currentUser = user;
-      adminUserInfoEl.textContent = user.email || "Куратор";
 
-      // просто загружаем сразу; права уже проверяются в Rules
+      currentUser = user;
+      adminUserInfoEl.textContent = user.email || "Пользователь";
+
+      // Проверяем права
+      await checkAdminClaims(user);
+
+      if (!isAdminOrCurator) {
+        loginCardEl.style.display    = "none";
+        adminContentEl.style.display = "none";
+        adminUserInfoEl.textContent =
+          (user.email || "Пользователь") + " — нет прав куратора/админа.";
+        // На всякий случай, если кто-то всё равно увидит контейнер:
+        submissionsContainer.innerHTML =
+          "<div class='submissions-empty'>У этого аккаунта нет прав для проверки заданий. Обратитесь к администратору.</div>";
+        return;
+      }
+
+      // Есть права: показываем интерфейс
+      loginCardEl.style.display    = "none";
+      adminContentEl.style.display = "block";
+
       loadSubmissions();
+    });
+
+    // Вход по email+паролю
+    loginFormEl.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginErrorEl.textContent = "";
+
+      const email = loginEmailEl.value.trim();
+      const pass  = loginPasswordEl.value;
+
+      if (!email || !pass) {
+        loginErrorEl.textContent = "Введите email и пароль.";
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        // Дальше сработает onAuthStateChanged
+      } catch (err) {
+        console.error("Ошибка входа:", err);
+        loginErrorEl.textContent =
+          "Не удалось войти. Проверьте email/пароль или права доступа.";
+      }
     });
 
     btnRefreshEl.addEventListener("click", () => loadSubmissions());
@@ -665,20 +826,22 @@
       currentModalSubmissionId = null;
     });
 
-    // --- Загрузка заданий из Firestore ---
-
     async function loadSubmissions() {
-      if (!currentUser) return;
+      if (!currentUser || !isAdminOrCurator) return;
 
-      submissionsContainer.innerHTML = "<div class='submissions-empty'>Загрузка…</div>";
+      submissionsContainer.innerHTML =
+        "<div class='submissions-empty'>Загрузка…</div>";
 
       try {
         let qRef = collection(db, "lessonSubmissions");
 
-        // Если выбран конкретный статус, фильтруем на уровне запроса
         const statusValue = filterStatusEl.value;
         if (statusValue !== "all") {
-          qRef = query(qRef, where("status", "==", statusValue), orderBy("createdAt", "desc"));
+          qRef = query(
+            qRef,
+            where("status", "==", statusValue),
+            orderBy("createdAt", "desc")
+          );
         } else {
           qRef = query(qRef, orderBy("createdAt", "desc"));
         }
@@ -690,11 +853,10 @@
         renderSubmissions();
       } catch (err) {
         console.error("Ошибка загрузки заданий:", err);
-        submissionsContainer.innerHTML = "<div class='submissions-empty'>Не удалось загрузить задания.</div>";
+        submissionsContainer.innerHTML =
+          "<div class='submissions-empty'>Не удалось загрузить задания.</div>";
       }
     }
-
-    // --- Формирование списка курсов слева + селект курса сверху ---
 
     function buildCourseFilter(submissions) {
       const byCourse = new Map();
@@ -719,12 +881,10 @@
         }
       });
 
-      // hero-статистика
-      statPendingEl.textContent  = pendingCount;
-      statCheckedEl.textContent  = checkedCount;
-      statCoursesEl.textContent  = byCourse.size;
+      statPendingEl.textContent = pendingCount;
+      statCheckedEl.textContent = checkedCount;
+      statCoursesEl.textContent = byCourse.size;
 
-      // обновляем селект курса
       const selected = filterCourseEl.value || "all";
       filterCourseEl.innerHTML = '<option value="all">Все курсы</option>';
 
@@ -741,12 +901,12 @@
         filterCourseEl.value = "all";
       }
 
-      // список курсов слева
       coursesListEl.innerHTML = "<h2>Курсы</h2>";
 
-      // "Все курсы"
       const allPill = document.createElement("div");
-      allPill.className = "course-pill " + (filterCourseEl.value === "all" ? "active" : "inactive");
+      allPill.className =
+        "course-pill " +
+        (filterCourseEl.value === "all" ? "active" : "inactive");
       allPill.innerHTML = `
         <span class="title">Все курсы</span>
         <span class="count">${submissions.length}</span>
@@ -754,13 +914,15 @@
       allPill.addEventListener("click", () => {
         filterCourseEl.value = "all";
         renderSubmissions();
-        buildCourseFilter(currentSubmissions); // обновить хайлайт
+        buildCourseFilter(currentSubmissions);
       });
       coursesListEl.appendChild(allPill);
 
       byCourse.forEach((bucket, cid) => {
         const pill = document.createElement("div");
-        pill.className = "course-pill " + (filterCourseEl.value === cid ? "active" : "inactive");
+        pill.className =
+          "course-pill " +
+          (filterCourseEl.value === cid ? "active" : "inactive");
         pill.innerHTML = `
           <span class="title">${bucket.title}</span>
           <span class="count">${bucket.pending || 0}</span>
@@ -768,17 +930,16 @@
         pill.addEventListener("click", () => {
           filterCourseEl.value = cid;
           renderSubmissions();
-          buildCourseFilter(currentSubmissions); // перерисовать для актуального active
+          buildCourseFilter(currentSubmissions);
         });
         coursesListEl.appendChild(pill);
       });
     }
 
-    // --- Отрисовка карточек с учётом фильтров ---
-
     function renderSubmissions() {
       if (!currentSubmissions.length) {
-        submissionsContainer.innerHTML = "<div class='submissions-empty'>Заданий пока нет.</div>";
+        submissionsContainer.innerHTML =
+          "<div class='submissions-empty'>Заданий пока нет.</div>";
         return;
       }
 
@@ -789,11 +950,15 @@
       let list = currentSubmissions.slice();
 
       if (courseFilter !== "all") {
-        list = list.filter(s => (s.courseId || "unknown") === courseFilter);
+        list = list.filter(
+          s => (s.courseId || "unknown") === courseFilter
+        );
       }
 
       if (statusFilter !== "all") {
-        list = list.filter(s => (s.status || "pending") === statusFilter);
+        list = list.filter(
+          s => (s.status || "pending") === statusFilter
+        );
       }
 
       if (emailFilter) {
@@ -803,12 +968,12 @@
       }
 
       if (!list.length) {
-        submissionsContainer.innerHTML = "<div class='submissions-empty'>По выбранным фильтрам заданий не найдено.</div>";
+        submissionsContainer.innerHTML =
+          "<div class='submissions-empty'>По выбранным фильтрам заданий не найдено.</div>";
         return;
       }
 
-      // Группируем: курс -> урок
-      const groups = new Map(); // key: lessonId, value: { courseTitle, lessonTitle, items: [] }
+      const groups = new Map();
       list.forEach(s => {
         const lid = s.lessonId || "unknown-lesson";
         if (!groups.has(lid)) {
@@ -851,11 +1016,10 @@
             ? createdAt.toLocaleString("ru-RU")
             : "—";
 
+          const fullText = (s.answerText || s.answer || "").toString();
           const shortAnswer =
-            (s.answerText || s.answer || "")
-              .toString()
-              .slice(0, 120)
-              .trim() + ((s.answerText || s.answer || "").length > 120 ? "…" : "");
+            fullText.slice(0, 120).trim() +
+            (fullText.length > 120 ? "…" : "");
 
           card.innerHTML = `
             <div class="submission-main">
@@ -878,13 +1042,14 @@
           card.addEventListener("click", (e) => {
             const action = e.target.dataset.action;
             if (!action) return;
+            e.stopPropagation();
 
             if (action === "open") {
               openModalForSubmission(s);
             } else if (action === "approve") {
-              updateSubmissionStatus(s.id, "approved");
+              updateSubmissionStatus(s.id, "approved", s.feedback || "");
             } else if (action === "needs-fix") {
-              updateSubmissionStatus(s.id, "needs-fix");
+              updateSubmissionStatus(s.id, "needs-fix", s.feedback || "");
             }
           });
 
@@ -901,8 +1066,6 @@
       return "Ожидает проверки";
     }
 
-    // --- Модалка: открытие и сохранение статуса/фидбека ---
-
     function openModalForSubmission(s) {
       currentModalSubmissionId = s.id;
 
@@ -912,7 +1075,9 @@
         Курс: ${s.courseTitle || s.courseId || "—"}<br/>
         Тип: ${s.answerType || "—"}
       `;
-      modalTaskEl.textContent = s.taskText || "Текст задания не сохранён (можно добавить его в структуру документов позднее).";
+      modalTaskEl.textContent =
+        s.taskText ||
+        "Текст задания не сохранён (можно добавить его в структуру документов позднее).";
 
       const textAnswer = (s.answerText || s.answer || "").trim();
       modalAnswerEl.innerHTML = textAnswer
@@ -930,11 +1095,19 @@
       }`;
 
       btnApproveModal.onclick = () => {
-        updateSubmissionStatus(currentModalSubmissionId, "approved", modalFeedbackEl.value);
+        updateSubmissionStatus(
+          currentModalSubmissionId,
+          "approved",
+          modalFeedbackEl.value
+        );
       };
 
       btnNeedFixModal.onclick = () => {
-        updateSubmissionStatus(currentModalSubmissionId, "needs-fix", modalFeedbackEl.value);
+        updateSubmissionStatus(
+          currentModalSubmissionId,
+          "needs-fix",
+          modalFeedbackEl.value
+        );
       };
 
       modalBackdrop.classList.add("visible");
@@ -946,7 +1119,7 @@
         const ref = doc(db, "lessonSubmissions", id);
         const payload = {
           status: newStatus,
-          checkedAt: new Date()
+          checkedAt: new Date(),
         };
         if (typeof feedbackText === "string") {
           payload.feedback = feedbackText;
@@ -954,7 +1127,7 @@
         await updateDoc(ref, payload);
         modalBackdrop.classList.remove("visible");
         currentModalSubmissionId = null;
-        await loadSubmissions(); // перезагрузим список + статистику
+        await loadSubmissions();
       } catch (err) {
         console.error("Ошибка обновления статуса:", err);
         alert("Не удалось обновить статус. Проверьте консоль.");
