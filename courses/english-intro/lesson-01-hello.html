@@ -1376,13 +1376,14 @@
   }
 }
 const feedbackLink = document.getElementById("feedback-link");
-const loginBtn = document.getElementById("login-btn");
-      
+const loginBtn     = document.getElementById("login-btn");
+const userStatus   = document.getElementById("user-status");
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
-    userStatus.textContent = Вы вошли как: ${user.email};
-  loginBtn.classList.add("hidden");
+    userStatus.textContent = `Вы вошли как: ${user.email}`;
+    loginBtn.classList.add("hidden");
 
     await loadUserProfile(user);
 
@@ -1397,7 +1398,7 @@ onAuthStateChanged(auth, async (user) => {
     currentUser = null;
     isProUser   = false;
     userStatus.textContent = "Вы не авторизованы";
-   loginBtn.classList.remove("hidden");
+    loginBtn.classList.remove("hidden");
     feedbackLink.classList.add("hidden");
   }
 });
@@ -1405,9 +1406,7 @@ onAuthStateChanged(auth, async (user) => {
       const stepPanels = document.querySelectorAll(".step-panel");
       const stepDots   = document.querySelectorAll(".step-dot");
 
-      const userStatus = document.getElementById("user-status");
-      const logoutBtn  = document.getElementById("logout-btn");
-
+    
       const openVocabBtn    = document.getElementById("open-vocab-btn");
       const vocabModal      = document.getElementById("vocab-modal");
       const vocabClose      = document.getElementById("vocab-close");
@@ -1428,25 +1427,7 @@ onAuthStateChanged(auth, async (user) => {
       const qaSubmitBtn  = document.getElementById("qa-submit");
       const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
 
-      // ====== Авторизация ======
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          currentUser = user;
-          userStatus.textContent = `Вы вошли как: ${user.email}`;
-          logoutBtn.classList.remove("hidden");
-          loadUserProfile(user).catch(console.error);
-        } else {
-          currentUser = null;
-          isProUser   = false;
-          userStatus.textContent = "Вы не авторизованы";
-          logoutBtn.classList.add("hidden");
-        }
-      });
-
-      logoutBtn.addEventListener("click", () => {
-        signOut(auth);
-      });
-
+      
       // ====== Прогресс по шагам + бейдж ======
       let currentStep  = 1;
       const totalSteps = 4;
