@@ -1865,7 +1865,12 @@ if (recordBtn && stopBtn && audioPlay) {
         });
       }
 
-      
+      let englishVoices = [];
+      window.speechSynthesis.onvoiceschanged = () => {
+  englishVoices = window.speechSynthesis
+    .getVoices()
+    .filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+};
 function speakWord(word) {
   if (!("speechSynthesis" in window)) return;
 
