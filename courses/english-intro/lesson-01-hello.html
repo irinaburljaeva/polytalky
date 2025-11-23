@@ -861,8 +861,9 @@
         Но мы уверены, что у вас точно все получится! Для начала давайте посмотрим видео, в котором нам расскажут про тонкости английского произношения. 
        
       </p>
+      <div class="w-full flex justify-center my-4">
 <iframe src="https://kinescope.io/embed/aBAaE9sNnBsBsgaYFZFzc7" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock;" frameborder="0" allowfullscreen width="360" height="640"></iframe>
-
+      </div>
       <p class="soft-note mt-3">
         Если пока сложно понимать речь на слух — не переживайте, с практикой станет легче. Сейчас ваша главная задача просто послушать произношение звуков и попытаться "выхватить" знакомые слова.
       </p>
@@ -1052,9 +1053,9 @@
         С таким настроем вы очень быстро заговорите на английском свободно.
       </p>
 
-      <div class="mt-3 rounded-2xl overflow-hidden border border-yellow-100 bg-white/70">
+      <div class="mt-3 flex justify-center">
         <img src="/assets/gifs/english-lesson1-finish.gif" alt="Finish gif"
-             class="w-full max-h-40 object-cover">
+             class="max-w-xs w-full h-auto rounded-2xl border border-yellow-100 bg-white/70 shadow-md">
       </div>
 
       <p class="step-body-text mt-3">
@@ -1289,7 +1290,7 @@
     const proGlobal = merged.proGlobal === true;
 
     // поддерживаем и новое поле, и возможные старые варианты
-    let proValidUntil = merged.proValidUntil  merged.proUntil  null;
+    let proValidUntil = merged.proValidUntil || merged.proUntil || null;
     if (proValidUntil && typeof proValidUntil.toDate === "function") {
       proValidUntil = proValidUntil.toDate();
     }
