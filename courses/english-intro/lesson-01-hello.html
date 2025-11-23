@@ -1878,7 +1878,16 @@ if (recordBtn && stopBtn && audioPlay) {
 };
 function speakWord(word) {
   if (!("speechSynthesis" in window)) return;
-
+  
+// Включаем озвучку по клику на слова из таблицы
+document.querySelectorAll(".word-tip").forEach(tip => {
+  tip.addEventListener("click", () => {
+    const word = tip.textContent.trim();
+    if (word) {
+      speakWord(word);
+    }
+  });
+});
   const utter = new SpeechSynthesisUtterance(word);
 
   // ЖЁСТКО фиксируем английский язык
