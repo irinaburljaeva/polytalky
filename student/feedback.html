@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Мои проверки — PolyTalky PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-soft: #FFF8E9;
+      --card-bg: #FFFFFF;
+      --accent: #FFBA08;
+      --accent-soft: #FFE8A3;
+      --accent-strong: #CF2C02;
+      --text-main: #222222;
+      --text-soft: #6B7280;
+      --border-soft: #E5E7EB;
+      --radius-xl: 24px;
+      --radius-l: 18px;
+      --radius-m: 12px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #FFEED2 0, #FFF8E9 45%, #FFFFFF 100%);
+      color: var(--text-main);
+    }
+
+    a {
+      color: var(--accent-strong);
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 48px;
+    }
+
+    /* HEADER */
+
+    header.feedback-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #FFFFFF 0, #FFE09C 45%, #FFB347 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .pill {
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--border-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill.pro {
+      background: #FEF3C7;
+      border-color: #FDE68A;
+      color: #92400E;
+      font-weight: 500;
+    }
+
+    .btn-ghost {
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--border-soft);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-ghost:hover {
+      background: #FFF3C7;
+    }
+
+    /* LOCKED (NO PRO) */
+
+    .locked {
+      max-width: 640px;
+      margin: 40px auto;
+      background: rgba(255,255,255,0.92);
+      border-radius: var(--radius-xl);
+      padding: 20px 22px 22px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+    }
+
+    .locked h1 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .locked p {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .btn-main {
+      border-radius: var(--radius-pill);
+      padding: 8px 18px;
+      border: none;
+      background: linear-gradient(135deg, #FFBA08, #FF8A3D);
+      color: #111827;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 12px 32px rgba(248,181,71,0.4);
+    }
+
+    .btn-main:hover {
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+    }
+
+    /* HERO */
+
+    .hero {
+      background: rgba(255,255,255,0.9);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 20px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hero-left h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .hero-left p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .hero-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .stat-pill {
+      border-radius: var(--radius-pill);
+      padding: 6px 10px;
+      background: #FFF7D1;
+      border: 1px solid #FFE08A;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-pill strong {
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+
+    /* FILTERS + TABS */
+
+    .filters-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .filters-row label {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .filters-row select {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-soft);
+      padding: 5px 10px;
+      font-size: 13px;
+      background: #FFFFFF;
+    }
+
+    .filters-row input[type="text"] {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-soft);
+      padding: 6px 10px;
+      font-size: 13px;
+      background: #FFFFFF;
+      min-width: 180px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .tab-btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      padding: 6px 12px;
+      font-size: 13px;
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-soft);
+    }
+
+    .tab-btn.active {
+      background: #FFFFFF;
+      border-color: #FFE08A;
+      color: var(--text-main);
+      box-shadow: 0 8px 20px rgba(15,23,42,0.06);
+    }
+
+    /* CONTENT GRID */
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 840px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: rgba(255,255,255,0.96);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 16px;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .card p.subtitle {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .empty {
+      font-size: 14px;
+      color: var(--text-soft);
+      text-align: center;
+      padding: 28px 0;
+    }
+
+    /* LIST */
+
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .list-item {
+      border-radius: var(--radius-l);
+      border: 1px solid var(--border-soft);
+      padding: 10px 11px;
+      background: #FFFFFF;
+      font-size: 13px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: box-shadow 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+    }
+
+    .list-item:hover {
+      box-shadow: 0 10px 24px rgba(148,163,184,0.3);
+      border-color: #FFE08A;
+      transform: translateY(-1px);
+    }
+
+    .list-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .course-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      background: #EEF2FF;
+      color: #4338CA;
+    }
+
+    .status-tag {
+      font-size: 11px;
+      border-radius: var(--radius-pill);
+      padding: 2px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-checked {
+      background: #DCFCE7;
+      color: #166534;
+    }
+
+    .status-pending {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .status-needs {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .lesson-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .snippet {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    /* DETAIL */
+
+    .detail-section {
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .detail-section h3 {
+      margin: 0 0 4px;
+      font-size: 13px;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .badge-small {
+      border-radius: var(--radius-pill);
+      padding: 2px 8px;
+      background: #ECFDF5;
+      color: #166534;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .detail-section p {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .detail-meta {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 6px;
+    }
+
+    .highlight {
+      background: #FFFBEB;
+      padding: 6px 8px;
+      border-radius: var(--radius-m);
+      border: 1px dashed #FACC15;
+      font-size: 12px;
+      color: #854D0E;
+    }
+
+    .progress-line {
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .progress-line span {
+      font-weight: 600;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header class="feedback-header">
+    <div class="brand-block">
+      <div class="brand-logo">PT</div>
+      <div>
+        <div class="brand-title">Мои проверки</div>
+        <div class="brand-sub">Личная обратная связь от кураторов PolyTalky</div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div id="proStatusPill" class="pill">Загрузка…</div>
+      <button class="btn-ghost" type="button" id="backToStudent">
+        ← В личный кабинет
+      </button>
+    </div>
+  </header>
+
+  <!-- Блок, если нет PRO -->
+  <section id="lockedBlock" class="locked hidden">
+    <h1>🔒 Страница только для PRO</h1>
+    <p>
+      Ручная проверка заданий, подробные комментарии и направление «куда двигаться дальше» —
+      это часть тарифа <strong>PolyTalky PRO</strong>.
+    </p>
+    <p>
+      Сейчас ваш аккаунт без PRO-подписки, поэтому раздел с обратной связью недоступен.
+    </p>
+    <button class="btn-main" type="button" id="goToPro">
+      ✨ Оформить PRO
+    </button>
+    <p style="margin-top:10px;font-size:12px;color:var(--text-soft);">
+      После оформления PRO здесь появятся все ваши задания и комментарии кураторов
+      по каждому курсу.
+    </p>
+  </section>
+
+  <!-- Основное содержимое для PRO -->
+  <main id="feedbackMain" class="hidden">
+    <section class="hero">
+      <div class="hero-left">
+        <h1>Ваша личная обратная связь</h1>
+        <p>
+          Здесь собираются все комментарии кураторов по заданиям из разных курсов.
+          Удобно возвращаться, перечитывать и отслеживать, как растёт ваш английский.
+        </p>
+      </div>
+      <div class="hero-right">
+        <div class="stat-pill">
+          📨 Новые проверки: <strong id="statNew">0</strong>
+        </div>
+        <div class="stat-pill">
+          ✅ Всего проверено: <strong id="statChecked">0</strong>
+        </div>
+        <div class="stat-pill">
+          📚 Курсов: <strong id="statCourses">0</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="filters-row">
+      <label for="filterCourse">Курс:</label>
+      <select id="filterCourse">
+        <option value="all">Все курсы</option>
+      </select>
+
+      <label for="filterStatus">Статус:</label>
+      <select id="filterStatus">
+        <option value="all">Все</option>
+        <option value="with-feedback">С проверкой</option>
+        <option value="pending">В ожидании</option>
+        <option value="needs">Нужны правки</option>
+      </select>
+
+      <label for="filterLesson">Урок:</label>
+      <select id="filterLesson">
+        <option value="all">Любой урок</option>
+      </select>
+    </section>
+
+    <section class="tabs">
+      <button class="tab-btn active" data-tab="all">
+        🌍 Все отзывы
+      </button>
+      <button class="tab-btn" data-tab="recent">
+        ✨ Последние
+      </button>
+      <button class="tab-btn" data-tab="practice">
+        🔁 Куда вернуться
+      </button>
+    </section>
+
+    <section class="grid">
+      <!-- Список -->
+      <article class="card">
+        <h2>Задания и комментарии</h2>
+        <p class="subtitle">Выберите карточку, чтобы увидеть полный комментарий.</p>
+        <ul id="feedbackList" class="list"></ul>
+        <div id="feedbackEmpty" class="empty hidden">
+          Здесь появятся задания, которые вы отправляете на проверку в курсе.
+        </div>
+      </article>
+
+      <!-- Детали -->
+      <article class="card">
+        <h2 id="detailTitle">Выберите задание</h2>
+        <p class="subtitle" id="detailSubtitle">
+          Справа вы увидите свой ответ, комментарий куратора и подсказки, над чем работать дальше.
+        </p>
+
+        <div id="detailBody" class="hidden">
+          <div class="detail-section">
+            <h3>Курс и урок</h3>
+            <p id="detailCourseLesson"></p>
+          </div>
+
+          <div class="detail-section">
+            <h3>Ваш ответ</h3>
+            <p id="detailAnswer"></p>
+            <div id="detailAudioWrap" class="hidden">
+              <audio id="detailAudio" controls></audio>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h3>Комментарий куратора</h3>
+            <p id="detailFeedback"></p>
+          </div>
+
+          <div class="detail-section">
+            <h3>Статус</h3>
+            <div id="detailStatusBadge"></div>
+          </div>
+
+          <div class="detail-section">
+            <div class="highlight" id="detailHighlight">
+              Подсказка куратора появится здесь.
+            </div>
+          </div>
+
+          <div class="detail-meta" id="detailMeta"></div>
+        </div>
+
+        <div id="detailEmpty" class="empty">
+          Выберите задание слева, чтобы увидеть подробный разбор.
+        </div>
+      </article>
+    </section>
+  </main>
+</div>
+
+<!-- ЛОГИКА -->
+<script type="module">
+  import {
+    onAuthStateChanged,
+    getIdTokenResult
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  import {
+    collectionGroup,
+    query,
+    where,
+    orderBy,
+    onSnapshot,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  // Предполагаем, что где-то на сайте уже выполнен firebase-init
+  // и доступны:
+  const auth = window.firebaseAuth;
+  const db   = window.firebaseDb;
+
+  // DOM-элементы
+  const proStatusPill = document.getElementById("proStatusPill");
+  const backToStudent = document.getElementById("backToStudent");
+  const goToPro       = document.getElementById("goToPro");
+
+  const lockedBlock   = document.getElementById("lockedBlock");
+  const feedbackMain  = document.getElementById("feedbackMain");
+
+  const statNewEl      = document.getElementById("statNew");
+  const statCheckedEl  = document.getElementById("statChecked");
+  const statCoursesEl  = document.getElementById("statCourses");
+
+  const filterCourseEl = document.getElementById("filterCourse");
+  const filterStatusEl = document.getElementById("filterStatus");
+  const filterLessonEl = document.getElementById("filterLesson");
+
+  const tabs           = document.querySelectorAll(".tab-btn");
+
+  const feedbackList   = document.getElementById("feedbackList");
+  const feedbackEmpty  = document.getElementById("feedbackEmpty");
+
+  const detailTitle    = document.getElementById("detailTitle");
+  const detailSubtitle = document.getElementById("detailSubtitle");
+  const detailBody     = document.getElementById("detailBody");
+  const detailEmpty    = document.getElementById("detailEmpty");
+  const detailCourseLesson = document.getElementById("detailCourseLesson");
+  const detailAnswer   = document.getElementById("detailAnswer");
+  const detailAudioWrap= document.getElementById("detailAudioWrap");
+  const detailAudio    = document.getElementById("detailAudio");
+  const detailFeedback = document.getElementById("detailFeedback");
+  const detailStatusBadge = document.getElementById("detailStatusBadge");
+  const detailHighlight= document.getElementById("detailHighlight");
+  const detailMeta     = document.getElementById("detailMeta");
+
+  let currentUser = null;
+  let hasPro      = false;
+  let submissions = []; // массив дергаемых документов
+  let activeTab   = "all";
+
+  backToStudent.addEventListener("click", () => {
+    window.location.href = "/student/";
+  });
+
+  goToPro.addEventListener("click", () => {
+    window.location.href = "/courses/pro.html";
+  });
+
+  tabs.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabs.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeTab = btn.dataset.tab;
+      renderList();
+      clearDetail();
+    });
+  });
+
+  filterCourseEl.addEventListener("change", () => {
+    buildLessonFilter();
+    renderList();
+    clearDetail();
+  });
+  filterStatusEl.addEventListener("change", () => {
+    renderList();
+    clearDetail();
+  });
+  filterLessonEl.addEventListener("change", () => {
+    renderList();
+    clearDetail();
+  });
+
+  // --- Проверяем авторизацию и PRO ---
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      proStatusPill.textContent = "Войдите в аккаунт, чтобы увидеть проверки";
+      lockedBlock.classList.remove("hidden");
+      feedbackMain.classList.add("hidden");
+      return;
+    }
+
+    currentUser = user;
+    proStatusPill.textContent = user.email || "Профиль";
+
+    // Проверяем custom claims (если когда-нибудь будешь их ставить)
+    let claimsHasPro = false;
+    try {
+      const tokenRes = await getIdTokenResult(user);
+      const claims = tokenRes.claims || {};
+      claimsHasPro = !!(claims.hasPro || claims.pro === true);
+    } catch (e) {
+      console.warn("Не удалось получить custom claims:", e);
+    }
+
+    // Проверяем Firestore профиль /users/{uid} и /users/{email}
+    let profileHasPro = false;
+    try {
+      const uidRef   = doc(db, "users", user.uid);
+      const uidSnap  = await getDoc(uidRef);
+      let profile = uidSnap.exists() ? uidSnap.data() : null;
+
+      if (!profile && user.email) {
+        const emailRef  = doc(db, "users", user.email);
+        const emailSnap = await getDoc(emailRef);
+        if (emailSnap.exists()) profile = emailSnap.data();
+      }
+
+      if (profile) {
+        const now = new Date();
+        const proUntil = profile.proUntil && profile.proUntil.toDate
+          ? profile.proUntil.toDate()
+          : null;
+
+        profileHasPro =
+          profile.hasPro === true ||
+          (proUntil && proUntil > now);
+      }
+    } catch (e) {
+      console.warn("Не удалось прочитать профиль пользователя:", e);
+    }
+
+    hasPro = claimsHasPro || profileHasPro;
+
+    if (!hasPro) {
+      proStatusPill.classList.remove("pro");
+      proStatusPill.textContent = "PRO не активен";
+      lockedBlock.classList.remove("hidden");
+      feedbackMain.classList.add("hidden");
+      return;
+    }
+
+    proStatusPill.classList.add("pro");
+    proStatusPill.innerHTML = "✨ PRO активно";
+
+    lockedBlock.classList.add("hidden");
+    feedbackMain.classList.remove("hidden");
+
+    initFeedbackListener();
+  });
+
+  // --- Слушаем все ответы ученика во всех курсах ---
+
+  function initFeedbackListener() {
+    if (!currentUser) return;
+
+    const email = currentUser.email || null;
+    const uid   = currentUser.uid;
+
+    // Берём всё из коллекций answers, где userEmail == email ИЛИ userUid == uid
+    const qRef = query(
+      collectionGroup(db, "answers"),
+      where("userUid", "==", uid),
+      orderBy("createdAt", "desc")
+    );
+
+    onSnapshot(qRef, (snap) => {
+      submissions = [];
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        // на всякий случай дополнительно фильтранём по email, если нужно
+        if (d.userUid === uid || d.userEmail === email) {
+          submissions.push({
+            id: docSnap.id,
+            refPath: docSnap.ref.path,
+            ...d
+          });
+        }
+      });
+
+      buildCourseFilter();
+      buildLessonFilter();
+      renderStats();
+      renderList();
+      clearDetail();
+    });
+  }
+
+  function renderStats() {
+    const coursesSet = new Set();
+    let checked = 0;
+    let newFeedback = 0;
+
+    submissions.forEach(s => {
+      if (s.courseId) coursesSet.add(s.courseId);
+      if (s.status && s.status !== "pending") {
+        checked++;
+      }
+      // "новые" условно считаем все, где есть feedback и нет поля feedbackSeen === true
+      if (s.feedback && !s.feedbackSeen) {
+        newFeedback++;
+      }
+    });
+
+    statNewEl.textContent     = newFeedback;
+    statCheckedEl.textContent = checked;
+    statCoursesEl.textContent = coursesSet.size;
+  }
+
+  function buildCourseFilter() {
+    const selected = filterCourseEl.value || "all";
+    filterCourseEl.innerHTML = `<option value="all">Все курсы</option>`;
+
+    const byCourse = new Map();
+    submissions.forEach(s => {
+      const cid = s.courseId || "unknown";
+      const title = s.courseTitle || cid;
+      if (!byCourse.has(cid)) {
+        byCourse.set(cid, { title, count: 0 });
+      }
+      byCourse.get(cid).count++;
+    });
+
+    byCourse.forEach((bucket, cid) => {
+      const opt = document.createElement("option");
+      opt.value = cid;
+      opt.textContent = `${bucket.title} (${bucket.count})`;
+      filterCourseEl.appendChild(opt);
+    });
+
+    if ([...byCourse.keys()].includes(selected)) {
+      filterCourseEl.value = selected;
+    } else {
+      filterCourseEl.value = "all";
+    }
+  }
+
+  function buildLessonFilter() {
+    const courseFilter = filterCourseEl.value;
+    const selectedLesson = filterLessonEl.value || "all";
+
+    filterLessonEl.innerHTML = `<option value="all">Любой урок</option>`;
+
+    const setLessons = new Map(); // key: lessonId
+
+    submissions.forEach(s => {
+      if (courseFilter !== "all" && (s.courseId || "unknown") !== courseFilter) return;
+      const lid = s.lessonId || "lesson";
+      if (!setLessons.has(lid)) {
+        setLessons.set(lid, s.lessonTitle || lid);
+      }
+    });
+
+    setLessons.forEach((title, lid) => {
+      const opt = document.createElement("option");
+      opt.value = lid;
+      opt.textContent = title;
+      filterLessonEl.appendChild(opt);
+    });
+
+    if ([...setLessons.keys()].includes(selectedLesson)) {
+      filterLessonEl.value = selectedLesson;
+    } else {
+      filterLessonEl.value = "all";
+    }
+  }
+
+  // --- Рендер списка с учётом фильтров и вкладок ---
+
+  function renderList() {
+    feedbackList.innerHTML = "";
+    feedbackEmpty.classList.add("hidden");
+
+    let list = submissions.slice();
+
+    const courseFilter = filterCourseEl.value;
+    const statusFilter = filterStatusEl.value;
+    const lessonFilter = filterLessonEl.value;
+
+    if (courseFilter !== "all") {
+      list = list.filter(s => (s.courseId || "unknown") === courseFilter);
+    }
+
+    if (lessonFilter !== "all") {
+      list = list.filter(s => (s.lessonId || "lesson") === lessonFilter);
+    }
+
+    if (statusFilter === "with-feedback") {
+      list = list.filter(s => !!s.feedback);
+    } else if (statusFilter === "pending") {
+      list = list.filter(s => (s.status || "pending") === "pending");
+    } else if (statusFilter === "needs") {
+      list = list.filter(s => s.status === "needs-more-practice" || s.status === "needs-fix");
+    }
+
+    // вкладки
+    if (activeTab === "recent") {
+      list = list.slice(0, 5);
+    } else if (activeTab === "practice") {
+      list = list.filter(s => s.status === "needs-more-practice" || s.status === "needs-fix");
+    }
+
+    if (!list.length) {
+      feedbackEmpty.classList.remove("hidden");
+      return;
+    }
+
+    list.forEach(s => {
+      const li = document.createElement("li");
+      li.className = "list-item";
+      li.addEventListener("click", () => showDetail(s));
+
+      const statusClass =
+        s.status === "approved"
+          ? "status-checked"
+          : s.status === "needs-more-practice" || s.status === "needs-fix"
+          ? "status-needs"
+          : "status-pending";
+
+      const lessonTitle = s.lessonTitle || "Урок";
+      const courseTitle = s.courseTitle || s.courseId || "Курс";
+
+      const answerText = (s.answerText || s.answer || "").toString();
+      const shortAnswer = answerText.length > 90
+        ? answerText.slice(0, 90).trim() + "…"
+        : answerText || "<em>Ответ без текста</em>";
+
+      li.innerHTML = `
+        <div class="list-top">
+          <div>
+            <span class="course-label">${courseTitle}</span>
+          </div>
+          <div class="status-tag ${statusClass}">
+            ${statusLabel(s)}
+          </div>
+        </div>
+        <div class="lesson-title">${lessonTitle}</div>
+        <div class="snippet">${shortAnswer}</div>
+      `;
+
+      feedbackList.appendChild(li);
+    });
+  }
+
+  function statusLabel(s) {
+    const st = s.status || "pending";
+    if (st === "approved") return "Проверено ✅";
+    if (st === "needs-more-practice" || st === "needs-fix") return "Нужна доработка ✏️";
+    return "В ожидании проверки ⏳";
+  }
+
+  // --- Детали карточки ---
+
+  function showDetail(s) {
+    detailBody.classList.remove("hidden");
+    detailEmpty.classList.add("hidden");
+
+    const courseTitle = s.courseTitle || s.courseId || "Курс";
+    const lessonTitle = s.lessonTitle || "Урок";
+
+    detailTitle.textContent = lessonTitle;
+    detailSubtitle.textContent = "Подробности вашего ответа и комментарий куратора по этому заданию.";
+
+    detailCourseLesson.innerHTML = `
+      <strong>${courseTitle}</strong><br/>
+      ${lessonTitle}
+    `;
+
+    const answerText = (s.answerText || s.answer || "").toString().trim();
+    detailAnswer.innerHTML = answerText
+      ? answerText.replace(/\n/g, "<br/>")
+      : "<em>Ответ без текста</em>";
+
+    if (s.audioAnswerBase64) {
+      const src = "data:audio/webm;base64," + s.audioAnswerBase64;
+      detailAudio.src = src;
+      detailAudioWrap.classList.remove("hidden");
+    } else {
+      detailAudioWrap.classList.add("hidden");
+    }
+
+    detailFeedback.innerHTML = s.feedback
+      ? s.feedback.replace(/\n/g, "<br/>")
+      : "<em>Куратор ещё не оставил комментарий. Как только проверка будет готова, вы увидите её здесь.</em>";
+
+    const st = s.status || "pending";
+    const statusText = statusLabel(s);
+    let badgeClass = "status-pending";
+    if (st === "approved") badgeClass = "status-checked";
+    else if (st === "needs-more-practice" || st === "needs-fix") badgeClass = "status-needs";
+
+    detailStatusBadge.innerHTML = `
+      <span class="badge-small ${badgeClass}">
+        ${statusText}
+      </span>
+    `;
+
+    // Подсказка
+    if (st === "approved") {
+      detailHighlight.textContent =
+        "Куратор считает, что с этим заданием вы справились отлично. Можно двигаться дальше — и время от времени возвращаться сюда для сверки прогресса.";
+    } else if (st === "needs-more-practice" || st === "needs-fix") {
+      detailHighlight.textContent =
+        "Здесь есть то, что можно улучшить. Посмотрите внимательно на комментарий куратора, перечитайте задание и попробуйте ещё раз — вы уже очень близко!";
+    } else {
+      detailHighlight.textContent =
+        "Ваше задание уже в очереди на проверку. Как только куратор оставит комментарий, он появится здесь.";
+    }
+
+    const createdAt = s.createdAt?.toDate ? s.createdAt.toDate() : null;
+    const checkedAt = s.checkedAt?.toDate ? s.checkedAt.toDate() : null;
+
+    detailMeta.textContent =
+      "Отправлено: " +
+      (createdAt ? createdAt.toLocaleString("ru-RU") : "—") +
+      (checkedAt ? " · Проверено: " + checkedAt.toLocaleString("ru-RU") : "");
+  }
+
+  function clearDetail() {
+    detailBody.classList.add("hidden");
+    detailEmpty.classList.remove("hidden");
+    detailTitle.textContent = "Выберите задание";
+    detailSubtitle.textContent =
+      "Справа вы увидите свой ответ, комментарий куратора и подсказки, над чем работать дальше.";
+  }
+</script>
+</body>
+</html>
