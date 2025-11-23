@@ -1649,7 +1649,7 @@ if (recordBtn && stopBtn && audioPlay) {
         mediaRecorder.start();
         recordBtn.disabled = true;
         stopBtn.disabled   = false;
-        audioFeedback?.classList.add("hidden");
+        audioFeedback.classList.add("hidden");
 
         // Показать индикатор записи
         if (recordingWrapper && recordingBar && recordingStatus) {
