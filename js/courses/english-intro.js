@@ -2,13 +2,40 @@
 //   PolyTalky — English Intro: общая логика курса
 // ==============================================
 
-// Firebase (инициализирован в firebase-init.js)
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  getDocs,
+  query,
+  orderBy,
+  doc,
+  setDoc,
+  arrayUnion,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// Firebase (инициализирован в firebase-init.js в <head>)
 const auth = window.firebaseAuth;
 const db   = window.firebaseDb;
 
-// Конфиг урока
+// Конфиг текущего урока
 const config = window.lessonConfig || {};
 
+const LESSON_ID        = config.lessonId        || "";
+const LESSON_SLUG      = config.lessonSlug      || "";
+const COURSE_ID        = config.courseId        || "";
+const LESSON_QA_DOC_ID = config.lessonQaDocId   || LESSON_ID;
+const SUBMISSIONS_ROOT = config.submissionsRoot || "lessonSubmissions";
+const TOTAL_STEPS      = config.totalSteps      || null;
+const AUDIO_NEXT_STEP  = config.audioNextStep   || null;
+const VOCAB_CATEGORY   = config.vocabCategory   || "";
+
+// Состояние пользователя
 let currentUser = null;
 let isProUser   = false;
 
@@ -21,15 +48,12 @@ function getUserKey() {
 
 // ====== Профиль пользователя / PRO ======
 async function loadUserProfile(user) {
-  // по умолчанию считаем, что PRO нет
   isProUser = false;
-
   if (!user) return;
 
   try {
     const email = user.email || null;
     const uid   = user.uid   || null;
-
     if (!email && !uid) return;
 
     const usersCol = collection(db, "users");
@@ -44,27 +68,18 @@ async function loadUserProfile(user) {
     const emailData = emailSnap && emailSnap.exists() ? (emailSnap.data() || {}) : null;
     const uidData   = uidSnap   && uidSnap.exists()   ? (uidSnap.data()   || {}) : null;
 
-    // объединяем данные, как в личном кабинете
-    const merged = {
-      ...(uidData || {}),
-      ...(emailData || {}),
-    };
-
+    const merged = { ...(uidData || {}), ...(emailData || {}) };
     if (!Object.keys(merged).length) {
       isProUser = false;
       return;
     }
 
-    // основная логика PRO — как в student/index.html
     const proGlobal = merged.proGlobal === true;
-
-    // поддерживаем и новое поле, и возможные старые варианты
     let proValidUntil = merged.proValidUntil || merged.proUntil || null;
     if (proValidUntil && typeof proValidUntil.toDate === "function") {
       proValidUntil = proValidUntil.toDate();
     }
 
-    // запасной вариант: старые поля (на случай старых пользователей)
     const legacyPro =
       merged.proActive ||
       merged.isPro ||
@@ -87,29 +102,40 @@ async function loadUserProfile(user) {
   }
 }
 
-// ====== Загрузка PRO-ответов (сейчас только аудио) ======
+// ====== Загрузка PRO-ответов (hello + аудио) ======
+const audioPlay = document.getElementById("audio-playback");
+
 async function loadProAnswers() {
-  if (!currentUser || !isProUser) return;
+  if (!currentUser || !isProUser || !LESSON_ID) return;
 
   const userKey = getUserKey();
   if (!userKey) return;
 
-  // Ожидаем, что LESSON_ID задан глобально (в lesson HTML)
-  const ref = doc(db, "lessonSubmissions", LESSON_ID, "answers", userKey);
-  const snap = await getDoc(ref);
+  try {
+    const ref  = doc(db, SUBMISSIONS_ROOT, LESSON_ID, "answers", userKey);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) return;
 
-  if (!snap.exists()) return;
-  const data = snap.data();
+    const data = snap.data();
 
-  // загрузка аудио (элемент audioPlay объявлен ниже, но к моменту вызова уже инициализирован)
-  if (data.audioAnswerBase64 && window.audioPlay) {
-    const url = "data:audio/webm;base64," + data.audioAnswerBase64;
-    window.audioPlay.src = url;
-    window.audioPlay.style.display = "block";
+    // hello-ответ (если поле есть)
+    const helloInput = document.getElementById("task-hello-input");
+    if (data.helloAnswer && helloInput) {
+      helloInput.value = data.helloAnswer;
+    }
+
+    // аудио-ответ
+    if (data.audioAnswerBase64 && audioPlay) {
+      const url = "data:audio/webm;base64," + data.audioAnswerBase64;
+      audioPlay.src = url;
+      audioPlay.style.display = "block";
+    }
+  } catch (e) {
+    console.error("Не удалось загрузить ответы по уроку:", e);
   }
 }
 
-// ====== Базовые элементы шапки ======
+// ====== Элементы шапки ======
 const feedbackLink = document.getElementById("feedback-link");
 const loginBtn     = document.getElementById("login-btn");
 const userStatus   = document.getElementById("user-status");
@@ -124,34 +150,35 @@ if (loginBtn) {
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
-    if (userStatus) {
-      userStatus.textContent = `Вы вошли как: ${user.email}`;
-    }
-    if (loginBtn)     loginBtn.classList.add("hidden");
+    if (userStatus) userStatus.textContent = `Вы вошли как: ${user.email}`;
+    if (loginBtn)   loginBtn.classList.add("hidden");
 
     await loadUserProfile(user);
     await loadProAnswers();
 
-    // === показываем/скрываем кнопку проверенных заданий ===
     if (feedbackLink) {
-      if (isProUser) {
-        feedbackLink.classList.remove("hidden");
-      } else {
-        feedbackLink.classList.add("hidden");
-      }
+      if (isProUser) feedbackLink.classList.remove("hidden");
+      else           feedbackLink.classList.add("hidden");
     }
   } else {
     currentUser = null;
     isProUser   = false;
-    if (userStatus) {
-      userStatus.textContent = "Вы не авторизованы";
-    }
-    if (loginBtn)     loginBtn.classList.remove("hidden");
+    if (userStatus) userStatus.textContent = "Вы не авторизованы";
+    if (loginBtn)   loginBtn.classList.remove("hidden");
     if (feedbackLink) feedbackLink.classList.add("hidden");
+  }
+
+  // Для НЕ-PRO в уроке 1 подставляем приветствие из localStorage
+  if (!isProUser && LESSON_SLUG === "lesson-01-hello") {
+    const helloInput = document.getElementById("task-hello-input");
+    if (helloInput) {
+      const saved = localStorage.getItem("lesson1_hello") || "";
+      if (saved) helloInput.value = saved;
+    }
   }
 });
 
-// ====== UI-элементы, работающие для уроков ======
+// ====== Общие UI-элементы ======
 const stepPanels      = document.querySelectorAll(".step-panel");
 const stepDots        = document.querySelectorAll(".step-dot");
 
@@ -172,9 +199,56 @@ const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
 
 const audioFeedback = document.getElementById("audio-feedback");
 
-let currentStep  = 1;
-// totalSteps и другие константы (LESSON_ID, SUBMISSIONS_ROOT, LESSON_SLUG, COURSE_ID, LESSON_QA_DOC_ID)
-// ожидаются как глобальные, заданные в HTML урока
+let currentStep = 1;
+
+// ====== Прогресс + бейдж (только для урока 1) ======
+async function saveLessonProgressAndBadge() {
+  if (!currentUser || LESSON_SLUG !== "lesson-01-hello") return;
+
+  const userKey = getUserKey();
+  if (!userKey) return;
+
+  try {
+    // прогресс по курсу
+    await setDoc(
+      doc(db, "users", userKey),
+      {
+        progress: {
+          [COURSE_ID]: {
+            percent:     25,
+            lastLessonId: LESSON_SLUG
+          }
+        }
+      },
+      { merge: true }
+    );
+
+    // бейдж
+    const badgeId = "english-intro-lesson1";
+    const badgePayload = {
+      badgeId,
+      title:    "Первое hello",
+      courseId: COURSE_ID,
+      lesson:   LESSON_SLUG,
+      earnedAt: serverTimestamp()
+    };
+
+    await Promise.all([
+      setDoc(
+        doc(db, `users/${userKey}/badges/${badgeId}`),
+        badgePayload,
+        { merge: true }
+      ),
+      setDoc(
+        doc(db, "users", userKey),
+        { badges: arrayUnion(badgeId) },
+        { merge: true }
+      )
+    ]);
+  } catch (e) {
+    console.error("Не удалось сохранить прогресс/бейдж:", e);
+  }
+}
 
 // ====== Переход по шагам ======
 function showStep(n) {
@@ -185,46 +259,47 @@ function showStep(n) {
   stepDots.forEach(dot => {
     dot.classList.remove("step-dot--active", "step-dot--done");
     const step = Number(dot.dataset.step);
-    if (step < n)  dot.classList.add("step-dot--done");
+    if (step < n)   dot.classList.add("step-dot--done");
     if (step === n) dot.classList.add("step-dot--active");
   });
 
-  if (typeof totalSteps !== "undefined" && typeof saveLessonProgress === "function") {
-    if (n === totalSteps) {
-      // реализация saveLessonProgress хранится в самом уроке
-      saveLessonProgress().catch(console.error);
-    }
+  const total = TOTAL_STEPS || stepDots.length;
+  if (n === total) {
+    // В уроке 1 — сохраняем прогресс и выдаём бейдж
+    saveLessonProgressAndBadge().catch(console.error);
   }
 
   currentStep = n;
 }
 
+// next-кнопки (кроме hello — у него своя логика)
 document.querySelectorAll(".next-step-btn").forEach(btn => {
+  if (btn.id === "task-hello-submit") return;
   btn.addEventListener("click", () => {
     const next = Number(btn.dataset.next);
     if (next) showStep(next);
   });
 });
 
-// ====== Сохранение заданий PRO ======
+// ====== Сохранение заданий PRO (общая функция) ======
 async function saveProSubmission(partialData) {
-  if (!currentUser || !isProUser) return;
+  if (!currentUser || !isProUser || !LESSON_ID) return;
   const userKey = getUserKey();
   if (!userKey) return;
 
   const answerRef = doc(
     db,
-    SUBMISSIONS_ROOT, // ожидается глобально, например "lessonSubmissions"
+    SUBMISSIONS_ROOT,
     LESSON_ID,
     "answers",
     userKey
   );
 
   const baseData = {
-    userEmail: currentUser.email || null,
-    userUid:   currentUser.uid,
-    isPro:     true,
-    courseId:  COURSE_ID,
+    userEmail:  currentUser.email || null,
+    userUid:    currentUser.uid,
+    isPro:      true,
+    courseId:   COURSE_ID,
     lessonSlug: LESSON_SLUG,
     updatedAt:  serverTimestamp()
   };
@@ -236,6 +311,40 @@ async function saveProSubmission(partialData) {
   );
 }
 
+// ====== Урок 1: мини-задание «приветствие» ======
+const helloInput    = document.getElementById("task-hello-input");
+const helloBtn      = document.getElementById("task-hello-submit");
+const helloFeedback = document.getElementById("hello-feedback");
+
+if (helloBtn && helloInput && LESSON_SLUG === "lesson-01-hello") {
+  helloBtn.addEventListener("click", async () => {
+    const val = helloInput.value.trim();
+    if (!val) {
+      alert("Напишите любое английское приветствие :)");
+      return;
+    }
+
+    if (helloFeedback) helloFeedback.classList.remove("hidden");
+
+    if (currentUser && isProUser) {
+      // PRO: сохраняем для куратора
+      try {
+        await saveProSubmission({ helloAnswer: val });
+      } catch (e) {
+        console.error("Не удалось сохранить приветствие для PRO:", e);
+      }
+    } else {
+      // НЕ PRO: просто в localStorage
+      localStorage.setItem("lesson1_hello", val);
+    }
+
+    setTimeout(() => {
+      if (helloFeedback) helloFeedback.classList.add("hidden");
+      showStep(2);
+    }, 1100);
+  });
+}
+
 // ====== Аудиозапись ======
 let mediaRecorder = null;
 let audioChunks   = [];
@@ -243,18 +352,14 @@ let audioStream   = null;
 
 const recordBtn        = document.getElementById("record-btn");
 const stopBtn          = document.getElementById("stop-btn");
-const audioPlay        = document.getElementById("audio-playback");
 const recordingWrapper = document.getElementById("recording-wrapper");
 const recordingBar     = document.getElementById("recording-bar");
 const recordingStatus  = document.getElementById("recording-status");
-
-window.audioPlay = audioPlay; // чтобы loadProAnswers мог к нему обратиться
 
 let recordingInterval = null;
 let recordingProgress = 0;
 
 if (recordBtn && stopBtn && audioPlay) {
-  // Проверяем, поддерживает ли браузер запись
   const canRecord =
     navigator.mediaDevices &&
     typeof navigator.mediaDevices.getUserMedia === "function" &&
@@ -274,7 +379,7 @@ if (recordBtn && stopBtn && audioPlay) {
           audioStream.getTracks().forEach(track => track.stop());
         }
 
-        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioStream   = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(audioStream);
 
         mediaRecorder.addEventListener("dataavailable", e => {
@@ -325,9 +430,8 @@ if (recordBtn && stopBtn && audioPlay) {
           }
           if (recordingBar) recordingBar.style.width = "100%";
 
-          const audioNextStep = config.audioNextStep || stepDots.length;
+          const nextStepAfterAudio = AUDIO_NEXT_STEP || stepDots.length;
 
-          // Если PRO — сохраняем аудио (base64) для проверки куратором
           if (isProUser && currentUser) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -350,10 +454,9 @@ if (recordBtn && stopBtn && audioPlay) {
             audioFeedback.classList.remove("hidden");
           }
 
-          // Переход на финальный шаг — только после успешной записи
           setTimeout(() => {
             if (audioFeedback) audioFeedback.classList.add("hidden");
-            showStep(audioNextStep);
+            showStep(nextStepAfterAudio);
           }, 1800);
         });
 
@@ -362,7 +465,6 @@ if (recordBtn && stopBtn && audioPlay) {
         stopBtn.disabled   = false;
         if (audioFeedback) audioFeedback.classList.add("hidden");
 
-        // Показать индикатор записи
         if (recordingWrapper && recordingBar && recordingStatus) {
           recordingWrapper.classList.remove("hidden");
           recordingStatus.classList.remove("hidden");
@@ -447,6 +549,7 @@ if (qaOpenBtns && qaModal && qaList && qaForm && qaText && qaSubmitBtn) {
         createdAt: serverTimestamp(),
         answer:    null
       });
+
       qaText.value = "";
       await loadQuestions();
     } catch (err) {
@@ -515,7 +618,7 @@ if (qaOpenBtns && qaModal && qaList && qaForm && qaText && qaSubmitBtn) {
   }
 }
 
-// ====== Озвучка ======
+// ====== Озвучка слов из таблицы ======
 let englishVoices = [];
 
 if ("speechSynthesis" in window && window.speechSynthesis) {
@@ -534,8 +637,6 @@ function speakWord(word) {
   const utter = new SpeechSynthesisUtterance(word);
   utter.lang   = "en-US";
   utter.rate   = 0.8;
-  utter.pitch  = 1.0;
-  utter.volume = 1.0;
 
   if (englishVoices.length > 0) {
     utter.voice = englishVoices[0];
@@ -545,32 +646,74 @@ function speakWord(word) {
   window.speechSynthesis.speak(utter);
 }
 
-// Включаем озвучку по клику на слова из таблицы
 document.querySelectorAll(".word-tip").forEach(tip => {
   tip.addEventListener("click", () => {
     const word = tip.textContent.trim();
-    if (word) {
-      speakWord(word);
-    }
+    if (word) speakWord(word);
   });
 });
 
-// ====== Окно словаря ======
+// ====== Словарик (слова из таблиц) ======
+const vocabListVowels = document.getElementById("vocab-vowels");
+
+function buildVocabEntries() {
+  const tips = document.querySelectorAll("#step-3 .word-tip");
+  const map  = new Map();
+
+  tips.forEach(tip => {
+    const w  = tip.textContent.trim().toLowerCase();
+    const ru = (tip.dataset.ru || "").trim();
+    if (/^[a-z]+$/.test(w) && !map.has(w)) {
+      map.set(w, ru);
+    }
+  });
+
+  return Array.from(map.entries()).map(([word, translation]) => ({
+    word,
+    translation
+  }));
+}
+
+function renderVocabWords() {
+  if (!vocabListVowels) return;
+
+  const entries = buildVocabEntries();
+  vocabListVowels.innerHTML = "";
+
+  entries.forEach(({ word, translation }) => {
+    const label = document.createElement("label");
+    label.className = "flex items-center gap-2 text-[0.85rem]";
+
+    const ruPart = translation
+      ? `<span class="text-gray-400 text-[0.78rem] ml-1">— ${translation}</span>`
+      : "";
+
+    label.innerHTML = `
+      <input type="checkbox"
+             class="vocab-word"
+             data-word="${word}"
+             data-ru="${translation}"
+             data-category="${VOCAB_CATEGORY}">
+      <span>${word}</span>
+      ${ruPart}
+    `;
+
+    vocabListVowels.appendChild(label);
+  });
+}
+
 if (openVocabBtn && vocabModal && vocabClose && vocabSaveBtn && vocabSelectAll) {
   openVocabBtn.addEventListener("click", () => {
     vocabModal.classList.remove("hidden");
     vocabModal.classList.add("flex");
 
-    // renderVowelWords() реализуется в конкретном уроке
-    if (typeof renderVowelWords === "function") {
-      renderVowelWords();
-    }
+    renderVocabWords();
 
     if (!currentUser) {
-      vocabAuthWarn?.classList.remove("hidden");
+      if (vocabAuthWarn) vocabAuthWarn.classList.remove("hidden");
       vocabSaveBtn.disabled = true;
     } else {
-      vocabAuthWarn?.classList.add("hidden");
+      if (vocabAuthWarn) vocabAuthWarn.classList.add("hidden");
       vocabSaveBtn.disabled = false;
     }
   });
@@ -595,13 +738,13 @@ if (openVocabBtn && vocabModal && vocabClose && vocabSaveBtn && vocabSelectAll) 
 
     for (const { word, translation } of entries) {
       await addDoc(colRef, {
-  word,
-  translation: translation || "",
-  lesson:      LESSON_SLUG,
-  courseId:    COURSE_ID,
-  category:    config.vocabCategory || "",
-  addedAt:     serverTimestamp()
-});
+        word,
+        translation: translation || "",
+        lesson:      LESSON_SLUG,
+        courseId:    COURSE_ID,
+        category:    VOCAB_CATEGORY || "",
+        addedAt:     serverTimestamp()
+      });
     }
   }
 
@@ -611,7 +754,8 @@ if (openVocabBtn && vocabModal && vocabClose && vocabSaveBtn && vocabSelectAll) 
       return;
     }
 
-    const checked = Array.from(document.querySelectorAll(".vocab-word"))
+    const checked = Array
+      .from(document.querySelectorAll(".vocab-word"))
       .filter(cb => cb.checked)
       .map(cb => ({
         word: cb.dataset.word,
@@ -637,3 +781,6 @@ if (openVocabBtn && vocabModal && vocabClose && vocabSaveBtn && vocabSelectAll) 
     }, 700);
   });
 }
+
+// Старт: показываем первый шаг
+showStep(1);
