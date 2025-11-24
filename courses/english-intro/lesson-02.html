@@ -741,10 +741,20 @@
       <button class="step-dot" data-step="5">
         <div class="step-dot-circle">
           <span class="js-step-indicator">
-            <img class="step-icon" src="/assets/lessons/finish.png" alt="Рассказ о себе">
+            <img class="step-icon" src="/assets/lessons/task.png" alt="Рассказ о себе">
           </span>
         </div>
         <div class="step-dot-label">Задание</div>
+      </button>
+    </div>
+
+     <button class="step-dot" data-step="6">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">
+            <img class="step-icon" src="/assets/lessons/finish.png" alt="Финиш">
+          </span>
+        </div>
+        <div class="step-dot-label">Финиш</div>
       </button>
     </div>
 
@@ -1125,13 +1135,37 @@
         <button id="task-story-submit" class="btn-main">
           Отправить рассказ →
         </button>
-
-        <button class="btn-ghost" id="open-vocab-btn">
-          Добавить слова из урока в словарик →
+        
+<div class="mt-5 flex flex-wrap gap-3 items-center">
+        <button class="btn-ghost next-step-btn" data-next="6">
+          Закончить урок
         </button>
+        </div>
+    </section>
+    <!-- STEP 6 — Финал: словарик + следующий урок -->
+    <section class="step-panel" data-step="6" id="step-6">
+      <div class="step-panel-header">
+        <span class="step-pill">Шаг 6 · DONE</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
+      </div>
+
+      <p class="step-body-text">
+        Отличная работа! Вы прошли второй урок: потренировали гласные в открытом и закрытом положении,
+        познакомились с согласными буквосочетаниями и написали свой небольшой текст.
+      </p>
+
+      <div class="soft-block soft-block--rose mt-4">
+        <p class="step-body-text text-[0.86rem]">
+          В завершение добавьте понравившиеся слова из таблицы в ваш словарик — так они не потеряются,
+          и будет проще возвращаться к повторению.
+        </p>
       </div>
 
       <div class="mt-5 flex flex-wrap gap-3">
+        <button class="btn-main" id="open-vocab-btn">
+          Добавить слова из урока в словарик →
+        </button>
+
         <a href="/courses/english-intro/lesson-03.html" class="btn-ghost">
           Перейти к следующему уроку →
         </a>
@@ -1396,7 +1430,7 @@
 
       // ====== ПРОГРЕСС УРОКА (без бейджа) ======
       let currentStep  = 1;
-      const totalSteps = 5;
+      const totalSteps = 6;
 
       async function saveLessonProgress() {
         if (!currentUser) return;
