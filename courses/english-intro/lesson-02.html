@@ -274,7 +274,18 @@
       font-size:.8rem;
     }
 
-    .step-dot-label{ line-height:1.3; }
+    .step-dot-label{ line-height:1.3; white-space:nowrap;}
+    @media (max-width: 786px) {
+      .step-nav{
+        flex-wrap:nowrap;
+        overflow-x:auto;
+      justify-content:flex-start;
+        gap:1rem;
+      }
+      .step-dot{
+        flex:0 0 auto;
+      }
+    }
 
     .step-dot--active .step-dot-circle{
       background:linear-gradient(145deg,#FFDE59,#FFB347);
