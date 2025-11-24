@@ -757,8 +757,7 @@
         </div>
         <div class="step-dot-label">Задание</div>
       </button>
-    </div>
-
+    
      <button class="step-dot" data-step="6">
         <div class="step-dot-circle">
           <span class="js-step-indicator">
@@ -1406,6 +1405,12 @@
       const loginBtn     = document.getElementById("login-btn");
       const userStatus   = document.getElementById("user-status");
 
+      if (loginBtn){
+        loginBtn.addEventListener("click", () => {
+          window.open("/student/","_blank");
+        });
+      }
+                                 
       const stepPanels = document.querySelectorAll(".step-panel");
       const stepDots   = document.querySelectorAll(".step-dot");
 
