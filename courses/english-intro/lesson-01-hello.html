@@ -1911,6 +1911,10 @@ function speakWord(word) {
   const utter = new SpeechSynthesisUtterance(word);
   utter.lang = "en-US";
 
+  utter.rate = 0.8;
+  utter.pitch = 1.0;
+  utter.volume = 1.0;
+  
   if (englishVoices.length > 0) {
     utter.voice = englishVoices[0];
   }
