@@ -125,7 +125,7 @@ onAuthStateChanged(auth, async (user) => {
     feedbackLink.classList.add("hidden");
   }
    // ====== UI-элементы ======
-      const stepPanels = document.querySelectorAll(".step-panel");
+   
       const stepPanels = document.querySelectorAll(".step-panel");
       const stepDots   = document.querySelectorAll(".step-dot");
       const openVocabBtn    = document.getElementById("open-vocab-btn");
