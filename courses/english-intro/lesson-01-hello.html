@@ -626,11 +626,7 @@
         order: 2;
       }
 
-      #logout-btn{
-        font-size: 0.7rem;
-        padding: .3rem .7rem;
-      }
-
+  
       .back-to-course-btn{
         order: 3;
         margin-right: 0;
@@ -1618,8 +1614,9 @@ function loadLocalAnswer(key) {
       });
 
 // ====== Аудиозапись ======
-let mediaRecorder;
+let mediaRecorder = null;;
 let audioChunks = [];
+let audioStream = null;
 
 const recordBtn        = document.getElementById("record-btn");
 const stopBtn          = document.getElementById("stop-btn");
@@ -1633,75 +1630,41 @@ let recordingProgress = 0;
 
 if (recordBtn && stopBtn && audioPlay) {
   // Проверяем, поддерживает ли браузер запись
-  const canRecord =
-    navigator.mediaDevices &&
+  const canRecord =  navigator.mediaDevices &&
     typeof navigator.mediaDevices.getUserMedia === "function" &&
     typeof MediaRecorder !== "undefined";
 
   if (!canRecord) {
-    // Красиво отключаем фичу, чтобы не было ошибок и странных переходов
     recordBtn.disabled = true;
     stopBtn.disabled   = true;
     recordBtn.textContent = "Запись недоступна в этом браузере";
-
     if (recordingWrapper) recordingWrapper.classList.add("hidden");
   } else {
     recordBtn.addEventListener("click", async () => {
       try {
         audioChunks = [];
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-
-        mediaRecorder.start();
-        recordBtn.disabled = true;
-        stopBtn.disabled   = false;
-        audioFeedback.classList.add("hidden");
-
-        // Показать индикатор записи
-        if (recordingWrapper && recordingBar && recordingStatus) {
-          recordingWrapper.classList.remove("hidden");
-          recordingStatus.classList.remove("hidden");
-          recordingStatus.textContent = "● Идёт запись…";
-          recordingProgress = 0;
-          recordingBar.style.width = "0%";
-
-          if (recordingInterval) {
-            clearInterval(recordingInterval);
-          }
-          recordingInterval = setInterval(() => {
-            recordingProgress += 3;
-            if (recordingProgress > 100) recordingProgress = 100;
-            recordingBar.style.width = recordingProgress + "%";
-          }, 200);
-        }
+        is (audioStream) {
+          audioStream.getTracks().forEach(track => track.stop());
+                  }
+       audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(audioStream);
 
         mediaRecorder.addEventListener("dataavailable", e => {
           if (e.data && e.data.size > 0) {
             audioChunks.push(e.data);
+      }
+  });
+        mediaRecorder.addEventListener("stop", () => {
+          if (audioStream) {
+            audioStream.getTracks().forEach(track => track.stop());
+            audioStream = null;
+  }
+             if (recordingInterval) {
+            clearInterval(recordingInterval);
+               recordingInterval = null;
           }
-        });
-      } catch (err) {
-        console.error(err);
-        alert("Не удалось получить доступ к микрофону. Проверьте доступ к микрофону и попробуйте ещё раз.");
-      }
-    });
 
-    stopBtn.addEventListener("click", () => {
-      if (!mediaRecorder || mediaRecorder.state !== "recording") return;
-
-      mediaRecorder.stop();
-      recordBtn.disabled = false;
-      stopBtn.disabled   = true;
-
-      // Останавливаем анимацию полоски
-      if (recordingInterval) {
-        clearInterval(recordingInterval);
-        recordingInterval = null;
-      }
-
-      mediaRecorder.onstop = () => {
-        // Если по какой-то причине данных нет — не переводим на следующий шаг
-        if (!audioChunks.length) {
+            if (!audioChunks.length) {
           if (recordingWrapper) recordingWrapper.classList.add("hidden");
           if (recordingStatus) {
             recordingStatus.classList.add("hidden");
@@ -1717,7 +1680,7 @@ if (recordBtn && stopBtn && audioPlay) {
           return;
         }
 
-        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+         const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
         const url       = URL.createObjectURL(audioBlob);
         audioPlay.src   = url;
         audioPlay.style.display = "block";
@@ -1737,9 +1700,7 @@ if (recordBtn && stopBtn && audioPlay) {
           const reader = new FileReader();
           reader.onloadend = () => {
             const res = reader.result || "";
-            const base64 = typeof res === "string"
-              ? (res.split(",")[1] || "")
-              : "";
+            const base64 = typeof res === "string" ? (res.split(",")[1] || "") : "";
 
             if (base64) {
               saveProSubmission({
@@ -1753,18 +1714,76 @@ if (recordBtn && stopBtn && audioPlay) {
         if (audioFeedback) {
           audioFeedback.textContent = "⭐️ Отлично получилось! Вы молодец.";
           audioFeedback.classList.remove("hidden");
-        }
-
+        } 
+          
         // Переход на финальный шаг — только после успешной записи
         setTimeout(() => {
           if (audioFeedback) audioFeedback.classList.add("hidden");
           showStep(4);
         }, 1800);
       });
+             
+        mediaRecorder.start();
+        recordBtn.disabled = true;
+        stopBtn.disabled   = false;
+        audioFeedback.classList.add("hidden");
+
+        // Показать индикатор записи
+        if (recordingWrapper && recordingBar && recordingStatus) {
+          recordingWrapper.classList.remove("hidden");
+          recordingStatus.classList.remove("hidden");
+          recordingStatus.textContent = "● Идёт запись…";
+          recordingProgress = 0;
+          recordingBar.style.width = "0%";
+
+       
+          is (recordingInterval) {
+            clearInterval(recordingInterval);
+          }
+          recordingInterval = setInterval(() => {
+            recordingProgress += 3;
+            if (recordingProgress > 100) recordingProgress = 100;
+            recordingBar.style.width = recordingProgress + "%";
+          }, 200);
+        }
+
+  
+      } catch (err) {
+        console.error("Ошибка при записи:", err);
+        alert("Не удалось получить доступ к микрофону. Проверьте разрешения в браузере и попробуйте ещё раз.");
+      if (recordingWrapper) recordingWrapper.classList.add("hidden");
+        if (recordingStatus) recordingStatus.classList.add("hidden");
+                                                        
+      }
+    });
+
+    stopBtn.addEventListener("click", () => {
+      if (!mediaRecorder) {
+        console.warn("mediaRecorder не инициализирован");
+        return;
+      }
+      if (mediaRecorder.state !== "recording") {
+        console.warn("Запись не активна");
+        return;
+      }
+
+      try {
+      mediaRecorder.stop();
+      recordBtn.disabled = false;
+      stopBtn.disabled   = true;
+
+      } catch (err) {
+     console.error("Ошибка при остановке записи:", err);
+        recordBtn.disabled = false;
+        stopBtn.disabled = true;
+
+      }
     });
   }
 }
+     
 
+        
       // ====== Q&A: модалка + Firestore ======
       qaOpenBtns.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -1873,12 +1892,15 @@ if (recordBtn && stopBtn && audioPlay) {
 let englishVoices = [];
 
 if ("speechSynthesis" in window && window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = () => {
-    englishVoices = window.speechSynthesis
+  const loadVoices = () => {
+       englishVoices = window.speechSynthesis
       .getVoices()
       .filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
   };
-}
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+      }
+ 
 
 function speakWord(word) {
   if (!("speechSynthesis" in window) || !window.speechSynthesis) return;
