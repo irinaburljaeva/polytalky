@@ -1,5 +1,23 @@
 // courses/english-intro/english-intro-state.js
-;(function (global) {
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp,
+  getDocs,
+  query,
+  orderBy,
+  doc,
+  setDoc,
+  arrayUnion,
+  getDoc
+} from "https://www.gstatic.com/firebase/10.7.1/firebase-firestore.js";
+
+(function (global) {
   const STORAGE_KEY = "englishIntroState-v1";
 
   const defaultState = {
