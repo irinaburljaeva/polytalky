@@ -1,0 +1,1920 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>English Intro · Урок 2 — Гласные и согласные</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <base href="/">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Firebase init (как в уроке 1) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
+
+    window.firebaseApp  = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(window.firebaseApp);
+    window.firebaseDb   = getFirestore(window.firebaseApp);
+  </script>
+
+  <style>
+    :root{
+      --bg-cream:#FFF8E5;
+      --bg-cream-soft:#FFFDF4;
+      --accent-yellow:#FFDE59;
+      --accent-yellow-deep:#FFBA08;
+      --accent-peach:#FFD4A8;
+      --accent-coral:#FF8A5C;
+      --accent-mint:#C4F1BE;
+      --text-main:#111827;
+      --text-muted:#6b7280;
+      --border-soft:rgba(148,163,184,.35);
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text-main);
+      background:
+        radial-gradient(circle at 0 0, #FFF9D9 0, transparent 55%),
+        radial-gradient(circle at 100% 0, #FFE3CC 0, transparent 55%),
+        linear-gradient(to bottom,#FFFDF6,#FFF8E5);
+      position:relative;
+      overflow-x:hidden;
+    }
+
+    /* фоновые буквы */
+    .bg-letter{
+      position:fixed;
+      font-weight:900;
+      font-size:120px;
+      color:rgba(255,255,255,0.55);
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:-1;
+    }
+    .bg-letter.a{top:5%;left:5%;transform:rotate(-12deg);}
+    .bg-letter.e{top:18%;right:2%;transform:rotate(9deg);}
+    .bg-letter.i{bottom:18%;left:10%;transform:rotate(5deg);}
+    .bg-letter.o{bottom:8%;right:8%;transform:rotate(-7deg);}
+    .bg-letter.u{top:45%;left:45%;transform:rotate(15deg);opacity:0.4;}
+
+    .center-gif-block{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin:1.2rem 0;
+    }
+    .center-gif-block img{
+      max-width:220px;
+      width:100%;
+      border-radius:12px;
+    }
+
+    /* Верхний бар */
+    .top-bar{
+      backdrop-filter:blur(16px);
+      background:linear-gradient(to right,rgba(255,255,255,.9),rgba(255,249,219,.9));
+      border-bottom:1px solid rgba(0,0,0,.06);
+    }
+
+    .back-to-course-btn{
+      font-size:0.85rem;
+      padding:6px 14px;
+      border-radius:8px;
+      background:#fff9e6;
+      border:1px solid #facc15;
+      color:#92400e;
+      text-decoration:none;
+      transition:0.25s;
+      white-space:nowrap;
+    }
+    .back-to-course-btn:hover{
+      background:#fef3c7;
+      border-color:#eab308;
+      color:#78350f;
+      box-shadow:0 4px 10px rgba(234,179,8,0.25);
+    }
+
+    .lesson-shell{
+      max-width:980px;
+      margin:0 auto;
+      padding:1.5rem 1.25rem 3.2rem;
+    }
+
+    /* HERO */
+    .hero-card{
+      position:relative;
+      border-radius:2rem;
+      padding:1.6rem 1.7rem 1.7rem;
+      background:
+        radial-gradient(circle at 0 0,#FFFDF5,transparent 65%),
+        radial-gradient(circle at 120% 10%,rgba(255,222,89,.55),transparent 55%),
+        #FFFFFFE6;
+      border:1px solid rgba(255,255,255,.6);
+      box-shadow:0 20px 60px rgba(0,0,0,.16);
+      overflow:hidden;
+      display:flex;
+      gap:1.6rem;
+      align-items:stretch;
+    }
+
+    .hero-left{
+      flex:1.3;
+      min-width:0;
+    }
+    .hero-right{
+      flex:1;
+      min-width:220px;
+      position:relative;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      font-size:.65rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      padding:.35rem .9rem;
+      border-radius:999px;
+      border:1px solid rgba(156,163,175,.55);
+      background:rgba(255,255,255,.85);
+      color:var(--text-muted);
+    }
+    .hero-title{
+      font-size:1.95rem;
+      line-height:1.1;
+      letter-spacing:-0.03em;
+    }
+    .hero-title .em{
+      background:linear-gradient(90deg,#FF8A5C,#FFDE59);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .hero-tagline{
+      font-size:.8rem;
+      color:var(--text-muted);
+    }
+
+    .hero-right-inner{
+      position:relative;
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      padding-right:1.4rem;
+    }
+
+    .hero-bubbles-cluster{
+      position:relative;
+      width:170px;
+      height:130px;
+    }
+
+    .hero-bubble{
+      position:absolute;
+      border-radius:1.1rem;
+      padding:.45rem .8rem;
+      font-size:.78rem;
+      background:#fffdfa;
+      border:1px solid rgba(148,163,184,.35);
+      box-shadow:0 10px 28px rgba(15,23,42,.18);
+    }
+
+    .hero-bubble--hello{
+      font-weight:700;
+      font-size:.9rem;
+      background:linear-gradient(135deg,#FFDE59,#FFB347);
+      color:#78350f;
+      box-shadow:0 12px 32px rgba(248,181,48,.65);
+      top:0;
+      right:8px;
+    }
+    .hero-bubble--morning{
+      background:#fff7ed;
+      top:46px;
+      left:0;
+    }
+    .hero-bubble--hi{
+      background:#FFFFFF;
+      bottom:4px;
+      right:26px;
+    }
+
+    .hero-bg-circle{
+      position:absolute;
+      width:280px;
+      height:280px;
+      border-radius:999px;
+      background:radial-gradient(circle,#FFE9A6,#FFCE8A,#FFB48F);
+      opacity:.65;
+      right:-80px;
+      top:-80px;
+      filter:blur(10px);
+    }
+
+    /* НАВИГАЦИЯ ШАГОВ — маршрут */
+    .step-nav{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      gap:1.6rem;
+      margin:1.8rem 0 1.4rem;
+      flex-wrap:wrap;
+    }
+    .step-nav::before{
+      content:"";
+      position:absolute;
+      left:8%;
+      right:8%;
+      top:20px;
+      height:2px;
+      background:linear-gradient(90deg,#fee2e2,#fde68a,#dcfce7);
+      z-index:0;
+    }
+
+    .step-dot{
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:.25rem;
+      font-size:.65rem;
+      color:var(--text-muted);
+      max-width:110px;
+      text-align:center;
+    }
+
+    .step-dot-circle{
+      width:32px;height:32px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(255,255,255,.95);
+      box-shadow:0 8px 18px rgba(0,0,0,.08);
+      font-size:.8rem;
+    }
+
+    .step-dot-label{ line-height:1.3; }
+
+    .step-dot--active .step-dot-circle{
+      background:linear-gradient(145deg,#FFDE59,#FFB347);
+      border-color:#f97316;
+      color:#78350f;
+      box-shadow:0 0 0 2px rgba(255,237,213,.95),0 10px 28px rgba(249,115,22,.35);
+      transform:translateY(-1px);
+    }
+
+    .step-dot--done .step-dot-circle{
+      background:linear-gradient(145deg,#4ade80,#22c55e);
+      border-color:#16a34a;
+      color:#ecfdf5;
+    }
+
+    .step-dot--active .step-dot-label{
+      color:#92400e;
+      font-weight:600;
+    }
+    .step-dot--done .step-dot-label{
+      color:#166534;
+    }
+
+    /* ПАНЕЛИ ШАГОВ */
+    .step-panel{
+      display:none;
+      border-radius:1.7rem;
+      background:rgba(255,255,255,.98);
+      border:1px solid rgba(148,163,184,.25);
+      box-shadow:0 18px 52px rgba(15,23,42,.18);
+      padding:1.25rem 1.4rem 1.4rem;
+    }
+    .step-panel--visible{ display:block; }
+
+    .step-panel-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:.5rem;
+      margin-bottom:.75rem;
+    }
+
+    .step-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      padding:.26rem .7rem;
+      border-radius:999px;
+      font-size:.68rem;
+      border:1px solid rgba(156,163,175,.65);
+      background:#F9FAFB;
+      color:var(--text-muted);
+    }
+
+    .step-icon{ font-size:1.4rem; opacity:.95; }
+
+    .step-body-text{
+      font-size:.88rem;
+      line-height:1.5;
+      color:#1f2937;
+    }
+    .step-body-text--lead{
+      font-size:.96rem;
+      font-weight:500;
+    }
+    .step-body-text--accent{
+      font-size:.9rem;
+      font-weight:600;
+    }
+
+    .highlight{
+      background:linear-gradient(to right,rgba(255,222,89,.5),rgba(255,222,89,0));
+      padding:0 .15rem;
+      border-radius:.4rem;
+    }
+
+    .soft-note{
+      font-size:.73rem;
+      color:var(--text-muted);
+    }
+
+    .soft-block{
+      border-radius:1.1rem;
+      padding:.8rem .9rem;
+      border:1px solid rgba(226,232,240,1);
+      background:linear-gradient(135deg,#FFFCF7,#FFF8E5);
+      font-size:.8rem;
+    }
+
+    .soft-block--blue{
+      background:linear-gradient(135deg,#FFE4E6,#FFF1F2);
+      border-color:#fecaca;
+    }
+
+    .soft-block--green{
+      background:linear-gradient(135deg,#ecfdf5,#f0fdf4);
+      border-color:#bbf7d0;
+    }
+
+    .soft-block--rose{
+      background:linear-gradient(135deg,#fff1f2,#ffe4e6);
+      border-color:#fecaca;
+    }
+
+    .input-main{
+      width:100%;
+      border-radius:.95rem;
+      border:1px solid rgba(209,213,219,1);
+      background:#FFFFFF;
+      padding:.5rem .7rem;
+      font-size:.84rem;
+      outline:none;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .input-main:focus{
+      border-color:#f97316;
+      box-shadow:0 0 0 1px rgba(249,115,22,.4);
+    }
+
+    textarea.input-main{
+      resize:vertical;
+      min-height:90px;
+    }
+
+    .btn-main{
+      border-radius:999px;
+      border:none;
+      padding:.55rem 1.2rem;
+      font-size:.8rem;
+      font-weight:600;
+      background:linear-gradient(135deg,#FF9F1C,#FFDE59);
+      color:#78350f;
+      cursor:pointer;
+      box-shadow:0 12px 26px rgba(249,115,22,0.45);
+      transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    }
+    .btn-main:active{
+      transform:translateY(1px);
+      box-shadow:0 6px 16px rgba(249,115,22,0.6);
+    }
+    .btn-main:disabled{
+      opacity:.4;
+      box-shadow:none;
+      cursor:default;
+      transform:none;
+    }
+
+    .btn-ghost{
+      border-radius:999px;
+      padding:.5rem 1rem;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(255,255,255,.9);
+      font-size:.78rem;
+      color:var(--text-muted);
+      cursor:pointer;
+    }
+
+    /* Таблицы звуков */
+    .sound-table-wrapper{
+      margin-top:.6rem;
+      border-radius:1rem;
+      border:1px solid rgba(226,232,240,1);
+      background:#ffffff;
+      box-shadow:0 10px 28px rgba(15,23,42,.06);
+      overflow:hidden;
+    }
+
+    .sound-table-scroll{ overflow-x:auto; }
+
+    .sound-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:.8rem;
+      min-width:420px;
+    }
+
+    .sound-table thead{
+      background:linear-gradient(90deg,#FFF8E5,#FFE6B3);
+    }
+
+    .sound-table th,
+    .sound-table td{
+      padding:.45rem .6rem;
+      border-bottom:1px solid rgba(229,231,235,1);
+      text-align:left;
+    }
+
+    .sound-table th{
+      font-weight:700;
+      font-size:.78rem;
+      color:#78350f;
+      white-space:nowrap;
+    }
+
+    .sound-table td:first-child{
+      font-weight:600;
+      white-space:nowrap;
+    }
+
+    .sound-table td:nth-child(2){
+      font-family:"SF Mono",ui-monospace;
+      white-space:nowrap;
+    }
+
+    .sound-table tr:nth-child(even) td{
+      background:#FFFCF7;
+    }
+
+    /* tooltip + озвучка */
+    .word-tip{
+      position:relative;
+      cursor:pointer;
+      border-bottom:1px dashed rgba(156,163,175,.8);
+    }
+    .word-tip::after{
+      content:attr(data-ru);
+      position:absolute;
+      left:50%;
+      bottom:120%;
+      transform:translateX(-50%) translateY(4px);
+      font-size:.72rem;
+      color:#111827;
+      background:#fffefb;
+      border-radius:.55rem;
+      padding:.25rem .55rem;
+      white-space:nowrap;
+      box-shadow:0 10px 25px rgba(15,23,42,.30);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .15s ease-out, transform .15s ease-out;
+      z-index:20;
+    }
+    .word-tip::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:110%;
+      transform:translateX(-50%);
+      border-width:6px 6px 0 6px;
+      border-style:solid;
+      border-color:#fffefb transparent transparent transparent;
+      opacity:0;
+      transition:opacity .15s ease-out;
+      z-index:19;
+    }
+    .word-tip:hover::after,
+    .word-tip:hover::before{
+      opacity:1;
+    }
+    .word-tip:hover::after{
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .mini-toast{
+      font-size:.75rem;
+      color:#166534;
+      background:#ecfdf5;
+      border-radius:.9rem;
+      padding:.45rem .7rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.25rem;
+      border:1px solid #bbf7d0;
+    }
+
+    .hidden{display:none;}
+
+    /* --------- МОБИЛЬНАЯ ВЕРСТКА --------- */
+    @media (max-width: 768px) {
+
+      .lesson-shell{
+        padding: 1rem .9rem 2.2rem;
+      }
+
+      .top-bar .max-w-7xl{
+        gap: .5rem;
+        flex-wrap: wrap;
+      }
+
+      #user-status{
+        font-size: 0.7rem;
+        flex-basis: 100%;
+        order: 2;
+      }
+
+      #logout-btn{
+        font-size: 0.7rem;
+        padding: .3rem .7rem;
+      }
+
+      .back-to-course-btn{
+        order: 3;
+        margin-right: 0;
+      }
+
+      .hero-card{
+        flex-direction: column;
+        padding: 1.3rem 1.1rem 1.4rem;
+        gap: 1.1rem;
+      }
+
+      .hero-title{
+        font-size: 1.5rem;
+      }
+
+      .hero-right{
+        width: 100%;
+        min-width: 0;
+      }
+
+      .hero-right-inner{
+        justify-content: flex-end;
+        padding-right: 0;
+      }
+
+      .hero-bg-circle{
+        width: 210px;
+        height: 210px;
+        right: -50px;
+        top: -60px;
+      }
+
+      .hero-bubbles-cluster{
+        align-items: flex-end;
+      }
+
+      .hero-bubble{
+        font-size: .8rem;
+        padding: .4rem .7rem;
+      }
+
+      .step-nav{
+        gap: 1rem;
+        margin: 1.3rem 0 1.1rem;
+      }
+
+      .step-nav::before{
+        left: 10%;
+        right: 10%;
+        top: 22px;
+      }
+
+      .step-dot{
+        max-width: 80px;
+        font-size: .6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Фоновые буквы -->
+  <div class="bg-letter a">A</div>
+  <div class="bg-letter e">E</div>
+  <div class="bg-letter i">I</div>
+  <div class="bg-letter o">O</div>
+  <div class="bg-letter u">U</div>
+
+  <!-- Верхняя панель -->
+  <header class="top-bar sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+        <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+        PolyTalky
+      </a>
+      <div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+        <div id="user-status"></div>
+
+        <a href="/student/feedback.html"
+           id="feedback-link"
+           class="hidden relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white">
+          📩
+          <span id="feedback-dot"
+                class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+        </a>
+
+        <button id="login-btn"
+                class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
+          Войти
+        </button>
+
+        <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="lesson-shell">
+
+    <!-- HERO -->
+    <section class="hero-card mb-8">
+
+      <div class="hero-left">
+        <div class="hero-badge">English · Lesson 2</div>
+        <h1 class="hero-title mt-3">
+          Открытые и закрытые <span class="em">гласные</span>
+          <br>и дружба с согласными
+        </h1>
+
+        <p class="hero-tagline mt-3">
+          Разбираемся, почему одна и та же буква звучит по-разному, тренируемся в мини-тренажёре и знакомимся с согласными буквосочетаниями.
+        </p>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-right-inner">
+          <div class="hero-bg-circle"></div>
+
+          <div class="hero-bubbles-cluster">
+            <div class="hero-bubble hero-bubble--hello">
+              cake / cat
+            </div>
+            <div class="hero-bubble hero-bubble--morning">
+              open ↔ closed
+            </div>
+            <div class="hero-bubble hero-bubble--hi">
+              chat, photo, think…
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Навигация шагов -->
+    <div class="step-nav">
+      <button class="step-dot step-dot--active" data-step="1">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">
+            <img class="step-icon" src="/assets/lessons/vowels.png" alt="Гласные">
+          </span>
+        </div>
+        <div class="step-dot-label">Открытые и закрытые</div>
+      </button>
+
+      <button class="step-dot" data-step="2">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">
+            <img class="step-icon" src="/assets/lessons/video.png" alt="Тренажёр">
+          </span>
+        </div>
+        <div class="step-dot-label">Тренажёр</div>
+      </button>
+
+      <button class="step-dot" data-step="3">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">
+            <img class="step-icon" src="/assets/lessons/finish.png" alt="Согласные">
+          </span>
+        </div>
+        <div class="step-dot-label">Согласные</div>
+      </button>
+
+      <button class="step-dot" data-step="4">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">
+            <img class="step-icon" src="/assets/lessons/video.png" alt="Видео">
+          </span>
+        </div>
+        <div class="step-dot-label">Видео</div>
+      </button>
+
+      <button class="step-dot" data-step="5">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">
+            <img class="step-icon" src="/assets/lessons/hello.png" alt="Рассказ о себе">
+          </span>
+        </div>
+        <div class="step-dot-label">Рассказ о себе</div>
+      </button>
+    </div>
+
+    <!-- STEP PANELS -->
+
+    <!-- STEP 1 — Введение в открытое и закрытое положение -->
+    <section class="step-panel step-panel--visible" data-step="1" id="step-1">
+      <div class="step-panel-header">
+        <span class="step-pill">Шаг 1 · OPEN / CLOSED</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
+      </div>
+
+      <p class="step-body-text step-body-text--lead">
+        Кстати, вообще в английском языке есть такая вещь, которая называется
+        <span class="highlight">открытое и закрытое положение</span> гласных.
+      </p>
+
+      <p class="step-body-text mt-3">
+        В зависимости от того, в каком положении стоит гласная, будет меняться её произношение.
+        Именно поэтому одна и та же буква <b>a</b> в словах
+        <span class="word-tip" data-ru="торт">cake</span> и
+        <span class="word-tip" data-ru="кот">cat</span> звучит по-разному.
+      </p>
+
+      <div class="soft-block soft-block--green mt-4">
+        <p class="step-body-text text-[0.86rem]">
+          В принципе, это не обязательно очень подробно разбирать, но для тех, кому интересна вся эта тема с открытым и
+          закрытым положением, подробнее об этом можно почитать вот тут:
+        </p>
+        <p class="mt-2 text-[0.82rem]">
+          <a href="http://skyeng.ru/articles/kakie-byvayut-slogi-v-anglijskom-yazyke"
+             target="_blank"
+             class="underline text-amber-700">
+            Какие бывают слоги в английском языке →
+          </a>
+        </p>
+      </div>
+
+      <p class="soft-note mt-3">
+        Сейчас наша задача — не выучить все термины, а почувствовать разницу «открытого» и «закрытого» звучания гласных на практике.
+      </p>
+
+      <button class="btn-main mt-5 next-step-btn" data-next="2">
+        Переходим к тренажёру →
+      </button>
+    </section>
+
+    <!-- STEP 2 — Пояснение + тренажёр -->
+    <section class="step-panel" data-step="2" id="step-2">
+      <div class="step-panel-header">
+        <span class="step-pill">Шаг 2 · ТРЕНАЖЁР</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
+      </div>
+
+      <p class="step-body-text">
+        Представьте, что гласная — как дверца:
+        в <b>открытом</b> слоге она «смотрит» в конец слова и часто звучит «по-алфавитному»
+        (как в <span class="word-tip" data-ru="торт">cake</span>,
+        <span class="word-tip" data-ru="надежда">hope</span>),
+        а в <b>закрытом</b> её словно «прижимает» согласная, и звук становится короче
+        (как в <span class="word-tip" data-ru="кот">cat</span>,
+        <span class="word-tip" data-ru="шляпа">hat</span>).
+      </p>
+
+      <p class="step-body-text mt-3 step-body-text--accent">
+        Давайте потренируемся: у нас есть слова-пары. Нужно выбрать, где гласная стоит в <b>открытом</b>, а где — в <b>закрытом</b> положении.
+      </p>
+
+      <div id="trainer-block" class="soft-block soft-block--blue mt-4">
+        <div id="trainer-question" class="text-[0.9rem] font-semibold mb-2">
+          <!-- Вопрос подставится из JS -->
+        </div>
+
+        <div id="trainer-options" class="flex flex-col gap-2">
+          <!-- Варианты -->
+        </div>
+
+        <p id="trainer-feedback" class="soft-note mt-2"></p>
+
+        <div class="flex justify-between items-center mt-3">
+          <div class="soft-note">
+            Вопрос <span id="trainer-progress">1 / 1</span>
+          </div>
+          <button id="trainer-next"
+                  class="btn-ghost text-[0.8rem] px-3 py-1.5"
+                  disabled>
+            Следующий →
+          </button>
+        </div>
+      </div>
+
+      <p class="soft-note mt-3">
+        Не переживайте, если путаетесь. Чем больше примеров вы увидите и проговорите, тем легче станет угадывать,
+        как именно прочитать новое слово.
+      </p>
+
+      <button class="btn-main mt-5 next-step-btn" data-next="3">
+        Переходим к согласным буквосочетаниям →
+      </button>
+    </section>
+
+    <!-- STEP 3 — Таблица согласных буквосочетаний -->
+    <section class="step-panel" data-step="3" id="step-3">
+      <div class="step-panel-header">
+        <span class="step-pill">Шаг 3 · CONSONANT BLENDS</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
+      </div>
+
+      <p class="step-body-text">
+        Но не можем же мы обделить согласные! Пока мы разобрали буквосочетания лишь с гласными. Исправляемся 🙂
+      </p>
+
+      <div class="soft-block soft-block--green mt-4">
+        <p class="text-[0.78rem] mb-2">
+          Ниже — таблица некоторых <b>согласных буквосочетаний</b>. Они тоже сильно влияют на чтение слова.
+          Нажимайте на слово, чтобы услышать произношение и увидеть перевод.
+        </p>
+
+        <div class="sound-table-wrapper">
+          <div class="sound-table-scroll">
+            <table class="sound-table">
+              <thead>
+                <tr>
+                  <th>Буквы</th>
+                  <th>Звук</th>
+                  <th>Примеры</th>
+                  <th>Примечание</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cc</td>
+                  <td>[s] / [k]</td>
+                  <td>
+                    <span class="word-tip" data-ru="центр">center</span>,
+                    <span class="word-tip" data-ru="кинотеатр">cinema</span>,
+                    <span class="word-tip" data-ru="цилиндр">cylinder</span>,
+                    <span class="word-tip" data-ru="код">code</span>,
+                    <span class="word-tip" data-ru="лечить">cure</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    [s] перед e, i, y · [k] перед a, o, u
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Gg</td>
+                  <td>[dʒ] / [g] / [ʒ]</td>
+                  <td>
+                    <span class="word-tip" data-ru="герундий">gerund</span>,
+                    <span class="word-tip" data-ru="спортзал">gym</span>,
+                    <span class="word-tip" data-ru="сад">garden</span>,
+                    <span class="word-tip" data-ru="зелёный">green</span>,
+                    <span class="word-tip" data-ru="гараж">garage</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    [dʒ] перед e, i, y · [ʒ] в словах из французского
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Ss</td>
+                  <td>[s] / [z] / [ʒ]</td>
+                  <td>
+                    <span class="word-tip" data-ru="размер">size</span>,
+                    <span class="word-tip" data-ru="мудрый">wise</span>,
+                    <span class="word-tip" data-ru="позировать">pose</span>,
+                    <span class="word-tip" data-ru="социализм">socialism</span>,
+                    <span class="word-tip" data-ru="удовольствие">pleasure</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    [z] между гласными и после звонких · [ʒ] в некоторых сочетаниях -sure
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Xx</td>
+                  <td>[ks] / [gz]</td>
+                  <td>
+                    <span class="word-tip" data-ru="извинять">excuse</span>,
+                    <span class="word-tip" data-ru="коробка">box</span>,
+                    <span class="word-tip" data-ru="пример">example</span>,
+                    <span class="word-tip" data-ru="экзамен">exam</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    [ks] в конце и между гласными · [gz] в начале перед гласной
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Ck</td>
+                  <td>[k]</td>
+                  <td>
+                    <span class="word-tip" data-ru="часы">clock</span>,
+                    <span class="word-tip" data-ru="упаковка">pack</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    Чаще всего обозначает твёрдое [k]
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Ch, tch</td>
+                  <td>[tʃ] / [k]</td>
+                  <td>
+                    <span class="word-tip" data-ru="проверять">check</span>,
+                    <span class="word-tip" data-ru="канава">ditch</span>,
+                    <span class="word-tip" data-ru="химия">chemistry</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    [tʃ] обычно · [k] в словах греческого происхождения
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Sh</td>
+                  <td>[ʃ]</td>
+                  <td>
+                    <span class="word-tip" data-ru="короткий">short</span>,
+                    <span class="word-tip" data-ru="сиять">shine</span>
+                  </td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td>Th</td>
+                  <td>[θ] / [ð]</td>
+                  <td>
+                    <span class="word-tip" data-ru="нить">thread</span>,
+                    <span class="word-tip" data-ru="этот">that</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    Глухой [θ] чаще в существительных, звонкий [ð] — в местоимениях и артиклях
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Ng</td>
+                  <td>[ŋ]</td>
+                  <td>
+                    <span class="word-tip" data-ru="петь">sing</span>,
+                    <span class="word-tip" data-ru="язык">language</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    В конце и в середине слова часто [ŋ]
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Nk</td>
+                  <td>[ŋk]</td>
+                  <td>
+                    <span class="word-tip" data-ru="банк">bank</span>,
+                    <span class="word-tip" data-ru="думать">think</span>
+                  </td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td>Gh</td>
+                  <td>[f] / —</td>
+                  <td>
+                    <span class="word-tip" data-ru="кашель">cough</span>,
+                    <span class="word-tip" data-ru="достаточно">enough</span>,
+                    <span class="word-tip" data-ru="высокий">high</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    Чаще [f], но в конце слова и перед t часто не читается
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Wh</td>
+                  <td>[w] / [h]</td>
+                  <td>
+                    <span class="word-tip" data-ru="чей">whose</span>,
+                    <span class="word-tip" data-ru="целый">whole</span>,
+                    <span class="word-tip" data-ru="белый">white</span>
+                  </td>
+                  <td class="text-[0.78rem]">
+                    Обычно [w], но есть исключения типа <i>who, whole</i>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Ph</td>
+                  <td>[f]</td>
+                  <td>
+                    <span class="word-tip" data-ru="философия">philosophy</span>
+                  </td>
+                  <td></td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p class="soft-note mt-2">
+          Фух! Теперь порядок. И гласные, и согласные разобраны. Осталось выучить буквосочетания —
+          а лучше всего это делать в практике и в живых текстах.
+        </p>
+      </div>
+
+      <div class="mt-5">
+        <button class="btn-main next-step-btn" data-next="4">
+          Смотреть видео →
+        </button>
+      </div>
+    </section>
+
+    <!-- STEP 4 — Видео -->
+    <section class="step-panel" data-step="4" id="step-4">
+      <div class="step-panel-header">
+        <span class="step-pill">Шаг 4 · VIDEO</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
+      </div>
+
+      <p class="step-body-text">
+        А в закрепление всего пройденного, давайте посмотрим ещё один небольшой видео-ролик.
+        Повторяйте вместе с Марком, чтобы звучать всё увереннее.
+      </p>
+
+      <div class="w-full flex justify-center my-4">
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/TJcCFXi1VgI"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <p class="soft-note mt-3">
+        Если чувствуете, что хочется повторить — смело пересматривайте. Мозгу нужно несколько повторений,
+        чтобы «приклеить» новые звуки к знакомым буквам.
+      </p>
+
+      <button class="btn-main mt-5 next-step-btn" data-next="5">
+        Переходим к рассказу о себе →
+      </button>
+    </section>
+
+    <!-- STEP 5 — Упражнение: рассказ о себе -->
+    <section class="step-panel" data-step="5" id="step-5">
+      <div class="step-panel-header">
+        <span class="step-pill">Шаг 5 · STORY</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
+      </div>
+
+      <p class="step-body-text">
+        Так что вот и второе задание этого урока: <span class="highlight">напишите небольшой рассказ о себе</span>.
+        Если вам пока ещё сложно писать целые тексты самостоятельно, можно опираться на словарь или переводчик.
+      </p>
+
+      <p class="soft-note mt-3">
+        Но наш вам секрет: из-за того, что языки очень разные, переводчик с целыми предложениями часто справляется не лучшим образом.
+        Поэтому лучше вводить по одному слову или по паре-тройке слов за раз — тогда текст получится гораздо аккуратнее 🙂
+      </p>
+
+      <p class="step-body-text mt-3">
+        Это может быть рассказ не только о вас, но и про ваш город, хобби, домашнее животное — о чём угодно.
+        Главное — постараться использовать <b>слова с буквосочетаниями</b>, которые вы видели в таблицах.
+      </p>
+
+      <textarea id="task-story-input"
+                class="input-main mt-4"
+                placeholder="Например: My name is Olga. I live in Moscow. I think English is interesting, because…"></textarea>
+
+      <p class="soft-note mt-2">
+        На тарифе <b>PRO</b> ваш текст уйдёт куратору — он проверит и подскажет, где были ошибки, а где вы уже пишете очень круто 💛
+      </p>
+
+      <div id="story-feedback" class="mini-toast mt-3 hidden">
+        Ваш рассказ сохранён! Продолжайте в том же духе ✨
+      </div>
+
+      <div class="mt-5 flex flex-wrap gap-3 items-center">
+        <button id="task-story-submit" class="btn-main">
+          Отправить рассказ →
+        </button>
+
+        <button class="btn-ghost" id="open-vocab-btn">
+          Добавить слова из урока в словарик →
+        </button>
+      </div>
+
+      <div class="mt-5 flex flex-wrap gap-3">
+        <a href="/courses/english-intro/lesson-03.html" class="btn-ghost">
+          Перейти к следующему уроку →
+        </a>
+      </div>
+    </section>
+
+    <!-- МОДАЛКА Q&A -->
+    <div id="qa-modal"
+         class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+      <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+        <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
+        <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
+
+        <div class="relative p-6 space-y-4">
+          <div class="flex justify-between items-start gap-4">
+            <div>
+              <h2 class="text-lg font-semibold text-gray-800">
+                Вопросы по уроку
+              </h2>
+              <p class="text-sm text-gray-600 mt-1">
+                Напишите свой вопрос — мы ответим, и ответ увидят другие участники.
+              </p>
+            </div>
+
+            <button id="qa-close"
+                    class="text-gray-500 text-xl leading-none">&times;</button>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+            Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
+            <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">Тариф PRO</a>
+            даёт приоритетную обратную связь и больше внимания к вашим вопросам 💛
+          </div>
+
+          <div class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70"
+               id="qa-list">
+            <p class="text-xs text-gray-500">
+              Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+            </p>
+          </div>
+
+          <form id="qa-form" class="space-y-2">
+            <label class="block text-xs text-gray-600">
+              Ваш вопрос:
+            </label>
+            <textarea id="qa-text"
+                      class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                      rows="3"
+                      placeholder="Например: «Как запомнить различия между open и closed слогами?»"></textarea>
+
+            <p class="text-[0.7rem] text-gray-400">
+              Чтобы задать вопрос, нужно войти в аккаунт.  
+              Если вы не авторизованы, перейдите на страницу
+              <a href="/student/" class="underline">входа / регистрации</a>.
+            </p>
+
+            <div class="flex justify-end">
+              <button type="submit"
+                      id="qa-submit"
+                      class="btn-main text-sm px-4 py-1.5">
+                Отправить вопрос →
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- МОДАЛКА СЛОВАРЯ -->
+    <div id="vocab-modal"
+         class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+      <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+        <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-70"></div>
+        <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-70"></div>
+
+        <div class="relative p-6">
+          <div class="flex justify-between items-start">
+            <h2 class="text-lg font-semibold text-gray-800">
+              Добавить слова в словарик
+            </h2>
+
+            <button id="vocab-close" class="text-gray-500 text-xl leading-none">&times;</button>
+          </div>
+
+          <p class="text-sm text-gray-600 mt-1">
+            Выберите слова из таблицы согласных буквосочетаний, которые хотите добавить в свой словарик.
+          </p>
+
+          <div id="vocab-auth-warning"
+               class="hidden mt-4 bg-red-50 text-red-700 border border-red-200 rounded-xl p-3 text-sm">
+            Чтобы сохранять слова, нужно войти в аккаунт.
+            <br>
+            <a href="/student" class="underline font-medium">Перейти к авторизации →</a>
+          </div>
+
+          <div id="vocab-list" class="mt-5 space-y-5 max-h-[330px] overflow-y-auto pr-1">
+            <div class="vocab-category" data-category="Согласные буквосочетания">
+              <h3 class="text-[0.8rem] font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                🔤 Согласные буквосочетания
+              </h3>
+
+              <div id="vocab-consonants" class="grid grid-cols-1 gap-2 pl-1">
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-between items-center">
+            <button id="vocab-select-all"
+                    class="px-4 py-2 rounded-xl bg-gray-100 text-sm text-gray-700 border border-gray-300">
+              Выбрать всё
+            </button>
+
+            <button id="vocab-save"
+                    class="btn-main text-sm px-5 py-2">
+              Добавить выбранные →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script type="module">
+      import {
+        getAuth,
+        onAuthStateChanged
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+      import {
+        collection,
+        addDoc,
+        serverTimestamp,
+        getDocs,
+        query,
+        orderBy,
+        doc,
+        setDoc,
+        arrayUnion,
+        getDoc
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      const auth = window.firebaseAuth;
+      const db   = window.firebaseDb;
+
+      // ====== КОНСТАНТЫ УРОКА ======
+      let currentUser = null;
+      let isProUser   = false;
+
+      const LESSON_ID        = "english-intro-lesson-2";
+      const LESSON_SLUG      = "lesson-02-vowels-consonants";
+      const COURSE_ID        = "english-intro";
+      const LESSON_QA_DOC_ID = LESSON_ID;
+
+      // Firestore: lessonSubmissions / english-intro / {email} / lesson2
+      const SUBMISSIONS_ROOT_COLLECTION = "lessonSubmissions";
+      const SUBMISSIONS_COURSE_DOC      = "english-intro";
+      const SUBMISSIONS_LESSON_DOC      = "lesson2";
+
+      function getUserKey() {
+        if (!currentUser) return null;
+        if (currentUser.email) return currentUser.email.toLowerCase();
+        return currentUser.uid;
+      }
+
+      // ====== Профиль пользователя / PRO ======
+      async function loadUserProfile(user) {
+        isProUser = false;
+        if (!user) return;
+
+        try {
+          const email = user.email || null;
+          const uid   = user.uid   || null;
+          if (!email && !uid) return;
+
+          const usersCol = collection(db, "users");
+          const emailRef = email ? doc(usersCol, email) : null;
+          const uidRef   = uid   ? doc(usersCol, uid)   : null;
+
+          const [emailSnap, uidSnap] = await Promise.all([
+            emailRef ? getDoc(emailRef) : Promise.resolve(null),
+            uidRef   ? getDoc(uidRef)   : Promise.resolve(null),
+          ]);
+
+          const emailData = emailSnap && emailSnap.exists() ? (emailSnap.data() || {}) : null;
+          const uidData   = uidSnap   && uidSnap.exists()   ? (uidSnap.data()   || {}) : null;
+
+          const merged = {
+            ...(uidData || {}),
+            ...(emailData || {}),
+          };
+
+          if (!Object.keys(merged).length) {
+            isProUser = false;
+            return;
+          }
+
+          const proGlobal = merged.proGlobal === true;
+          let proValidUntil = merged.proValidUntil || merged.proUntil || null;
+          if (proValidUntil && typeof proValidUntil.toDate === "function") {
+            proValidUntil = proValidUntil.toDate();
+          }
+
+          const legacyPro =
+            merged.proActive ||
+            merged.isPro ||
+            merged.hasPro ||
+            (merged.pro && merged.pro.active);
+
+          let active = !!(proGlobal || legacyPro);
+
+          if (proValidUntil instanceof Date) {
+            const now = new Date();
+            if (proValidUntil <= now) {
+              active = false;
+            }
+          }
+
+          isProUser = active;
+        } catch (e) {
+          console.error("Не удалось загрузить профиль пользователя:", e);
+          isProUser = false;
+        }
+      }
+
+      // ====== DOM-элементы ======
+      const feedbackLink = document.getElementById("feedback-link");
+      const loginBtn     = document.getElementById("login-btn");
+      const userStatus   = document.getElementById("user-status");
+
+      const stepPanels = document.querySelectorAll(".step-panel");
+      const stepDots   = document.querySelectorAll(".step-dot");
+
+      // тренажёр
+      const trainerQuestion = document.getElementById("trainer-question");
+      const trainerOptions  = document.getElementById("trainer-options");
+      const trainerFeedback = document.getElementById("trainer-feedback");
+      const trainerProgress = document.getElementById("trainer-progress");
+      const trainerNextBtn  = document.getElementById("trainer-next");
+
+      // рассказ
+      const storyInput    = document.getElementById("task-story-input");
+      const storyBtn      = document.getElementById("task-story-submit");
+      const storyFeedback = document.getElementById("story-feedback");
+
+      // словарик
+      const openVocabBtn    = document.getElementById("open-vocab-btn");
+      const vocabModal      = document.getElementById("vocab-modal");
+      const vocabClose      = document.getElementById("vocab-close");
+      const vocabListConson = document.getElementById("vocab-consonants");
+      const vocabAuthWarn   = document.getElementById("vocab-auth-warning");
+      const vocabSaveBtn    = document.getElementById("vocab-save");
+      const vocabSelectAll  = document.getElementById("vocab-select-all");
+
+      // Q&A
+      const qaModal      = document.getElementById("qa-modal");
+      const qaCloseBtn   = document.getElementById("qa-close");
+      const qaList       = document.getElementById("qa-list");
+      const qaForm       = document.getElementById("qa-form");
+      const qaText       = document.getElementById("qa-text");
+      const qaSubmitBtn  = document.getElementById("qa-submit");
+      const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
+
+      // ====== ПРОГРЕСС УРОКА (без бейджа) ======
+      let currentStep  = 1;
+      const totalSteps = 5;
+
+      async function saveLessonProgress() {
+        if (!currentUser) return;
+        const userKey = getUserKey();
+        if (!userKey) return;
+
+        try {
+          await setDoc(
+            doc(db, "users", userKey),
+            {
+              progress: {
+                [COURSE_ID]: {
+                  percent: 50,               // второй урок
+                  lastLessonId: LESSON_SLUG
+                }
+              }
+            },
+            { merge: true }
+          );
+        } catch (e) {
+          console.error("Не удалось сохранить прогресс:", e);
+        }
+      }
+
+      function showStep(n) {
+        stepPanels.forEach(p => p.classList.remove("step-panel--visible"));
+        const panel = document.getElementById(`step-${n}`);
+        if (panel) panel.classList.add("step-panel--visible");
+
+        stepDots.forEach(dot => {
+          dot.classList.remove("step-dot--active", "step-dot--done");
+          const step = Number(dot.dataset.step);
+          if (step < n) dot.classList.add("step-dot--done");
+          if (step === n) dot.classList.add("step-dot--active");
+        });
+
+        if (n === totalSteps) {
+          // только прогресс, без бейджа
+          saveLessonProgress().catch(console.error);
+        }
+
+        currentStep = n;
+      }
+
+      document.querySelectorAll(".next-step-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const next = Number(btn.dataset.next);
+          if (next) showStep(next);
+        });
+      });
+
+      // ====== LOCAL STORAGE (для не-PRO) ======
+      function saveLocalAnswer(key, value) {
+        localStorage.setItem(`lesson2_${key}`, value);
+      }
+      function loadLocalAnswer(key) {
+        return localStorage.getItem(`lesson2_${key}`) || "";
+      }
+
+      // ====== Firestore: документ с ответами по уроку 2 ======
+      function getLesson2DocRef() {
+        if (!currentUser) return null;
+        const userKey = getUserKey();
+        if (!userKey) return null;
+
+        // lessonSubmissions / english-intro / {userKey} / lesson2
+        return doc(
+          db,
+          SUBMISSIONS_ROOT_COLLECTION,
+          SUBMISSIONS_COURSE_DOC,
+          userKey,
+          SUBMISSIONS_LESSON_DOC
+        );
+      }
+
+      async function saveProSubmission(partialData) {
+        if (!currentUser || !isProUser) return;
+        const docRef = getLesson2DocRef();
+        if (!docRef) return;
+
+        const baseData = {
+          userEmail: currentUser.email || null,
+          userUid:   currentUser.uid,
+          isPro:     true,
+          courseId:  COURSE_ID,
+          lessonSlug: LESSON_SLUG,
+          updatedAt: serverTimestamp()
+        };
+
+        await setDoc(
+          docRef,
+          { createdAt: serverTimestamp(), ...baseData, ...partialData },
+          { merge: true }
+        );
+      }
+
+      // ====== Загрузка ответов PRO (история) ======
+      async function loadProAnswers() {
+        if (!currentUser || !isProUser) return;
+        const docRef = getLesson2DocRef();
+        if (!docRef) return;
+
+        const snap = await getDoc(docRef);
+        if (!snap.exists()) return;
+
+        const data = snap.data();
+        if (data.story && storyInput) {
+          storyInput.value = data.story;
+        }
+      }
+
+      // ====== Упражнение: рассказ о себе ======
+      storyBtn.addEventListener("click", async () => {
+        const text = (storyInput.value || "").trim();
+        if (!text) {
+          alert("Напишите хотя бы пару предложений о себе или о чём-то, что вам интересно :)");
+          return;
+        }
+
+        if (isProUser && currentUser) {
+          await saveProSubmission({ story: text }).catch(console.error);
+        } else {
+          saveLocalAnswer("story", text);
+        }
+
+        if (storyFeedback) {
+          storyFeedback.classList.remove("hidden");
+          setTimeout(() => storyFeedback.classList.add("hidden"), 2000);
+        }
+      });
+
+      // ====== TRAINER: ОТКРЫТЫЕ / ЗАКРЫТЫЕ ГЛАСНЫЕ ======
+      const trainerQuestions = [
+        {
+          prompt: "Выберите слово, где гласная стоит в ОТКРЫТОМ положении:",
+          options: [
+            { word: "cake",  label: "cake",  correct: true },
+            { word: "cat",   label: "cat",   correct: false },
+            { word: "hat",   label: "hat",   correct: false }
+          ]
+        },
+        {
+          prompt: "Где гласная звучит «по-алфавитному» (как в названии буквы)?",
+          options: [
+            { word: "hope",  label: "hope",  correct: true },
+            { word: "hop",   label: "hop",   correct: false },
+            { word: "cap",   label: "cap",   correct: false }
+          ]
+        },
+        {
+          prompt: "Выберите слово с ЗАКРЫТЫМ слогом:",
+          options: [
+            { word: "ride",  label: "ride",  correct: false },
+            { word: "rid",   label: "rid",   correct: true },
+            { word: "time",  label: "time",  correct: false }
+          ]
+        },
+        {
+          prompt: "Где слог выглядит «короче» и звук более сжатый?",
+          options: [
+            { word: "kit",   label: "kit",   correct: true },
+            { word: "kite",  label: "kite",  correct: false }
+          ]
+        }
+      ];
+
+      let trainerIndex = 0;
+      let trainerLocked = false;
+
+      function renderTrainerQuestion() {
+        const q = trainerQuestions[trainerIndex];
+        trainerLocked = false;
+        trainerFeedback.textContent = "";
+        trainerNextBtn.disabled = true;
+
+        trainerQuestion.textContent = q.prompt;
+        trainerProgress.textContent = `${trainerIndex + 1} / ${trainerQuestions.length}`;
+
+        trainerOptions.innerHTML = "";
+        q.options.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn-ghost text-[0.85rem] w-full flex justify-between items-center";
+          btn.textContent = opt.label;
+
+          btn.addEventListener("click", () => {
+            if (trainerLocked) return;
+            trainerLocked = true;
+
+            if (opt.correct) {
+              trainerFeedback.textContent = "Отлично! Это пример открытого слога 👏";
+              btn.classList.add("border-2");
+              btn.style.borderColor = "#16a34a";
+            } else {
+              trainerFeedback.textContent = "Здесь слог закрытый. Попробуйте запомнить разницу по длине звука.";
+              btn.classList.add("border-2");
+              btn.style.borderColor = "#b91c1c";
+            }
+
+            if (trainerIndex < trainerQuestions.length - 1) {
+              trainerNextBtn.disabled = false;
+            } else {
+              trainerNextBtn.disabled = true;
+            }
+          });
+
+          trainerOptions.appendChild(btn);
+        });
+      }
+
+      trainerNextBtn.addEventListener("click", () => {
+        if (trainerIndex < trainerQuestions.length - 1) {
+          trainerIndex += 1;
+          renderTrainerQuestion();
+        }
+      });
+
+      renderTrainerQuestion();
+
+      // ====== Q&A ======
+      qaOpenBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          qaModal.classList.remove("hidden");
+          qaModal.classList.add("flex");
+          loadQuestions().catch(console.error);
+        });
+      });
+
+      qaForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const text = qaText.value.trim();
+        if (!text) {
+          alert("Напишите вопрос, пожалуйста 🙂");
+          return;
+        }
+
+        if (!currentUser) {
+          alert("Чтобы задать вопрос, нужно войти в аккаунт на странице /student/.");
+          return;
+        }
+
+        qaSubmitBtn.disabled  = true;
+        qaSubmitBtn.textContent = "Отправляем...";
+
+        try {
+          const colRef = collection(db, "lessons", LESSON_QA_DOC_ID, "questions");
+
+          await addDoc(colRef, {
+            text,
+            userId:    currentUser.email || currentUser.uid,
+            userEmail: currentUser.email || null,
+            createdAt: serverTimestamp(),
+            answer:    null
+          });
+
+          qaText.value = "";
+          await loadQuestions();
+        } catch (err) {
+          console.error(err);
+          alert("Не получилось отправить вопрос. Попробуйте ещё раз позже.");
+        } finally {
+          qaSubmitBtn.disabled   = false;
+          qaSubmitBtn.textContent = "Отправить вопрос →";
+        }
+      });
+
+      qaCloseBtn.addEventListener("click", () => {
+        qaModal.classList.add("hidden");
+        qaModal.classList.remove("flex");
+      });
+
+      qaModal.addEventListener("click", (e) => {
+        if (e.target === qaModal) {
+          qaModal.classList.add("hidden");
+          qaModal.classList.remove("flex");
+        }
+      });
+
+      async function loadQuestions() {
+        const colRef = collection(db, "lessons", LESSON_QA_DOC_ID, "questions");
+        const qRef   = query(colRef, orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(qRef);
+
+        qaList.innerHTML = "";
+
+        if (snapshot.empty) {
+          qaList.innerHTML = `
+            <p class="text-xs text-gray-500">
+              Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+            </p>
+          `;
+          return;
+        }
+
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          const item = document.createElement("div");
+          item.className = "mb-3 pb-3 border-b border-gray-200 last:border-b-0";
+
+          const author = data.userEmail || "Участник курса";
+          const answerHtml = data.answer
+            ? `<p class="text-[0.8rem] text-emerald-800 mt-2">
+                 <span class="font-semibold">Ответ:</span> ${data.answer}
+               </p>`
+            : `<p class="text-[0.75rem] text-gray-400 mt-2">
+                 Ответ скоро появится.
+               </p>`;
+
+          item.innerHTML = `
+            <p class="text-[0.8rem] text-gray-800 font-medium">
+              ❓ ${data.text}
+            </p>
+            <p class="text-[0.7rem] text-gray-400 mt-1">
+              от ${author}
+            </p>
+            ${answerHtml}
+          `;
+
+          qaList.appendChild(item);
+        });
+      }
+
+      // ====== Озвучка слов ======
+      let englishVoices = [];
+
+      if ("speechSynthesis" in window && window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          englishVoices = window.speechSynthesis
+            .getVoices()
+            .filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+        };
+      }
+
+      function speakWord(word) {
+        if (!("speechSynthesis" in window) || !window.speechSynthesis) return;
+
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = "en-US";
+
+        if (englishVoices.length > 0) {
+          utter.voice = englishVoices[0];
+        }
+
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utter);
+      }
+
+      document.querySelectorAll(".word-tip").forEach(tip => {
+        tip.addEventListener("click", () => {
+          const word = tip.textContent.trim();
+          if (word) {
+            speakWord(word);
+          }
+        });
+      });
+
+      // ====== Словарик: вытянуть слова из таблицы согласных ======
+      function extractConsonantEntries() {
+        const tips = document.querySelectorAll("#step-3 .word-tip");
+        const map  = new Map();
+
+        tips.forEach(tip => {
+          const w  = tip.textContent.trim().toLowerCase();
+          const ru = (tip.dataset.ru || "").trim();
+          if (/^[a-z]+$/.test(w) && !map.has(w)) {
+            map.set(w, ru);
+          }
+        });
+
+        return Array.from(map.entries()).map(([word, translation]) => ({
+          word,
+          translation
+        }));
+      }
+
+      function renderConsonantWords() {
+        const entries = extractConsonantEntries();
+        vocabListConson.innerHTML = "";
+
+        entries.forEach(({ word, translation }) => {
+          const label = document.createElement("label");
+          label.className = "flex items-center gap-2 text-[0.85rem]";
+
+          const ruPart = translation
+            ? `<span class="text-gray-400 text-[0.78rem] ml-1">— ${translation}</span>`
+            : "";
+
+          label.innerHTML = `
+            <input type="checkbox"
+                   class="vocab-word"
+                   data-word="${word}"
+                   data-ru="${translation}"
+                   data-category="Согласные буквосочетания">
+            <span>${word}</span>
+            ${ruPart}
+          `;
+
+          vocabListConson.appendChild(label);
+        });
+      }
+
+      // ====== Окно словаря ======
+      openVocabBtn.addEventListener("click", () => {
+        vocabModal.classList.remove("hidden");
+        vocabModal.classList.add("flex");
+
+        renderConsonantWords();
+
+        if (!currentUser) {
+          vocabAuthWarn.classList.remove("hidden");
+          vocabSaveBtn.disabled = true;
+        } else {
+          vocabAuthWarn.classList.add("hidden");
+          vocabSaveBtn.disabled = false;
+        }
+      });
+
+      vocabClose.addEventListener("click", () => {
+        vocabModal.classList.add("hidden");
+        vocabModal.classList.remove("flex");
+      });
+
+      vocabSelectAll.addEventListener("click", () => {
+        const boxes = document.querySelectorAll(".vocab-word");
+        const anyUnchecked = Array.from(boxes).some(b => !b.checked);
+        boxes.forEach(b => b.checked = anyUnchecked);
+      });
+
+      async function saveWordsToFirestore(entries) {
+        if (!currentUser) return;
+        const userKey = getUserKey();
+        if (!userKey) return;
+
+        const colRef = collection(db, `users/${userKey}/vocabulary`);
+
+        for (const { word, translation } of entries) {
+          await addDoc(colRef, {
+            word,
+            translation: translation || "",
+            lesson:      LESSON_SLUG,
+            courseId:    COURSE_ID,
+            category:    "Согласные буквосочетания",
+            addedAt:     serverTimestamp()
+          });
+        }
+      }
+
+      vocabSaveBtn.addEventListener("click", async () => {
+        if (!currentUser) {
+          alert("Войдите, чтобы сохранить слова.");
+          return;
+        }
+
+        const checked = Array.from(document.querySelectorAll(".vocab-word"))
+          .filter(cb => cb.checked)
+          .map(cb => ({
+            word: cb.dataset.word,
+            translation: cb.dataset.ru || ""
+          }));
+
+        if (checked.length === 0) {
+          alert("Выберите хотя бы одно слово.");
+          return;
+        }
+
+        vocabSaveBtn.disabled  = true;
+        vocabSaveBtn.textContent = "Сохраняем...";
+
+        await saveWordsToFirestore(checked);
+
+        vocabSaveBtn.textContent = "Готово!";
+        setTimeout(() => {
+          vocabModal.classList.add("hidden");
+          vocabModal.classList.remove("flex");
+          vocabSaveBtn.disabled   = false;
+          vocabSaveBtn.textContent = "Добавить выбранные →";
+        }, 700);
+      });
+
+      // ====== Авторизация и загрузка данных ======
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          userStatus.textContent = `Вы вошли как: ${user.email}`;
+          loginBtn.classList.add("hidden");
+
+          await loadUserProfile(user);
+          await loadProAnswers();
+
+          if (isProUser) {
+            feedbackLink.classList.remove("hidden");
+          } else {
+            feedbackLink.classList.add("hidden");
+          }
+        } else {
+          currentUser = null;
+          isProUser   = false;
+          userStatus.textContent = "Вы не авторизованы";
+          loginBtn.classList.remove("hidden");
+          feedbackLink.classList.add("hidden");
+        }
+
+        // подтянуть сохранённый рассказ для не-PRO
+        if (!isProUser && storyInput) {
+          const saved = loadLocalAnswer("story");
+          if (saved) storyInput.value = saved;
+        }
+      });
+
+      // старт
+      showStep(1);
+    </script>
+
+  </main>
+
+</body>
+</html>
