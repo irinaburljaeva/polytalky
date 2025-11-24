@@ -1267,273 +1267,394 @@
     </div>
 <script type="module" src="/js/courses/english-intro.js"></script>
     <script type="module">
-      import {
-        getAuth,
-        onAuthStateChanged,
-        signOut
-      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp,
+    doc,
+    setDoc,
+    arrayUnion,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-      import {
-        getFirestore,
-        collection,
-        addDoc,
-        serverTimestamp,
-        getDocs,
-        query,
-        orderBy,
-        doc,
-        setDoc,
-        arrayUnion,
-        getDoc
-      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  const db = window.firebaseDb;
 
- 
+  // ====== КОНФИГУРАЦИЯ УРОКА 1 ======
+  window.lessonConfig = {
+    lessonId: "english-intro-lesson-1",
+    lessonSlug: "lesson-01-hello",
+    courseId: "english-intro",
+    lessonQaDocId: "english-intro-lesson-1",
+    submissionsRoot: "lessonSubmissions",
+    totalSteps: 4,
+    audioNextStep: 4,
+    vocabCategory: "Гласные буквосочетания"
+  };
 
+  const LESSON_ID = "english-intro-lesson-1";
+  const LESSON_SLUG = "lesson-01-hello";
+  const COURSE_ID = "english-intro";
+  const FIRST_BADGE_ID = "english-intro-lesson1";
+  const LESSON_QA_DOC_ID = LESSON_ID;
+  const SUBMISSIONS_ROOT = "lessonSubmissions";
 
-      const LESSON_ID          = "english-intro-lesson-1";
-      const LESSON_SLUG        = "lesson-01-hello";
-      const COURSE_ID          = "english-intro";
-      const FIRST_BADGE_ID     = "english-intro-lesson1"; // совпадает с файлом .png
-      const LESSON_QA_DOC_ID   = LESSON_ID;               // для /lessons/{id}/questions
-      const SUBMISSIONS_ROOT   = "lessonSubmissions";
-   
-  // загрузка hello
-  if (data.helloAnswer) {
-    helloInput.value = data.helloAnswer;
-  }
+  // Сделать константы глобально доступными
+  window.LESSON_ID = LESSON_ID;
+  window.LESSON_SLUG = LESSON_SLUG;
+  window.COURSE_ID = COURSE_ID;
+  window.LESSON_QA_DOC_ID = LESSON_QA_DOC_ID;
+  window.SUBMISSIONS_ROOT = SUBMISSIONS_ROOT;
 
-  if (!isProUser) {
-    const savedHello = loadLocalAnswer("hello");
-    if (savedHello && helloInput) helloInput.value = savedHello;
-  }
-});
-      
-      // ====== UI-элементы ======
-    
-      const vocabListVowels = document.getElementById("vocab-vowels");
-           const helloFeedback   = document.getElementById("hello-feedback");
-      const audioFeedback   = document.getElementById("audio-feedback");
+  // Глобальные переменные
+  let currentUser = null;
+  let isProUser = false;
 
-     
-      // ====== Прогресс по шагам + бейдж ======
-      let currentStep  = 1;
-      const totalSteps = 4;
-      let badgeAwarded = false;
-
-      async function awardFirstHelloBadge() {
-        if (!currentUser || badgeAwarded) return;
-
-        const userKey = getUserKey();
-        if (!userKey) return;
-
-        const badgePayload = {
-          badgeId:  FIRST_BADGE_ID,
-          title:    "Первое hello",
-          courseId: COURSE_ID,
-          lesson:   LESSON_SLUG,
-          earnedAt: serverTimestamp()
-        };
-
-        const tasks = [];
-
-        // 1) подробности бейджа
-        tasks.push(
-          setDoc(
-            doc(db, `users/${userKey}/badges/${FIRST_BADGE_ID}`),
-            badgePayload,
-            { merge: true }
-          )
-        );
-
-        // 2) список бейджей в документе пользователя
-        tasks.push(
-          setDoc(
-            doc(db, "users", userKey),
-            { badges: arrayUnion(FIRST_BADGE_ID) },
-            { merge: true }
-          )
-        );
-
-        await Promise.all(tasks);
-        badgeAwarded = true;
-      }
-
-      async function saveLessonProgress() {
-        if (!currentUser) return;
-        const userKey = getUserKey();
-        if (!userKey) return;
-
-        try {
-          await setDoc(
-            doc(db, "users", userKey),
-            {
-              progress: {
-                [COURSE_ID]: {
-                  percent: 25,                // 1 урок из 4+ и т.п.
-                  lastLessonId: LESSON_SLUG
-                }
-              }
-            },
-            { merge: true }
-          );
-        } catch (e) {
-          console.error("Не удалось сохранить прогресс:", e);
-        }
-      }
-
-      function showStep(n) {
-     
-        if (n === 4) {
-          awardFirstHelloBadge().catch(console.error);
-          saveLessonProgress().catch(console.error);
-        }
-
-      
-      document.querySelectorAll(".next-step-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          if (btn.id === "task-hello-submit") return; // для него отдельная логика
-          const next = Number(btn.dataset.next);
-          if (next) showStep(next);
-        });
-      });
-
-      // ====== Мини-задание: приветствие ======
-      const helloInput = document.getElementById("task-hello-input");
-      const helloBtn   = document.getElementById("task-hello-submit");
-
-      // ====== LOCAL STORAGE для НЕ-PRO ======
-function saveLocalAnswer(key, value) {
-  localStorage.setItem(`lesson1_${key}`, value);
-}
-
-function loadLocalAnswer(key) {
-  return localStorage.getItem(`lesson1_${key}`) || "";
-}
-      
-      helloBtn.addEventListener("click", async () => {
-        const val = helloInput.value.trim();
-        if (!val) {
-          alert("Напишите любое английское приветствие :)");
-          return;
-        }
-
-        if (helloFeedback) {
-          helloFeedback.classList.remove("hidden");
-        }
-
-        // если PRO — сохраняем ответ для куратора
-        if (isProUser && currentUser) {
-          saveProSubmission({ helloAnswer: val }).catch(console.error);
-        } else {
-          saveLocalAnswer("hello", val);
-        }
-
-        setTimeout(() => {
-          if (helloFeedback) helloFeedback.classList.add("hidden");
-          showStep(2);
-        }, 1100);
-      });
-
-
-
-      
+  // ====== UI-элементы ======
+  const vocabListVowels = document.getElementById("vocab-vowels");
+  const helloFeedback = document.getElementById("hello-feedback");
+  const helloInput = document.getElementById("task-hello-input");
+  const helloBtn = document.getElementById("task-hello-submit");
   
+  const openVocabBtn = document.getElementById("open-vocab-btn");
+  const vocabModal = document.getElementById("vocab-modal");
+  const vocabClose = document.getElementById("vocab-close");
+  const vocabAuthWarn = document.getElementById("vocab-auth-warning");
+  const vocabSaveBtn = document.getElementById("vocab-save");
+  const vocabSelectAll = document.getElementById("vocab-select-all");
 
-      // ====== Словарик: вытянуть слова из таблицы ======
-      function extractVowelEntries() {
-        const tips = document.querySelectorAll("#step-3 .word-tip");
-        const map  = new Map();
+  const stepPanels = document.querySelectorAll(".step-panel");
+  const stepDots = document.querySelectorAll(".step-dot");
 
-        tips.forEach(tip => {
-          const w  = tip.textContent.trim().toLowerCase();
-          const ru = (tip.dataset.ru || "").trim();
-          if (/^[a-z]+$/.test(w) && !map.has(w)) {
-            map.set(w, ru);
+  // ====== ФУНКЦИИ ======
+  function getUserKey() {
+    if (!currentUser) return null;
+    if (currentUser.email) return currentUser.email.toLowerCase();
+    return currentUser.uid;
+  }
+
+  // LOCAL STORAGE для НЕ-PRO
+  function saveLocalAnswer(key, value) {
+    localStorage.setItem(`lesson1_${key}`, value);
+  }
+
+  function loadLocalAnswer(key) {
+    return localStorage.getItem(`lesson1_${key}`) || "";
+  }
+
+  // Сохранение PRO заданий
+  async function saveProSubmission(partialData) {
+    if (!currentUser || !isProUser) return;
+    const userKey = getUserKey();
+    if (!userKey) return;
+
+    const answerRef = doc(db, SUBMISSIONS_ROOT, LESSON_ID, "answers", userKey);
+
+    const baseData = {
+      userEmail: currentUser.email || null,
+      userUid: currentUser.uid,
+      isPro: true,
+      courseId: COURSE_ID,
+      lessonSlug: LESSON_SLUG,
+      updatedAt: serverTimestamp()
+    };
+
+    await setDoc(
+      answerRef,
+      { createdAt: serverTimestamp(), ...baseData, ...partialData },
+      { merge: true }
+    );
+  }
+
+  // Загрузка PRO ответов
+  async function loadProAnswers() {
+    if (!currentUser || !isProUser) return;
+    const userKey = getUserKey();
+    if (!userKey) return;
+
+    const ref = doc(db, "lessonSubmissions", LESSON_ID, "answers", userKey);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) return;
+    const data = snap.data();
+
+    if (data.helloAnswer && helloInput) {
+      helloInput.value = data.helloAnswer;
+    }
+  }
+
+  // Прогресс урока
+  let currentStep = 1;
+  const totalSteps = 4;
+  let badgeAwarded = false;
+
+  async function saveLessonProgress() {
+    if (!currentUser) return;
+    const userKey = getUserKey();
+    if (!userKey) return;
+
+    try {
+      await setDoc(
+        doc(db, "users", userKey),
+        {
+          progress: {
+            [COURSE_ID]: {
+              percent: 25,
+              lastLessonId: LESSON_SLUG
+            }
           }
-        });
+        },
+        { merge: true }
+      );
+    } catch (e) {
+      console.error("Не удалось сохранить прогресс:", e);
+    }
+  }
 
-        return Array.from(map.entries()).map(([word, translation]) => ({
-          word,
-          translation
-        }));
+  // Бейдж
+  async function awardFirstHelloBadge() {
+    if (!currentUser || badgeAwarded) return;
+    const userKey = getUserKey();
+    if (!userKey) return;
+
+    const badgePayload = {
+      badgeId: FIRST_BADGE_ID,
+      title: "Первое hello",
+      courseId: COURSE_ID,
+      lesson: LESSON_SLUG,
+      earnedAt: serverTimestamp()
+    };
+
+    const tasks = [];
+
+    tasks.push(
+      setDoc(
+        doc(db, `users/${userKey}/badges/${FIRST_BADGE_ID}`),
+        badgePayload,
+        { merge: true }
+      )
+    );
+
+    tasks.push(
+      setDoc(
+        doc(db, "users", userKey),
+        { badges: arrayUnion(FIRST_BADGE_ID) },
+        { merge: true }
+      )
+    );
+
+    await Promise.all(tasks);
+    badgeAwarded = true;
+  }
+
+  // Переключение шагов
+  function showStep(n) {
+    stepPanels.forEach(p => p.classList.remove("step-panel--visible"));
+    const panel = document.getElementById(`step-${n}`);
+    if (panel) panel.classList.add("step-panel--visible");
+
+    stepDots.forEach(dot => {
+      dot.classList.remove("step-dot--active", "step-dot--done");
+      const step = Number(dot.dataset.step);
+      if (step < n) dot.classList.add("step-dot--done");
+      if (step === n) dot.classList.add("step-dot--active");
+    });
+
+    if (n === 4) {
+      awardFirstHelloBadge().catch(console.error);
+      saveLessonProgress().catch(console.error);
+    }
+
+    currentStep = n;
+  }
+
+  // Навигация
+  document.querySelectorAll(".next-step-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.id === "task-hello-submit") return;
+      const next = Number(btn.dataset.next);
+      if (next) showStep(next);
+    });
+  });
+
+  // ====== ЗАДАНИЕ: ПРИВЕТСТВИЕ ======
+  if (helloBtn) {
+    helloBtn.addEventListener("click", async () => {
+      const val = helloInput.value.trim();
+      if (!val) {
+        alert("Напишите любое английское приветствие :)");
+        return;
       }
 
-      function renderVowelWords() {
-        const entries = extractVowelEntries();
-        vocabListVowels.innerHTML = "";
-
-        entries.forEach(({ word, translation }) => {
-          const label = document.createElement("label");
-          label.className = "flex items-center gap-2 text-[0.85rem]";
-
-          const ruPart = translation
-            ? `<span class="text-gray-400 text-[0.78rem] ml-1">— ${translation}</span>`
-            : "";
-
-          label.innerHTML = `
-            <input type="checkbox"
-                   class="vocab-word"
-                   data-word="${word}"
-                   data-ru="${translation}"
-                   data-category="Гласные буквосочетания">
-            <span>${word}</span>
-            ${ruPart}
-          `;
-
-          vocabListVowels.appendChild(label);
-        });
+      if (helloFeedback) {
+        helloFeedback.classList.remove("hidden");
       }
 
-      // ====== Окно словаря ======
-      openVocabBtn.addEventListener("click", () => {
-        vocabModal.classList.remove("hidden");
-        vocabModal.classList.add("flex");
+      if (isProUser && currentUser) {
+        await saveProSubmission({ helloAnswer: val }).catch(console.error);
+      } else {
+        saveLocalAnswer("hello", val);
+      }
 
-        renderVowelWords();
+      setTimeout(() => {
+        if (helloFeedback) helloFeedback.classList.add("hidden");
+        showStep(2);
+      }, 1100);
+    });
+  }
 
-        if (!currentUser) {
-          vocabAuthWarn.classList.remove("hidden");
-          vocabSaveBtn.disabled = true;
-        } else {
-          vocabAuthWarn.classList.add("hidden");
-          vocabSaveBtn.disabled = false;
-        }
+  // ====== СЛОВАРИК ======
+  function extractVowelEntries() {
+    const tips = document.querySelectorAll("#step-3 .word-tip");
+    const map = new Map();
+
+    tips.forEach(tip => {
+      const w = tip.textContent.trim().toLowerCase();
+      const ru = (tip.dataset.ru || "").trim();
+      if (/^[a-z]+$/.test(w) && !map.has(w)) {
+        map.set(w, ru);
+      }
+    });
+
+    return Array.from(map.entries()).map(([word, translation]) => ({
+      word,
+      translation
+    }));
+  }
+
+  function renderVowelWords() {
+    const entries = extractVowelEntries();
+    vocabListVowels.innerHTML = "";
+
+    entries.forEach(({ word, translation }) => {
+      const label = document.createElement("label");
+      label.className = "flex items-center gap-2 text-[0.85rem]";
+
+      const ruPart = translation
+        ? `<span class="text-gray-400 text-[0.78rem] ml-1">— ${translation}</span>`
+        : "";
+
+      label.innerHTML = `
+        <input type="checkbox"
+               class="vocab-word"
+               data-word="${word}"
+               data-ru="${translation}"
+               data-category="Гласные буквосочетания">
+        <span>${word}</span>
+        ${ruPart}
+      `;
+
+      vocabListVowels.appendChild(label);
+    });
+  }
+
+  if (openVocabBtn) {
+    openVocabBtn.addEventListener("click", () => {
+      vocabModal.classList.remove("hidden");
+      vocabModal.classList.add("flex");
+
+      renderVowelWords();
+
+      if (!currentUser) {
+        vocabAuthWarn.classList.remove("hidden");
+        vocabSaveBtn.disabled = true;
+      } else {
+        vocabAuthWarn.classList.add("hidden");
+        vocabSaveBtn.disabled = false;
+      }
+    });
+  }
+
+  if (vocabClose) {
+    vocabClose.addEventListener("click", () => {
+      vocabModal.classList.add("hidden");
+      vocabModal.classList.remove("flex");
+    });
+  }
+
+  if (vocabSelectAll) {
+    vocabSelectAll.addEventListener("click", () => {
+      const boxes = document.querySelectorAll(".vocab-word");
+      const anyUnchecked = Array.from(boxes).some(b => !b.checked);
+      boxes.forEach(b => b.checked = anyUnchecked);
+    });
+  }
+
+  async function saveWordsToFirestore(entries) {
+    if (!currentUser) return;
+    const userKey = getUserKey();
+    if (!userKey) return;
+
+    const colRef = collection(db, `users/${userKey}/vocabulary`);
+
+    for (const { word, translation } of entries) {
+      await addDoc(colRef, {
+        word,
+        translation: translation || "",
+        lesson: LESSON_SLUG,
+        courseId: COURSE_ID,
+        category: "Гласные буквосочетания",
+        addedAt: serverTimestamp()
       });
+    }
+  }
 
-      vocabClose.addEventListener("click", () => {
+  if (vocabSaveBtn) {
+    vocabSaveBtn.addEventListener("click", async () => {
+      if (!currentUser) {
+        alert("Войдите, чтобы сохранить слова.");
+        return;
+      }
+
+      const checked = Array.from(document.querySelectorAll(".vocab-word"))
+        .filter(cb => cb.checked)
+        .map(cb => ({
+          word: cb.dataset.word,
+          translation: cb.dataset.ru || ""
+        }));
+
+      if (checked.length === 0) {
+        alert("Выберите хотя бы одно слово.");
+        return;
+      }
+
+      vocabSaveBtn.disabled = true;
+      vocabSaveBtn.textContent = "Сохраняем...";
+
+      await saveWordsToFirestore(checked);
+
+      vocabSaveBtn.textContent = "Готово!";
+      setTimeout(() => {
         vocabModal.classList.add("hidden");
         vocabModal.classList.remove("flex");
-      });
+        vocabSaveBtn.disabled = false;
+        vocabSaveBtn.textContent = "Добавить выбранные →";
+      }, 700);
+    });
+  }
 
-      vocabSelectAll.addEventListener("click", () => {
-        const boxes = document.querySelectorAll(".vocab-word");
-        const anyUnchecked = Array.from(boxes).some(b => !b.checked);
-        boxes.forEach(b => b.checked = anyUnchecked);
-      });
+  // ====== СЛУШАЕМ СОБЫТИЯ АВТОРИЗАЦИИ ======
+  window.addEventListener('auth-state-changed', async (e) => {
+    currentUser = e.detail.user;
+    isProUser = e.detail.isProUser;
 
-      async function saveWordsToFirestore(entries) {
-        if (!currentUser) return;
-        const userKey = getUserKey();
-        if (!userKey) return;
+    console.log("📚 Урок 1: Auth changed", { currentUser: currentUser?.email, isProUser });
 
-        const colRef = collection(db, `users/${userKey}/vocabulary`);
+    // Загружаем PRO ответы
+    if (isProUser && currentUser) {
+      await loadProAnswers();
+    }
 
-        for (const { word, translation } of entries) {
-          await addDoc(colRef, {
-            word,
-            translation: translation || "",
-            lesson:      LESSON_SLUG,
-            courseId:    COURSE_ID,
-            category:    "Гласные буквосочетания",
-            addedAt:     serverTimestamp()
-          });
-        }
-      }
+    // Загружаем локальные ответы для не-PRO
+    if (!isProUser && helloInput) {
+      const savedHello = loadLocalAnswer("hello");
+      if (savedHello) helloInput.value = savedHello;
+    }
+  });
 
-
-      // Старт
-      showStep(1);
-                  </script>
+  // Старт
+  showStep(1);
+</script>
 
   </main>
 
