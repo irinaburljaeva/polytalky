@@ -1614,7 +1614,7 @@ function loadLocalAnswer(key) {
       });
 
 // ====== Аудиозапись ======
-let mediaRecorder = null;;
+let mediaRecorder = null;
 let audioChunks = [];
 let audioStream = null;
 
@@ -1643,7 +1643,7 @@ if (recordBtn && stopBtn && audioPlay) {
     recordBtn.addEventListener("click", async () => {
       try {
         audioChunks = [];
-        is (audioStream) {
+        if (audioStream) {
           audioStream.getTracks().forEach(track => track.stop());
                   }
        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -1737,7 +1737,7 @@ if (recordBtn && stopBtn && audioPlay) {
           recordingBar.style.width = "0%";
 
        
-          is (recordingInterval) {
+          if (recordingInterval) {
             clearInterval(recordingInterval);
           }
           recordingInterval = setInterval(() => {
