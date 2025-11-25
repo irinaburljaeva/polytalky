@@ -1417,7 +1417,7 @@ setInterval(() => {
     }
 
     const proGlobal = merged.proGlobal === true;
-    let proValidUntil = merged.proValidUntil  merged.proUntil  null;
+    let proValidUntil = merged.proValidUntil || merged.proUntil || null;
     
     console.log("🎯 proGlobal:", proGlobal);
     console.log("📅 proValidUntil (raw):", proValidUntil);
