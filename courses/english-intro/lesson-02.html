@@ -2004,7 +2004,7 @@ onAuthStateChanged(auth, async (user) => {
   
   if (user) {
     currentUser = user;
-    userStatus.textContent = Вы вошли как: ${user.email};
+    userStatus.textContent = `Вы вошли как: ${user.email}`;
     loginBtn.classList.add("hidden");
 
     console.log("⏳ Загружаем профиль...");
