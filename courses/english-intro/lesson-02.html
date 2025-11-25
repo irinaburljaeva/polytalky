@@ -1362,7 +1362,52 @@ setInterval(() => {
   console.log("  feedbackLink.classList:", feedbackLink?.classList.toString());
 }, 2000);
       
-      // ====== Профиль пользователя / PRO ======
+
+      // ====== DOM-элементы ======
+      const feedbackLink = document.getElementById("feedback-link");
+      const loginBtn     = document.getElementById("login-btn");
+      const userStatus   = document.getElementById("user-status");
+
+      if (loginBtn){
+        loginBtn.addEventListener("click", () => {
+          window.open("/student/","_blank");
+        });
+      }
+                                 
+      const stepPanels = document.querySelectorAll(".step-panel");
+      const stepDots   = document.querySelectorAll(".step-dot");
+
+      // тренажёр
+      const trainerQuestion = document.getElementById("trainer-question");
+      const trainerOptions  = document.getElementById("trainer-options");
+      const trainerFeedback = document.getElementById("trainer-feedback");
+      const trainerProgress = document.getElementById("trainer-progress");
+      const trainerNextBtn  = document.getElementById("trainer-next");
+
+      // рассказ
+      const storyInput    = document.getElementById("task-story-input");
+      const storyBtn      = document.getElementById("task-story-submit");
+      const storyFeedback = document.getElementById("story-feedback");
+
+      // словарик
+      const openVocabBtn    = document.getElementById("open-vocab-btn");
+      const vocabModal      = document.getElementById("vocab-modal");
+      const vocabClose      = document.getElementById("vocab-close");
+      const vocabListConson = document.getElementById("vocab-consonants");
+      const vocabAuthWarn   = document.getElementById("vocab-auth-warning");
+      const vocabSaveBtn    = document.getElementById("vocab-save");
+      const vocabSelectAll  = document.getElementById("vocab-select-all");
+
+      // Q&A
+      const qaModal      = document.getElementById("qa-modal");
+      const qaCloseBtn   = document.getElementById("qa-close");
+      const qaList       = document.getElementById("qa-list");
+      const qaForm       = document.getElementById("qa-form");
+      const qaText       = document.getElementById("qa-text");
+      const qaSubmitBtn  = document.getElementById("qa-submit");
+      const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
+
+            // ====== Профиль пользователя / PRO ======
     async function loadUserProfile(user) {
   console.log("📊 loadUserProfile вызвана для:", user?.email);
   
@@ -1454,50 +1499,6 @@ setInterval(() => {
     isProUser = false;
   }
 }
-
-      // ====== DOM-элементы ======
-      const feedbackLink = document.getElementById("feedback-link");
-      const loginBtn     = document.getElementById("login-btn");
-      const userStatus   = document.getElementById("user-status");
-
-      if (loginBtn){
-        loginBtn.addEventListener("click", () => {
-          window.open("/student/","_blank");
-        });
-      }
-                                 
-      const stepPanels = document.querySelectorAll(".step-panel");
-      const stepDots   = document.querySelectorAll(".step-dot");
-
-      // тренажёр
-      const trainerQuestion = document.getElementById("trainer-question");
-      const trainerOptions  = document.getElementById("trainer-options");
-      const trainerFeedback = document.getElementById("trainer-feedback");
-      const trainerProgress = document.getElementById("trainer-progress");
-      const trainerNextBtn  = document.getElementById("trainer-next");
-
-      // рассказ
-      const storyInput    = document.getElementById("task-story-input");
-      const storyBtn      = document.getElementById("task-story-submit");
-      const storyFeedback = document.getElementById("story-feedback");
-
-      // словарик
-      const openVocabBtn    = document.getElementById("open-vocab-btn");
-      const vocabModal      = document.getElementById("vocab-modal");
-      const vocabClose      = document.getElementById("vocab-close");
-      const vocabListConson = document.getElementById("vocab-consonants");
-      const vocabAuthWarn   = document.getElementById("vocab-auth-warning");
-      const vocabSaveBtn    = document.getElementById("vocab-save");
-      const vocabSelectAll  = document.getElementById("vocab-select-all");
-
-      // Q&A
-      const qaModal      = document.getElementById("qa-modal");
-      const qaCloseBtn   = document.getElementById("qa-close");
-      const qaList       = document.getElementById("qa-list");
-      const qaForm       = document.getElementById("qa-form");
-      const qaText       = document.getElementById("qa-text");
-      const qaSubmitBtn  = document.getElementById("qa-submit");
-      const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
 
       // ====== ПРОГРЕСС УРОКА (без бейджа) ======
       let currentStep  = 1;
