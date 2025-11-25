@@ -1347,21 +1347,7 @@
         return currentUser.uid;
       }
 
-      // ====== ДИАГНОСТИКА ======
-console.log("🔍 ДИАГНОСТИКА УРОКА 2:");
-console.log("feedbackLink элемент:", feedbackLink);
-console.log("feedbackLink classList:", feedbackLink?.classList);
-console.log("currentUser:", currentUser);
-console.log("isProUser:", isProUser);
-
-// Проверяем каждые 2 секунды
-setInterval(() => {
-  console.log("⏰ Проверка состояния:");
-  console.log("  currentUser:", currentUser?.email);
-  console.log("  isProUser:", isProUser);
-  console.log("  feedbackLink.classList:", feedbackLink?.classList.toString());
-}, 2000);
-      
+          
 
       // ====== DOM-элементы ======
       const feedbackLink = document.getElementById("feedback-link");
@@ -1407,6 +1393,20 @@ setInterval(() => {
       const qaSubmitBtn  = document.getElementById("qa-submit");
       const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
 
+        // ====== ДИАГНОСТИКА ======
+console.log("🔍 ДИАГНОСТИКА УРОКА 2:");
+console.log("feedbackLink элемент:", feedbackLink);
+console.log("feedbackLink classList:", feedbackLink?.classList);
+console.log("currentUser:", currentUser);
+console.log("isProUser:", isProUser);
+
+// Проверяем каждые 2 секунды
+setInterval(() => {
+  console.log("⏰ Проверка состояния:");
+  console.log("  currentUser:", currentUser?.email);
+  console.log("  isProUser:", isProUser);
+  console.log("  feedbackLink.classList:", feedbackLink?.classList.toString());
+}, 2000);
             // ====== Профиль пользователя / PRO ======
     async function loadUserProfile(user) {
   console.log("📊 loadUserProfile вызвана для:", user?.email);
