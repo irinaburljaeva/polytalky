@@ -2016,7 +2016,7 @@ onAuthStateChanged(auth, async (user) => {
     userStatus.textContent = "Вы не авторизованы";
     loginBtn.classList.remove("hidden");
     feedbackLink.classList.add("hidden");
- 
+  }
   // подтянуть сохранённый рассказ для не-PRO
   if (!isProUser && storyInput) {
     const saved = loadLocalAnswer("story");
