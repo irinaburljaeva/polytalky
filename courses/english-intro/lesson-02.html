@@ -1400,13 +1400,7 @@ console.log("feedbackLink classList:", feedbackLink?.classList);
 console.log("currentUser:", currentUser);
 console.log("isProUser:", isProUser);
 
-// Проверяем каждые 2 секунды
-setInterval(() => {
-  console.log("⏰ Проверка состояния:");
-  console.log("  currentUser:", currentUser?.email);
-  console.log("  isProUser:", isProUser);
-  console.log("  feedbackLink.classList:", feedbackLink?.classList.toString());
-}, 2000);
+
             // ====== Профиль пользователя / PRO ======
     async function loadUserProfile(user) {
   console.log("📊 loadUserProfile вызвана для:", user?.email);
@@ -2001,38 +1995,28 @@ document.querySelectorAll(".word-tip").forEach(tip => {
 
     // ====== Авторизация и загрузка данных ======
 onAuthStateChanged(auth, async (user) => {
-  console.log("🔐 onAuthStateChanged вызвана, user:", user?.email);
-  
   if (user) {
     currentUser = user;
     userStatus.textContent = `Вы вошли как: ${user.email}`;
     loginBtn.classList.add("hidden");
 
-    console.log("⏳ Загружаем профиль...");
     await loadUserProfile(user);
-    console.log("✅ Профиль загружен, isProUser:", isProUser);
-    
-    console.log("⏳ Загружаем PRO ответы...");
     await loadProAnswers();
 
-    console.log("🎨 Обновляем feedbackLink...");
+    // === показываем/скрываем кнопку проверенных заданий ===
     if (isProUser) {
-      console.log("✅ Пользователь PRO - показываем feedbackLink");
       feedbackLink.classList.remove("hidden");
-      console.log("feedbackLink classes после remove:", feedbackLink.classList.toString());
     } else {
-      console.log("❌ Пользователь не PRO - скрываем feedbackLink");
       feedbackLink.classList.add("hidden");
     }
+
   } else {
-    console.log("👤 Пользователь не авторизован");
     currentUser = null;
     isProUser   = false;
     userStatus.textContent = "Вы не авторизованы";
     loginBtn.classList.remove("hidden");
     feedbackLink.classList.add("hidden");
-  }
-
+ 
   // подтянуть сохранённый рассказ для не-PRO
   if (!isProUser && storyInput) {
     const saved = loadLocalAnswer("story");
