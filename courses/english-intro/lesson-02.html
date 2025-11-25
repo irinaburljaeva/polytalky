@@ -1950,35 +1950,40 @@ document.querySelectorAll(".word-tip").forEach(tip => {
         }, 700);
       });
 
-      // ====== Авторизация и загрузка данных ======
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          currentUser = user;
-          userStatus.textContent = `Вы вошли как: ${user.email}`;
-          loginBtn.classList.add("hidden");
+    // ====== Авторизация и загрузка данных ======
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    userStatus.textContent = Вы вошли как: ${user.email};
+    loginBtn.classList.add("hidden");
 
-          await loadUserProfile(user);
-          await loadProAnswers();
+    await loadUserProfile(user);
+    await loadProAnswers();
 
-          if (isProUser) {
-            feedbackLink.classList.remove("hidden");
-          } else {
-            feedbackLink.classList.add("hidden");
-          }
-        } else {
-          currentUser = null;
-          isProUser   = false;
-          userStatus.textContent = "Вы не авторизованы";
-          loginBtn.classList.remove("hidden");
-          feedbackLink.classList.add("hidden");
-        }
+    // ВАЖНО: показываем иконку фидбека для PRO пользователей
+    if (isProUser) {
+      feedbackLink.classList.remove("hidden");
+      console.log("✅ Показываем feedbackLink для PRO:", user.email);
+    } else {
+      feedbackLink.classList.add("hidden");
+      console.log("❌ Скрываем feedbackLink (не PRO):", user.email);
+    }
+  } else {
+    currentUser = null;
+    isProUser   = false;
+    userStatus.textContent = "Вы не авторизованы";
+    loginBtn.classList.remove("hidden");
+    feedbackLink.classList.add("hidden");
+    console.log("👤 Не авторизован");
+  }
 
-        // подтянуть сохранённый рассказ для не-PRO
-        if (!isProUser && storyInput) {
-          const saved = loadLocalAnswer("story");
-          if (saved) storyInput.value = saved;
-        }
-      });
+  // подтянуть сохранённый рассказ для не-PRO
+  if (!isProUser && storyInput) {
+    const saved = loadLocalAnswer("story");
+    if (saved) storyInput.value = saved;
+  }
+});
+
 
       // старт
       showStep(1);
