@@ -1347,65 +1347,113 @@
         return currentUser.uid;
       }
 
+      // ====== ДИАГНОСТИКА ======
+console.log("🔍 ДИАГНОСТИКА УРОКА 2:");
+console.log("feedbackLink элемент:", feedbackLink);
+console.log("feedbackLink classList:", feedbackLink?.classList);
+console.log("currentUser:", currentUser);
+console.log("isProUser:", isProUser);
+
+// Проверяем каждые 2 секунды
+setInterval(() => {
+  console.log("⏰ Проверка состояния:");
+  console.log("  currentUser:", currentUser?.email);
+  console.log("  isProUser:", isProUser);
+  console.log("  feedbackLink.classList:", feedbackLink?.classList.toString());
+}, 2000);
+      
       // ====== Профиль пользователя / PRO ======
-      async function loadUserProfile(user) {
-        isProUser = false;
-        if (!user) return;
+    async function loadUserProfile(user) {
+  console.log("📊 loadUserProfile вызвана для:", user?.email);
+  
+  isProUser = false;
+  if (!user) {
+    console.log("❌ Нет пользователя");
+    return;
+  }
 
-        try {
-          const email = user.email || null;
-          const uid   = user.uid   || null;
-          if (!email && !uid) return;
+  try {
+    const email = user.email || null;
+    const uid   = user.uid   || null;
+    
+    console.log("🔑 Email:", email, "UID:", uid);
+    
+    if (!email && !uid) {
+      console.log("❌ Нет ни email, ни uid");
+      return;
+    }
 
-          const usersCol = collection(db, "users");
-          const emailRef = email ? doc(usersCol, email) : null;
-          const uidRef   = uid   ? doc(usersCol, uid)   : null;
+    const usersCol = collection(db, "users");
+    const emailRef = email ? doc(usersCol, email) : null;
+    const uidRef   = uid   ? doc(usersCol, uid)   : null;
 
-          const [emailSnap, uidSnap] = await Promise.all([
-            emailRef ? getDoc(emailRef) : Promise.resolve(null),
-            uidRef   ? getDoc(uidRef)   : Promise.resolve(null),
-          ]);
+    console.log("📄 Загружаем документы из Firestore...");
 
-          const emailData = emailSnap && emailSnap.exists() ? (emailSnap.data() || {}) : null;
-          const uidData   = uidSnap   && uidSnap.exists()   ? (uidSnap.data()   || {}) : null;
+    const [emailSnap, uidSnap] = await Promise.all([
+      emailRef ? getDoc(emailRef) : Promise.resolve(null),
+      uidRef   ? getDoc(uidRef)   : Promise.resolve(null),
+    ]);
 
-          const merged = {
-            ...(uidData || {}),
-            ...(emailData || {}),
-          };
+    console.log("📥 emailSnap exists:", emailSnap?.exists());
+    console.log("📥 uidSnap exists:", uidSnap?.exists());
 
-          if (!Object.keys(merged).length) {
-            isProUser = false;
-            return;
-          }
+    const emailData = emailSnap && emailSnap.exists() ? (emailSnap.data() || {}) : null;
+    const uidData   = uidSnap   && uidSnap.exists()   ? (uidSnap.data()   || {}) : null;
 
-          const proGlobal = merged.proGlobal === true;
-          let proValidUntil = merged.proValidUntil || merged.proUntil || null;
-          if (proValidUntil && typeof proValidUntil.toDate === "function") {
-            proValidUntil = proValidUntil.toDate();
-          }
+    console.log("📦 emailData:", emailData);
+    console.log("📦 uidData:", uidData);
 
-          const legacyPro =
-            merged.proActive ||
-            merged.isPro ||
-            merged.hasPro ||
-            (merged.pro && merged.pro.active);
+    const merged = {
+      ...(uidData || {}),
+      ...(emailData || {}),
+    };
 
-          let active = !!(proGlobal || legacyPro);
+    console.log("🔀 Merged data:", merged);
 
-          if (proValidUntil instanceof Date) {
-            const now = new Date();
-            if (proValidUntil <= now) {
-              active = false;
-            }
-          }
+    if (!Object.keys(merged).length) {
+      console.log("❌ Нет данных после слияния");
+      isProUser = false;
+      return;
+    }
 
-          isProUser = active;
-        } catch (e) {
-          console.error("Не удалось загрузить профиль пользователя:", e);
-          isProUser = false;
-        }
+    const proGlobal = merged.proGlobal === true;
+    let proValidUntil = merged.proValidUntil  merged.proUntil  null;
+    
+    console.log("🎯 proGlobal:", proGlobal);
+    console.log("📅 proValidUntil (raw):", proValidUntil);
+    
+    if (proValidUntil && typeof proValidUntil.toDate === "function") {
+      proValidUntil = proValidUntil.toDate();
+      console.log("📅 proValidUntil (converted):", proValidUntil);
+    }
+
+    const legacyPro =
+      merged.proActive ||
+      merged.isPro ||
+      merged.hasPro ||
+      (merged.pro && merged.pro.active);
+
+    console.log("🔧 legacyPro:", legacyPro);
+
+    let active = !!(proGlobal || legacyPro);
+
+    if (proValidUntil instanceof Date) {
+      const now = new Date();
+      console.log("⏰ Сравниваем даты: now =", now, "valid until =", proValidUntil);
+      if (proValidUntil <= now) {
+        console.log("❌ PRO истёк");
+        active = false;
       }
+    }
+
+    isProUser = active;
+    console.log("✅ ИТОГОВЫЙ isProUser:", isProUser);
+    
+  } catch (e) {
+    console.error("💥 Ошибка в loadUserProfile:", e);
+    isProUser = false;
+  }
+}
 
       // ====== DOM-элементы ======
       const feedbackLink = document.getElementById("feedback-link");
@@ -1952,29 +2000,36 @@ document.querySelectorAll(".word-tip").forEach(tip => {
 
     // ====== Авторизация и загрузка данных ======
 onAuthStateChanged(auth, async (user) => {
+  console.log("🔐 onAuthStateChanged вызвана, user:", user?.email);
+  
   if (user) {
     currentUser = user;
-    userStatus.textContent = `Вы вошли как: ${user.email}`;
+    userStatus.textContent = Вы вошли как: ${user.email};
     loginBtn.classList.add("hidden");
 
+    console.log("⏳ Загружаем профиль...");
     await loadUserProfile(user);
+    console.log("✅ Профиль загружен, isProUser:", isProUser);
+    
+    console.log("⏳ Загружаем PRO ответы...");
     await loadProAnswers();
 
-    // ВАЖНО: показываем иконку фидбека для PRO пользователей
+    console.log("🎨 Обновляем feedbackLink...");
     if (isProUser) {
+      console.log("✅ Пользователь PRO - показываем feedbackLink");
       feedbackLink.classList.remove("hidden");
-      console.log("✅ Показываем feedbackLink для PRO:", user.email);
+      console.log("feedbackLink classes после remove:", feedbackLink.classList.toString());
     } else {
+      console.log("❌ Пользователь не PRO - скрываем feedbackLink");
       feedbackLink.classList.add("hidden");
-      console.log("❌ Скрываем feedbackLink (не PRO):", user.email);
     }
   } else {
+    console.log("👤 Пользователь не авторизован");
     currentUser = null;
     isProUser   = false;
     userStatus.textContent = "Вы не авторизованы";
     loginBtn.classList.remove("hidden");
     feedbackLink.classList.add("hidden");
-    console.log("👤 Не авторизован");
   }
 
   // подтянуть сохранённый рассказ для не-PRO
@@ -1983,8 +2038,6 @@ onAuthStateChanged(auth, async (user) => {
     if (saved) storyInput.value = saved;
   }
 });
-
-
       // старт
       showStep(1);
     </script>
