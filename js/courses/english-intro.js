@@ -654,9 +654,21 @@ document.querySelectorAll(".word-tip").forEach(tip => {
 });
 
 // ====== Словарик (слова из таблиц) ======
-const vocabListVowels = document.getElementById("vocab-vowels");
-
 function buildVocabEntries() {
+  const entries = [];
+
+  // Урок 3: слова перечислены вручную
+  if (LESSON_SLUG === "lesson-03") {
+    document.querySelectorAll(".vocab-list li").forEach(li => {
+      const word = li.textContent.trim().toLowerCase();
+      if (word && /^[a-z]+$/.test(word)) {
+        entries.push({ word, translation: "" });
+      }
+    });
+    return entries;
+  }
+
+  // Урок 1 (и другие со словарём в таблицах)
   const tips = document.querySelectorAll("#step-3 .word-tip");
   const map  = new Map();
 
@@ -669,8 +681,7 @@ function buildVocabEntries() {
   });
 
   return Array.from(map.entries()).map(([word, translation]) => ({
-    word,
-    translation
+    word, translation
   }));
 }
 
