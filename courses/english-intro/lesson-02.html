@@ -1366,7 +1366,7 @@
       const trainerOptions  = document.getElementById("trainer-options");
       const trainerFeedback = document.getElementById("trainer-feedback");
       const trainerProgress = document.getElementById("trainer-progress");
-      const trainerNextBtn  = document.getElementById("trainer-next");
+     
 
       // рассказ
       const storyInput    = document.getElementById("task-story-input");
@@ -1681,7 +1681,7 @@ function renderTrainerQuestion() {
 
   trainerLocked = false;
   trainerFeedback.textContent = "";
-  trainerNextBtn.disabled = true;
+  
 
   trainerQuestion.textContent = q.prompt;
   trainerProgress.textContent = `${trainerIndex + 1} / ${trainerQuestions.length}`;
