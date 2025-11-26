@@ -82,7 +82,23 @@
       color: #78350f;
       margin-bottom: 0.5rem;
     }
+.tobe-input {
+  width: 90px;
+  padding: 3px 6px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin: 0 3px;
+}
 
+.tobe-input.correct {
+  border-color: #22c55e;
+  background: #e9fce9;
+}
+
+.tobe-input.wrong {
+  border-color: #dc2626;
+  background: #fde2e2;
+}
     .hidden{display:none;}
 
   </style>
@@ -460,17 +476,50 @@
       <span class="font-mono">next week</span> (future).
     </p>
 
-    <textarea id="tobe-textarea" class="input-main">Hello! My name ________ Alan. I ________ thirteen.
-My friend's name ________ David. He ________ thirteen, too.
-We ________ from Belarus.
+   <div class="step" data-step="5">
+  <h2 class="lesson-title">Задание: вставьте правильный глагол <span class="font-bold">to be</span></h2>
 
-Last summer we ________ at the seaside.
-The weather ________ sunny.
-There ________ many people on the beach.
+  <p class="text-gray-700 mt-2">
+    Вставьте правильную форму глагола <b>to be</b> в каждый пропуск: <i>am, is, are, was, were, will be</i>.
+  </p>
 
-I hope next summer it ________ sunny and warm, too.
-Some day in future I ________ lucky to visit London.
-My holidays ________ great.</textarea>
+  <div class="exercise-block mt-5 bg-white border border-amber-200 p-4 rounded-xl leading-8">
+
+    Hello! My name 
+    <input class="tobe-input" data-answer="is"> Alan.
+    
+    I <input class="tobe-input" data-answer="am"> thirteen.
+    
+    My friend’s name <input class="tobe-input" data-answer="is"> David.
+    
+    He <input class="tobe-input" data-answer="is"> thirteen, too.
+    
+    We <input class="tobe-input" data-answer="are"> from Belarus.
+    
+    Last summer we <input class="tobe-input" data-answer="were"> at the seaside.
+    
+    The weather <input class="tobe-input" data-answer="was"> sunny.
+    
+    There <input class="tobe-input" data-answer="were"> many people on the beach.
+    
+    We had a good time.
+    
+    I hope next summer it <input class="tobe-input" data-answer="will be"> sunny and warm, too.
+    
+    There <input class="tobe-input" data-answer="will be"> a lot of nice days.
+    
+    I have never been to other countries.
+    
+    Some day in future I <input class="tobe-input" data-answer="will be"> lucky to visit London and my holidays 
+    <input class="tobe-input" data-answer="will be"> great.
+  </div>
+
+  <p id="step5-feedback" class="text-green-700 font-semibold mt-3"></p>
+
+  <button id="step5-next-btn" class="btn-main mt-6 opacity-50" disabled>
+    Перейти к финалу →
+  </button>
+</div>
 
     <p id="step5-feedback" class="mt-3 text-sm font-medium text-gray-800"></p>
 
@@ -654,6 +703,11 @@ My holidays ________ great.</textarea>
 // 🔸 ШАГ 3 — DRAG & DROP ТРЕНАЖЁР (5 предложений)
 // =========================================================
 
+  let startX = 0;
+  let startY = 0;
+  let dragging = false;
+  let dragClone = null;
+  
 // слова с переводом для тултипов
 const translations = {
   "I": "я",
@@ -863,6 +917,66 @@ function initSentence() {
       e.stopPropagation();
       showTooltip(btn, word);
       selectWord(word);
+
+      // ======== мобильное управление: тап = тултип, удержание = drag ========
+btn.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+  dragging = false;
+
+  // создаём clone, но показываем его только если будет именно drag
+  dragClone = btn.cloneNode(true);
+  dragClone.style.position = "fixed";
+  dragClone.style.pointerEvents = "none";
+  dragClone.style.opacity = "0";
+  dragClone.style.transform = "scale(1.1)";
+  dragClone.style.zIndex = "9999";
+  document.body.appendChild(dragClone);
+
+  setTimeout(() => {
+    if (!dragging) return;
+    dragClone.style.opacity = "1";
+  }, 120);
+});
+
+btn.addEventListener("touchmove", (e) => {
+  const dx = Math.abs(e.touches[0].clientX - startX);
+  const dy = Math.abs(e.touches[0].clientY - startY);
+
+  // пользователь начал тянуть — это drag
+  if (dx > 10 || dy > 10) {
+    dragging = true;
+
+    dragClone.style.left = e.touches[0].clientX + "px";
+    dragClone.style.top  = e.touches[0].clientY + "px";
+  }
+});
+
+btn.addEventListener("touchend", (e) => {
+
+  // TAP → тултип
+  if (!dragging) {
+    showTooltip(btn, word);
+    return;
+  }
+
+  // DRAG → перенос в drop-zone
+  const dropZone = document
+    .getElementById(`drop-zone-${currentSentenceIndex + 1}`)
+    .getBoundingClientRect();
+
+  const x = e.changedTouches[0].clientX;
+  const y = e.changedTouches[0].clientY;
+
+  if (x >= dropZone.left && x <= dropZone.right &&
+      y >= dropZone.top  && y <= dropZone.bottom) {
+    selectWord(word);
+  }
+
+  dragClone.remove();
+  dragClone = null;
+  dragging = false;
+});
     });
 
     wordBank.appendChild(btn);
@@ -874,38 +988,43 @@ initSentence();
 
 
 // ===============================
-// 🔸 ШАГ 5 — ПОДДЕРЖКА УПРАЖНЕНИЯ TO BE
+// 🔸 ШАГ 5 — ПРОВЕРКА TO BE
 // ===============================
 
-const step5Area = document.getElementById("tobe-textarea");
-const step5Next = document.getElementById("step5-next-btn");
+const step5Inputs = document.querySelectorAll(".tobe-input");
 const step5Feedback = document.getElementById("step5-feedback");
+const step5NextBtn = document.getElementById("step5-next-btn");
 
-step5Area.addEventListener("input", () => {
-  const value = step5Area.value.toLowerCase();
+step5Inputs.forEach(input => {
+  input.addEventListener("input", () => {
+    const val = input.value.trim().toLowerCase();
+    const correct = input.dataset.answer;
 
-  const requiredForms = [
-    "is", "am", "is", "is", "are",
-    "were", "was", "were",
-    "will be", "will be", "will be"
-  ];
+    // Проверка конкретного поля
+    if (val === correct) {
+      input.classList.add("correct");
+      input.classList.remove("wrong");
+    } else {
+      input.classList.remove("correct");
+      input.classList.add("wrong");
+    }
 
-  let count = 0;
-  requiredForms.forEach(form => {
-    if (value.includes(form)) count++;
+    // Проверка всех полей
+    const allCorrect = [...step5Inputs].every(i => 
+      i.value.trim().toLowerCase() === i.dataset.answer
+    );
+
+    if (allCorrect) {
+      step5Feedback.textContent = "Отлично! Все формы to be заполнены правильно 🎉";
+      step5NextBtn.disabled = false;
+      step5NextBtn.classList.remove("opacity-50");
+    } else {
+      step5Feedback.textContent = "";
+      step5NextBtn.disabled = true;
+      step5NextBtn.classList.add("opacity-50");
+    }
   });
-
-  if (count >= 8) {
-    step5Feedback.textContent = "Отлично! Можно переходить дальше 🎉";
-    step5Feedback.style.color = "#16a34a";
-    step5Next.disabled = false;
-    step5Next.classList.remove("opacity-50");
-  } else {
-    step5Feedback.textContent = "";
-    step5Next.disabled = false;
-  }
 });
-
 // ===============================
 // 🔸 ФИНАЛ — СЛОВАРИК
 // ===============================
