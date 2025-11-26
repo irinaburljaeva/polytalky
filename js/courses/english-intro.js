@@ -200,6 +200,7 @@ const qaOpenBtns   = document.querySelectorAll("[data-open-qa]");
 const audioFeedback = document.getElementById("audio-feedback");
 
 let currentStep = 1;
+let maxStepReached = 1;
 
 // ====== Прогресс + бейдж (только для урока 1) ======
 async function saveLessonProgressAndBadge() {
@@ -270,8 +271,22 @@ function showStep(n) {
   }
 
   currentStep = n;
+  if (n> maxStepReached) {
+    maxStepReached = n;
+  }
 }
+// Клик по иконкам шагов: можно переходить только на уже достигнутые шаги
+stepDots.forEach(dot => {
+  dot.addEventListener("click", () => {
+    const targetStep = Number(dot.dataset.step);
+    if (!targetStep) return;
 
+    // Нельзя прыгнуть дальше, чем уже дошли
+    if (targetStep > maxStepReached) return;
+
+    showStep(targetStep);
+  });
+});
 // next-кнопки (кроме hello — у него своя логика)
 document.querySelectorAll(".next-step-btn").forEach(btn => {
   if (btn.id === "task-hello-submit") return;
