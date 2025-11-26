@@ -897,18 +897,18 @@ function initSentence() {
       "drag-item relative bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl text-gray-800 cursor-pointer";
     btn.textContent = word;
 
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      showTooltip(btn, word);
-      selectWord(word);
+ // ==================== ПК и тап: просто показать тултип ====================
+btn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  showTooltip(btn, word);
+});
 
-      // ======== мобильное управление: тап = тултип, удержание = drag ========
+// ==================== Мобильное перетаскивание ====================
 btn.addEventListener("touchstart", (e) => {
   startX = e.touches[0].clientX;
   startY = e.touches[0].clientY;
   dragging = false;
 
-  // создаём clone, но показываем его только если будет именно drag
   dragClone = btn.cloneNode(true);
   dragClone.style.position = "fixed";
   dragClone.style.pointerEvents = "none";
@@ -916,52 +916,46 @@ btn.addEventListener("touchstart", (e) => {
   dragClone.style.transform = "scale(1.1)";
   dragClone.style.zIndex = "9999";
   document.body.appendChild(dragClone);
-
-  setTimeout(() => {
-    if (!dragging) return;
-    dragClone.style.opacity = "1";
-  }, 120);
 });
 
 btn.addEventListener("touchmove", (e) => {
   const dx = Math.abs(e.touches[0].clientX - startX);
   const dy = Math.abs(e.touches[0].clientY - startY);
 
-  // пользователь начал тянуть — это drag
+  // Если движение превышает 10 px — это drag, а не tap
   if (dx > 10 || dy > 10) {
     dragging = true;
-
     dragClone.style.left = e.touches[0].clientX + "px";
     dragClone.style.top  = e.touches[0].clientY + "px";
+    dragClone.style.opacity = "1";
   }
 });
 
 btn.addEventListener("touchend", (e) => {
-
-  // TAP → тултип
-  if (!dragging) {
-    showTooltip(btn, word);
-    return;
-  }
-
-  // DRAG → перенос в drop-zone
-  const dropZone = document
-    .getElementById(`drop-zone-${currentSentenceIndex + 1}`)
-    .getBoundingClientRect();
-
   const x = e.changedTouches[0].clientX;
   const y = e.changedTouches[0].clientY;
 
-  if (x >= dropZone.left && x <= dropZone.right &&
-      y >= dropZone.top  && y <= dropZone.bottom) {
-    selectWord(word);
+  if (!dragging) {
+    // короткий тап — только тултип, без drag
+    showTooltip(btn, word);
+  } else {
+    // реальное перетаскивание
+    const dropRect = document
+      .getElementById(`drop-zone-${currentSentenceIndex + 1}`)
+      .getBoundingClientRect();
+
+    if (
+      x >= dropRect.left && x <= dropRect.right &&
+      y >= dropRect.top  && y <= dropRect.bottom
+    ) {
+      selectWord(word);
+    }
   }
 
-  dragClone.remove();
+  dragClone?.remove();
   dragClone = null;
   dragging = false;
 });
-    });
 
     wordBank.appendChild(btn);
   });
