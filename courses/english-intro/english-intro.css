@@ -690,14 +690,15 @@
   box-shadow: 0 4px 14px rgba(0,0,0,0.12);
   max-width: 180px;              /* ✨ ограничиваем ширину */
   z-index: 9999;
-
-  transform: translate(-50%, -120%); /* ✨ компактное позиционирование над словом */
+  bottom: 110%;
+    left: 50%;
+  transform: translateX(-50%); /* ✨ компактное позиционирование над словом */
 }
 
 .word-tooltip::after {
   content: "";
   position: absolute;
-  bottom: -6px;
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   border-width: 6px;
