@@ -354,6 +354,10 @@
       background:linear-gradient(135deg,#fff1f2,#ffe4e6);
       border-color:#fecaca;
     }
+ .soft-block--orange{
+      background:linear-gradient(135deg,#ffca86,#ffbd88);
+      border-color:#FFA500;
+    }
 
     .input-main{
       width:100%;
