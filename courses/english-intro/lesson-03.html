@@ -805,9 +805,12 @@ function showTooltip(btn, word) {
   playWordAudio(word);
 
   // закрываем по клику вне
+   setTimeout(() => {
+       tip.remove();
+  }, 2000);
   setTimeout(() => {
     document.addEventListener("click", closeTooltips, { once: true });
-  }, 0);
+     }, 0);
 }
 
 // отрисовать уже набранное предложение в жёлтом блоке
