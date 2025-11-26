@@ -1704,7 +1704,7 @@ function renderTrainerQuestion() {
         btn.style.borderColor = "#16a34a";
         btn.style.background = "#dcfce7";
 
-        if (q.prompt.includes("ЗАКРЫТ", "короче")) {
+        if (q.prompt.includes("ЗАКРЫТ" || "короче")) {
           trainerFeedback.textContent = "Верно! Это закрытый слог 👏";
         } else {
           trainerFeedback.textContent = "Отлично! Это пример открытого слога 👏";
