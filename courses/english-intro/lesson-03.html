@@ -5,56 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>English Intro — Урок 3</title>
 
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Общие стили курса -->
   <link rel="stylesheet" href="../styles/lesson.css" />
 
   <style>
-    .lesson-container {
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    .step-progress {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 25px;
-    }
-
-    .step-dot {
-      width: 58px;
-      height: 58px;
-      background: #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(0,0,0,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0.6;
-      transition: 0.2s;
-    }
-
+    /* ПОДСВЕТКА АКТИВНЫХ ЭЛЕМЕНТОВ */
     .step-dot--active {
-      opacity: 1;
-      box-shadow: 0 0 12px rgba(255,200,0,0.7);
+      transform: scale(1.08);
+      box-shadow: 0 0 10px rgba(255, 200, 0, 0.6);
     }
-
     .step-dot--done {
       opacity: 1;
     }
 
+    .step-dot {
+      width: 60px;
+      height: 60px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0.55;
+      transition: 0.25s;
+    }
+
     .step-dot img {
-      width: 35px;
-      height: 35px;
+      width: 32px;
+      height: 32px;
     }
 
     .step-panel {
       display: none;
-      animation: fade 0.3s ease;
     }
 
     .step-panel--visible {
       display: block;
+      animation: fade 0.35s ease;
     }
 
     @keyframes fade {
@@ -64,293 +56,696 @@
 
     .btn-main {
       background: #ffb703;
-      color: #000;
       padding: 12px 22px;
       border-radius: 14px;
-      display: inline-block;
       font-weight: 600;
-      transition: 0.2s;
+      color: #000;
+      display: inline-block;
+      transition: .2s;
     }
-
     .btn-main:hover {
-      background: #ffd469;
+      background: #ffd46a;
     }
 
     .btn-secondary {
-      background: #fff0c2;
-      padding: 12px 20px;
+      background: #fff4cc;
+      padding: 12px 18px;
       border-radius: 12px;
       font-weight: 500;
-    }
-
-    .drag-container {
-      margin-top: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .drag-item {
-      background: #fff6dc;
-      padding: 10px 14px;
-      border-radius: 10px;
-      cursor: grab;
-      font-size: 17px;
-      user-select: none;
-    }
-
-    .drop-target {
-      margin-top: 15px;
-      min-height: 50px;
-      border: 2px dashed #ffb703;
-      border-radius: 10px;
-      padding: 10px;
-    }
-
-    .finish-card {
-      background: #fff3cd;
-      padding: 20px;
-      border-radius: 14px;
-      margin-top: 20px;
-    }
-
-    .finish-actions {
-      margin-top: 40px;
-      display: flex;
-      justify-content: space-between;
     }
   </style>
 </head>
 
-<body>
+<body class="bg-[#fffdf8]">
 
-<div class="lesson-container">
+<!-- ================= ХЕДЕР КУРСА ================= -->
+<header class="w-full bg-white shadow-sm py-4 px-4 flex justify-between items-center">
+  
+  <!-- Левая часть: Название курса -->
+  <div class="text-xl font-semibold">
+    PolyTalky • English Intro
+  </div>
+
+  <!-- Правая часть: логин / pro / сообщения -->
+  <div id="auth-area" class="flex items-center gap-4">
+
+    <!-- Здесь появится: "Вы вошли как email" -->
+    <span id="user-email" class="text-gray-700 text-sm hidden"></span>
+
+    <!-- Кнопка сообщений (только Pro) -->
+    <a 
+      id="feedback-btn" 
+      href="../../student/feedback.html"
+      class="text-yellow-600 text-xl hidden"
+      title="Проверенные задания">
+      ✉️
+    </a>
+
+    <!-- Кнопка Войти -->
+    <button 
+      id="login-btn"
+      class="text-blue-600 underline text-sm">
+      Войти
+    </button>
+
+  </div>
+</header>
+
+
+<!-- ================= КОНТЕЙНЕР УРОКА ================= -->
+<div class="lesson-container max-w-3xl mx-auto mt-6 px-4 pb-20">
 
   <!-- Панель шагов -->
-  <div class="step-progress">
+  <div class="step-progress flex justify-between mb-8">
+
     <div class="step-dot" data-step="1">
       <img src="../assets/icons/step-intro.png" alt="">
     </div>
+
     <div class="step-dot" data-step="2">
       <img src="../assets/icons/step-video.png" alt="">
     </div>
+
     <div class="step-dot" data-step="3">
       <img src="../assets/icons/step-trainer.png" alt="">
     </div>
+
     <div class="step-dot" data-step="4">
       <img src="../assets/icons/step-grammar.png" alt="">
     </div>
+
     <div class="step-dot" data-step="5">
       <img src="../assets/icons/step-exercise.png" alt="">
     </div>
+
     <div class="step-dot" data-step="6">
       <img src="../assets/icons/step-finish.png" alt="">
     </div>
+
   </div>
+  <!-- ================ ШАГ 1. ВВОДНАЯ ================ -->
+  <section id="step-1" class="step-panel step-panel--visible">
+    <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+      <p class="text-sm uppercase tracking-wide text-amber-600 font-semibold mb-2">
+        Урок 3 · Порядок слов и to be
+      </p>
+      <h1 class="text-2xl md:text-3xl font-bold mb-3">
+        Как выстроить английское предложение, чтобы вас поняли с первого раза
+      </h1>
 
+      <p class="text-gray-800 mb-3">
+        Сегодня мы разберем две ключевые вещи:
+        <b>порядок слов в предложении</b> и <b>глагол <i>to be</i></b>.
+      </p>
 
-  <!-- ✦✦✦ ШАГ 1 — Вводная + картинка ✦✦✦ -->
-  <div id="step-1" class="step-panel step-panel--visible">
-    <h2>Порядок слов в предложении</h2>
-    <p>
-      Сегодня мы разберем две важные темы: 
-      <b>порядок слов в предложении</b> и <b>глагол to be</b>.
-    </p>
+      <p class="text-gray-800 mb-3">
+        В русском языке можно завернуть фразу как угодно: 
+        <span class="italic">«ну как вам захочется, собственно»</span>.  
+        В английском такое не сработает 😅 — там всё подчиняется 
+        чётким правилам. Но хорошая новость в том, что,
+        поняв схему, вы сможете строить предложения уверенно и спокойно.
+      </p>
 
-    <p class="mt-3">
-      В русском можно переставлять части предложения почти как угодно —
-      в английском такое не работает 😞  
-      Там всё очень строго.
-    </p>
+      <div class="mt-6 flex flex-col md:flex-row gap-6 items-center">
+        <div class="flex-1">
+          <p class="font-semibold mb-2">
+            Базовая схема английского предложения:
+          </p>
+          <p class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-3">
+            <b>КТО</b> → <b>ЧТО ДЕЛАЕТ</b> → <b>КУДА / КОГДА / КАК</b>
+          </p>
+          <p class="text-gray-700 text-sm">
+            Например: <br />
+            <span class="font-mono">I come home very late.</span> — правильно.<br />
+            А вот менять местами <b>подлежащее</b> и <b>сказуемое</b> в английском 
+            нельзя никогда: ни в утверждениях, ни в отрицаниях, ни в вопросах.
+          </p>
+        </div>
 
-    <div class="mt-5">
-      <img 
-        src="../assets/english/picture.jpg" 
-        style="width:100%; border-radius:18px; box-shadow:0 0 12px rgba(0,0,0,0.1);" 
-      />
+        <div class="flex-1 w-full">
+          <img
+            src="../assets/english/picture.jpg"
+            alt="Схема порядка слов"
+            class="w-full rounded-2xl shadow-md"
+          />
+        </div>
+      </div>
+
+      <p class="text-gray-700 text-sm mt-4">
+        На следующем шаге мы посмотрим небольшое видео, где эта схема объясняется
+        на живых примерах. А потом потренируемся в интерактивном тренажёре 💛
+      </p>
+
+      <button
+        class="btn-main mt-6 next-step-btn"
+        data-next="2"
+      >
+        Перейти к видео →
+      </button>
     </div>
-
-    <button class="btn-main mt-5 next-step-btn" data-next="2">
-      Перейти к видео →
-    </button>
-  </div>
+  </section>
 
 
-  <!-- ✦✦✦ ШАГ 2 — Видео ✦✦✦ -->
-  <div id="step-2" class="step-panel">
-    <h2>Видео о порядке слов</h2>
+  <!-- ================ ШАГ 2. ВИДЕО ================ -->
+  <section id="step-2" class="step-panel">
+    <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+      <p class="text-sm uppercase tracking-wide text-amber-600 font-semibold mb-2">
+        Шаг 2 · Видео о порядке слов
+      </p>
+      <h2 class="text-xl md:text-2xl font-bold mb-3">
+        Смотрим, как работает порядок слов в живой речи
+      </h2>
 
-    <p class="mt-2">Посмотрите ролик, чтобы лучше понять структуру английских предложений.</p>
+      <p class="text-gray-800 mb-4">
+        Посмотрите видео: обратите внимание, как носитель языка 
+        сначала называет <b>кто</b>, затем <b>что делает</b>, 
+        а уже потом добавляет детали вроде времени и места.
+      </p>
 
-    <div class="mt-4" style="display:flex; justify-content:center;">
-      <iframe width="330" height="200"
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-        title="Видео"
-        allowfullscreen>
-      </iframe>
+      <div class="flex justify-center mt-4">
+        <div class="w-full max-w-md aspect-video rounded-2xl overflow-hidden shadow-md">
+          <iframe
+            class="w-full h-full"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            title="Видео о порядке слов в английском"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>  <!-- ================ ШАГ 1. ВВОДНАЯ ================ -->
+  <section id="step-1" class="step-panel step-panel--visible">
+    <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+      <p class="text-sm uppercase tracking-wide text-amber-600 font-semibold mb-2">
+        Урок 3 · Порядок слов и to be
+      </p>
+      <h1 class="text-2xl md:text-3xl font-bold mb-3">
+        Как выстроить английское предложение, чтобы вас поняли с первого раза
+      </h1>
+
+      <p class="text-gray-800 mb-3">
+        Сегодня мы разберем две ключевые вещи:
+        <b>порядок слов в предложении</b> и <b>глагол <i>to be</i></b>.
+      </p>
+
+      <p class="text-gray-800 mb-3">
+        В русском языке можно завернуть фразу как угодно: 
+        <span class="italic">«ну как вам захочется, собственно»</span>.  
+        В английском такое не сработает 😅 — там всё подчиняется 
+        чётким правилам. Но хорошая новость в том, что,
+        поняв схему, вы сможете строить предложения уверенно и спокойно.
+      </p>
+
+      <div class="mt-6 flex flex-col md:flex-row gap-6 items-center">
+        <div class="flex-1">
+          <p class="font-semibold mb-2">
+            Базовая схема английского предложения:
+          </p>
+          <p class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-3">
+            <b>КТО</b> → <b>ЧТО ДЕЛАЕТ</b> → <b>КУДА / КОГДА / КАК</b>
+          </p>
+          <p class="text-gray-700 text-sm">
+            Например: <br />
+            <span class="font-mono">I come home very late.</span> — правильно.<br />
+            А вот менять местами <b>подлежащее</b> и <b>сказуемое</b> в английском 
+            нельзя никогда: ни в утверждениях, ни в отрицаниях, ни в вопросах.
+          </p>
+        </div>
+
+        <div class="flex-1 w-full">
+          <img
+            src="../assets/english/picture.jpg"
+            alt="Схема порядка слов"
+            class="w-full rounded-2xl shadow-md"
+          />
+        </div>
+      </div>
+
+      <p class="text-gray-700 text-sm mt-4">
+        На следующем шаге мы посмотрим небольшое видео, где эта схема объясняется
+        на живых примерах. А потом потренируемся в интерактивном тренажёре 💛
+      </p>
+
+      <button
+        class="btn-main mt-6 next-step-btn"
+        data-next="2"
+      >
+        Перейти к видео →
+      </button>
     </div>
-
-    <button class="btn-main mt-5 next-step-btn" data-next="3">
-      Перейти к тренажёру →
-    </button>
-  </div>
+  </section>
 
 
-  <!-- ✦✦✦ ШАГ 3 — Тренажёр Drag & Drop ✦✦✦ -->
-  <div id="step-3" class="step-panel">
-    <h2>Тренажёр: расставьте слова правильно</h2>
-    <p>Соберите правильное английское предложение.</p>
+  <!-- ================ ШАГ 2. ВИДЕО ================ -->
+  <section id="step-2" class="step-panel">
+    <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+      <p class="text-sm uppercase tracking-wide text-amber-600 font-semibold mb-2">
+        Шаг 2 · Видео о порядке слов
+      </p>
+      <h2 class="text-xl md:text-2xl font-bold mb-3">
+        Смотрим, как работает порядок слов в живой речи
+      </h2>
 
-    <div id="trainer-words" class="drag-container"></div>
+      <p class="text-gray-800 mb-4">
+        Посмотрите видео: обратите внимание, как носитель языка 
+        сначала называет <b>кто</b>, затем <b>что делает</b>, 
+        а уже потом добавляет детали вроде времени и места.
+      </p>
 
-    <div class="drop-target" id="trainer-drop">
-      Перетащите слова сюда
+      <div class="flex justify-center mt-4">
+        <div class="w-full max-w-md aspect-video rounded-2xl overflow-hidden shadow-md">
+          <iframe
+            class="w-full h-full"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            title="Видео о порядке слов в английском"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <p class="text-gray-700 text-sm mt-4">
+        Если сейчас сложно понять всё на слух — это нормально. 
+        Можно включить         субтитры и снизить скорость воспроизведения.  
+        Главное — уловить общую идею: порядок слов в английском — это
+        <b>жёсткий каркас</b>, на котором держится смысл предложения.
+      </p>
+
+      <button
+        class="btn-main mt-6 next-step-btn"
+        data-next="3"
+      >
+        Перейти к тренажёру →
+      </button>
     </div>
+  </section>
+    <!-- ================ ШАГ 3. ТРЕНАЖЁР DRAG & DROP ================ -->
+  <section id="step-3" class="step-panel">
+    <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+      <p class="text-sm uppercase tracking-wide text-amber-600 font-semibold mb-2">
+        Шаг 3 · Тренажёр
+      </p>
+      <h2 class="text-xl md:text-2xl font-bold mb-3">
+        Соберите английское предложение в правильном порядке
+      </h2>
 
-    <p id="trainer-feedback" class="mt-3"></p>
+      <p class="text-gray-800 mb-3">
+        Сейчас потренируемся в порядке слов.  
+        У вас есть набор слов — перетащите их в область ниже так, чтобы получилось
+        <b>грамматически правильное предложение</b>.
+      </p>
 
-    <button
-      class="btn-main mt-5 next-step-btn opacity-50"
-      data-next="4"
-      id="step3-next"
-      disabled>
-      Дальше →
-    </button>
-  </div>
+      <p class="text-gray-700 text-sm mb-4">
+        Подсказка: сначала <b>КТО</b>, потом <b>ЧТО ДЕЛАЕТ</b>, потом всё остальное 💫
+      </p>
 
+      <!-- Банк слов -->
+      <div
+        id="lesson3-word-bank"
+        class="flex flex-wrap gap-2 bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3"
+      >
+        <!-- Слова подставятся скриптом -->
+      </div>
 
-  <!-- ✦✦✦ ШАГ 4 — Глагол to be ✦✦✦ -->
-  <div id="step-4" class="step-panel">
-    <h2>Глагол <i>to be</i></h2>
+      <!-- Зона, куда перетаскиваем -->
+      <div
+        id="lesson3-drop-zone"
+        class="mt-4 min-h-[64px] border-2 border-dashed border-amber-300 rounded-2xl px-4 py-3 flex flex-wrap gap-2 items-center bg-[#fffdf5]"
+      >
+        <span class="text-gray-400 text-sm">
+          Перетащите слова сюда по одному, чтобы собрать предложение
+        </span>
+      </div>
 
-    <p class="mt-2">
-      <i>To be</i> — это глагол «быть» или «находиться».  
-      Он меняется в зависимости от времени и подлежащего:
-    </p>
+      <!-- Обратная связь -->
+      <p
+        id="lesson3-trainer-feedback"
+        class="mt-3 text-sm font-medium text-gray-800"
+      ></p>
 
-    <ul class="mt-3">
-      <li><b>I → am</b></li>
-      <li><b>He/She/It → is</b></li>
-      <li><b>You/We/They → are</b></li>
-      <li>В прошедшем времени: <b>was / were</b></li>
-      <li>В будущем: <b>will be</b></li>
-    </ul>
+      <button
+        id="lesson3-next-btn"
+        class="btn-main mt-6 next-step-btn opacity-50"
+        data-next="4"
+        disabled
+      >
+        Дальше →
+      </button>
+    </div>
+  </section>  <!-- ================ ШАГ 4. ГЛАГОЛ TO BE ================ -->
+  <section id="step-4" class="step-panel">
+    <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+      <p class="text-sm uppercase tracking-wide text-amber-600 font-semibold mb-2">
+        Шаг 4 · Глагол to be
+      </p>
 
-    <button class="btn-main mt-5 next-step-btn" data-next="5">
-      Перейти к заданию →
-    </button>
-  </div>
+      <h2 class="text-xl md:text-2xl font-bold mb-3">
+        Как работает глагол <i>to be</i> — самый меняющийся глагол в английском
+      </h2>
 
+      <p class="text-gray-800 mb-3">
+        <i>To be</i> — это глагол «быть / находиться».  
+        Он меняется в зависимости от лица и времени.
+      </p>
 
-  <!-- ✦✦✦ ШАГ 5 — Упражнение to be ✦✦✦ -->
-  <div id="step-5" class="step-panel">
-    <h2>Задание: вставьте правильный <i>to be</i></h2>
+      <p class="text-gray-700 text-sm mb-4">
+        Если в русском предложении нет глагола,  
+        в английском всё равно должен стоять <b>to be</b>.
+      </p>
 
-    <p>Обращайте внимание на слова, подсказывающие время (yesterday, next week...).</p>
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-4 mb-4">
+        <p class="font-semibold mb-2">Настоящее время (Present):</p>
+        <ul class="list-disc ml-5 text-sm">
+          <li><b>I → am</b></li>
+          <li><b>He / She / It → is</b></li>
+          <li><b>You / We / They → are</b></li>
+        </ul>
+      </div>
 
-    <textarea
-      id="tobe-exercise"
-      class="mt-3"
-      style="width:100%; height:200px; padding:10px; border-radius:12px;">
-Hello! My name ________ Alan. I ________ thirteen.
+      <div class="bg-rose-50 border border-rose-200 rounded-2xl px-4 py-4 mb-4">
+        <p class="font-semibold mb-2">Прошедшее время (Past):</p>
+        <ul class="list-disc ml-5 text-sm">
+          <li><b>I / He / She / It → was</b></li>
+          <li><b>You / We / They → were</b></li>
+        </ul>
+      </div>
+
+      <div class="bg-sky-50 border border-sky-200 rounded-2xl px-4 py-4 mb-4">
+        <p class="font-semibold mb-2">Будущее (Future):</p>
+        <ul class="list-disc ml-5 text-sm">
+          <li><b>все лица → will be</b></li>
+        </ul>
+      </div>
+
+      <p class="text-gray-700 text-sm">
+        Обратите внимание: <b>комбинации</b> вроде <i>will am</i>, <i>will to be</i>,
+        <i>will is</i> — неправильные.  
+        Правильно только <b>will be</b>.
+      </p>
+
+      <button
+        class="btn-main mt-6 next-step-btn"
+        data-next="5"
+      >
+        Перейти к упражнению →
+      </button>
+    </div>
+  </section>
+    <!-- ================ ШАГ 5. УПРАЖНЕНИЕ TO BE ================ -->
+  <section id="step-5" class="step-panel">
+    <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+
+      <p class="text-sm uppercase tracking-wide text-amber-600 font-semibold mb-2">
+        Шаг 5 · Практика
+      </p>
+      <h2 class="text-xl md:text-2xl font-bold mb-3">
+        Вставьте правильные формы <i>to be</i>
+      </h2>
+
+      <p class="text-gray-800 mb-3">
+        Обращайте внимание на слова, указывающие время:  
+        <span class="font-mono">yesterday</span> (past),  
+        <span class="font-mono">every day</span> (present),  
+        <span class="font-mono">next week</span> (future).
+      </p>
+
+<textarea
+  id="tobe-textarea"
+  class="w-full h-64 p-4 rounded-2xl border border-gray-200 bg-[#fffef9] text-sm"
+>Hello! My name ________ Alan. I ________ thirteen.
 My friend’s name ________ David. He ________ thirteen, too.
 We ________ from Belarus.
+
 Last summer we ________ at the seaside.
 The weather ________ sunny.
 There ________ many people on the beach.
+
 I hope next summer it ________ sunny and warm, too.
 Some day in future I ________ lucky to visit London.
 My holidays ________ great.
-    </textarea>
+</textarea>
 
-    <button class="btn-main mt-5 next-step-btn" data-next="6">
-      Завершить урок →
-    </button>
-  </div>
+      <p id="step5-feedback" class="mt-3 text-sm font-medium text-gray-800"></p>
 
-
-  <!-- ✦✦✦ ШАГ 6 — Финал ✦✦✦ -->
-  <div id="step-6" class="step-panel">
-    <h2>Отлично! Урок завершён 🎉</h2>
-
-    <p class="mt-2">
-      Вы проделали большую работу: разобрали порядок слов, глагол <i>to be</i>,  
-      потренировались в упражнениях и продолжаете укреплять фундамент английского языка.
-    </p>
-
-    <div class="finish-card mt-6">
-      <h3>Добавить слова в словарик</h3>
-      <p>Отметьте нужные слова:</p>
-
-      <ul class="vocab-list mt-3">
-        <li>name</li>
-        <li>friend</li>
-        <li>summer</li>
-        <li>weather</li>
-        <li>sunny</li>
-        <li>people</li>
-        <li>beach</li>
-        <li>countries</li>
-        <li>future</li>
-        <li>lucky</li>
-        <li>holidays</li>
-      </ul>
-
-      <button class="btn-secondary mt-4" id="lesson3-add-vocab-btn">
-        Добавить в словарик →
+      <button
+        id="step5-next-btn"
+        class="btn-main mt-6 next-step-btn"
+        data-next="6"
+      >
+        Завершить урок →
       </button>
     </div>
+  </section>
+    <div class="finish-actions mt-8">
+    <a href="../english-intro.html" class="btn-ghost">
+      ← Вернуться к описанию курса
+    </a>
+    <a href="./lesson-04.html" class="btn-main">
+      Перейти к уроку 4 →
+    </a>
+  </div>
+</section>
 
-    <div class="finish-actions">
-      <a href="../english-intro.html" class="btn-secondary">← К курсу</a>
-      <a href="./lesson-04.html" class="btn-main">Урок 4 →</a>
+<!-- ============================= -->
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ СЛОВАРЯ -->
+<!-- ============================= -->
+<div id="vocab-modal"
+     class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+  <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+    <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-70"></div>
+    <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-70"></div>
+
+    <div class="relative p-6">
+      <div class="flex justify-between items-start">
+        <h2 class="text-lg font-semibold text-gray-800">
+          Добавить слова в словарик
+        </h2>
+        <button id="vocab-close" class="text-gray-500 text-xl leading-none">&times;</button>
+      </div>
+
+      <p class="text-sm text-gray-600 mt-1">
+        Выберите, какие слова сохранить. Они появятся в вашем словарике в личном кабинете.
+      </p>
+
+      <div id="vocab-auth-warning"
+           class="hidden mt-4 bg-red-50 text-red-700 border border-red-200 rounded-xl p-3 text-sm">
+        Чтобы сохранять слова, нужно войти.
+        <br>
+        <a href="/student/" class="underline font-medium">Перейти к авторизации →</a>
+      </div>
+
+      <div id="vocab-list" class="mt-5 space-y-5 max-h-[330px] overflow-y-auto pr-1">
+        <div class="vocab-category">
+          <h3 class="text-[0.8rem] font-semibold text-gray-700 mb-2 flex items-center gap-1">
+            📘 Слова из текста про Алана
+          </h3>
+
+          <div id="vocab-words" class="grid grid-cols-1 gap-2 pl-1">
+            <!-- JS автоматически вставит чекбоксы -->
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-between items-center">
+        <button id="vocab-select-all"
+                class="px-4 py-2 rounded-xl bg-gray-100 text-sm text-gray-700 border border-gray-300">
+          Выбрать всё
+        </button>
+
+        <button id="vocab-save" class="btn-main text-sm px-5 py-2">
+          Сохранить →
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
-
-<script>
-/* Drag & Drop тренажёр для шага 3 */
-const trainerWords = ["I", "come", "home", "very", "late"];
-const trainerContainer = document.getElementById("trainer-words");
-const trainerDrop = document.getElementById("trainer-drop");
-const trainerFeedback = document.getElementById("trainer-feedback");
-const step3Next = document.getElementById("step3-next");
-
-trainerWords.sort(() => Math.random() - 0.5);
-
-trainerWords.forEach(word => {
-  const item = document.createElement("div");
-  item.className = "drag-item";
-  item.draggable = true;
-  item.textContent = word;
-
-  item.addEventListener("dragstart", e => {
-    e.dataTransfer.setData("text/plain", word);
-  });
-
-  trainerContainer.appendChild(item);
-});
-
-trainerDrop.addEventListener("dragover", e => e.preventDefault());
-
-let answer = [];
-
-trainerDrop.addEventListener("drop", e => {
-  e.preventDefault();
-  const word = e.dataTransfer.getData("text/plain");
-  answer.push(word);
-  trainerDrop.textContent = answer.join(" ");
-
-  if (answer.join(" ") === "I come home very late") {
-    trainerFeedback.textContent = "Отлично! Всё верно 👏";
-    step3Next.disabled = false;
-    step3Next.classList.remove("opacity-50");
-  }
-});
+<!-- ============================= -->
+<!-- КОНФИГ УРОКА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module">
+  window.lessonConfig = {
+    lessonId:        "english-intro-lesson-3",
+    lessonSlug:      "lesson-03-word-order",
+    courseId:        "english-intro",
+    lessonQaDocId:   "english-intro-lesson-3",
+    submissionsRoot: "lessonSubmissions",
+    totalSteps:      6,
+    audioNextStep:   null,
+    vocabCategory:   "vocabulary-lesson3",
+    vocabStep:       5
+        
+  };
 </script>
 
-<script src="../js/english-intro.js"></script>
+  <script>
+// ===============================
+// 🔸 ШАГ 3 — DRAG & DROP ТРЕНАЖЁР
+// ===============================
 
+const trainerWords3 = ["I", "come", "home", "very", "late"];
+trainerWords3.sort(() => Math.random() - 0.5);
+
+const wordBank = document.getElementById("lesson3-word-bank");
+const dropZone = document.getElementById("lesson3-drop-zone");
+const trainerFeedback3 = document.getElementById("lesson3-trainer-feedback");
+const nextBtn3 = document.getElementById("lesson3-next-btn");
+
+let currentSentence = [];
+
+trainerWords3.forEach(word => {
+  const el = document.createElement("div");
+  el.className =
+    "drag-item bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl cursor-grab text-gray-800";
+  el.textContent = word;
+  el.draggable = true;
+
+  el.addEventListener("dragstart", e => {
+    e.dataTransfer.setData("text/plain", word);
+  });
+  wordBank.appendChild(el);
+});
+
+dropZone.addEventListener("dragover", e => e.preventDefault());
+
+dropZone.addEventListener("drop", e => {
+  e.preventDefault();
+  const word = e.dataTransfer.getData("text/plain");
+  currentSentence.push(word);
+
+  dropZone.textContent = "";
+  currentSentence.forEach(w => {
+    const el = document.createElement("span");
+    el.className = "inline-block bg-white px-2 py-1 rounded border text-sm mr-1";
+    el.textContent = w;
+    dropZone.appendChild(el);
+  });
+
+  if (currentSentence.join(" ") === "I come home very late") {
+    trainerFeedback3.textContent = "Отлично! Всё верно 👏";
+    nextBtn3.disabled = false;
+    nextBtn3.classList.remove("opacity-50");
+  }
+});
+
+
+// ===============================
+// 🔸 ШАГ 5 — ПОДДЕРЖКА УПРАЖНЕНИЯ TO BE
+// ===============================
+
+const step5Area = document.getElementById("tobe-textarea");
+const step5Next = document.getElementById("step5-next-btn");
+const step5Feedback = document.getElementById("step5-feedback");
+
+step5Area.addEventListener("input", () => {
+  const value = step5Area.value;
+
+  const requiredForms = [
+    "am", "is", "is", "are",
+    "were", "was", "were",
+    "will be", "will be"
+  ];
+
+  let count = 0;
+  requiredForms.forEach(form => {
+    if (value.includes(form)) count++;
+  });
+
+  if (count >= 6) {
+    step5Feedback.textContent = "Отлично! Можно переходить дальше 🎉";
+    step5Next.disabled = false;
+    step5Next.classList.remove("opacity-50");
+  } else {
+    step5Feedback.textContent = "";
+    step5Next.disabled = false; // не блокируем — это не экзамен
+  }
+});
+
+
+// ===============================
+// 🔸 ФИНАЛ — СЛОВАРИК
+// ===============================
+
+const vocabBtn = document.getElementById("lesson3-add-vocab-btn");
+const vocabModal = document.getElementById("vocab-modal");
+const vocabClose = document.getElementById("vocab-close");
+const vocabList = document.getElementById("vocab-words");
+const vocabWarning = document.getElementById("vocab-auth-warning");
+const vocabSave = document.getElementById("vocab-save");
+
+const lesson3Words = [
+  "name", "friend", "summer", "weather", "sunny",
+  "people", "beach", "countries", "future",
+  "lucky", "holidays"
+];
+
+function openVocabModal() {
+  vocabModal.classList.remove("hidden");
+
+  vocabList.innerHTML = "";
+  lesson3Words.forEach(word => {
+    const row = document.createElement("label");
+    row.className = "flex items-center gap-2 text-sm";
+
+    row.innerHTML = `
+      <input type="checkbox" value="${word}" class="vocab-checkbox w-4 h-4">
+      <span>${word}</span>
+    `;
+
+    vocabList.appendChild(row);
+  });
+
+  if (!window.firebaseUserEmail) {
+    vocabWarning.classList.remove("hidden");
+    vocabSave.disabled = true;
+  } else {
+    vocabWarning.classList.add("hidden");
+    vocabSave.disabled = false;
+  }
+}
+
+vocabBtn?.addEventListener("click", openVocabModal);
+vocabClose?.addEventListener("click", () => vocabModal.classList.add("hidden"));
+
+vocabSave?.addEventListener("click", async () => {
+  if (!window.firebaseUserEmail) return;
+
+  const checked = [...document.querySelectorAll(".vocab-checkbox:checked")]
+    .map(input => input.value);
+
+  if (!checked.length) {
+    vocabModal.classList.add("hidden");
+    return;
+  }
+
+  const db = firebase.firestore();
+  const ref = db
+    .collection("users")
+    .doc(window.firebaseUserEmail)
+    .collection("vocabulary");
+
+  for (const w of checked) {
+    await ref.doc(w).set({ word: w }, { merge: true });
+  }
+
+  vocabModal.classList.add("hidden");
+});
+</script>
+<!-- ============================= -->
+<!-- ОБЩИЙ СКРИПТ КУРСА (ВАЖНО!) -->
+<!-- ============================= -->
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+<!-- Твой глобальный файл, управляющий шагами, Q&A, Pro, словарём -->
+<script type="module" src="/js/courses/english-intro.js"></script>
+
+<!-- ============================= -->
+<!-- ЗАКРЫВАЮЩИЕ ТЕГИ СТРАНИЦЫ -->
+<!-- ============================= -->
+
+</main>
 </body>
 </html>
