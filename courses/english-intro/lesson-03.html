@@ -122,7 +122,11 @@
       <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
     </div>
   </div>
-  <!-- HERO -->
+  
+</header>
+
+<main class="lesson-shell">
+<!-- HERO -->
     <section class="hero-card mb-8">
 
       <div class="hero-left">
@@ -156,10 +160,6 @@
       </div>
 
     </section>
-</header>
-
-<main class="lesson-shell">
-
   <!-- Навигация шагов -->
   <div class="step-nav">
     <button class="step-dot step-dot--active" data-step="1">
@@ -698,10 +698,10 @@ let currentSentenceIndex = 0;
 let currentSentence = [];
 
 // элементы DOM
-const wordBank = document.getElementById("word-bank");
-const dropZone = document.getElementById("drop-zone");
-const trainerFeedback3 = document.getElementById("trainer-feedback");
-const nextBtn3 = document.getElementById("next-btn");
+const wordBank = document.getElementById(`word-bank-${index + 1}`);
+const dropZone = document.getElementById(`drop-zone-${index + 1}`);
+const trainerFeedback3 = document.getElementById(`feedback-${index + 1}`);
+const nextBtn3 = document.getElementById("next-btn-step3");
 
 // синтез речи
 function speak(word) {
@@ -712,10 +712,11 @@ function speak(word) {
 
 // рендер нового предложения
 function initSentence() {
+  const { wordBank, dropZone, feedback} = getElementsFor(currentSentenceIndex);
   const data = sentences[currentSentenceIndex];
   currentSentence = [];
-  trainerFeedback3.textContent = "";
-  dropZone.textContent = "";
+ feedback.textContent = "";
+  dropZone.textContent = `<span class="text-gray-400 text-sm"> Перетащите слова сюда...</span>`;
 
   wordBank.innerHTML = "";
   const shuffled = [...data.words].sort(() => Math.random() - 0.5);
@@ -735,8 +736,16 @@ function initSentence() {
 
     wordBank.appendChild(btn);
   });
+for (let i = 1; i <=5; i++) {
+  document.getElementById(`sentence-${i}-block`).classList.toggle(
+    "hidden",
+    i !== currentSentenceIndex + 1
+    
+  );
+}
 }
 
+  
 // тултип
 function showTooltip(btn, word) {
   closeTooltips();
@@ -778,7 +787,7 @@ function selectWord(word) {
   if (joined === correct) {
     dropZone.classList.remove("border-red-400");
     dropZone.classList.add("border-green-400");
-    trainerFeedback3.textContent = "Отлично! Всё верно 👏";
+    Feedback3.textContent = "Отлично! Всё верно 👏";
 
     setTimeout(() => {
       currentSentenceIndex++;
@@ -787,7 +796,7 @@ function selectWord(word) {
       if (currentSentenceIndex >= sentences.length) {
         nextBtn3.disabled = false;
         nextBtn3.classList.remove("opacity-50");
-        trainerFeedback3.textContent = "Шаг завершён, можно идти дальше 🎉";
+        Feedback3.textContent = "Шаг завершён, можно идти дальше 🎉";
       } else {
         dropZone.classList.remove("border-green-400");
         initSentence();
@@ -800,12 +809,12 @@ function selectWord(word) {
   // если уже неправильная последовательность
   if (!correct.startsWith(joined)) {
     dropZone.classList.add("border-red-400");
-    trainerFeedback3.textContent = "Неправильно. Попробуйте ещё раз.";
+    Feedback3.textContent = "Неправильно. Попробуйте ещё раз.";
 
     setTimeout(() => {
       currentSentence = [];
       dropZone.classList.remove("border-red-400");
-      trainerFeedback3.textContent = "";
+      Feedback3.textContent = "";
       renderSentence();
     }, 900);
   }
