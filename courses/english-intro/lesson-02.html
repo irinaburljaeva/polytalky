@@ -862,7 +862,9 @@
         как именно прочитать новое слово.
       </p>
 
-      <button class="btn-main mt-5 next-step-btn" data-next="3">
+      <button 
+        id="step2-finish-btn"
+        class="btn-main mt-5 opacity-50" data-next="3" disabled>
         Переходим к согласным буквосочетаниям →
       </button>
     </section>
@@ -1695,14 +1697,14 @@ console.log("isProUser:", isProUser);
             trainerLocked = true;
 
             if (opt.correct) {
-              trainerFeedback.textContent = "Отлично! Это пример открытого слога 👏";
-              btn.classList.add("border-2");
-              btn.style.borderColor = "#16a34a";
-            } else {
-              trainerFeedback.textContent = "Здесь слог закрытый. Попробуйте запомнить разницу по длине звука.";
-              btn.classList.add("border-2");
-              btn.style.borderColor = "#b91c1c";
-            }
+    if (trainerQuestions[trainerIndex].prompt.includes("ЗАКРЫТОМ")) {
+        trainerFeedback.textContent = "Верно! Это закрытый слог 👏";
+    } else {
+        trainerFeedback.textContent = "Отлично! Это пример открытого слога 👏";
+    }
+} else {
+    trainerFeedback.textContent = "Попробуйте ещё раз — здесь другой тип слога.";
+}
 
             if (trainerIndex < trainerQuestions.length - 1) {
               trainerNextBtn.disabled = false;
@@ -1721,7 +1723,14 @@ console.log("isProUser:", isProUser);
           renderTrainerQuestion();
         }
       });
-
+if (trainerIndex === trainerQuestions.length - 1) {
+    const finishBtn = document.getElementById("step2-finish-btn");
+    if (finishBtn) {
+        finishBtn.disabled = false;
+        finishBtn.classList.remove("opacity-50");
+        finishBtn.classList.add("next-step-btn");
+    }
+}
       renderTrainerQuestion();
 
       // ====== Q&A ======
