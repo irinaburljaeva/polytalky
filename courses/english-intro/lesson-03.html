@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>English Intro · Урок 3 — Порядок слов и глагол to be</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <base href="/">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Firebase init (как в уроке 1) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
+
+    window.firebaseApp  = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(window.firebaseApp);
+    window.firebaseDb   = getFirestore(window.firebaseApp);
+  </script>
+
+  <!-- Стили полностью такие же, как в уроке 1 -->
+  <style>
+    :root{
+      --bg-cream:#FFF8E5;
+      --bg-cream-soft:#FFFDF4;
+      --accent-yellow:#FFDE59;
+      --accent-yellow-deep:#FFBA08;
+      --accent-peach:#FFD4A8;
+      --accent-coral:#FF8A5C;
+      --accent-mint:#C4F1BE;
+      --text-main:#111827;
+      --text-muted:#6b7280;
+      --border-soft:rgba(148,163,184,.35);
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text-main);
+      background:
+        radial-gradient(circle at 0 0, #FFF9D9 0, transparent 55%),
+        radial-gradient(circle at 100% 0, #FFE3CC 0, transparent 55%),
+        linear-gradient(to bottom,#FFFDF6,#FFF8E5);
+      position:relative;
+      overflow-x:hidden;
+    }
+
+    .bg-letter{
+      position:fixed;
+      font-weight:900;
+      font-size:120px;
+      color:rgba(255,255,255,0.55);
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:-1;
+    }
+    .bg-letter.a{top:5%;left:5%;transform:rotate(-12deg);}
+    .bg-letter.e{top:18%;right:2%;transform:rotate(9deg);}
+    .bg-letter.i{bottom:18%;left:10%;transform:rotate(5deg);}
+    .bg-letter.o{bottom:8%;right:8%;transform:rotate(-7deg);}
+    .bg-letter.u{top:45%;left:45%;transform:rotate(15deg);opacity:0.4;}
+
+    .center-gif-block{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin:1.2rem 0;
+    }
+    .center-gif-block img{
+      max-width:220px;
+      width:100%;
+      border-radius:12px;
+    }
+
+    .top-bar{
+      backdrop-filter:blur(16px);
+      background:linear-gradient(to right,rgba(255,255,255,.9),rgba(255,249,219,.9));
+      border-bottom:1px solid rgba(0,0,0,.06);
+    }
+
+    .back-to-course-btn{
+      font-size:0.85rem;
+      padding:6px 14px;
+      border-radius:8px;
+      background:#fff9e6;
+      border:1px solid #facc15;
+      color:#92400e;
+      text-decoration:none;
+      transition:0.25s;
+      white-space:nowrap;
+    }
+    .back-to-course-btn:hover{
+      background:#fef3c7;
+      border-color:#eab308;
+      color:#78350f;
+      box-shadow:0 4px 10px rgba(234,179,8,0.25);
+    }
+
+    .lesson-shell{
+      max-width:980px;
+      margin:0 auto;
+      padding:1.5rem 1.25rem 3.2rem;
+    }
+
+    .hero-card{
+      position:relative;
+      border-radius:2rem;
+      padding:1.6rem 1.7rem 1.7rem;
+      background:
+        radial-gradient(circle at 0 0,#FFFDF5,transparent 65%),
+        radial-gradient(circle at 120% 10%,rgba(255,222,89,.55),transparent 55%),
+        #FFFFFFE6;
+      border:1px solid rgba(255,255,255,.6);
+      box-shadow:0 20px 60px rgba(0,0,0,.16);
+      overflow:hidden;
+      display:flex;
+      gap:1.6rem;
+      align-items:stretch;
+    }
+
+    .hero-left{flex:1.3;min-width:0;}
+    .hero-right{flex:1;min-width:220px;position:relative;}
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      font-size:.65rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      padding:.35rem .9rem;
+      border-radius:999px;
+      border:1px solid rgba(156,163,175,.55);
+      background:rgba(255,255,255,.85);
+      color:var(--text-muted);
+    }
+    .hero-title{
+      font-size:1.95rem;
+      line-height:1.1;
+      letter-spacing:-0.03em;
+    }
+    .hero-title .em{
+      background:linear-gradient(90deg,#FF8A5C,#FFDE59);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .hero-tagline{font-size:.8rem;color:var(--text-muted);}
+
+    .hero-right-inner{
+      position:relative;
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      padding-right:1.4rem;
+    }
+    .hero-bubbles-cluster{position:relative;width:170px;height:130px;}
+
+    .hero-bubble{
+      position:absolute;
+      border-radius:1.1rem;
+      padding:.45rem .8rem;
+      font-size:.78rem;
+      background:#fffdfa;
+      border:1px solid rgba(148,163,184,.35);
+      box-shadow:0 10px 28px rgba(15,23,42,.18);
+    }
+    .hero-bubble--hello{
+      font-weight:700;
+      font-size:.9rem;
+      background:linear-gradient(135deg,#FFDE59,#FFB347);
+      color:#78350f;
+      box-shadow:0 12px 32px rgba(248,181,48,.65);
+      top:0;
+      right:8px;
+    }
+    .hero-bubble--morning{background:#fff7ed;top:46px;left:0;}
+    .hero-bubble--hi{background:#FFFFFF;bottom:4px;right:26px;}
+
+    .hero-bg-circle{
+      position:absolute;
+      width:280px;height:280px;
+      border-radius:999px;
+      background:radial-gradient(circle,#FFE9A6,#FFCE8A,#FFB48F);
+      opacity:.65;
+      right:-80px;top:-80px;
+      filter:blur(10px);
+    }
+
+    /* Навигация по шагам */
+    .step-nav{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      gap:1.6rem;
+      margin:1.8rem 0 1.4rem;
+      flex-wrap:wrap;
+    }
+    .step-nav::before{
+      content:"";
+      position:absolute;
+      left:8%;
+      right:8%;
+      top:20px;
+      height:2px;
+      background:linear-gradient(90deg,#fee2e2,#fde68a,#dcfce7);
+      z-index:0;
+    }
+
+    .step-dot{
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:.25rem;
+      font-size:.65rem;
+      color:var(--text-muted);
+      max-width:110px;
+      text-align:center;
+    }
+    .step-dot-circle{
+      width:32px;height:32px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(255,255,255,.95);
+      box-shadow:0 8px 18px rgba(0,0,0,.08);
+      font-size:.8rem;
+    }
+    .step-dot-label{line-height:1.3;}
+
+    .step-dot--active .step-dot-circle{
+      background:linear-gradient(145deg,#FFDE59,#FFB347);
+      border-color:#f97316;
+      color:#78350f;
+      box-shadow:0 0 0 2px rgba(255,237,213,.95),0 10px 28px rgba(249,115,22,.35);
+      transform:translateY(-1px);
+    }
+    .step-dot--done .step-dot-circle{
+      background:linear-gradient(145deg,#4ade80,#22c55e);
+      border-color:#16a34a;
+      color:#ecfdf5;
+    }
+    .step-dot--active .step-dot-label{color:#92400e;font-weight:600;}
+    .step-dot--done .step-dot-label{color:#166534;}
+
+    .step-panel{
+      display:none;
+      border-radius:1.7rem;
+      background:rgba(255,255,255,.98);
+      border:1px solid rgba(148,163,184,.25);
+      box-shadow:0 18px 52px rgba(15,23,42,.18);
+      padding:1.25rem 1.4rem 1.4rem;
+    }
+    .step-panel--visible{display:block;}
+
+    .step-panel-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:.5rem;
+      margin-bottom:.75rem;
+    }
+
+    .step-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      padding:.26rem .7rem;
+      border-radius:999px;
+      font-size:.68rem;
+      border:1px solid rgba(156,163,175,.65);
+      background:#F9FAFB;
+      color:var(--text-muted);
+    }
+
+    .step-icon{
+      font-size:1.4rem;
+      opacity:.95;
+    }
+
+    .step-body-text{
+      font-size:.88rem;
+      line-height:1.5;
+      color:#1f2937;
+    }
+    .step-body-text--lead{font-size:.96rem;font-weight:500;}
+    .step-body-text--accent{font-size:.9rem;font-weight:600;}
+
+    .highlight{
+      background:linear-gradient(to right,rgba(255,222,89,.5),rgba(255,222,89,0));
+      padding:0 .15rem;
+      border-radius:.4rem;
+    }
+
+    .soft-note{font-size:.73rem;color:var(--text-muted);}
+
+    .soft-block{
+      border-radius:1.1rem;
+      padding:.8rem .9rem;
+      border:1px solid rgba(226,232,240,1);
+      background:linear-gradient(135deg,#FFFCF7,#FFF8E5);
+      font-size:.8rem;
+    }
+    .soft-block--blue{
+      background:linear-gradient(135deg,#FFE4E6,#FFF1F2);
+      border-color:#fecaca;
+    }
+    .soft-block--green{
+      background:linear-gradient(135deg,#ecfdf5,#f0fdf4);
+      border-color:#bbf7d0;
+    }
+    .soft-block--rose{
+      background:linear-gradient(135deg,#fff1f2,#ffe4e6);
+      border-color:#fecaca;
+    }
+
+    .input-main{
+      width:100%;
+      border-radius:.95rem;
+      border:1px solid rgba(209,213,219,1);
+      background:#FFFFFF;
+      padding:.5rem .7rem;
+      font-size:.84rem;
+      outline:none;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }
+    .input-main:focus{
+      border-color:#f97316;
+      box-shadow:0 0 0 1px rgba(249,115,22,.4);
+    }
+    textarea.input-main{resize:vertical;min-height:90px;}
+
+    .btn-main{
+      border-radius:999px;
+      border:none;
+      padding:.55rem 1.2rem;
+      font-size:.8rem;
+      font-weight:600;
+      background:linear-gradient(135deg,#FF9F1C,#FFDE59);
+      color:#78350f;
+      cursor:pointer;
+      box-shadow:0 12px 26px rgba(249,115,22,0.45);
+      transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    }
+    .btn-main:active{
+      transform:translateY(1px);
+      box-shadow:0 6px 16px rgba(249,115,22,0.6);
+    }
+    .btn-main:disabled{
+      opacity:.4;
+      box-shadow:none;
+      cursor:default;
+      transform:none;
+    }
+
+    .btn-ghost{
+      border-radius:999px;
+      padding:.5rem 1rem;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(255,255,255,.9);
+      font-size:.78rem;
+      color:var(--text-muted);
+      cursor:pointer;
+    }
+
+    .word-tip{
+      position:relative;
+      cursor:pointer;
+      border-bottom:1px dashed rgba(156,163,175,.8);
+    }
+    .word-tip::after{
+      content:attr(data-ru);
+      position:absolute;
+      left:50%;
+      bottom:120%;
+      transform:translateX(-50%) translateY(4px);
+      font-size:.72rem;
+      color:#111827;
+      background:#fffefb;
+      border-radius:.55rem;
+      padding:.25rem .55rem;
+      white-space:nowrap;
+      box-shadow:0 10px 25px rgba(15,23,42,.30);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .15s ease-out, transform .15s ease-out;
+      z-index:20;
+    }
+    .word-tip::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:110%;
+      transform:translateX(-50%);
+      border-width:6px 6px 0 6px;
+      border-style:solid;
+      border-color:#fffefb transparent transparent transparent;
+      opacity:0;
+      transition:opacity .15s ease-out;
+      z-index:19;
+    }
+    .word-tip:hover::after,
+    .word-tip:hover::before{opacity:1;}
+    .word-tip:hover::after{
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .mini-toast{
+      font-size:.75rem;
+      color:#78350f;
+      background:linear-gradient(135deg, #ffedd5, #fed7aa);
+      border-radius:.9rem;
+      padding:.45rem .7rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.25rem;
+      border:1px solid #bbf7d0;
+      box-shadow:0 4px 12px rgba(251, 146, 60, 0.25);
+    }
+
+    .hidden{display:none;}
+
+    @media (max-width: 768px){
+      .lesson-shell{padding:1rem .9rem 2.2rem;}
+      .top-bar .max-w-7xl{gap:.5rem;flex-wrap:wrap;}
+      #user-status{font-size:0.7rem;flex-basis:100%;order:2;}
+      .back-to-course-btn{order:3;margin-right:0;}
+      .hero-card{
+        flex-direction:column;
+        padding:1.3rem 1.1rem 1.4rem;
+        gap:1.1rem;
+      }
+      .hero-title{font-size:1.5rem;}
+      .hero-right{width:100%;min-width:0;}
+      .hero-right-inner{justify-content:flex-end;padding-right:0;}
+      .hero-bg-circle{width:210px;height:210px;right:-50px;top:-60px;}
+      .step-nav{gap:1rem;margin:1.3rem 0 1.1rem;}
+      .step-nav::before{left:10%;right:10%;top:22px;}
+      .step-dot{max-width:80px;font-size:.6rem;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Фоновые буквы -->
+  <div class="bg-letter a">A</div>
+  <div class="bg-letter e">E</div>
+  <div class="bg-letter i">I</div>
+  <div class="bg-letter o">O</div>
+  <div class="bg-letter u">U</div>
+
+  <!-- Верхний бар -->
+  <header class="top-bar sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+        <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+        PolyTalky
+      </a>
+
+      <div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+        <div id="user-status"></div>
+
+        <a href="/student/feedback.html"
+           id="feedback-link"
+           class="hidden relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white">
+          📩
+          <span id="feedback-dot"
+                class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+        </a>
+
+        <a href="/student/"
+           target="_blank"
+           id="login-btn"
+           class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
+          Войти
+        </a>
+
+        <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="lesson-shell">
+
+    <!-- HERO -->
+    <section class="hero-card mb-8">
+      <div class="hero-left">
+        <div class="hero-badge">English · Lesson 3</div>
+        <h1 class="hero-title mt-3">
+          Порядок слов и <span class="em">глагол to be</span>
+          <br>— фундамент ваших будущих фраз
+        </h1>
+        <p class="hero-tagline mt-3">
+          Разбираемся, в каком порядке ставить слова в предложении, знакомимся с to be и тренируемся на живом тексте.
+        </p>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-right-inner">
+          <div class="hero-bg-circle"></div>
+          <div class="hero-bubbles-cluster">
+            <div class="hero-bubble hero-bubble--hello">
+              I am happy.
+            </div>
+            <div class="hero-bubble hero-bubble--morning">
+              You are here.
+            </div>
+            <div class="hero-bubble hero-bubble--hi">
+              We were lucky!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Навигация шагов -->
+    <div class="step-nav">
+      <button class="step-dot step-dot--active" data-step="1">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">1</span>
+        </div>
+        <div class="step-dot-label">Порядок слов · вводная</div>
+      </button>
+
+      <button class="step-dot" data-step="2">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">2</span>
+        </div>
+        <div class="step-dot-label">Видео о порядке слов</div>
+      </button>
+
+      <button class="step-dot" data-step="3">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">3</span>
+        </div>
+        <div class="step-dot-label">Тренажёр: порядок слов</div>
+      </button>
+
+      <button class="step-dot" data-step="4">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">4</span>
+        </div>
+        <div class="step-dot-label">Глагол to be</div>
+      </button>
+
+      <button class="step-dot" data-step="5">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">5</span>
+        </div>
+        <div class="step-dot-label">Практика с to be</div>
+      </button>
+
+      <button class="step-dot" data-step="6">
+        <div class="step-dot-circle">
+          <span class="js-step-indicator">6</span>
+        </div>
+        <div class="step-dot-label">Финиш</div>
+      </button>
+    </div>
+
+    <!-- STEP 1 — Порядок слов: введение -->
+    <section class="step-panel step-panel--visible" data-step="1" id="step-1">
+      <div class="step-panel-header">
+        <span class="step-pill">Шаг 1 · ПОРЯДОК СЛОВ</span>
+        <button class="step-icon step-icon--qa" type="button" data-open-qa>❓</button>
+      </div>
+
+      <p class="step-body-text step-body-text--lead">
+        Сегодня мы разберём две очень важные вещи: <b>порядок слов в предложении и глагол to be</b>.
+      </p>
+
+      <p class="step-body-text mt-3">
+        Дело в том, что мы с вами разговариваем на чудесном языке, в котором предложения можно тааак завернуть…  
+        ну, собственно, как вам захочется. В английском такие выкрутасы не получатся 😦  
+        У них с этим всё очень строго: строение предложений подчиняется чётким правилам.
+      </p>
+
+      <p class="step-body-text mt-3">
+        Если ещё раз всё это постараться разобрать, то можно выделить, что <span class="highlight">первым в предложении
+        всегда идёт КТО, затем ЧТО ОН ДЕЛАЕТ, а потом уже всё остальное</span>.  
+        На самом деле, если сказать <i>I come very late at home</i>, это не будет грубой ошибкой  
+        (хотя правильнее <i>I come at home very late</i> — кто · что делает · куда · когда),  
+        но <b>нельзя ставить сказуемое перед подлежащим</b>.
+      </p>
+
+      <p class="soft-block soft-block--green mt-4">
+        В утвердительных предложениях, в отрицаниях и в вопросах — везде сначала идёт подлежащее (кто?),
+        а потом сказуемое (что делает?).
+      </p>
+
+      <p class="step-body-text step-body-text--accent mt-4">
+        №1. Напишите 5 предложений с грамматически правильным порядком слов.
+      </p>
+
+      <textarea
+        class="input-main mt-3"
+        placeholder="Например: I live in Moscow. / My sister works every day. / We will go to the cinema tomorrow..."
+      ></textarea>
+
+      <p class="soft-note mt-2">
+  Не переживайте о сложной лексике. Главное — держать порядок: <b>КТО — ЧТО ДЕЛАЕТ — всё остальное</b>.
+</p>
+
+      <button class="btn-main mt-5 next-step-btn" data-next="step-2-word-order-video">
+        Перейти к видео →
+      </button>
+    </section>
+
+    <!-- ШАГ 2 · ПОРЯДОК СЛОВ — ВИДЕО -->
+    <section id="step-2-word-order-video" class="lesson-step" data-step="2" hidden>
+      <div class="step-label">Шаг 2 · VIDEO</div>
+      <h2 class="lesson-step-title">Посмотрим, как это работает в живой речи</h2>
+
+      <p>
+        Ниже — короткое видео про <b>порядок слов в английском предложении</b>. 
+        Смотрите его целиком, не переживая, если что-то ускользает. Сейчас важно уловить общий 
+        принцип: <span class="u-highlight">кто — что делает — всё остальное</span>.
+      </p>
+
+      <div class="video-wrapper mt-6">
+        <!-- Замените src на нужную ссылку (YouTube / VK) -->
+        <iframe
+          src="https://www.youtube.com/embed/XXXXXXXXXXX"
+          title="Word order in English"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <p class="soft-note mt-4">
+        Если YouTube недоступен, мы добавим сюда альтернативный плеер из VK. 
+        Главное — проследить за тем, как говорящий строит предложения: сначала
+        <b>подлежащее</b>, затем <b>сказуемое</b>.
+      </p>
+
+      <button class="btn-main mt-6 next-step-btn" data-next="step-3-trainer">
+        Перейти к тренажёру →
+      </button>
+    </section>
+
+    <!-- ШАГ 3 · ТРЕНАЖЁР ПОРЯДКА СЛОВ -->
+    <section id="step-3-trainer" class="lesson-step" data-step="3" hidden>
+      <div class="step-label">Шаг 3 · TRAINER</div>
+      <h2 class="lesson-step-title">Расставьте слова в правильном порядке</h2>
+
+      <p>
+        Сейчас потренируемся. Ниже вы видите слова из английских предложений в
+        <b>перемешанном</b> порядке. Ваша задача — собрать из них грамматически
+        правильные предложения и вписать результат в поле.
+      </p>
+
+      <ol class="word-order-list mt-6">
+        <li class="word-order-item">
+          <p class="word-order-scrambled">
+            <b>1)</b> late · very · I · come · home · at
+          </p>
+          <label class="word-order-label">
+            Ваш вариант:
+            <input type="text"
+                   class="word-order-input"
+                   name="wo-1"
+                   placeholder="Например: I come home very late." />
+          </label>
+        </li>
+
+        <li class="word-order-item">
+          <p class="word-order-scrambled">
+            <b>2)</b> at school · my brother · every day · studies · hard
+          </p>
+          <label class="word-order-label">
+            Ваш вариант:
+            <input type="text"
+                   class="word-order-input"
+                   name="wo-2"
+                   placeholder="Например: My brother studies hard at school every day." />
+          </label>
+        </li>
+
+        <li class="word-order-item">
+          <p class="word-order-scrambled">
+            <b>3)</b> on Sundays · go · usually · we · to the park
+          </p>
+          <label class="word-order-label">
+            Ваш вариант:
+            <input type="text"
+                   class="word-order-input"
+                   name="wo-3"
+                   placeholder="Например: We usually go to the park on Sundays." />
+          </label>
+        </li>
+      </ol>
+
+      <p class="soft-note mt-4">
+        Это задание тренирует <b>чувство правильного порядка слов</b>. Чем больше
+        таких предложений вы построите, тем легче будет говорить.
+      </p>
+
+      <button class="btn-main mt-6 next-step-btn" data-next="step-4-to-be-theory">
+        Перейти к глаголу <i>to be</i> →
+      </button>
+    </section>
+
+    <!-- ШАГ 4 · ГЛАГОЛ TO BE — ТЕОРИЯ -->
+    <section id="step-4-to-be-theory" class="lesson-step" data-step="4" hidden>
+      <div class="step-label">Шаг 4 · TO BE</div>
+      <h2 class="lesson-step-title">Знакомимся с глаголом <i>to be</i></h2>
+
+      <p>
+        Всё замечательно, но что делать с предложениями, где в русском варианте
+        <b>вообще нет глагола</b>? Например: «Я студент», «Она дома», «Погода хорошая».
+      </p>
+
+      <p class="mt-3">
+        В английском такие предложения не могут существовать без сказуемого. 
+        И здесь нас спасает глагол <b><i>to be</i></b>. Он меняется в зависимости от 
+        времени и подлежащего и превращается в:
+      </p>
+
+      <div class="to-be-table mt-4">
+        <div class="to-be-column">
+          <h3>Present (настоящее)</h3>
+          <ul>
+            <li><b>I am</b></li>
+            <li><b>He / She / It is</b></li>
+            <li><b>You / We / They are</b></li>
+          </ul>
+        </div>
+        <div class="to-be-column">
+          <h3>Past (прошедшее)</h3>
+          <ul>
+            <li><b>I / He / She / It was</b></li>
+            <li><b>You / We / They were</b></li>
+          </ul>
+        </div>
+        <div class="to-be-column">
+          <h3>Future (будущее)</h3>
+          <ul>
+            <li><b>Все лица:</b> will be</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="mt-4">
+        Сам по себе <i>to be</i> переводится как <b>«быть»</b> или <b>«находиться»</b>. 
+        Но в русском переводе мы чаще всего его <b>не произносим</b>:
+      </p>
+
+      <ul class="examples mt-3">
+        <li><b>I am a student.</b> — Я студент.</li>
+        <li><b>She is at home.</b> — Она дома.</li>
+        <li><b>They were happy.</b> — Они были счастливы.</li>
+      </ul>
+
+      <p class="soft-note mt-4">
+        Важно: если в предложении уже есть другой глагол, 
+        <b>дополнительный <i>to be</i> не нужен</b>.
+      </p>
+
+      <button class="btn-main mt-6 next-step-btn" data-next="step-5-to-be-exercise">
+        Перейти к заданию →
+      </button>
+    </section>
+
+    <!-- ШАГ 5 · УПРАЖНЕНИЕ НА TO BE -->
+    <section id="step-5-to-be-exercise" class="lesson-step" data-step="5" hidden>
+      <div class="step-label">Шаг 5 · PRACTICE</div>
+      <h2 class="lesson-step-title">Вставьте правильную форму глагола <i>to be</i></h2>
+
+      <p>
+        Теперь потренируемся. Вам нужно вставить правильную форму глагола
+        <b><i>to be</i></b> в пропуски. Подсказка: обращайте внимание на слова, 
+        которые указывают время: <span class="u-highlight">every day</span> — 
+        Present, <span class="u-highlight">last summer / yesterday</span> — Past, 
+        <span class="u-highlight">next summer / in future</span> — Future.
+      </p>
+
+      <div class="to-be-text mt-5">
+        <p>
+          Hello! My name <input type="text" class="to-be-input" data-answer="is" /> Alan.
+          I <input type="text" class="to-be-input" data-answer="am" /> thirteen.
+          My friend’s name <input type="text" class="to-be-input" data-answer="is" /> David.
+          He <input type="text" class="to-be-input" data-answer="is" /> thirteen, too.
+          We <input type="text" class="to-be-input" data-answer="are" /> from Belarus.
+        </p>
+
+        <p class="mt-3">
+          Last summer we
+          <input type="text" class="to-be-input" data-answer="were" /> at the seaside.
+          The weather <input type="text" class="to-be-input" data-answer="was" /> sunny.
+          There <input type="text" class="to-be-input" data-answer="were" /> many people on the beach.
+          We had a good time.
+        </p>
+
+        <p class="mt-3">
+          I hope next summer it
+          <input type="text" class="to-be-input" data-answer="will be" /> sunny and warm, too.
+          There <input type="text" class="to-be-input" data-answer="will be" /> a lot of nice days.
+        </p>
+
+        <p class="mt-3">
+          I have never been to other countries. Some day in future I
+          <input type="text" class="to-be-input" data-answer="will be" /> lucky to visit London
+          and my holidays <input type="text" class="to-be-input" data-answer="will be" /> great.
+        </p>
+      </div>
+
+      <p class="soft-note mt-4">
+        Не пытайтесь запомнить всё сразу. Главное — замечать, как время 
+        (вчера / каждый день / в будущем) влияет на форму глагола.
+      </p>
+
+      <button class="btn-main mt-6 next-step-btn" data-next="step-6-finish">
+        Завершить урок →
+      </button>
+    </section>
+
+    <!-- ШАГ 6 · ФИНИШ -->
+    <section id="step-6-finish" class="lesson-step" data-step="6" hidden>
+      <div class="step-label">Шаг 6 · FINISH</div>
+      <h2 class="lesson-step-title">Ура! Урок 3 пройден 🎉</h2>
+
+      <p>
+        Вы проделали большую работу: разобрались с <b>порядком слов в предложении</b> 
+        и познакомились с изменчивым, но очень полезным глаголом <b><i>to be</i></b>.
+      </p>
+
+      <p class="mt-3">
+        С таким уровнем внимательности к структуре предложений вы гораздо быстрее
+        начнёте говорить уверенно и без «русского порядка» слов в английских фразах.
+      </p>
+
+      <div class="finish-card mt-6">
+  <h3>Добавить слова в словарик</h3>
+  <p>
+    Ниже — слова из текста про Алана. Отметьте те, которые хотите сохранить в свой личный словарик.
+  </p>
+
+  <!-- Список слов для словарика (без повторов).
+       Здесь мы просто выводим их текстом — логика добавления в Firebase
+       может использовать те же функции, что и в уроке 1. -->
+  <ul class="vocab-list mt-3">
+    <li>name</li>
+    <li>friend</li>
+    <li>summer</li>
+    <li>weather</li>
+    <li>sunny</li>
+    <li>people</li>
+    <li>beach</li>
+    <li>countries</li>
+    <li>future</li>
+    <li>lucky</li>
+    <li>holidays</li>
+  </ul>
+
+  <button class="btn-secondary mt-4" id="lesson3-add-vocab-btn">
+    Добавить слова из урока в словарик →
+  </button>
+</div>
+
+<div class="finish-actions mt-8">
+  <a href="../english-intro.html" class="btn-ghost">
+    ← Вернуться к описанию курса
+  </a>
+  <a href="./lesson-04.html" class="btn-main">
+    Перейти к уроку 4 →
+  </a>
+</div>
+</section> <!-- конец step-6-finish -->
+
+
+<!-- ============================= -->
+<!-- МОДАЛЬНОЕ ОКНО Q&A  (как в уроке 1)-->
+<!-- ============================= -->
+<div id="qa-modal"
+     class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+  <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+    <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
+    <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
+
+    <div class="relative p-6 space-y-4">
+      <div class="flex justify-between items-start gap-4">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800">
+            Вопросы по уроку
+          </h2>
+          <p class="text-sm text-gray-600 mt-1">
+            Напишите свой вопрос — мы ответим, и ответ увидят другие участники.
+          </p>
+        </div>
+        <button id="qa-close" class="text-gray-500 text-xl leading-none">&times;</button>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+        Хотите получать ответы ещё быстрее и задавать вопросы персонально?
+        <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">
+          Тариф PRO →
+        </a>
+      </div>
+
+      <div id="qa-list"
+           class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70">
+        <p class="text-xs text-gray-500">
+          Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+        </p>
+      </div>
+
+      <form id="qa-form" class="space-y-2">
+        <label class="block text-xs text-gray-600">Ваш вопрос:</label>
+        <textarea id="qa-text"
+                  class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                  rows="3"
+                  placeholder="Например: «Где в предложении ставится обстоятельство времени?»"></textarea>
+
+        <p class="text-[0.7rem] text-gray-400">
+          Чтобы задать вопрос, нужно войти в аккаунт.
+          <a href="/student/" class="underline">Войти →</a>
+        </p>
+
+        <div class="flex justify-end">
+          <button type="submit" id="qa-submit" class="btn-main text-sm px-4 py-1.5">
+            Отправить →
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================= -->
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ СЛОВАРЯ -->
+<!-- ============================= -->
+<div id="vocab-modal"
+     class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+  <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+    <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-70"></div>
+    <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-70"></div>
+
+    <div class="relative p-6">
+      <div class="flex justify-between items-start">
+        <h2 class="text-lg font-semibold text-gray-800">
+          Добавить слова в словарик
+        </h2>
+        <button id="vocab-close" class="text-gray-500 text-xl leading-none">&times;</button>
+      </div>
+
+      <p class="text-sm text-gray-600 mt-1">
+        Выберите, какие слова сохранить. Они появятся в вашем словарике в личном кабинете.
+      </p>
+
+      <div id="vocab-auth-warning"
+           class="hidden mt-4 bg-red-50 text-red-700 border border-red-200 rounded-xl p-3 text-sm">
+        Чтобы сохранять слова, нужно войти.
+        <br><a href="/student/" class="underline font-medium">Перейти к авторизации →</a>
+      </div>
+
+      <div id="vocab-list" class="mt-5 space-y-5 max-h-[330px] overflow-y-auto pr-1">
+        <div class="vocab-category">
+          <h3 class="text-[0.8rem] font-semibold text-gray-700 mb-2 flex items-center gap-1">
+            📘 Слова из текста про Алана
+          </h3>
+
+          <div id="vocab-words" class="grid grid-cols-1 gap-2 pl-1">
+            <!-- JS автоматически вставит чекбоксы -->
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-between items-center">
+        <button id="vocab-select-all"
+                class="px-4 py-2 rounded-xl bg-gray-100 text-sm text-gray-700 border border-gray-300">
+          Выбрать всё
+        </button>
+
+        <button id="vocab-save" class="btn-main text-sm px-5 py-2">
+          Сохранить →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================= -->
+<!-- КОНФИГ УРОКА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module">
+  window.lessonConfig = {
+    lessonId:        "english-intro-lesson-3",
+    lessonSlug:      "lesson-03-word-order",
+    courseId:        "english-intro",
+    lessonQaDocId:   "english-intro-lesson-3",
+    submissionsRoot: "lessonSubmissions",
+    totalSteps:      6,
+    audioNextStep:   null,
+    vocabCategory:   "Текст про Алана (to be)",
+    vocabStep:       5
+  };
+</script>
+
+
+<!-- ============================= -->
+<!-- ОБЩИЙ СКРИПТ КУРСА -->
+<!-- ============================= -->
+<script type="module" src="/js/courses/english-intro.js"></script>
+
+</main>
+
+</body>
+</html>
