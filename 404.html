@@ -7,7 +7,7 @@
   <meta name="description" content="Ой! Похоже, эта страница потерялась. Давайте поможем вам вернуться к учёбе." />
 
   <!-- Фавикон -->
-  <link rel="icon" type="image/jpeg" href="/favicon.jpg">
+  <link rel="icon" type="image/jpeg" href="/assets/favicon.jpg">
 
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -42,12 +42,10 @@
 <!-- Header -->
 <header class="bg-white border-b border-[var(--border)] sticky top-0 z-40">
   <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-2 font-semibold text-lg">
-      <span class="inline-flex h-9 w-9 rounded-xl bg-[var(--yellow)] text-white items-center justify-center text-xl shadow">
-        🐤
-      </span>
-      PolyTalky
-    </a>
+   <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+        <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+        PolyTalky
+      </a>
 
     <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--text-soft)]">
       <a href="/courses/" class="hover:text-[var(--text)]">Курсы</a>
@@ -79,21 +77,7 @@
           Но не переживайте — помогу быстро вернуться к изучению языка мечты 💛
         </p>
 
-        <!-- Кнопки (на мобиле — в столбик, на шире — в ряд) -->
-        <div class="flex flex-col sm:flex-row gap-3 mb-8">
-          <a href="/" class="w-full sm:w-auto text-center px-5 py-3 rounded-xl bg-[var(--yellow)] text-white font-semibold shadow hover:shadow-md transition">
-            ⬅ На главную
-          </a>
-
-          <a href="/courses/" class="w-full sm:w-auto text-center px-5 py-3 rounded-xl bg-white border border-[var(--border)] text-[var(--text)] hover:bg-[#fff7d6] transition">
-            📚 Каталог курсов
-          </a>
-
-          <a href="/student/" class="w-full sm:w-auto text-center px-4 py-2 rounded-xl bg-white border border-[var(--border)] text-[var(--text-soft)] hover:bg-[#fff7d6] transition">
-            ⭐ Личный кабинет
-          </a>
-        </div>
-
+       
         <!-- Мини-карточки -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
           <div class="rounded-xl bg-white border border-[var(--border)] p-4 shadow-sm">
