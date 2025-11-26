@@ -679,3 +679,28 @@
         font-size: .6rem;
       }
     }
+.word-tooltip {
+  position: absolute;
+  background: #fffdfa;
+  border: 1px solid #f5d58a;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #444;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  max-width: 180px;              /* ✨ ограничиваем ширину */
+  z-index: 9999;
+
+  transform: translate(-50%, -120%); /* ✨ компактное позиционирование над словом */
+}
+
+.word-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #fffdfa transparent transparent transparent;
+}
