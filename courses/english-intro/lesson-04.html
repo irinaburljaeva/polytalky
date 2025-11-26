@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Intro — Урок 4</title>
+  <base href="/">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Общие стили для курса English Intro -->
+  <link rel="stylesheet" href="/courses/english-intro/english-intro.css">
+
+  <!-- Firebase init -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
+
+    window.firebaseApp  = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(window.firebaseApp);
+    window.firebaseDb   = getFirestore(window.firebaseApp);
+  </script>
+
+  <style>
+    .hidden{display:none;}
+
+    /* Стили для упражнения на времена */
+    .question-counter {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      display: inline-block;
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 0.9em;
+    }
+
+    .question-text {
+      font-size: 1.3em;
+      color: #333;
+      margin-bottom: 30px;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .option-btn {
+      background: white;
+      border: 2px solid #e0e0e0;
+      padding: 18px 25px;
+      border-radius: 12px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: #667eea;
+      background: #f8f9ff;
+      transform: translateX(5px);
+    }
+
+    .option-btn.correct {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+      animation: correctAnswer 0.5s ease;
+    }
+
+    .option-btn.incorrect {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes correctAnswer {
+      0%, 100% {
+        transform: translateX(5px);
+      }
+      50% {
+        transform: translateX(5px) scale(1.05);
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-10px);
+      }
+      75% {
+        transform: translateX(10px);
+      }
+    }
+
+    .option-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .feedback {
+      min-height: 60px;
+      margin-top: 20px;
+    }
+
+    .correct-feedback {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: #155724;
+      animation: slideIn 0.4s ease;
+    }
+
+    .incorrect-feedback {
+      background: #f8d7da;
+      border-left: 4px solid #dc3545;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: #721c24;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .score {
+      text-align: center;
+      font-size: 1.1em;
+      color: #666;
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+
+    /* Results */
+    .results {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .results h3 {
+      color: #333;
+      font-size: 2em;
+      margin-bottom: 30px;
+    }
+
+    .score-big {
+      font-size: 4em;
+      font-weight: bold;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 20px 0;
+    }
+
+    .percentage {
+      font-size: 2.5em;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .result-message {
+      font-size: 1.3em;
+      color: #555;
+      margin: 30px 0;
+      line-height: 1.6;
+    }
+
+    .btn-retry {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 25px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+
+    .btn-retry:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Визуализация времен */
+    .tenses-visualization {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      padding: 40px;
+      margin: 30px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .timeline {
+      position: relative;
+      padding: 60px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+    }
+
+    .timeline-line {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+    }
+
+    .tense-example {
+      position: relative;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tense-example:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .tense-example .tense-title {
+      color: #667eea;
+      font-size: 1.3em;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .tense-example .description {
+      color: #666;
+      font-size: 0.95em;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    /* Simple - Point */
+    .tense-example.simple .point {
+      width: 20px;
+      height: 20px;
+      background: #667eea;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.2);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 0 15px rgba(102, 126, 234, 0.1);
+      }
+    }
+
+    /* Continuous - Line */
+    .tense-example.continuous .line {
+      height: 6px;
+      background: linear-gradient(90deg, 
+        rgba(102, 126, 234, 0) 0%, 
+        rgba(102, 126, 234, 1) 20%, 
+        rgba(102, 126, 234, 1) 80%, 
+        rgba(102, 126, 234, 0) 100%);
+      border-radius: 3px;
+      margin: 0 auto 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tense-example.continuous .line::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.8), 
+        transparent);
+      animation: slide 2s infinite;
+    }
+
+    @keyframes slide {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 200%;
+      }
+    }
+
+    /* Perfect - Segment */
+    .tense-example.perfect .segment {
+      height: 8px;
+      background: #667eea;
+      border-radius: 4px;
+      margin: 0 auto 15px;
+      width: 70%;
+      position: relative;
+    }
+
+    .tense-example.perfect .segment::before,
+    .tense-example.perfect .segment::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      background: #667eea;
+      border: 3px solid white;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .tense-example.perfect .segment::before {
+      left: -6px;
+    }
+
+    .tense-example.perfect .segment::after {
+      right: -6px;
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      background: #f8f9ff;
+      border-left: 4px solid #667eea;
+      padding: 25px;
+      margin: 30px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .explanation-box p {
+      margin-bottom: 15px;
+      line-height: 1.7;
+      color: #444;
+    }
+
+    /* Summary Box */
+    .summary-box {
+      background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+      padding: 30px;
+      border-radius: 15px;
+      margin: 30px 0;
+      border: 2px solid #667eea;
+    }
+
+    .summary-box h3 {
+      color: #667eea;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+
+    .summary-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .summary-box li {
+      padding: 12px 0;
+      font-size: 1.1em;
+      color: #444;
+      line-height: 1.6;
+      border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .summary-box li:last-child {
+      border-bottom: none;
+    }
+
+    .motivation {
+      text-align: center;
+      font-size: 1.3em;
+      color: #667eea;
+      font-weight: 600;
+      margin-top: 30px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 768px) {
+      .tenses-visualization {
+        padding: 25px;
+      }
+
+      .timeline {
+        padding: 40px 0;
+        gap: 35px;
+      }
+
+      .question-text {
+        font-size: 1.1em;
+      }
+
+      .option-btn {
+        padding: 15px 20px;
+        font-size: 1em;
+      }
+
+      .score-big {
+        font-size: 3em;
+      }
+
+      .percentage {
+        font-size: 2em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+ 
+<!-- Фоновые буквы -->
+<div class="bg-letter a">B</div>
+<div class="bg-letter e">C</div>
+<div class="bg-letter i">D</div>
+<div class="bg-letter o">F</div>
+<div class="bg-letter u">G</div>
+
+<!-- Верхняя панель -->
+<header class="top-bar sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+      <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+      PolyTalky
+    </a>
+
+    <div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+      <div id="user-status"></div>
+
+      <a href="/student/feedback.html"
+         id="feedback-link"
+         class="hidden relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white">
+        📩
+        <span id="feedback-dot"
+              class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+      </a>
+
+      <a href="/student/"
+         target="_blank"
+         id="login-btn"
+         class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
+        Войти
+      </a>
+
+      <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
+    </div>
+  </div>
+  
+</header>
+
+<main class="lesson-shell">
+  <!-- HERO -->
+  <section class="hero-card mb-8">
+    <div class="hero-left">
+      <div class="hero-badge">English · Lesson 4</div>
+      <h1 class="hero-title mt-3">
+        Времена в английском языке
+      </h1>
+
+      <p class="hero-tagline mt-3">
+        Разбираемся с английскими tenses: Simple, Continuous, Perfect
+      </p>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-right-inner">
+        <div class="hero-bg-circle"></div>
+
+        <div class="hero-bubbles-cluster">
+          <div class="hero-bubble hero-bubble--hello">
+            Simple
+          </div>
+          <div class="hero-bubble hero-bubble--morning">
+            Continuous
+          </div>
+          <div class="hero-bubble hero-bubble--hi">
+            Perfect
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Навигация шагов -->
+  <div class="step-nav">
+    <button class="step-dot step-dot--active" data-step="1">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/order.png" alt="Введение">
+      </div>
+      <div class="step-dot-label">Введение</div>
+    </button>
+
+    <button class="step-dot" data-step="2">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/grammar.png" alt="Группы">
+      </div>
+      <div class="step-dot-label">Группы</div>
+    </button>
+
+    <button class="step-dot" data-step="3">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/video.png" alt="Визуализация">
+      </div>
+      <div class="step-dot-label">Визуализация</div>
+    </button>
+
+    <button class="step-dot" data-step="4">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/practise.png" alt="Упражнение">
+      </div>
+      <div class="step-dot-label">Практика</div>
+    </button>
+
+    <button class="step-dot" data-step="5">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/finish.png" alt="Финал">
+      </div>
+      <div class="step-dot-label">Финиш</div>
+    </button>
+  </div>
+
+  <!-- ================ ШАГ 1. ВВЕДЕНИЕ ================ -->
+  <section id="step-1" class="step-panel step-panel--visible">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 1 · Введение</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Добро пожаловать в мир английских времен!
+    </h2>
+
+    <p class="step-body-text mb-3">
+      Сегодня мы расскажем вам о таком страшном звере, который называется <b>времена</b> или <b>tenses</b>.
+    </p>
+
+    <p class="step-body-text mb-3">
+      Мы с вами привыкли строить предложения в настоящем, прошедшем и будущем, а все особенности передавать через некоторые суффиксы и приставки. И нам с вами и в голову не придет строить какие-то конструкции настоящего продолженного времени, настоящего совершенного...
+    </p>
+
+    <p class="step-body-text mb-3">
+      Но у англичан свои тараканы. И хочешь, не хочешь - а нужно разбираться во всех этих временах и по возможности еще и строить предложения в правильном времени!
+    </p>
+
+    <p class="step-body-text mb-3">
+      <i>Mamma mia!</i> - сказали бы мы, будь мы с вами итальянцами...
+    </p>
+
+    <p class="step-body-text mb-3">
+      Но строить предложения мы с вами хотим, строить <b>правильные</b> предложения еще больше, так что давайте разберем все эти замысловатые tenses.
+    </p>
+
+    <button class="btn-main mt-6 next-step-btn" data-next="2">
+      Далее →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 2. ГРУППЫ ВРЕМЕН ================ -->
+  <section id="step-2" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 2 · Группы времен</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Структура английских времен
+    </h2>
+
+    <p class="step-body-text mb-3">
+      В целом существует несколько групп:
+    </p>
+
+    <ul class="list-disc ml-5 mb-4 text-gray-700">
+      <li class="mb-2"><b>Simple</b> (Простое)</li>
+      <li class="mb-2"><b>Continuous</b> (Продолженное)</li>
+      <li class="mb-2"><b>Perfect</b> (Совершенное)</li>
+      <li class="mb-2"><b>Perfect Continuous</b> (Совершенное продолженное)</li>
+    </ul>
+
+    <p class="step-body-text mb-3">
+      Каждая из них делится на:
+    </p>
+
+    <ul class="list-disc ml-5 mb-4 text-gray-700">
+      <li class="mb-2"><b>Present</b> (Настоящее)</li>
+      <li class="mb-2"><b>Past</b> (Прошедшее)</li>
+      <li class="mb-2"><b>Future</b> (Будущее)</li>
+    </ul>
+
+    <p class="step-body-text mb-3">
+      В зависимости от некоторых условий нужно выбирать какое-то конкретное время.
+    </p>
+
+    <button class="btn-main mt-6 next-step-btn" data-next="3">
+      Далее →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 3. ВИЗУАЛИЗАЦИЯ ================ -->
+  <section id="step-3" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 3 · Визуализация</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Давайте визуализируем!
+    </h2>
+
+    <p class="step-body-text mb-3">
+      Попробуем изобразить все эти времена, чтобы разобрать получше.
+    </p>
+    
+    <div class="tenses-visualization">
+      <div class="timeline">
+        <div class="timeline-line"></div>
+        
+        <div class="tense-example simple">
+          <div class="point"></div>
+          <span class="tense-title">Simple</span>
+          <p class="description">Простая точка на временном отрезке - констатация факта</p>
+        </div>
+        
+        <div class="tense-example continuous">
+          <div class="line"></div>
+          <span class="tense-title">Continuous</span>
+          <p class="description">Прямая без четкого начала и конца - процесс в развитии</p>
+        </div>
+        
+        <div class="tense-example perfect">
+          <div class="segment"></div>
+          <span class="tense-title">Perfect</span>
+          <p class="description">Отрезок с началом и концом - завершенное действие</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="explanation-box">
+      <p>Если мы возьмем время и нарисуем временной отрезок, то простая точка на нем - это будет <b>Simple</b>, так как данное время отвечает за простую констатацию факта.</p>
+      <p><b>Continuous</b> (или иногда вы можете встретить название этого времени как Progressive) будет какой-то прямой, и при этом мы не знаем, когда именно она началась (и вполне возможно, что потом будет продолжение).</p>
+      <p>А <b>Perfect</b> будет выглядеть как некий отрезок времени, который имеет начало и конец.</p>
+    </div>
+
+    <button class="btn-main mt-6 next-step-btn" data-next="4">
+      Перейти к практике →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 4. УПРАЖНЕНИЕ ================ -->
+  <section id="step-4" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 4 · Практика</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Время практиковаться!
+    </h2>
+
+    <p class="step-body-text mb-3">
+      В зависимости от того <b>tense</b> (Simple, Continuous, Perfect или Perfect Continuous) и того времени, в момент которого действие происходит (настоящее, прошедшее или будущее), будет меняться построение предложений.
+    </p>
+
+    <p class="step-body-text mb-4">
+      Давайте проверим, как вы поняли основные различия между временами!
+    </p>
+
+    <div id="exerciseContainer">
+      <!-- Exercise will be rendered here by JavaScript -->
+    </div>
+
+    <button id="next-btn-step4" class="btn-main mt-6 next-step-btn hidden" data-next="5">
+      Завершить урок →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 5. ФИНАЛ ================ -->
+  <section id="step-5" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 5 · ФИНАЛ</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Отличная работа! 🎉
+    </h2>
+
+    <p class="step-body-text mb-3">
+      Вы познакомились с основными группами английских времен!
+    </p>
+    
+    <div class="summary-box">
+      <h3>Что мы узнали:</h3>
+      <ul>
+        <li>✓ Существует 4 основных группы времен: Simple, Continuous, Perfect, Perfect Continuous</li>
+        <li>✓ Каждая группа имеет формы Present, Past и Future</li>
+        <li>✓ Simple - для фактов и регулярных действий</li>
+        <li>✓ Continuous - для процессов в развитии</li>
+        <li>✓ Perfect - для завершенных действий с результатом</li>
+      </ul>
+    </div>
+    
+    <p class="step-body-text mb-3">
+      В следующих уроках мы подробно разберем каждое время с примерами и практикой!
+    </p>
+
+    <p class="motivation">
+      Помните: понимание времен - это ключ к свободному владению английским языком! 🔑
+    </p>
+
+    <div class="flex justify-center my-4">
+      <img src="/assets/gifs/english-lesson4-finish.gif" alt="Finish gif"
+           class="w-64 h-auto rounded-2xl">
+    </div>
+
+    <div class="mt-5 flex flex-wrap gap-3">
+      <a href="/courses/english-intro/lesson-05.html" class="btn-main">
+        Перейти к следующему уроку →
+      </a>
+
+      <a href="/courses/english-intro/" class="btn-ghost">
+        Вернуться к курсу
+      </a>
+    </div>
+  </section>
+
+  <!-- МОДАЛКА Q&A -->
+  <div id="qa-modal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+      <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
+
+      <div class="relative p-6 space-y-4">
+        <div class="flex justify-between items-start gap-4">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-800">
+              Вопросы по уроку
+            </h2>
+            <p class="text-sm text-gray-600 mt-1">
+              Напишите свой вопрос — мы ответим и ответ увидят другие участники.
+            </p>
+          </div>
+
+          <button id="qa-close"
+                  class="text-gray-500 text-xl leading-none​​​​​​​​​​​​​​​​
