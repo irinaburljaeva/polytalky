@@ -326,7 +326,7 @@
     </h2>
 
     <p class="step-body-text mb-3">
-      У вас есть набор слов — перетащите их в область ниже так, чтобы получилось
+      У вас есть набор слов — нажимайте на них в правильном порядке, чтобы получилось
       <b>грамматически правильное предложение</b>.
     </p>
 
@@ -859,6 +859,7 @@ function selectWord(word) {
       dropZone.classList.remove("border-green-400");
 
       requestAnimationFrame(() => {
+        let touchUsed = false;
         initSentence(); // перезапуск следующего предложения
       });
     }, 900);
@@ -910,6 +911,10 @@ function initSentence() {
 
     // ПК: клик = добавить слово + показать перевод и озвучку
     btn.addEventListener("click", (e) => {
+     if (touchUsed) {
+       touchUsed = false;
+       return;
+     }
       e.stopPropagation();
       selectWord(word);
       showTooltip(btn, word);
@@ -917,6 +922,7 @@ function initSentence() {
 
     // Мобильное перетаскивание
     btn.addEventListener("touchstart", (e) => {
+      touchUsed = true;
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
       dragging = false;
