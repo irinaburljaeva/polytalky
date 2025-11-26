@@ -688,19 +688,20 @@
 </script>
 
 <script>
-  // Отключаем скролл страницы во время drag на мобильных
+// Отключаем скролл страницы во время drag на мобильных
+let dragging = false;
 document.addEventListener('touchmove', function(e) {
   if (dragging) {
     e.preventDefault();  // блокируем скролл
   }
 }, { passive: false });
+
 // =========================================================
 // 🔸 ШАГ 3 — DRAG & DROP ТРЕНАЖЁР (5 предложений)
 // =========================================================
 
 let startX = 0;
 let startY = 0;
-let dragging = false;
 let dragClone = null;
 
 // слова с переводом для тултипов
@@ -795,8 +796,8 @@ function showTooltip(btn, word) {
   }
 
   const tip = document.createElement("div");
-  tip.className = "word-tooltip";
-  tip.textContent = translation; // только перевод
+  tip.className = "word-tooltip";   // стили заданы в CSS
+  tip.textContent = translation;    // только перевод
 
   btn.appendChild(tip);
 
@@ -867,7 +868,6 @@ function selectWord(word) {
       dropZone.classList.remove("border-green-400");
 
       requestAnimationFrame(() => {
-        let touchUsed = false;
         initSentence(); // перезапуск следующего предложения
       });
     }, 900);
@@ -886,6 +886,136 @@ function selectWord(word) {
       renderSentence();
     }, 900);
   }
+}
+
+// 🔥 Универсальные обработчики drag для мыши и тача
+function attachDragHandlers(btn, word, sentenceIndex) {
+  const dropZone = document.getElementById(`drop-zone-${sentenceIndex + 1}`);
+
+  // ==========================
+  // 🖱 МЫШЬ
+  // ==========================
+  btn.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    closeTooltips();
+
+    dragging = false; // пока не знаем, клик это или drag
+    startX = e.clientX;
+    startY = e.clientY;
+
+    function onMouseMove(ev) {
+      const dx = Math.abs(ev.clientX - startX);
+      const dy = Math.abs(ev.clientY - startY);
+
+      // если двинулись больше порога — это drag
+      if (!dragging && (dx > 5 || dy > 5)) {
+        dragging = true;
+        dragClone = btn.cloneNode(true);
+        dragClone.style.position = "fixed";
+        dragClone.style.pointerEvents = "none";
+        dragClone.style.opacity = "0.95";
+        dragClone.style.transform = "scale(1.1)";
+        dragClone.style.zIndex = "9999";
+        dragClone.style.left = ev.clientX + "px";
+        dragClone.style.top  = ev.clientY + "px";
+        document.body.appendChild(dragClone);
+      }
+
+      if (dragging && dragClone) {
+        dragClone.style.left = ev.clientX + "px";
+        dragClone.style.top  = ev.clientY + "px";
+      }
+    }
+
+    function onMouseUp(ev) {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+
+      const x = ev.clientX;
+      const y = ev.clientY;
+
+      if (dragging) {
+        // завершили перетаскивание
+        const rect = dropZone.getBoundingClientRect();
+        if (x >= rect.left && x <= rect.right &&
+            y >= rect.top  && y <= rect.bottom) {
+          selectWord(word);
+          showTooltip(btn, word);
+        }
+      } else {
+        // это был просто клик без drag → только перевод + озвучка
+        showTooltip(btn, word);
+      }
+
+      dragging = false;
+      dragClone?.remove();
+      dragClone = null;
+    }
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  });
+
+  // ==========================
+  // 📱 ТАЧ
+  // ==========================
+  btn.addEventListener("touchstart", (e) => {
+    const t = e.touches[0];
+    startX = t.clientX;
+    startY = t.clientY;
+    dragging = false;
+    dragClone?.remove();
+    dragClone = null;
+  }, { passive: true });
+
+  btn.addEventListener("touchmove", (e) => {
+    const t = e.touches[0];
+    const dx = Math.abs(t.clientX - startX);
+    const dy = Math.abs(t.clientY - startY);
+
+    if (!dragging && (dx > 10 || dy > 10)) {
+      // начинаем реальный drag
+      dragging = true;
+      dragClone = btn.cloneNode(true);
+      dragClone.style.position = "fixed";
+      dragClone.style.pointerEvents = "none";
+      dragClone.style.opacity = "0.95";
+      dragClone.style.transform = "scale(1.1)";
+      dragClone.style.zIndex = "9999";
+      dragClone.style.left = t.clientX + "px";
+      dragClone.style.top  = t.clientY + "px";
+      document.body.appendChild(dragClone);
+    }
+
+    if (dragging && dragClone) {
+      dragClone.style.left = t.clientX + "px";
+      dragClone.style.top  = t.clientY + "px";
+      e.preventDefault(); // убираем скролл страницы при drag
+    }
+  }, { passive: false });
+
+  btn.addEventListener("touchend", (e) => {
+    const t = e.changedTouches[0];
+    const x = t.clientX;
+    const y = t.clientY;
+
+    if (dragging) {
+      // закончили перетаскивать
+      const rect = dropZone.getBoundingClientRect();
+      if (x >= rect.left && x <= rect.right &&
+          y >= rect.top  && y <= rect.bottom) {
+        selectWord(word);
+        showTooltip(btn, word);
+      }
+    } else {
+      // короткий тап — только подсказка и озвучка
+      showTooltip(btn, word);
+    }
+
+    dragging = false;
+    dragClone?.remove();
+    dragClone = null;
+  });
 }
 
 // инициализация предложения по индексу
@@ -917,71 +1047,8 @@ function initSentence() {
       "drag-item relative bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl text-gray-800 cursor-pointer";
     btn.textContent = word;
 
-    // ПК: клик = добавить слово + показать перевод и озвучку
-    btn.addEventListener("click", (e) => {
-     if (touchUsed) {
-       touchUsed = false;
-       return;
-     }
-      e.stopPropagation();
-      selectWord(word);
-      showTooltip(btn, word);
-    });
-
-    // Мобильное перетаскивание
-    btn.addEventListener("touchstart", (e) => {
-      touchUsed = true;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      dragging = false;
-
-      dragClone = btn.cloneNode(true);
-      dragClone.style.position = "fixed";
-      dragClone.style.pointerEvents = "none";
-      dragClone.style.opacity = "0";
-      dragClone.style.transform = "scale(1.1)";
-      dragClone.style.zIndex = "9999";
-      document.body.appendChild(dragClone);
-    });
-
-    btn.addEventListener("touchmove", (e) => {
-      const dx = Math.abs(e.touches[0].clientX - startX);
-      const dy = Math.abs(e.touches[0].clientY - startY);
-
-      // Если движение превышает 10 px — это drag, а не tap
-      if (dx > 10 || dy > 10) {
-        dragging = true;
-        dragClone.style.left = e.touches[0].clientX + "px";
-        dragClone.style.top  = e.touches[0].clientY + "px";
-        dragClone.style.opacity = "1";
-      }
-    });
-
-    btn.addEventListener("touchend", (e) => {
-      const x = e.changedTouches[0].clientX;
-      const y = e.changedTouches[0].clientY;
-
-      if (!dragging) {
-        // короткий тап — только перевод + озвучка
-        showTooltip(btn, word);
-      } else {
-        // реальное перетаскивание
-        const dropRect = document
-          .getElementById(`drop-zone-${currentSentenceIndex + 1}`)
-          .getBoundingClientRect();
-
-        if (
-          x >= dropRect.left && x <= dropRect.right &&
-          y >= dropRect.top  && y <= dropRect.bottom
-        ) {
-          selectWord(word);
-        }
-      }
-
-      dragClone?.remove();
-      dragClone = null;
-      dragging = false;
-    });
+    // подключаем универсальный drag (ПК + мобильные)
+    attachDragHandlers(btn, word, currentSentenceIndex);
 
     wordBank.appendChild(btn);
   });
