@@ -85,40 +85,7 @@
 </head>
 
 <body>
- <!-- HERO -->
-    <section class="hero-card mb-8">
-
-      <div class="hero-left">
-        <div class="hero-badge">English · Lesson 3</div>
-        <h1 class="hero-title mt-3">
-          Порядок слов в предложении
-          и глагол <span class="em">to be</span>
-        </h1>
-
-        <p class="hero-tagline mt-3">
-         Как выстроить английское предложение, чтобы вас поняли с первого раза.
-        </p>
-      </div>
-
-      <div class="hero-right">
-        <div class="hero-right-inner">
-          <div class="hero-bg-circle"></div>
-
-          <div class="hero-bubbles-cluster">
-            <div class="hero-bubble hero-bubble--hello">
-              subject
-            </div>
-            <div class= "hero-bubble hero-bubble--morning">
-              verb
-            </div>
-            <div class="hero-bubble hero-bubble--hi">
-             object
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </section>
+ 
 <!-- Фоновые буквы -->
 <div class="bg-letter a">B</div>
 <div class="bg-letter e">C</div>
@@ -155,6 +122,40 @@
       <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
     </div>
   </div>
+  <!-- HERO -->
+    <section class="hero-card mb-8">
+
+      <div class="hero-left">
+        <div class="hero-badge">English · Lesson 3</div>
+        <h1 class="hero-title mt-3">
+          Порядок слов в предложении
+          и глагол <span class="em">to be</span>
+        </h1>
+
+        <p class="hero-tagline mt-3">
+         Как выстроить английское предложение, чтобы вас поняли с первого раза.
+        </p>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-right-inner">
+          <div class="hero-bg-circle"></div>
+
+          <div class="hero-bubbles-cluster">
+            <div class="hero-bubble hero-bubble--hello">
+              subject
+            </div>
+            <div class= "hero-bubble hero-bubble--morning">
+              verb
+            </div>
+            <div class="hero-bubble hero-bubble--hi">
+             object
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
 </header>
 
 <main class="lesson-shell">
@@ -211,15 +212,22 @@
       <button class="step-icon" type="button" data-open-qa>❓</button>
     </div>
 
- 
+ <!-- 📌 КАРТИНКА В ШАГЕ 1 -->
+  <div class="mt-6 flex justify-center">
+    <img 
+      src="../assets/english/picture.jpg" 
+      alt="english"
+      class="rounded-2xl shadow-md max-w-sm"
+    />
+  </div>
     <p class="step-body-text mb-3">
       Сегодня мы разберем две ключевые вещи:
       <b>порядок слов в предложении</b> и <b>глагол <i>to be</i></b>.
     </p>
 
     <p class="step-body-text mb-3">
-      В русском языке можно построить фразу как угодно: 
-      <span class="italic">/как угодно построить фразу можно/построить фразу как угодно можно...»</span>.  
+      В русском языке можно построить фразу как угодно
+      <span class="italic">(как угодно построить фразу можно/построить фразу как угодно можно...)</span>.  
       В английском такое не сработает 😅 — там всё подчиняется 
       чётким правилам. Но хорошая новость в том, что,
       поняв схему, вы сможете строить предложения уверенно и спокойно.
@@ -382,13 +390,19 @@
     </h2>
 
     <p class="step-body-text mb-3">
-      <i>To be</i> — это глагол «быть / находиться».  
+      Порядок слов - это конечно замечательно, но что же нам делать с предложениями, у которых в русском аналоге нету никакого глагола?! У англичан все предусмотрено! Если в предложении нет сказуемого, мы добавляем заветный глагол to be.  Глагол это непростой..уж очень по натуре своей он изменчивый. В одном случае to be превращается в am, в другом в is, в третьем в was. Но обо всем по порядку!
+      <i>To be</i> — переводится как «быть / находиться».  
       Он меняется в зависимости от лица и времени.
     </p>
-
+ <div class="mt-6 flex justify-center">
+    <img 
+      src="../assets/english/tobe.jpg" 
+      alt="to be"
+      class="rounded-2xl shadow-md max-w-sm"
+    />
+  </div>
     <p class="step-body-text text-sm mb-4">
-      Если в русском предложении нет глагола,  
-      в английском всё равно должен стоять <b>to be</b>.
+    Когда мы вставляем его в предложение, где нет никакого глагола, то при переводе  <b>to be</b> опускается, или же получится  Я ЕСТЬ ЧЕЛОВЕК.
     </p>
 
     <div class="soft-block soft-block--blue mb-4">
@@ -684,10 +698,10 @@ let currentSentenceIndex = 0;
 let currentSentence = [];
 
 // элементы DOM
-const wordBank = document.getElementById("lesson3-word-bank");
-const dropZone = document.getElementById("lesson3-drop-zone");
-const trainerFeedback3 = document.getElementById("lesson3-trainer-feedback");
-const nextBtn3 = document.getElementById("lesson3-next-btn");
+const wordBank = document.getElementById("word-bank");
+const dropZone = document.getElementById("drop-zone");
+const trainerFeedback3 = document.getElementById("trainer-feedback");
+const nextBtn3 = document.getElementById("next-btn");
 
 // синтез речи
 function speak(word) {
