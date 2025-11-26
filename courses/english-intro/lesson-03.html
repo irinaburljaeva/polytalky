@@ -71,7 +71,11 @@
       border-radius: 8px;
       font-size: 0.85rem;
     }
-
+  
+.sentence-block.completed {
+  opacity: 0.5;
+  pointer-events: none;
+}
     .sentence-number {
       font-size: 0.9rem;
       font-weight: 600;
@@ -696,6 +700,17 @@ const sentences = [
 let currentSentenceIndex = 0;
 let currentSentence = [];
 
+  document.getElementById(`sentence-${currentSentenceIndex+1}`).classList.add("completed");
+
+currentSentenceIndex++;
+
+if (currentSentenceIndex < sentences.length) {
+   showSentence(currentSentenceIndex + 1);
+} else {
+   nextBtn3.disabled = false;
+   nextBtn3.classList.remove("opacity-50");
+}
+  
 const nextBtn3 = document.getElementById("next-btn-step3");
 
 // вспомогательная функция: получить элементы для текущего предложения
@@ -708,12 +723,7 @@ function getElementsFor(index) {
   };
 }
 
-// синтез речи
-function speak(word) {
-  const u = new SpeechSynthesisUtterance(word);
-  u.lang = "en-US";
-  window.speechSynthesis.speak(u);
-}
+
 
 // закрыть все тултипы
 function closeTooltips() {
@@ -737,7 +747,7 @@ function showTooltip(btn, word) {
 
   tip.querySelector("button").addEventListener("click", (e) => {
     e.stopPropagation();
-    speak(word);
+    speakWord(word);
   });
 
   btn.appendChild(tip);
@@ -777,20 +787,32 @@ function selectWord(word) {
     dropZone.classList.add("border-green-400");
     feedback.textContent = "Отлично! Всё верно 👏";
 
-    setTimeout(() => {
-      currentSentenceIndex++;
+   setTimeout(() => {
+  currentSentenceIndex++;
 
-      if (currentSentenceIndex >= sentences.length) {
-        // весь тренажёр пройден
-        nextBtn3.disabled = false;
-        nextBtn3.classList.remove("opacity-50");
-        feedback.textContent = "Шаг завершён, можно идти дальше 🎉";
-      } else {
-        dropZone.classList.remove("border-green-400");
-        initSentence(); // следующее предложение
-      }
-    }, 900);
+  if (currentSentenceIndex >= sentences.length) {
+    nextBtn3.disabled = false;
+    nextBtn3.classList.remove("opacity-50");
+    feedback.textContent = "Шаг завершён, можно идти дальше 🎉";
+    return;
+  }
 
+  // Скрываем все блоки предложений
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`sentence-${i}-block`)?.classList.add("hidden");
+  }
+
+  // Показываем только нужный блок
+  document
+    .getElementById(`sentence-${currentSentenceIndex + 1}-block`)
+    ?.classList.remove("hidden");
+
+  dropZone.classList.remove("border-green-400");
+
+  requestAnimationFrame(() => {
+    initSentence(); // перезапуск следующего предложения
+  });
+}, 900);
     return;
   }
 
