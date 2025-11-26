@@ -649,12 +649,11 @@ My holidays ________ great.</textarea>
 </script>
 
 <script>
-
 // =========================================================
 // 🔸 ШАГ 3 — DRAG & DROP ТРЕНАЖЁР (5 предложений)
 // =========================================================
 
-// варианты — слова с переводом
+// слова с переводом для тултипов
 const translations = {
   "I": "я",
   "come": "прихожу",
@@ -672,7 +671,7 @@ const translations = {
   "watch": "смотрим",
   "movies": "фильмы",
   "on": "по, на",
-  "weekends": "выходным",
+  "weekends": "выходные",
 
   "They": "они",
   "play": "играют",
@@ -684,70 +683,47 @@ const translations = {
   "He": "он",
   "drinks": "пьёт",
   "coffee": "кофе",
+  "every": "каждый",
   "morning": "утро"
 };
 
+// 5 предложений
 const sentences = [
-  { words: ["I", "come", "home", "very", "late"], correct: "I come home very late" },
-  { words: ["She", "reads", "books", "every", "day"], correct: "She reads books every day" },
-  { words: ["We", "watch", "movies", "on", "weekends"], correct: "We watch movies on weekends" },
-  { words: ["They","play","football","in","the","park"], correct: "They play football in the park" },
-  { words: ["He","drinks","coffee","every","morning"], correct: "He drinks coffee every morning" }
+  { words: ["I", "come", "home", "very", "late"],           correct: "I come home very late" },
+  { words: ["She", "reads", "books", "every", "day"],       correct: "She reads books every day" },
+  { words: ["We", "watch", "movies", "on", "weekends"],     correct: "We watch movies on weekends" },
+  { words: ["They", "play", "football", "in", "the", "park"], correct: "They play football in the park" },
+  { words: ["He", "drinks", "coffee", "every", "morning"],  correct: "He drinks coffee every morning" }
 ];
 
 let currentSentenceIndex = 0;
 let currentSentence = [];
 
-// элементы DOM
-const wordBank = document.getElementById(`word-bank-${index + 1}`);
-const dropZone = document.getElementById(`drop-zone-${index + 1}`);
-const trainerFeedback3 = document.getElementById(`feedback-${index + 1}`);
 const nextBtn3 = document.getElementById("next-btn-step3");
+
+// вспомогательная функция: получить элементы для текущего предложения
+function getElementsFor(index) {
+  const n = index + 1;
+  return {
+    wordBank: document.getElementById(`word-bank-${n}`),
+    dropZone: document.getElementById(`drop-zone-${n}`),
+    feedback: document.getElementById(`feedback-${n}`)
+  };
+}
 
 // синтез речи
 function speak(word) {
   const u = new SpeechSynthesisUtterance(word);
   u.lang = "en-US";
-  speechSynthesis.speak(u);
+  window.speechSynthesis.speak(u);
 }
 
-// рендер нового предложения
-function initSentence() {
-  const { wordBank, dropZone, feedback} = getElementsFor(currentSentenceIndex);
-  const data = sentences[currentSentenceIndex];
-  currentSentence = [];
- feedback.textContent = "";
-  dropZone.textContent = `<span class="text-gray-400 text-sm"> Перетащите слова сюда...</span>`;
-
-  wordBank.innerHTML = "";
-  const shuffled = [...data.words].sort(() => Math.random() - 0.5);
-
-  shuffled.forEach(word => {
-    const btn = document.createElement("button");
-    btn.className =
-      "drag-item relative bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl text-gray-800 cursor-pointer";
-    btn.textContent = word;
-
-    // тултип
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      showTooltip(btn, word);
-      selectWord(word);
-    });
-
-    wordBank.appendChild(btn);
-  });
-for (let i = 1; i <=5; i++) {
-  document.getElementById(`sentence-${i}-block`).classList.toggle(
-    "hidden",
-    i !== currentSentenceIndex + 1
-    
-  );
-}
+// закрыть все тултипы
+function closeTooltips() {
+  document.querySelectorAll(".tooltip").forEach(t => t.remove());
 }
 
-  
-// тултип
+// показать тултип с озвучкой и переводом
 function showTooltip(btn, word) {
   closeTooltips();
 
@@ -771,70 +747,112 @@ function showTooltip(btn, word) {
   document.addEventListener("click", closeTooltips, { once: true });
 }
 
-function closeTooltips() {
-  document.querySelectorAll(".tooltip").forEach(t => t.remove());
+// отрисовать уже набранное предложение в жёлтом блоке
+function renderSentence() {
+  const { dropZone } = getElementsFor(currentSentenceIndex);
+  if (!dropZone) return;
+
+  dropZone.innerHTML = "";
+  currentSentence.forEach(w => {
+    const el = document.createElement("span");
+    el.className =
+      "inline-block bg-white px-2 py-1 rounded border text-sm mr-1 mb-1";
+    el.textContent = w;
+    dropZone.appendChild(el);
+  });
 }
 
-// обработка выбора слова
+// обработка клика по слову
 function selectWord(word) {
-  currentSentence.push(word);
-
-  renderSentence();
+  const { dropZone, feedback } = getElementsFor(currentSentenceIndex);
+  if (!dropZone || !feedback) return;
 
   const correct = sentences[currentSentenceIndex].correct;
+
+  currentSentence.push(word);
+  renderSentence();
+
   const joined = currentSentence.join(" ");
 
-  // если правильная последовательность
+  // вариант 1: всё предложение собрано верно
   if (joined === correct) {
     dropZone.classList.remove("border-red-400");
     dropZone.classList.add("border-green-400");
-    Feedback3.textContent = "Отлично! Всё верно 👏";
+    feedback.textContent = "Отлично! Всё верно 👏";
 
     setTimeout(() => {
       currentSentenceIndex++;
 
-      // все 5 сделаны → открыть кнопку
       if (currentSentenceIndex >= sentences.length) {
+        // весь тренажёр пройден
         nextBtn3.disabled = false;
         nextBtn3.classList.remove("opacity-50");
-        Feedback3.textContent = "Шаг завершён, можно идти дальше 🎉";
+        feedback.textContent = "Шаг завершён, можно идти дальше 🎉";
       } else {
         dropZone.classList.remove("border-green-400");
-        initSentence();
+        initSentence(); // следующее предложение
       }
     }, 900);
 
     return;
   }
 
-  // если уже неправильная последовательность
+  // вариант 2: пользователь уже ушёл от правильного начала
   if (!correct.startsWith(joined)) {
     dropZone.classList.add("border-red-400");
-    Feedback3.textContent = "Неправильно. Попробуйте ещё раз.";
+    feedback.textContent = "Неправильно. Попробуйте ещё раз 🙂";
 
     setTimeout(() => {
       currentSentence = [];
       dropZone.classList.remove("border-red-400");
-      Feedback3.textContent = "";
+      feedback.textContent = "";
       renderSentence();
     }, 900);
   }
 }
 
-// обновление DOM зоны предложения
-function renderSentence() {
-  dropZone.innerHTML = "";
-  currentSentence.forEach(w => {
-    const el = document.createElement("span");
-    el.className =
-      "inline-block bg-white px-2 py-1 rounded border text-sm mr-1";
-    el.textContent = w;
-    dropZone.appendChild(el);
+// инициализация предложения по индексу
+function initSentence() {
+  const { wordBank, dropZone, feedback } = getElementsFor(currentSentenceIndex);
+  if (!wordBank || !dropZone || !feedback) return;
+
+  // показываем только текущий блок предложения
+  for (let i = 1; i <= 5; i++) {
+    const block = document.getElementById(`sentence-${i}-block`);
+    if (block) {
+      block.classList.toggle("hidden", i !== currentSentenceIndex + 1);
+    }
+  }
+
+  currentSentence = [];
+  feedback.textContent = "";
+  dropZone.innerHTML =
+    '<span class="text-gray-400 text-sm">Перетащите слова сюда...</span>';
+
+  wordBank.innerHTML = "";
+  const data = sentences[currentSentenceIndex];
+  const shuffled = [...data.words].sort(() => Math.random() - 0.5);
+
+  shuffled.forEach(word => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className =
+      "drag-item relative bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl text-gray-800 cursor-pointer";
+    btn.textContent = word;
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showTooltip(btn, word);
+      selectWord(word);
+    });
+
+    wordBank.appendChild(btn);
   });
 }
 
-// запуск
+// запуск тренажёра
 initSentence();
+
 
 // ===============================
 // 🔸 ШАГ 5 — ПОДДЕРЖКА УПРАЖНЕНИЯ TO BE
