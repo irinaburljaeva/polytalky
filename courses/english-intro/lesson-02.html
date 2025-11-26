@@ -1673,65 +1673,73 @@ console.log("isProUser:", isProUser);
         }
       ];
 
-      let trainerIndex = 0;
-      let trainerLocked = false;
+      // ===============================
+// 🔸 ТРЕНАЖЕР: ОТКРЫТЫЕ / ЗАКРЫТЫЕ ГЛАСНЫЕ
+// ===============================
 
-      function renderTrainerQuestion() {
-        const q = trainerQuestions[trainerIndex];
-        trainerLocked = false;
-        trainerFeedback.textContent = "";
-        trainerNextBtn.disabled = true;
+let trainerIndex = 0;
+let trainerLocked = false;
 
-        trainerQuestion.textContent = q.prompt;
-        trainerProgress.textContent = `${trainerIndex + 1} / ${trainerQuestions.length}`;
+function renderTrainerQuestion() {
+  const q = trainerQuestions[trainerIndex];
 
-        trainerOptions.innerHTML = "";
-        q.options.forEach((opt) => {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "btn-ghost text-[0.85rem] w-full flex justify-between items-center";
-          btn.textContent = opt.label;
+  trainerLocked = false;
+  trainerFeedback.textContent = "";
+  trainerNextBtn.disabled = true;
 
-          btn.addEventListener("click", () => {
-            if (trainerLocked) return;
-            trainerLocked = true;
+  trainerQuestion.textContent = q.prompt;
+  trainerProgress.textContent = `${trainerIndex + 1} / ${trainerQuestions.length}`;
 
-            if (opt.correct) {
-    if (trainerQuestions[trainerIndex].prompt.includes("ЗАКРЫТОМ")) {
-        trainerFeedback.textContent = "Верно! Это закрытый слог 👏";
-    } else {
-        trainerFeedback.textContent = "Отлично! Это пример открытого слога 👏";
-    }
-} else {
-    trainerFeedback.textContent = "Попробуйте ещё раз — здесь другой тип слога.";
-}
+  trainerOptions.innerHTML = "";
 
-            if (trainerIndex < trainerQuestions.length - 1) {
-              trainerNextBtn.disabled = false;
-            } else {
-              trainerNextBtn.disabled = true;
-            }
-          });
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className =
+      "btn-ghost text-[0.85rem] w-full flex justify-between items-center border rounded-xl px-3 py-2";
+    btn.textContent = opt.label;
 
-          trainerOptions.appendChild(btn);
-        });
-      }
+    btn.addEventListener("click", () => {
+      if (trainerLocked) return;
+      trainerLocked = true;
 
-      trainerNextBtn.addEventListener("click", () => {
-        if (trainerIndex < trainerQuestions.length - 1) {
-          trainerIndex += 1;
-          renderTrainerQuestion();
+      // ----- ПОДСВЕТКА -----
+      if (opt.correct) {
+        btn.style.borderColor = "#16a34a";
+        btn.style.background = "#dcfce7";
+
+        if (q.prompt.includes("ЗАКРЫТ")) {
+          trainerFeedback.textContent = "Верно! Это закрытый слог 👏";
+        } else {
+          trainerFeedback.textContent = "Отлично! Это пример открытого слога 👏";
         }
-      });
-if (trainerIndex === trainerQuestions.length - 1) {
-    const finishBtn = document.getElementById("step2-finish-btn");
-    if (finishBtn) {
-        finishBtn.disabled = false;
-        finishBtn.classList.remove("opacity-50");
-        finishBtn.classList.add("next-step-btn");
-    }
+
+        // --- Автопереход ---
+        setTimeout(() => {
+          if (trainerIndex < trainerQuestions.length - 1) {
+            trainerIndex++;
+            renderTrainerQuestion();
+          } else {
+            // Активируем кнопку перехода на шаг 3
+            const finishBtn = document.getElementById("step2-finish-btn");
+            finishBtn.disabled = false;
+            finishBtn.classList.remove("opacity-50");
+          }
+        }, 1100);
+
+      } else {
+        btn.style.borderColor = "#dc2626";
+        btn.style.background = "#fee2e2";
+        trainerFeedback.textContent = "Попробуйте ещё раз — здесь другой тип слога.";
+        trainerLocked = false;
+      }
+    });
+
+    trainerOptions.appendChild(btn);
+  });
 }
-      renderTrainerQuestion();
+
+renderTrainerQuestion();
 
       // ====== Q&A ======
       qaOpenBtns.forEach(btn => {
