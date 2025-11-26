@@ -648,7 +648,12 @@ if ("speechSynthesis" in window && window.speechSynthesis) {
 
 function speakWord(word) {
   if (!("speechSynthesis" in window) || !window.speechSynthesis) return;
-
+if (!englishVoices.length) {
+  englishVoices = window.speechSynthesis
+  .getVoices()
+  .filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+}
+  
   const utter = new SpeechSynthesisUtterance(word);
   utter.lang   = "en-US";
   utter.rate   = 0.8;
@@ -660,6 +665,7 @@ function speakWord(word) {
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utter);
 }
+window.speakWord = speakWord;
 
 document.querySelectorAll(".word-tip").forEach(tip => {
   tip.addEventListener("click", () => {
