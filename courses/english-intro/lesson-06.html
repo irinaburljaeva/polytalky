@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Intro — Урок 6</title>
+  <base href="/">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Общие стили для курса English Intro -->
+  <link rel="stylesheet" href="/courses/english-intro/english-intro.css">
+
+  <!-- Firebase init -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
+
+    window.firebaseApp  = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(window.firebaseApp);
+    window.firebaseDb   = getFirestore(window.firebaseApp);
+  </script>
+
+  <style>
+    .hidden{display:none;}
+
+    /* Стили для упражнения */
+    .exercise-sentence {
+      background: linear-gradient(135deg, #FFF8E5 0%, #FFE8B3 100%);
+      border: 2px solid #FFDE59;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      line-height: 1.8;
+      color: #78350f;
+      transition: all 0.3s ease;
+    }
+
+    .exercise-sentence.correct {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-color: #22c55e;
+    }
+
+    .exercise-sentence.incorrect {
+      background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+      border-color: #ef4444;
+    }
+
+    .verb-input {
+      border: none;
+      border-bottom: 2px solid #FFDE59;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 1.05em;
+      font-weight: 600;
+      color: #92400e;
+      min-width: 100px;
+      text-align: center;
+      transition: all 0.3s ease;
+      margin: 0 4px;
+    }
+
+    .verb-input:focus {
+      outline: none;
+      border-bottom-color: #FF9F1C;
+      background: white;
+      box-shadow: 0 4px 12px rgba(255, 159, 28, 0.2);
+    }
+
+    .verb-input.correct {
+      border-bottom-color: #22c55e;
+      background: #ecfdf5;
+      color: #166534;
+    }
+
+    .verb-input.incorrect {
+      border-bottom-color: #ef4444;
+      background: #fff1f2;
+      color: #991b1b;
+    }
+
+    .check-btn {
+      background: linear-gradient(135deg, #FF9F1C 0%, #FFDE59 100%);
+      color: #78350f;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 999px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(255, 159, 28, 0.3);
+      margin-top: 15px;
+    }
+
+    .check-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(255, 159, 28, 0.4);
+    }
+
+    .check-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .feedback-box {
+      margin-top: 15px;
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-size: 0.95em;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback-box.show {
+      display: block;
+      animation: slideIn 0.4s ease;
+    }
+
+    .feedback-box.success {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-left: 4px solid #22c55e;
+      color: #166534;
+    }
+
+    .feedback-box.error {
+      background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+      border-left: 4px solid #ef4444;
+      color: #991b1b;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .grammar-rule-box {
+      background: linear-gradient(135deg, #FFF8E5 0%, #FFE8B3 100%);
+      border: 2px solid #FFDE59;
+      border-radius: 16px;
+      padding: 25px;
+      margin: 25px 0;
+      box-shadow: 0 8px 24px rgba(255, 159, 28, 0.15);
+    }
+
+    .grammar-rule-box h3 {
+      color: #92400e;
+      font-size: 1.3em;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .grammar-rule-box .formula {
+      background: white;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin: 15px 0;
+      font-size: 1.1em;
+      color: #78350f;
+      font-weight: 600;
+      text-align: center;
+      border: 2px solid #FFD4A8;
+    }
+
+    .example-box {
+      background: rgba(255, 255, 255, 0.8);
+      border-left: 4px solid #FF9F1C;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+      font-size: 0.95em;
+      line-height: 1.7;
+    }
+
+    .example-box strong {
+      color: #92400e;
+    }
+
+    .exception-box {
+      background: linear-gradient(135deg, #FFE4E6 0%, #FFF1F2 100%);
+      border: 2px solid #FFD4A8;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .exception-box h4 {
+      color: #92400e;
+      font-size: 1.1em;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .exception-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .exception-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 159, 28, 0.2);
+      font-size: 0.95em;
+      color: #78350f;
+    }
+
+    .exception-list li:last-child {
+      border-bottom: none;
+    }
+
+    .vocab-category {
+      margin-bottom: 25px;
+    }
+
+    .vocab-category h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #92400e;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #vocab-words {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    #vocab-words label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: linear-gradient(135deg, #FFF8E5 0%, #FFFDF4 100%);
+      border: 1px solid #FFE8B3;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    #vocab-words label:hover {
+      background: linear-gradient(135deg, #FFE8B3 0%, #FFD89B 100%);
+      border-color: #FFDE59;
+      transform: translateX(3px);
+    }
+
+    #vocab-words input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .exercise-sentence {
+        font-size: 1em;
+        padding: 15px;
+      }
+
+      .verb-input {
+        min-width: 80px;
+        font-size: 0.95em;
+      }
+
+      .grammar-rule-box {
+        padding: 20px;
+      }
+
+      .grammar-rule-box .formula {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+ 
+<!-- Фоновые буквы -->
+<div class="bg-letter a">P</div>
+<div class="bg-letter e">R</div>
+<div class="bg-letter i">E</div>
+<div class="bg-letter o">S</div>
+<div class="bg-letter u">T</div>
+
+<!-- Верхняя панель -->
+<header class="top-bar sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+      <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+      PolyTalky
+    </a>
+
+    <div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+      <div id="user-status"></div>
+
+      <a href="/student/feedback.html"
+         id="feedback-link"
+         class="hidden relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white">
+        📩
+        <span id="feedback-dot"
+              class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+      </a>
+
+      <a href="/student/"
+         target="_blank"
+         id="login-btn"
+         class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
+        Войти
+      </a>
+
+      <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
+    </div>
+  </div>
+  
+</header>
+
+<main class="lesson-shell">
+  <!-- HERO -->
+  <section class="hero-card mb-8">
+    <div class="hero-left">
+      <div class="hero-badge">English · Lesson 6</div>
+      <h1 class="hero-title mt-3">
+        Present Simple
+      </h1>
+
+      <p class="hero-tagline mt-3">
+        Настоящее простое время — говорим о фактах и привычках
+      </p>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-right-inner">
+        <div class="hero-bg-circle"></div>
+
+        <div class="hero-bubbles-cluster">
+          <div class="hero-bubble hero-bubble--hello">
+            I work
+          </div>
+          <div class="hero-bubble hero-bubble--morning">
+            She likes
+          </div>
+          <div class="hero-bubble hero-bubble--hi">
+            They study
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Навигация шагов -->
+  <div class="step-nav">
+    <button class="step-dot step-dot--active" data-step="1">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/grammar.png" alt="Введение">
+      </div>
+      <div class="step-dot-label">Что это?</div>
+    </button>
+
+    <button class="step-dot" data-step="2">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/order.png" alt="Структура">
+      </div>
+      <div class="step-dot-label">Структура</div>
+    </button>
+
+    <button class="step-dot" data-step="3">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/video.png" alt="Третье лицо">
+      </div>
+      <div class="step-dot-label">Третье лицо</div>
+    </button>
+
+    <button class="step-dot" data-step="4">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/practise.png" alt="Упражнение">
+      </div>
+      <div class="step-dot-label">Практика</div>
+    </button>
+
+    <button class="step-dot" data-step="5">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/finish.png" alt="Финал">
+      </div>
+      <div class="step-dot-label">Финиш</div>
+    </button>
+  </div>
+
+  <!-- ================ ШАГ 1. ЧТО ТАКОЕ PRESENT SIMPLE ================ -->
+  <section id="step-1" class="step-panel step-panel--visible">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 1 · Что это такое?</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Разберем Present Simple (настоящее простое время)
+    </h2>
+
+    <p class="step-body-text mb-3">
+      Мы используем данное время когда говорим о каких-то <b>фактах</b>. 
+    </p>
+
+    <div class="grammar-rule-box">
+      <h3>📌 Present Simple используется для:</h3>
+      <ul class="list-disc ml-5 mt-3 text-gray-700 space-y-2">
+        <li><b>Фактов:</b> постоянных состояний и общих истин</li>
+        <li><b>Привычек:</b> регулярных действий</li>
+        <li><b>Предпочтений:</b> того, что нам нравится или не нравится</li>
+      </ul>
+    </div>
+
+    <div class="example-box">
+      <p class="mb-2"><strong>Примеры:</strong></p>
+      <ul class="space-y-2 ml-4">
+        <li>• Я люблю пиццу — <span class="word-tip" data-ru="я люблю пиццу">I like pizza</span></li>
+        <li>• Я живу в Москве — <span class="word-tip" data-ru="я живу в Москве">I live in Moscow</span></li>
+        <li>• Я учусь в университете — <span class="word-tip" data-ru="я учусь в университете">I study at the University</span></li>
+        <li>• Я работаю дизайнером — <span class="word-tip" data-ru="я работаю дизайнером">I work as a designer</span></li>
+      </ul>
+    </div>
+
+    <p class="step-body-text mb-3 mt-4">
+      Все эти предложения используют время <b>Present Simple</b>, потому что они описывают 
+      текущие факты о вашей жизни, работе, учёбе и предпочтениях.
+    </p>
+
+    <button class="btn-main mt-6 next-step-btn" data-next="2">
+      Далее →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 2. СТРУКТУРА ПРЕДЛОЖЕНИЙ ================ -->
+  <section id="step-2" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 2 · Структура</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Как строятся предложения в Present Simple?
+    </h2>
+
+    <p class="step-body-text mb-3">
+      Предложения бывают <b>утвердительные</b>, <b>отрицательные</b> и <b>вопросительные</b>.
+    </p>
+
+    <p class="step-body-text mb-4">
+      Сегодня мы разберем утвердительные предложения. Они строятся по следующей схеме:
+    </p>
+
+    <div class="grammar-rule-box">
+      <h3>Формула утвердительного предложения:</h3>
+      <div class="formula">
+        <span style="color: #FF9F1C;">КТО</span> (подлежащее) + 
+        <span style="color: #FFDE59; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">ЧТО ДЕЛАЕТ</span> (сказуемое) + 
+        <span style="color: #FFD4A8;">ВСЁ ОСТАЛЬНОЕ</span>
+      </div>
+    </div>
+
+    <div class="example-box">
+      <p class="mb-3"><strong>Примеры с разбором:</strong></p>
+      
+      <div class="mb-3">
+        <p class="font-semibold text-gray-800">I like pizza</p>
+        <p class="text-sm text-gray-600 ml-4">
+          <span style="color: #FF9F1C;">I</span> (кто) + 
+          <span style="color: #FFDE59;">like</span> (что делаю) + 
+          <span style="color: #FFD4A8;">pizza</span> (что)
+        </p>
+      </div>
+
+      <div class="mb-3">
+        <p class="font-semibold text-gray-800">She works as a designer</p>
+        <p class="text-sm text-gray-600 ml-4">
+          <span style="color: #FF9F1C;">She</span> (кто) + 
+          <span style="color: #FFDE59;">works</span> (что делает) + 
+          <span style="color: #FFD4A8;">as a designer</span> (кем)
+        </p>
+      </div>
+
+      <div>
+        <p class="font-semibold text-gray-800">They study at the University</p>
+        <p class="text-sm text-gray-600 ml-4">
+          <span style="color: #FF9F1C;">They</span> (кто) + 
+          <span style="color: #FFDE59;">study</span> (что делают) + 
+          <span style="color: #FFD4A8;">at the University</span> (где)
+        </p>
+      </div>
+    </div>
+
+    <p class="step-body-text text-sm mt-4">
+      Запомните эту простую схему — она поможет вам строить правильные предложения в Present Simple!
+    </p>
+
+    <button class="btn-main mt-6 next-step-btn" data-next="3">
+      Далее →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 3. ТРЕТЬЕ ЛИЦО + ВИДЕО ================ -->
+  <section id="step-3" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 3 · Третье лицо</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Особенность третьего лица
+    </h2>
+
+    <p class="step-body-text mb-3">
+      Если в роли подлежащего у нас <b>3-е лицо единственного числа</b> — он (<i>he</i>), 
+      она (<i>she</i>), оно (<i>it</i>) — то к нашему глаголу мы добавляем окончание <b>-s</b> или <b>-es</b>.
+    </p>
+
+    <div class="grammar-rule-box">
+      <h3>Правило добавления -s/-es:</h3>
+      <div class="example-box mt-3">
+        <p class="mb-2"><strong>Пример:</strong></p>
+        <p class="text-lg">
+          <span class="word-tip" data-ru="я люблю этот торт">I like this cake</span> 
+          → 
+          <span class="word-tip" data-ru="он любит этот торт">He like<span style="color: #FF9F1C; font-weight: 700;">s</span> this cake</span>
+        </p>
+      </div>
+
+      <div class="mt-4 p-4 bg-white rounded-lg border-2 border-amber-200">
+        <p class="font-semibold mb-2 text-gray-800">Больше примеров:</p>
+        <ul class="space-y-2 text-gray-700">
+          <li>• I work → She work<b style="color: #FF9F1C;">s</b></li>
+          <li>• You play → He play<b style="color: #FF9F1C;">s</b></li>
+          <li>• They study → It stud<b style="color: #FF9F1C;">ies</b> (y → ies)</li>
+          <li>• We watch → She watch<b style="color: #FF9F1C;">es</b></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="text-lg font-bold mt-6 mb-3">Посмотрите видео для закрепления:</h3>
+
+    <div class="flex justify-center mt-4">
+      <div class="w-full max-w-2xl aspect-video rounded-2xl overflow-hidden shadow-lg">
+        <iframe
+          class="w-full h-full"
+          src="https://www.youtube.com/embed/HzYuhkC4brg"
+          title="Present Simple - Третье лицо"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+
+    <div class="exception-box mt-6">
+      <h4>⚠️ Слова-исключения:</h4>
+      <p class="text-sm mb-3 text-gray-700">
+        Есть несколько глаголов, которые для третьего лица имеют свою собственную форму:
+      </p>
+      <ul class="exception-list">
+        <li><b>have</b> → <b style="color: #FF9F1C;">has</b> (иметь)</li>
+        <li><b>do</b> → <b style="color: #FF9F1C;">does</b> (делать)</li>
+        <li><b>go</b> → <b style="color: #FF9F1C;">goes</b> (идти)</li>
+      </ul>
+    </div>
+
+    <button class="btn-main mt-6 next-step-btn" data-next="4">
+      Перейти к практике →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 4. УПРАЖНЕНИЕ ================ -->
+  <section id="step-4" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 4 · Практика</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Нужно ли добавить -s?
+    </h2>
+
+    <p class="step-body-text mb-4">
+      Впишите правильную форму глагола. Помните: если подлежащее — <b>he/she/it</b>, добавляем <b>-s</b> или <b>-es</b>!
+    </p>
+
+    <div id="exerciseContainer">
+      <!-- Exercises will be rendered here -->
+    </div>
+
+    <button id="check-answers-btn" class="check-btn">
+      Проверить ответы
+    </button>
+
+    <div id="exercise-feedback" class="feedback-box"></div>
+
+    <button id="next-btn-step4" class="btn-main mt-6 next-step-btn hidden" data-next="5">
+      Завершить урок →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 5. ФИНАЛ ================ -->
+  <section id="step-5" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 5 · ФИНАЛ</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Отличная работа! 🎉
+    </h2>
+
+    <p class="step-body-text mb-3">
+      Вы освоили <b>Present Simple</b> — одно из самых важных времен в английском языке!
+    </p>
+
+    <div class="soft-block soft-block--blue mb-4">
+      <p class="font-semibold mb-2">Что мы узнали:</p>
+      <ul class="list-disc ml-5 text-sm space-y-1">
+        <li>✓ Present Simple используется для фактов и привычек</li>
+        <li>✓ Структура: подлежащее + сказуемое + остальное</li>
+        <li>✓ Для he/she/it добавляем -s/-es к глаголу</li>
+        <li>✓ Слова-исключения: have→has, do→does, go→goes</li>
+      </ul>
+    </div>
+
+    <p class="step-body-text mb-4">
+      Можете сохранить новые слова из урока в свой словарик, а затем перейти к следующему уроку.
+    </p>
+
+    <div class="flex justify-center my-4">
+      <img src="/assets/gifs/english-lesson6-finish.gif" alt="Finish gif"
+           class="w-64 h-auto rounded-2xl"
+           onerror="this.style.display='none'">
+    </div>
+
+    <div class="mt-5 flex flex-wrap gap-3">
+      <button class="btn-main" id="open-vocab-btn">
+        Добавить слова в словарик →
+      </button>
+
+      <a href="/courses/english-intro/lesson-07.html" class="btn-ghost">
+        Перейти к следующему уроку
+      </a>
+    </div>
+  </section>
+
+  <!-- МОДАЛКА Q&A -->
+  <div id="qa-modal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+      <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD4A8] blur-xl opacity-60"></div>
+
+      <div class="relative p-6 space-y-4">
+        <div class="flex justify-between items-start gap-4">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-800">
+              Вопросы по уроку
+            </h2>
+            <p class="text-sm text-gray-600 mt-1">
+              Напишите свой вопрос — мы ответим и ответ увидят другие участники.
+            </p>
+          </div>
+
+          <button id="qa-close"
+                  class="text-gray-500 text-xl leading-none">&times;</button>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+          Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
+          <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">Тариф PRO</a> даё​​​​​​​​​​​​​​​​
