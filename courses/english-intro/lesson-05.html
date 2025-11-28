@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Intro — Урок 5</title>
+  <base href="/">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Общие стили для курса English Intro -->
+  <link rel="stylesheet" href="/courses/english-intro/english-intro.css">
+
+  <!-- Firebase init -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
+
+    window.firebaseApp  = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(window.firebaseApp);
+    window.firebaseDb   = getFirestore(window.firebaseApp);
+  </script>
+
+  <style>
+    .hidden{display:none;}
+
+    /* Специальные стили для бейджа */
+    .badge-container {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 30px 0;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+      animation: badgeAppear 0.8s ease;
+    }
+
+    @keyframes badgeAppear {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .badge-icon {
+      font-size: 5em;
+      margin-bottom: 20px;
+      animation: rotate 3s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .badge-title {
+      color: white;
+      font-size: 2em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .badge-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    .badge-description {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      color: white;
+      font-size: 1em;
+      line-height: 1.6;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Конфетти эффект */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: #ffd700;
+      position: absolute;
+      animation: confetti-fall 3s linear infinite;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Рикролл стили */
+    .rickroll-hint {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px 0;
+      color: white;
+      text-align: center;
+      font-size: 1.1em;
+      box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+      animation: pulse-hint 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-hint {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+    }
+
+    .explanation-box {
+      background: #f8f9ff;
+      border-left: 4px solid #667eea;
+      padding: 25px;
+      margin: 30px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .explanation-box p {
+      margin-bottom: 15px;
+      line-height: 1.7;
+      color: #444;
+    }
+
+    .explanation-box ul {
+      margin: 15px 0;
+      padding-left: 25px;
+    }
+
+    .explanation-box li {
+      margin-bottom: 10px;
+      color: #444;
+    }
+
+    .fun-fact {
+      background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px 0;
+      font-size: 1em;
+      line-height: 1.6;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .fun-fact strong {
+      font-size: 1.2em;
+      display: block;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+ 
+<!-- Фоновые буквы -->
+<div class="bg-letter a">R</div>
+<div class="bg-letter e">I</div>
+<div class="bg-letter i">C</div>
+<div class="bg-letter o">K</div>
+<div class="bg-letter u">R</div>
+
+<!-- Верхняя панель -->
+<header class="top-bar sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+      <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+      PolyTalky
+    </a>
+
+    <div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+      <div id="user-status"></div>
+
+      <a href="/student/feedback.html"
+         id="feedback-link"
+         class="hidden relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white">
+        📩
+        <span id="feedback-dot"
+              class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+      </a>
+
+      <a href="/student/"
+         target="_blank"
+         id="login-btn"
+         class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
+        Войти
+      </a>
+
+      <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
+    </div>
+  </div>
+  
+</header>
+
+<main class="lesson-shell">
+  <!-- HERO -->
+  <section class="hero-card mb-8">
+    <div class="hero-left">
+      <div class="hero-badge">English · Lesson 5</div>
+      <h1 class="hero-title mt-3">
+        Культурный феномен интернета
+      </h1>
+
+      <p class="hero-tagline mt-3">
+        Изучаем английский через мемы и интернет-культуру
+      </p>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-right-inner">
+        <div class="hero-bg-circle"></div>
+
+        <div class="hero-bubbles-cluster">
+          <div class="hero-bubble hero-bubble--hello">
+            🎵
+          </div>
+          <div class="hero-bubble hero-bubble--morning">
+            🎭
+          </div>
+          <div class="hero-bubble hero-bubble--hi">
+            😄
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Навигация шагов -->
+  <div class="step-nav">
+    <button class="step-dot step-dot--active" data-step="1">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/video.png" alt="Видео">
+      </div>
+      <div class="step-dot-label">Важное видео</div>
+    </button>
+
+    <button class="step-dot" data-step="2">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/finish.png" alt="Объяснение">
+      </div>
+      <div class="step-dot-label">Объяснение</div>
+    </button>
+  </div>
+
+  <!-- ================ ШАГ 1. ВИДЕО ================ -->
+  <section id="step-1" class="step-panel step-panel--visible">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 1 · Важное видео</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Очень важное обучающее видео 🎓
+    </h2>
+
+    <div class="rickroll-hint">
+      <p>⚠️ ВНИМАНИЕ! Это видео содержит критически важную информацию для изучения английского языка!</p>
+      <p style="margin-top: 10px; font-size: 0.9em;">Обязательно досмотрите до конца! 😉</p>
+    </div>
+
+    <p class="step-body-text mb-4">
+      Сегодня мы познакомимся с одним из самых известных культурных феноменов англоязычного интернета. Это видео стало настоящей легендой и частью поп-культуры.
+    </p>
+
+    <p class="step-body-text mb-4 text-sm text-gray-600">
+      <i>Подсказка: если вы уже знаете, что это такое — поздравляем, вы в теме! Если нет — сейчас узнаете 😊</i>
+    </p>
+
+    <div class="flex justify-center mt-6">
+      <div class="w-full max-w-2xl aspect-video rounded-2xl overflow-hidden shadow-lg">
+        <iframe
+          class="w-full h-full"
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          title="Rick Astley - Never Gonna Give You Up"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+
+    <p class="step-body-text text-sm mt-6 text-center text-gray-500">
+      🎵 Приятного просмотра! 🎵
+    </p>
+
+    <button class="btn-main mt-6 next-step-btn" data-next="2">
+      Узнать, что это было →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 2. ОБЪЯСНЕНИЕ И БЕЙДЖ ================ -->
+  <section id="step-2" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 2 · Объяснение</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Поздравляем! Вас только что "рикроллнули" 🎉
+    </h2>
+
+    <p class="step-body-text mb-4">
+      Если вы не знали — вы только что стали частью одной из самых известных интернет-шуток всех времён!
+    </p>
+
+    <div class="explanation-box">
+      <p><strong>Что такое "Rickrolling"?</strong></p>
+      <p>
+        <b>Rickroll</b> (рикролл) — это интернет-мем и пранк, который заключается в том, что человека обманом заставляют посмотреть музыкальное видео Рика Эстли "Never Gonna Give You Up" 1987 года.
+      </p>
+      
+      <p><strong>Как это работает:</strong></p>
+      <ul class="list-disc">
+        <li>Кто-то публикует ссылку, обещая интересный контент</li>
+        <li>Вместо обещанного контента открывается это видео</li>
+        <li>Вы понимаете, что вас разыграли — вас "рикроллнули"!</li>
+      </ul>
+
+      <p><strong>История мема:</strong></p>
+      <p>
+        Мем появился в 2007 году на форуме 4chan и быстро распространился по всему интернету. С тех пор миллионы людей по всему миру были "рикроллнуты", включая знаменитостей и даже целые компании!
+      </p>
+    </div>
+
+    <div class="fun-fact">
+      <strong>🎭 Интересные факты:</strong>
+      <p>• Видео набрало более 1.5 миллиарда просмотров на YouTube</p>
+      <p>• Рик Эстли сам неоднократно участвовал в рикроллинге людей</p>
+      <p>• В 2008 году весь сервис YouTube был "рикроллнут" в День дураков</p>
+      <p>• Мем стал настолько популярным, что попал в словари английского языка</p>
+    </div>
+
+    <div class="explanation-box">
+      <p><strong>Почему это важно для изучения английского?</strong></p>
+      <p>
+        Понимание интернет-культуры и мемов — важная часть современного английского языка. Это помогает:
+      </p>
+      <ul class="list-disc">
+        <li>Понимать шутки и отсылки в англоязычном интернете</li>
+        <li>Чувствовать себя частью глобального сообщества</li>
+        <li>Улучшать понимание современной культуры и юмора</li>
+        <li>Запоминать выражения через эмоциональный опыт</li>
+      </ul>
+    </div>
+
+    <p class="step-body-text mb-4 text-center" style="font-size: 1.2em;">
+      Теперь вы в курсе одного из самых известных интернет-мемов! 🎓
+    </p>
+
+    <!-- БЕЙДЖ -->
+    <div class="badge-container" id="badge-container">
+      <div class="badge-icon">🎵</div>
+      <div class="badge-title">Never Gonna Give You Up</div>
+      <div class="badge-subtitle">Вы получили бейдж!</div>
+      <div class="badge-description">
+        <p>Поздравляем! Вы прошли обряд посвящения в интернет-культуру и узнали о легендарном риколле.</p>
+        <p style="margin-top: 10px;">Теперь вы можете с гордостью сказать: "I've been rickrolled!" 😄</p>
+      </div>
+    </div>
+
+    <div class="flex justify-center my-4">
+      <img src="/assets/gifs/english-lesson5-finish.gif" alt="Finish gif"
+           class="w-64 h-auto rounded-2xl"
+           onerror="this.style.display='none'">
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-3 justify-center">
+      <a href="/courses/english-intro/lesson-06.html" class="btn-main">
+        Перейти к следующему уроку →
+      </a>
+
+      <a href="/courses/english-intro/" class="btn-ghost">
+        Вернуться к курсу
+      </a>
+    </div>
+  </section>
+
+  <!-- МОДАЛКА Q&A -->
+  <div id="qa-modal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+      <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
+
+      <div class="relative p-6 space-y-4">
+        <div class="flex justify-between items-start gap-4">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-800">
+              Вопросы по уроку
+            </h2>
+            <p class="text-sm text-gray-600 mt-1">
+              Напишите свой вопрос — мы ответим и ответ увидят другие участники.
+            </p>
+          </div>
+
+          <button id="qa-close"
+                  class="text-gray-500 text-xl leading-none">&times;</button>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+          Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
+          <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">Тариф PRO</a> даёт приоритетную обратную связь и больше внимания к вашим вопросам 💛
+        </div>
+
+        <div class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70"
+             id="qa-list">
+          <p class="text-xs text-gray-500">
+            Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+          </p>
+        </div>
+
+        <form id="qa-form" class="space-y-2">
+          <label class="block text-xs text-gray-600">
+            Ваш вопрос:
+          </label>
+          <textarea id="qa-text"
+                    class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                    rows="3"
+                    placeholder="Например: «Расскажите больше о других интернет-мемах!»"></textarea>
+
+          <p class="text-[0.7rem] text-gray-400">
+            Чтобы задать вопрос, нужно войти в аккаунт.  
+            Если вы не авторизованы, перейдите на страницу
+            <a href="/student/" class="underline">входа / регистрации</a>.
+          </p>
+
+          <div class="flex justify-end">
+            <button type="submit"
+                    id="qa-submit"
+                    class="btn-main text-sm px-4 py-1.5">
+              Отправить вопрос →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================= -->
+<!-- КОНФИГ УРОКА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module">
+  window.lessonConfig = {
+    lessonId:        "english-intro-lesson-5",
+    lessonSlug:      "lesson-05-rickroll",
+    courseId:        "english-intro",
+    lessonQaDocId:   "english-intro-lesson-5",
+    submissionsRoot: "lessonSubmissions",
+    totalSteps:      2,
+    audioNextStep:   null,
+    badgeName:       "Never Gonna Give You Up",
+    badgeIcon:       "🎵"
+  };
+</script>
+
+<script>
+// =========================================================
+// 🎵 ЭФФЕКТЫ ДЛЯ БЕЙДЖА
+// =========================================================
+
+// Создаём конфетти когда показывается бейдж
+function createConfetti() {
+  const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#ff7979'];
+  
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random() * 100 + '%';
+      confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.animationDelay = Math.random() * 2 + 's';
+      confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      document.body.appendChild(confetti);
+      
+      setTimeout(() => confetti.remove(), 4000);
+    }, i * 30);
+  }
+}
+
+// Отслеживаем когда показывается шаг 2 с бейджем
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.target.id === 'step-2' && 
+        mutation.target.classList.contains('step-panel--visible')) {
+      setTimeout(() => {
+        createConfetti();
+      }, 500);
+    }
+  });
+});
+
+const step2 = document.getElementById('step-2');
+if (step2) {
+  observer.observe(step2, { attributes: true, attributeFilter: ['class'] });
+}
+</script>
+
+<!-- ============================= -->
+<!-- ОБЩИЙ СКРИПТ КУРСА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module" src="/js/courses/english-intro.js"></script>
+
+</body>
+</html>
+​​​​​​​​​​​​​​​​
