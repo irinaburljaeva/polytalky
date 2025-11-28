@@ -792,4 +792,223 @@
           </div>
 
           <button id="qa-close"
-                  class="text-gray-500 text-xl leading-none​​​​​​​​​​​​​​​​
+                  class="text-gray-500 text-xl leading-none​​​​​​​​​​​​​​​​">&times;</button>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+          Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
+          <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">Тариф PRO</a> даёт приоритетную обратную связь и больше внимания к вашим вопросам 💛
+        </div>
+
+        <div class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70"
+             id="qa-list">
+          <p class="text-xs text-gray-500">
+            Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+          </p>
+        </div>
+
+        <form id="qa-form" class="space-y-2">
+          <label class="block text-xs text-gray-600">
+            Ваш вопрос:
+          </label>
+          <textarea id="qa-text"
+                    class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                    rows="3"
+                    placeholder="Например: «Чем отличается Simple от Continuous?»"></textarea>
+
+          <p class="text-[0.7rem] text-gray-400">
+            Чтобы задать вопрос, нужно войти в аккаунт.  
+            Если вы не авторизованы, перейдите на страницу
+            <a href="/student/" class="underline">входа / регистрации</a>.
+          </p>
+
+          <div class="flex justify-end">
+            <button type="submit"
+                    id="qa-submit"
+                    class="btn-main text-sm px-4 py-1.5">
+              Отправить вопрос →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================= -->
+<!-- КОНФИГ УРОКА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module">
+  window.lessonConfig = {
+    lessonId:        "english-intro-lesson-4",
+    lessonSlug:      "lesson-04-tenses",
+    courseId:        "english-intro",
+    lessonQaDocId:   "english-intro-lesson-4",
+    submissionsRoot: "lessonSubmissions",
+    totalSteps:      5,
+    audioNextStep:   null,
+    vocabCategory:   "vocabulary-lesson4"
+  };
+</script>
+
+<script>
+// =========================================================
+// 🔸 ШАГ 4 — УПРАЖНЕНИЕ НА ВРЕМЕНА
+// =========================================================
+
+let exerciseData = {
+  currentQuestion: 0,
+  score: 0,
+  questions: [
+    {
+      id: 1,
+      text: 'Я каждый день хожу на работу.',
+      options: ['Simple', 'Continuous', 'Perfect'],
+      correct: 'Simple',
+      explanation: 'Это регулярное, повторяющееся действие - факт. Используем Simple.'
+    },
+    {
+      id: 2,
+      text: 'Я сейчас читаю книгу (в данный момент).',
+      options: ['Simple', 'Continuous', 'Perfect'],
+      correct: 'Continuous',
+      explanation: 'Действие происходит прямо сейчас, в процессе. Используем Continuous.'
+    },
+    {
+      id: 3,
+      text: 'Я уже прочитал эту книгу (результат есть).',
+      options: ['Simple', 'Continuous', 'Perfect'],
+      correct: 'Perfect',
+      explanation: 'Действие завершено, есть результат. Используем Perfect.'
+    },
+    {
+      id: 4,
+      text: 'Солнце встает на востоке.',
+      options: ['Simple', 'Continuous', 'Perfect'],
+      correct: 'Simple',
+      explanation: 'Это общеизвестный факт, неизменная истина. Используем Simple.'
+    },
+    {
+      id: 5,
+      text: 'Я изучаю английский уже 3 года (и продолжаю).',
+      options: ['Simple', 'Continuous', 'Perfect'],
+      correct: 'Perfect',
+      explanation: 'Действие началось в прошлом и продолжается, есть период времени. Это Perfect (или Perfect Continuous).'
+    }
+  ]
+};
+
+function initExercise() {
+  exerciseData.currentQuestion = 0;
+  exerciseData.score = 0;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const question = exerciseData.questions[exerciseData.currentQuestion];
+  const container = document.getElementById('exerciseContainer');
+  
+  container.innerHTML = `
+    <div class="question-counter">Вопрос ${exerciseData.currentQuestion + 1} из ${exerciseData.questions.length}</div>
+    <div class="question-text">${question.text}</div>
+    <div class="options">
+      ${question.options.map(option => `
+        <button class="option-btn" data-answer="${option}">${option}</button>
+      `).join('')}
+    </div>
+    <div class="feedback"></div>
+    <div class="score">Правильных ответов: ${exerciseData.score} из ${exerciseData.currentQuestion}</div>
+  `;
+  
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.addEventListener('click', checkAnswer);
+  });
+}
+
+function checkAnswer(e) {
+  const selectedAnswer = e.target.dataset.answer;
+  const question = exerciseData.questions[exerciseData.currentQuestion];
+  const feedback = document.querySelector('.feedback');
+  const optionBtns = document.querySelectorAll('.option-btn');
+  
+  // Disable all buttons
+  optionBtns.forEach(btn => btn.disabled = true);
+  
+  if (selectedAnswer === question.correct) {
+    e.target.classList.add('correct');
+    feedback.innerHTML = `<p class="correct-feedback">✓ Правильно! ${question.explanation}</p>`;
+    exerciseData.score++;
+  } else {
+    e.target.classList.add('incorrect');
+    optionBtns.forEach(btn => {
+      if (btn.dataset.answer === question.correct) {
+        btn.classList.add('correct');
+      }
+    });
+    feedback.innerHTML = `<p class="incorrect-feedback">✗ Неправильно. ${question.explanation}</p>`;
+  }
+  
+  // Move to next question or show results
+  setTimeout(() => {
+    exerciseData.currentQuestion++;
+    if (exerciseData.currentQuestion < exerciseData.questions.length) {
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }, 3000);
+}
+
+function showResults() {
+  const container = document.getElementById('exerciseContainer');
+  const percentage = Math.round((exerciseData.score / exerciseData.questions.length) * 100);
+  let message = '';
+  
+  if (percentage === 100) {
+    message = 'Превосходно! Вы отлично разобрались в типах времен! 🌟';
+  } else if (percentage >= 80) {
+    message = 'Отличная работа! Вы хорошо понимаете основы! 👍';
+  } else if (percentage >= 60) {
+    message = 'Неплохо! Но стоит еще раз повторить материал. 📚';
+  } else {
+    message = 'Не расстраивайтесь! Повторите теорию и попробуйте снова. 💪';
+  }
+  
+  container.innerHTML = `
+    <div class="results">
+      <h3>Результаты</h3>
+      <div class="score-big">${exerciseData.score} из ${exerciseData.questions.length}</div>
+      <div class="percentage">${percentage}%</div>
+      <p class="result-message">${message}</p>
+      <button class="btn-retry" onclick="initExercise()">Попробовать снова</button>
+    </div>
+  `;
+
+  // Show next step button
+  document.getElementById('next-btn-step4').classList.remove('hidden');
+}
+
+// Auto-initialize exercise when step 4 is visible
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.target.id === 'step-4' && mutation.target.classList.contains('step-panel--visible')) {
+      initExercise();
+    }
+  });
+});
+
+const step4 = document.getElementById('step-4');
+if (step4) {
+  observer.observe(step4, { attributes: true, attributeFilter: ['class'] });
+}
+</script>
+
+<!-- ============================= -->
+<!-- ОБЩИЙ СКРИПТ КУРСА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module" src="/js/courses/english-intro.js"></script>
+
+</body>
+</html>
+
