@@ -745,4 +745,475 @@
            onerror="this.style.display='none'">
     </div>
 
-    <div class="mt-5 flex​​​​​​​​​​​​​​​​
+    <div class="mt-5 flex flex-wrap gap-3">
+      <a href="/courses/english-intro/lesson-08.html" class="btn-main">
+        Перейти к следующему уроку →
+      </a>
+
+      <a href="/courses/english-intro/" class="btn-ghost">
+        Вернуться к курсу
+      </a>
+    </div>
+  </section>
+
+  <!-- МОДАЛКА Q&A -->
+  <div id="qa-modal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+      <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD4A8] blur-xl opacity-60"></div>
+
+      <div class="relative p-6 space-y-4">
+        <div class="flex justify-between items-start gap-4">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-800">
+              Вопросы по уроку
+            </h2>
+            <p class="text-sm text-gray-600 mt-1">
+              Напишите свой вопрос — мы ответим и ответ увидят другие участники.
+            </p>
+          </div>
+
+          <button id="qa-close"
+                  class="text-gray-500 text-xl leading-none">&times;</button>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+          Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
+          <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">Тариф PRO</a> даёт приоритетную обратную связь и больше внимания к вашим вопросам 💛
+        </div>
+
+        <div class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70"
+             id="qa-list">
+          <p class="text-xs text-gray-500">
+            Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+          </p>
+        </div>
+
+        <form id="qa-form" class="space-y-2">
+          <label class="block text-xs text-gray-600">
+            Ваш вопрос:
+          </label>
+          <textarea id="qa-text"
+                    class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                    rows="3"
+                    placeholder="Например: «Как сокращать do not и does not?»"></textarea>
+
+          <p class="text-[0.7rem] text-gray-400">
+            Чтобы задать вопрос, нужно войти в аккаунт.  
+            Если вы не авторизованы, перейдите на страницу
+            <a href="/student/" class="underline">входа / регистрации</a>.
+          </p>
+
+          <div class="flex justify-end">
+            <button type="submit"
+                    id="qa-submit"
+                    class="btn-main text-sm px-4 py-1.5">
+              Отправить вопрос →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================= -->
+<!-- КОНФИГ УРОКА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module">
+  window.lessonConfig = {
+    lessonId:        "english-intro-lesson-7",
+    lessonSlug:      "lesson-07-negative-present-simple",
+    courseId:        "english-intro",
+    lessonQaDocId:   "english-intro-lesson-7",
+    submissionsRoot: "lessonSubmissions",
+    totalSteps:      4,
+    audioNextStep:   null,
+    vocabCategory:   "vocabulary-lesson7"
+  };
+</script>
+
+<script type="module">
+// =========================================================
+// 🔸 ИМПОРТЫ ДЛЯ FIREBASE
+// =========================================================
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const db = window.firebaseDb;
+const auth = window.firebaseAuth;
+
+let currentUser = null;
+let isProUser = false;
+
+// Следим за авторизацией
+auth.onAuthStateChanged(async (user) => {
+  currentUser = user;
+  
+  if (user) {
+    // Проверяем статус PRO
+    await checkProStatus(user);
+    updateProMessage();
+  }
+});
+
+// Проверка PRO статуса
+async function checkProStatus(user) {
+  try {
+    const email = user.email || null;
+    const uid = user.uid || null;
+    
+    if (!email && !uid) {
+      isProUser = false;
+      return;
+    }
+
+    const emailRef = email ? doc(db, "users", email) : null;
+    const uidRef = uid ? doc(db, "users", uid) : null;
+
+    const [emailSnap, uidSnap] = await Promise.all([
+      emailRef ? getDoc(emailRef) : Promise.resolve(null),
+      uidRef ? getDoc(uidRef) : Promise.resolve(null),
+    ]);
+
+    const emailData = emailSnap && emailSnap.exists() ? emailSnap.data() : {};
+    const uidData = uidSnap && uidSnap.exists() ? uidSnap.data() : {};
+    const merged = { ...uidData, ...emailData };
+
+    const proGlobal = merged.proGlobal === true;
+    let proValidUntil = merged.proValidUntil || merged.proUntil || null;
+    
+    if (proValidUntil && typeof proValidUntil.toDate === "function") {
+      proValidUntil = proValidUntil.toDate();
+    }
+
+    const legacyPro = merged.proActive || merged.isPro || merged.hasPro || 
+                      (merged.pro && merged.pro.active);
+
+    let active = !!(proGlobal || legacyPro);
+
+    if (proValidUntil instanceof Date) {
+      const now = new Date();
+      if (proValidUntil <= now) {
+        active = false;
+      }
+    }
+
+    isProUser = active;
+  } catch (e) {
+    console.error("Ошибка проверки PRO статуса:", e);
+    isProUser = false;
+  }
+}
+
+function updateProMessage() {
+  const proMsg = document.getElementById('pro-status-message');
+  if (!proMsg) return;
+
+  if (isProUser) {
+    proMsg.innerHTML = `
+      <span class="pro-badge">✨ PRO</span> 
+      <span class="text-sm">Ваши предложения будут отправлены куратору на проверку!</span>
+    `;
+  } else {
+    proMsg.innerHTML = `
+      <span class="text-sm text-gray-600">
+        Ваши предложения будут сохранены. 
+        <a href="/courses/pro.html" class="underline text-amber-700 font-semibold">Тариф PRO</a> 
+        даёт проверку от куратора!
+      </span>
+    `;
+  }
+}
+
+// =========================================================
+// 🔸 УПРАЖНЕНИЕ 1: ВЫБОР ПРАВИЛЬНОГО ВАРИАНТА
+// =========================================================
+
+const choiceQuestions = [
+  {
+    question: "I ___ like coffee.",
+    options: ["not", "do not", "does not", "am not"],
+    correct: "do not",
+    explanation: "Для 'I' используем 'do not'. 'Am not' используется только с глаголом 'to be'."
+  },
+  {
+    question: "She ___ work here.",
+    options: ["not", "do not", "does not", "is not"],
+    correct: "does not",
+    explanation: "Для 'she' используем 'does not'."
+  },
+  {
+    question: "They ___ speak English.",
+    options: ["not", "do not", "does not", "are not"],
+    correct: "do not",
+    explanation: "Для 'they' используем 'do not'."
+  },
+  {
+    question: "He ___ play football.",
+    options: ["not", "do not", "does not", "is not"],
+    correct: "does not",
+    explanation: "Для 'he' используем 'does not'."
+  },
+  {
+    question: "I ___ tired. (глагол to be)",
+    options: ["not", "do not", "does not", "am not"],
+    correct: "am not",
+    explanation: "'To be' — самостоятельный глагол, поэтому 'am not' (без 'do')."
+  },
+  {
+    question: "She ___ swim. (глагол can)",
+    options: ["not can", "can not", "does not can", "do not can"],
+    correct: "can not",
+    explanation: "'Can' — самостоятельный глагол, поэтому 'can not' или 'cannot' (без 'do')."
+  }
+];
+
+let selectedAnswers = {};
+
+function renderChoiceExercises() {
+  const container = document.getElementById('choiceExercises');
+  container.innerHTML = '';
+
+  choiceQuestions.forEach((q, index) => {
+    const div = document.createElement('div');
+    div.className = 'exercise-choice';
+    div.id = `choice-${index}`;
+
+    div.innerHTML = `
+      <div class="exercise-question">${index + 1}. ${q.question}</div>
+      <div class="choice-options" id="options-${index}">
+        ${q.options.map((opt, optIdx) => `
+          <button 
+            class="choice-btn" 
+            data-question="${index}"
+            data-answer="${opt}"
+            onclick="selectAnswer(${index}, '${opt}')"
+          >
+            ${opt}
+          </button>
+        `).join('')}
+      </div>
+      <div id="explanation-${index}" class="hidden mt-3 p-3 bg-white rounded-lg text-sm"></div>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+window.selectAnswer = function(questionIndex, answer) {
+  selectedAnswers[questionIndex] = answer;
+
+  // Update UI
+  const buttons = document.querySelectorAll(`[data-question="${questionIndex}"]`);
+  buttons.forEach(btn => {
+    btn.classList.remove('selected');
+    if (btn.dataset.answer === answer) {
+      btn.classList.add('selected');
+    }
+  });
+};
+
+function checkChoiceAnswers() {
+  let allCorrect = true;
+  let correctCount = 0;
+
+  choiceQuestions.forEach((q, index) => {
+    const userAnswer = selectedAnswers[index];
+    const isCorrect = userAnswer === q.correct;
+    const exerciseDiv = document.getElementById(`choice-${index}`);
+    const explanationDiv = document.getElementById(`explanation-${index}`);
+    const buttons = document.querySelectorAll(`[data-question="${index}"]`);
+
+    if (isCorrect) {
+      correctCount++;
+      exerciseDiv.classList.add('correct');
+      exerciseDiv.classList.remove('incorrect');
+      
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.dataset.answer === q.correct) {
+          btn.classList.add('correct');
+        }
+      });
+
+      explanationDiv.innerHTML = `✓ Правильно! ${q.explanation}`;
+      explanationDiv.className = 'mt-3 p-3 bg-green-50 rounded-lg text-sm text-green-800';
+    } else {
+      allCorrect = false;
+      exerciseDiv.classList.add('incorrect');
+      exerciseDiv.classList.remove('correct');
+
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.dataset.answer === userAnswer) {
+          btn.classList.add('incorrect');
+        }
+        if (btn.dataset.answer === q.correct) {
+          btn.classList.add('correct');
+        }
+      });
+
+      explanationDiv.innerHTML = `✗ Неправильно. Правильный ответ: <strong>${q.correct}</strong>. ${q.explanation}`;
+      explanationDiv.className = 'mt-3 p-3 bg-red-50 rounded-lg text-sm text-red-800';
+    }
+  });
+
+  // Show feedback
+  const feedbackBox = document.getElementById('choice-feedback');
+  feedbackBox.classList.remove('success', 'info');
+  feedbackBox.classList.add('show');
+
+  if (allCorrect) {
+    feedbackBox.classList.add('success');
+    feedbackBox.innerHTML = `
+      <strong>🎉 Отлично!</strong> Все ответы правильные! Переходим ко второму упражнению.
+    `;
+    
+    // Show writing exercise
+    setTimeout(() => {
+      document.getElementById('writing-exercise-section').classList.remove('hidden');
+      document.getElementById('writing-exercise-section').scrollIntoView({ behavior: 'smooth' });
+    }, 1500);
+  } else {
+    feedbackBox.classList.add('info');
+    feedbackBox.innerHTML = `
+      <strong>Почти получилось!</strong> Правильных ответов: ${correctCount} из ${choiceQuestions.length}. 
+      Изучите правильные ответы и переходите ко второму упражнению.
+    `;
+    
+    // Show writing exercise anyway
+    setTimeout(() => {
+      document.getElementById('writing-exercise-section').classList.remove('hidden');
+      document.getElementById('writing-exercise-section').scrollIntoView({ behavior: 'smooth' });
+    }, 2000);
+  }
+}
+
+// Initialize choice exercise
+renderChoiceExercises();
+
+// Add event listener to check when all questions are answered
+setInterval(() => {
+  const answeredCount = Object.keys(selectedAnswers).length;
+  if (answeredCount === choiceQuestions.length) {
+    // Auto-check after all answered
+    const feedbackBox = document.getElementById('choice-feedback');
+    if (!feedbackBox.classList.contains('show')) {
+      checkChoiceAnswers();
+    }
+  }
+}, 500);
+
+// =========================================================
+// 🔸 УПРАЖНЕНИЕ 2: НАПИСАНИЕ ПРЕДЛОЖЕНИЙ
+// =========================================================
+
+const submitBtn = document.getElementById('submit-sentences-btn');
+const textarea = document.getElementById('sentences-textarea');
+const writingFeedback = document.getElementById('writing-feedback');
+const nextBtn = document.getElementById('next-btn-step3');
+
+async function saveUserSentences(sentences) {
+  if (!currentUser) {
+    console.log("Пользователь не авторизован, сохраняем локально");
+    localStorage.setItem('lesson7_sentences', sentences);
+    return { saved: true, isPro: false };
+  }
+
+  const userKey = currentUser.email || currentUser.uid;
+  const answerRef = doc(
+    db,
+    "lessonSubmissions",
+    "english-intro-lesson-7",
+    "answers",
+    userKey
+  );
+
+  try {
+    await setDoc(
+      answerRef,
+      {
+        sentences: sentences,
+        userEmail: currentUser.email || null,
+        userUid: currentUser.uid,
+        isPro: isProUser,
+        courseId: "english-intro",
+        lessonSlug: "lesson-07-negative-present-simple",
+        submittedAt: serverTimestamp(),
+        needsReview: isProUser,
+        reviewed: false
+      },
+      { merge: true }
+    );
+
+    return { saved: true, isPro: isProUser };
+  } catch (e) {
+    console.error("Ошибка сохранения:", e);
+    return { saved: false, isPro: isProUser };
+  }
+}
+
+submitBtn.addEventListener('click', async () => {
+  const sentences = textarea.value.trim();
+
+  if (!sentences) {
+    writingFeedback.classList.remove('success', 'info');
+    writingFeedback.classList.add('show', 'info');
+    writingFeedback.innerHTML = `
+      <strong>Пожалуйста, напишите хотя бы одно предложение.</strong>
+    `;
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Отправляем...";
+
+  const result = await saveUserSentences(sentences);
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Отправить предложения";
+
+  writingFeedback.classList.remove('success', 'info');
+  writingFeedback.classList.add('show', 'success');
+
+  if (result.saved) {
+    if (result.isPro) {
+      writingFeedback.innerHTML = `
+        <strong>✨ Отлично!</strong> Ваши предложения отправлены куратору на проверку. 
+        Вы получите обратную связь в личном кабинете!
+      `;
+    } else {
+      writingFeedback.innerHTML = `
+        <strong>✓ Сохранено!</strong> Ваши предложения сохранены. 
+        Отличная работа! Продолжайте практиковаться.
+      `;
+    }
+    
+    // Show next button
+    nextBtn.classList.remove('hidden');
+  } else {
+    writingFeedback.classList.remove('success');
+    writingFeedback.classList.add('info');
+    writingFeedback.innerHTML = `
+      <strong>Произошла ошибка при сохранении.</strong> Попробуйте еще раз.
+    `;
+  }
+});
+</script>
+
+<!-- ============================= -->
+<!-- ОБЩИЙ СКРИПТ КУРСА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module" src="/js/courses/english-intro.js"></script>
+
+</body>
+</html>
+​​​​​​​​​​​​​​​​
