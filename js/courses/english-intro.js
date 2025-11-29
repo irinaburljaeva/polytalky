@@ -106,7 +106,7 @@ async function loadUserProfile(user) {
 // ====== ПОДГРУЗКА ПРОШЛЫХ ОТВЕТОВ (ЛЮБЫХ!) ======
 //
 const audioPlay = document.getElementById("audio-playback");
-const audiofeedback = document.getElementById("audio-feedback");
+const audioFeedback = document.getElementById("audio-feedback");
 async function loadProAnswers() {
   if (!currentUser || !isProUser || !LESSON_ID) return;
 
