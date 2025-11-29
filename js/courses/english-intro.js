@@ -671,14 +671,13 @@ document.querySelectorAll(".word-tip").forEach(tip => {
 });
 
 // ====== Словарик (слова из таблиц) ======
-// ====== Словарик (слова из таблиц) ======
 const openVocabBtn    = document.getElementById("open-vocab-btn");
 const vocabModal      = document.getElementById("vocab-modal");
 const vocabClose      = document.getElementById("vocab-close");
-const vocabSaveBtn    = document.getElementById("vocab-save-btn");
+const vocabSaveBtn    = document.getElementById("vocab-save");
 const vocabSelectAll  = document.getElementById("vocab-select-all");
-const vocabListVowels = document.getElementById("vocab-list");
-const vocabAuthWarn   = document.getElementById("vocab-auth-warn");
+const vocabListVowels = document.getElementById("vocab-vowels");
+const vocabAuthWarn   = document.getElementById("vocab-auth-warning");
 
 function buildVocabEntries() {
   const entries = [];
