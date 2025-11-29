@@ -446,10 +446,11 @@ if (recordBtn && stopBtn && audioPlay) {
             reader.readAsDataURL(audioBlob);
           }
 
-          if (audioFeedback) {
-            audioFeedback.textContent = "Здорово! Аудио сохранено.";
+            if (audioFeedback) {
+            audioFeedback.textContent = "⭐️ Отлично получилось! Вы молодец.";
             audioFeedback.classList.remove("hidden");
           }
+
 
                  setTimeout(() => {
             if (audioFeedback) audioFeedback.classList.add("hidden");
