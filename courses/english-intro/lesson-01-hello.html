@@ -874,7 +874,7 @@
         Напишите ниже, как бы вы поздоровались по-английски.
       </p>
 
-      <textarea class="input-main mt-4" id="task-hello-input"
+      <textarea class="input-main mt-4" id="task-hello-input" data-task-id="hello"
                 placeholder="Например: Hello! или Hi, my name is Olga"></textarea>
 
       <p class="soft-note mt-2">
@@ -1088,7 +1088,7 @@
   ● Идёт запись…
 </p>
 
-<audio id="audio-playback" class="mt-4 w-full" controls style="display:none;"></audio>
+<audio id="audio-playback" data-task-id="audio" class="mt-4 w-full" controls style="display:none;"></audio>
 
 <p id="audio-feedback" class="mini-toast mt-3 hidden">
   ⭐️ Отлично получилось! Вы молодец.
@@ -1270,12 +1270,15 @@
     window.lessonConfig = {
       lessonId:        "english-intro-lesson-1",
       lessonSlug:      "lesson-01-hello",
+      lessonTitle: "Урок 1 - Старт путешествия",
+      courseTitle: "Интенсив английского"
       courseId:        "english-intro",
       lessonQaDocId:   "english-intro-lesson-1",
       submissionsRoot: "lessonSubmissions",
       totalSteps:      4,
       audioNextStep:   4,
-      vocabCategory:   "Гласные буквосочетания"
+      vocabCategory:   "Гласные буквосочетания",
+      hasHelloTask: true
     };
   </script>
 
