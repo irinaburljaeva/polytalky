@@ -451,52 +451,70 @@ if (recordBtn && stopBtn && audioPlay) {
             audioFeedback.classList.remove("hidden");
           }
 
-          setTimeout(() => {
+                 setTimeout(() => {
             if (audioFeedback) audioFeedback.classList.add("hidden");
-            showStep(AUDIO_NEXT_STEP || currentStep + 1);
-          }, 1500);
+            showStep(nextStepAfterAudio);
+          }, 1800);
         });
 
         //
         // Старт записи
         //
-        mediaRecorder.start();
+                mediaRecorder.start();
         recordBtn.disabled = true;
         stopBtn.disabled   = false;
+        if (audioFeedback) audioFeedback.classList.add("hidden");
 
         if (recordingWrapper && recordingBar && recordingStatus) {
           recordingWrapper.classList.remove("hidden");
           recordingStatus.classList.remove("hidden");
           recordingStatus.textContent = "● Идёт запись…";
-
           recordingProgress = 0;
           recordingBar.style.width = "0%";
 
+          if (recordingInterval) {
+            clearInterval(recordingInterval);
+          }
           recordingInterval = setInterval(() => {
             recordingProgress += 3;
             if (recordingProgress > 100) recordingProgress = 100;
             recordingBar.style.width = recordingProgress + "%";
           }, 200);
         }
-
       } catch (err) {
-        console.error("Ошибка записи аудио:", err);
-        alert("Не удалось включить микрофон. Проверьте разрешения.");
+        console.error("Ошибка при записи:", err);
+        alert("Не удалось получить доступ к микрофону. Проверьте разрешения в браузере и попробуйте ещё раз.");
+        if (recordingWrapper) recordingWrapper.classList.add("hidden");
+        if (recordingStatus)  recordingStatus.classList.add("hidden");
       }
     });
 
     //
     // Остановка записи
     //
-    stopBtn.addEventListener("click", () => {
-      if (!mediaRecorder) return;
-      if (mediaRecorder.state !== "recording") return;
-      mediaRecorder.stop();
-      recordBtn.disabled = false;
-      stopBtn.disabled   = true;
+      stopBtn.addEventListener("click", () => {
+      if (!mediaRecorder) {
+        console.warn("mediaRecorder не инициализирован");
+        return;
+      }
+      if (mediaRecorder.state !== "recording") {
+        console.warn("Запись не активна");
+        return;
+      }
+
+      try {
+        mediaRecorder.stop();
+        recordBtn.disabled = false;
+        stopBtn.disabled   = true;
+      } catch (err) {
+        console.error("Ошибка при остановке записи:", err);
+        recordBtn.disabled = false;
+        stopBtn.disabled   = true;
+      }
     });
   }
 }
+
 
 //
 // ====== Q&A ======
