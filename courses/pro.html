@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <title>PolyTalky PRO — проверка заданий и поддержка куратора</title>
+  <title>PolyTalky PRO — Учись с поддержкой куратора</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="PolyTalky PRO — месячная подписка с ручной проверкой заданий куратором, приоритетными ответами и особым отношением по всем курсам."
+    content="PolyTalky PRO — месячная подписка с ручной проверкой заданий куратором, приоритетными ответами и личной поддержкой."
   >
   <base href="/">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -14,376 +14,883 @@
 
   <style>
     :root{
-      --brand-yellow:#FFDE59;
-      --brand-yellow-deep:#FFBA08;
-      --brand-orange:#E85D04;
-      --ink:#020617;
-      --ink-2:#4b5563;
-      --bg:#f9fafb;
+      --accent-yellow: #FFDE59;
+      --accent-yellow-deep: #FFBA08;
+      --accent-orange: #FF9F1C;
+      --accent-peach: #FFD4A8;
+      --bg-cream: #FFF8E5;
+      --bg-cream-soft: #FFFDF4;
+      --text-dark: #78350f;
+      --text-medium: #92400e;
     }
+
     body{
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-                   "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: system-ui, -apple-system, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background:
-        radial-gradient(circle at top left, #ffffff 0, #f9fafb 40%, #eef2ff 100%);
-      color:var(--ink);
+        radial-gradient(circle at 0 0, #FFF9D9 0, transparent 55%),
+        radial-gradient(circle at 100% 0, #FFE3CC 0, transparent 55%),
+        linear-gradient(to bottom, #FFFDF6, #FFF8E5);
+      color: var(--text-dark);
+      overflow-x: hidden;
     }
-    .shadow-soft{box-shadow:0 22px 45px rgba(15,23,42,.12);}
-    .pill{
-      border-radius:999px;
-      padding:.2rem .8rem;
-      font-size:.7rem;
-      border:1px solid rgba(15,23,42,.08);
-      background:#fffef7ee;
-      backdrop-filter:blur(8px);
+
+    /* Фоновые буквы */
+    .bg-letter {
+      position: fixed;
+      font-weight: 900;
+      font-size: 120px;
+      color: rgba(255, 255, 255, 0.4);
+      pointer-events: none;
+      z-index: 0;
     }
-    .card{
-      border-radius:1.5rem;
-      border:1px solid rgba(15,23,42,.06);
-      background:#ffffff;
+    .bg-letter.a { top: 10%; left: 5%; transform: rotate(-12deg); }
+    .bg-letter.e { top: 25%; right: 8%; transform: rotate(9deg); }
+    .bg-letter.i { bottom: 20%; left: 10%; transform: rotate(5deg); }
+    .bg-letter.o { bottom: 10%; right: 15%; transform: rotate(-7deg); }
+
+    /* Хедер */
+    .top-bar {
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to right, rgba(255,255,255,.9), rgba(255,249,219,.9));
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
-    .glass-card{
-      border-radius:1.5rem;
-      border:1px solid rgba(148,163,184,.25);
-      background:linear-gradient(135deg,rgba(255,255,255,0.92),rgba(248,250,252,0.98));
-      backdrop-filter:blur(14px);
+
+    /* Градиентные кнопки */
+    .btn-primary {
+      background: linear-gradient(135deg, #FF9F1C 0%, #FFDE59 100%);
+      color: var(--text-dark);
+      padding: 16px 32px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.1em;
+      box-shadow: 0 12px 28px rgba(255, 159, 28, 0.4);
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(255, 159, 28, 0.5);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--text-medium);
+      padding: 16px 32px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 1em;
+      border: 2px solid #FFE8B3;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: #FFF8E5;
+      border-color: #FFDE59;
+      transform: translateY(-2px);
+    }
+
+    /* Hero секция */
+    .hero-section {
+      position: relative;
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #FFF8E5, #FFE8B3);
+      border: 2px solid #FFDE59;
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+      color: var(--text-medium);
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: 3.5em;
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--text-dark);
+      margin-bottom: 24px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.3em;
+      color: var(--text-medium);
+      line-height: 1.6;
+      max-width: 700px;
+      margin-bottom: 40px;
+    }
+
+    .highlight-text {
+      background: linear-gradient(135deg, #FF9F1C, #FFDE59);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Карточки возможностей */
+    .feature-card {
+      background: white;
+      border: 2px solid #FFE8B3;
+      border-radius: 24px;
+      padding: 32px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #FF9F1C, #FFDE59);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(255, 159, 28, 0.2);
+      border-color: #FFDE59;
+    }
+
+    .feature-icon {
+      font-size: 3em;
+      margin-bottom: 16px;
+    }
+
+    .feature-title {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .feature-description {
+      color: var(--text-medium);
+      line-height: 1.6;
+    }
+
+    /* Pricing карточка */
+    .pricing-card {
+      background: linear-gradient(135deg, #FFF8E5 0%, #FFE8B3 100%);
+      border: 3px solid #FFDE59;
+      border-radius: 32px;
+      padding: 48px;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(255, 159, 28, 0.3);
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: -16px;
+      right: 32px;
+      background: linear-gradient(135deg, #FF9F1C, #FFDE59);
+      color: var(--text-dark);
+      padding: 8px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9em;
+      box-shadow: 0 8px 20px rgba(255, 159, 28, 0.4);
+    }
+
+    .price {
+      font-size: 3.5em;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin: 24px 0;
+    }
+
+    .price-period {
+      font-size: 0.4em;
+      font-weight: 600;
+      color: var(--text-medium);
+    }
+
+    /* Сравнительная таблица */
+    .comparison-table {
+      background: white;
+      border: 2px solid #FFE8B3;
+      border-radius: 24px;
+      overflow: hidden;
+      margin: 60px 0;
+    }
+
+    .comparison-header {
+      background: linear-gradient(135deg, #FFF8E5, #FFE8B3);
+      padding: 24px;
+      font-weight: 700;
+      font-size: 1.3em;
+      color: var(--text-dark);
+      text-align: center;
+    }
+
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      border-bottom: 1px solid #FFE8B3;
+      padding: 20px 24px;
+      align-items: center;
+    }
+
+    .comparison-row:last-child {
+      border-bottom: none;
+    }
+
+    .comparison-row:nth-child(even) {
+      background: #FFFDF4;
+    }
+
+    .check-icon {
+      color: #22c55e;
+      font-size: 1.5em;
+      text-align: center;
+    }
+
+    .cross-icon {
+      color: #ef4444;
+      font-size: 1.5em;
+      text-align: center;
+    }
+
+    /* FAQ */
+    .faq-item {
+      background: white;
+      border: 2px solid #FFE8B3;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+      border-color: #FFDE59;
+    }
+
+    .faq-question {
+      padding: 20px 24px;
+      font-weight: 600;
+      font-size: 1.1em;
+      color: var(--text-dark);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-answer {
+      padding: 0 24px 20px;
+      color: var(--text-medium);
+      line-height: 1.7;
+      display: none;
+    }
+
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+
+    .faq-icon {
+      font-size: 1.5em;
+      color: #FF9F1C;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+      background: white;
+      border: 2px solid #FFE8B3;
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+    }
+
+    .testimonial-quote {
+      font-size: 3em;
+      color: #FFDE59;
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      opacity: 0.5;
+    }
+
+    .testimonial-text {
+      margin-top: 20px;
+      font-size: 1em;
+      line-height: 1.7;
+      color: var(--text-medium);
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      margin-top: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    /* CTA секция */
+    .cta-section {
+      background: linear-gradient(135deg, #FF9F1C 0%, #FFDE59 100%);
+      border-radius: 32px;
+      padding: 60px 40px;
+      text-align: center;
+      margin: 80px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .cta-section::after {
+      content: '';
+      position: absolute;
+      bottom: -50%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.2em;
+      }
+
+      .hero-subtitle {
+        font-size: 1.1em;
+      }
+
+      .price {
+        font-size: 2.5em;
+      }
+
+      .comparison-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
 <body>
 
+<!-- Фоновые буквы -->
+<div class="bg-letter a">P</div>
+<div class="bg-letter e">R</div>
+<div class="bg-letter i">O</div>
+<div class="bg-letter o">✨</div>
+
 <!-- HEADER -->
-<header class="sticky top-0 z-50 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-    <a href="./" class="flex items-center gap-3 font-semibold text-lg">
-      <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl">
-      <span>PolyTalky</span>
+<header class="top-bar">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 font-bold text-lg">
+      <img src="/assets/logo.png" alt="PolyTalky" class="h-9 w-9 rounded-xl">
+      <span style="color: var(--text-dark);">PolyTalky</span>
     </a>
 
-    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
-      <a href="/courses/" class="hover:opacity-80">Курсы</a>
-      <a href="/shop/" class="hover:opacity-80">Магазин</a>
-      <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
-      <a
-        href="/courses/english-intro/"
-        class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft"
-      >
-        ← Вернуться к курсу
+    <nav class="hidden md:flex items-center gap-6 text-sm" style="color: var(--text-medium);">
+      <a href="/courses/" class="hover:opacity-70 transition">Курсы</a>
+      <a href="/student/" class="hover:opacity-70 transition">Личный кабинет</a>
+      <a href="/courses/english-intro/" 
+         class="px-4 py-2 rounded-xl font-semibold"
+         style="background: var(--bg-cream); color: var(--text-dark); border: 1px solid #FFE8B3;">
+        ← К курсу
       </a>
     </nav>
 
-    <button
-      id="burger"
-      class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft"
-      aria-label="Меню"
-    >
-      ☰
-    </button>
+    <button id="burger" class="md:hidden text-2xl" style="color: var(--text-dark);">☰</button>
   </div>
 
-  <div id="mnav" class="md:hidden hidden border-t border-black/10 bg-[#fffef7]">
-    <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-[var(--ink-2)]">
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/5 shadow-sm" href="/courses/">Курсы</a>
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/5 shadow-sm" href="/shop/">Магазин</a>
-      <a class="px-3 py-3 rounded-xl bg-white border border-black/5 shadow-sm" href="/student/">Личный кабинет</a>
-      <a
-        class="px-3 py-3 rounded-xl bg-[var(--brand-yellow)] text-sm font-semibold text-[#1a1a1a] shadow-soft"
-        href="/courses/english-intro/"
-      >
-        ← Вернуться к курсу
-      </a>
-    </div>
+  <div id="mnav" class="md:hidden hidden border-t px-4 py-3 space-y-2" style="border-color: #FFE8B3; background: #FFFDF4;">
+    <a class="block px-4 py-3 rounded-xl bg-white border" style="border-color: #FFE8B3;" href="/courses/">Курсы</a>
+    <a class="block px-4 py-3 rounded-xl bg-white border" style="border-color: #FFE8B3;" href="/student/">Личный кабинет</a>
+    <a class="block px-4 py-3 rounded-xl font-semibold text-center" style="background: var(--accent-yellow); color: var(--text-dark);" href="/courses/english-intro/">← К курсу</a>
   </div>
 </header>
 
-<main class="pb-16">
+<main class="relative z-10">
   <!-- HERO -->
-  <section class="pt-10 sm:pt-14 pb-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[1.7fr,1.1fr] gap-8 items-center">
-      <!-- Текст -->
-      <div class="space-y-5">
-        <div class="flex flex-wrap gap-2 items-center">
-          <span class="pill inline-flex items-center gap-2">
-            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-            <span class="uppercase tracking-[0.16em] text-[10px] text-slate-600">Месячная подписка</span>
-          </span>
-          <span class="text-[11px] text-slate-500">
-            Работает для всех подключённых курсов PolyTalky
-          </span>
-        </div>
-
-        <h1 class="text-3xl sm:text-4xl lg:text-[2.7rem] font-extrabold leading-tight tracking-tight">
-          <span class="block">Когда ваши задания</span>
-          <span class="inline-flex mt-1 items-center gap-2">
-            <span>проверяет</span>
-            <span class="px-3 py-1.5 rounded-full bg-slate-900 text-white text-[1.6rem] sm:text-[1.8rem]">
-              живой человек
-            </span>
-          </span>
-        </h1>
-
-        <p class="text-sm sm:text-base text-[var(--ink-2)] max-w-xl">
-          <b>PolyTalky PRO</b> — это месячная опция, при которой все задания, которые вы отправляете на проверку,
-          просматривает личный куратор. Он вручную исправляет ошибки, даёт комментарии, поддерживает мотивацию
-          и отвечает вам в приоритете.
-        </p>
-
-        <div class="grid sm:grid-cols-3 gap-3 text-xs sm:text-sm text-[var(--ink-2)]">
-          <div class="card p-3 sm:p-4">
-            <p class="font-semibold mb-1">Ручная проверка заданий</p>
-            <p>Письменные и голосовые задания смотрит человек, а не алгоритм.</p>
-          </div>
-          <div class="card p-3 sm:p-4">
-            <p class="font-semibold mb-1">Приоритетные ответы</p>
-            <p>Ваши вопросы в Q&A и чате обрабатываются в приоритетном режиме.</p>
-          </div>
-          <div class="card p-3 sm:p-4">
-            <p class="font-semibold mb-1">Особое отношение</p>
-            <p>Куратор видит ваш путь целиком, подсказывает и мягко не даёт «слиться».</p>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap gap-3 pt-2">
-          <button
-            id="btn-pro-ru-main"
-            class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-sm font-semibold text-[#111827] shadow-soft"
-          >
-            🇷🇺 Оплатить из РФ — 2000&nbsp;₽
-          </button>
-          <button
-            id="btn-pro-stripe-main"
-            class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-black/10 bg-white/80 hover:bg-white text-sm text-[var(--ink-2)] shadow-sm"
-          >
-            🌍 Оплатить из-за рубежа — 20&nbsp;€
-          </button>
-        </div>
-
-        <p class="text-[11px] text-[var(--ink-2)] max-w-md">
-          После оплаты к вашему аккаунту автоматически привяжется статус <b>PRO</b> (для Stripe — сразу через вебхук).
-          В личном кабинете появится бейдж, а куратор увидит вас в своей панели.
-        </p>
+  <section class="hero-section">
+    <div class="text-center">
+      <div class="hero-badge">
+        <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block;"></span>
+        <span>МЕСЯЧНАЯ ПОДПИСКА</span>
       </div>
 
-      <!-- Карточка тарифа -->
-      <aside class="relative">
-        <div class="absolute -top-10 -right-6 w-32 h-32 rounded-full bg-slate-200/60 blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-indigo-100/70 blur-3xl pointer-events-none"></div>
+      <h1 class="hero-title">
+        Учись с <span class="highlight-text">живым куратором</span><br>
+        и получай результат быстрее
+      </h1>
 
-        <div class="relative glass-card shadow-soft p-5 sm:p-6 space-y-5">
-          <div class="flex items-center justify-between gap-3">
-            <div>
-              <p class="text-[11px] uppercase tracking-[0.12em] text-slate-500">Подписка PRO</p>
-              <p class="text-lg font-semibold text-slate-900 mt-0.5">Поддержка куратора каждый месяц</p>
-            </div>
-            <span class="pill bg-emerald-50 border-emerald-200 text-emerald-700 text-[11px]">
-              Самый тёплый формат
-            </span>
-          </div>
+      <p class="hero-subtitle mx-auto">
+        <strong>PolyTalky PRO</strong> — это персональная проверка всех ваших заданий, 
+        приоритетные ответы на вопросы и поддержка на каждом этапе обучения.
+      </p>
 
-          <div class="bg-slate-50 rounded-2xl px-4 py-3 text-xs sm:text-sm text-slate-700">
-            <p class="font-semibold mb-1">Сколько стоит PRO?</p>
-            <p>Для России — <b>2000 ₽ в месяц</b> (оплата через YooKassa).</p>
-            <p>Для зарубежных карт — <b>20 € в месяц</b> (подписка через Stripe).</p>
-          </div>
+      <div class="flex flex-wrap gap-4 justify-center mb-12">
+        <button id="btn-pro-ru-hero" class="btn-primary">
+          🇷🇺 Оформить PRO — 2000 ₽/мес
+        </button>
+        <button id="btn-pro-stripe-hero" class="btn-secondary">
+          🌍 Оформить PRO — 20 €/мес
+        </button>
+      </div>
 
-          <div class="grid grid-cols-2 gap-4 text-xs sm:text-sm text-[var(--ink-2)]">
-            <div class="space-y-1">
-              <p class="font-semibold mb-1">Базовый доступ (0 ₽)</p>
-              <ul class="space-y-1.5">
-                <li>· Все видео и материалы курса.</li>
-                <li>· Словарик и тренажёры.</li>
-                <li>· Задания — только для себя.</li>
-              </ul>
-            </div>
-            <div class="space-y-1">
-              <p class="font-semibold mb-1">PRO-доступ (подписка)</p>
-              <ul class="space-y-1.5">
-                <li>· Ручная проверка письменных и голосовых заданий.</li>
-                <li>· Приоритет по вопросам и разбору ошибок.</li>
-                <li>· Короткие комментарии по вашему прогрессу.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="pt-1 space-y-2 text-xs text-slate-500">
-            <p>
-              Списание происходит раз в месяц. Подписку можно отменить в любой момент — PRO останется активным до конца
-              оплаченного периода.
-            </p>
-          </div>
-
-          <div class="space-y-2">
-            <button
-              id="btn-pro-ru-side"
-              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-xs sm:text-sm font-semibold text-slate-900 shadow-soft"
-            >
-              🇷🇺 Оплатить из РФ — 2000&nbsp;₽
-            </button>
-            <button
-              id="btn-pro-stripe-side"
-              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-black/10 bg-white hover:bg-slate-50 text-xs sm:text-sm font-semibold text-slate-800 shadow-sm"
-            >
-              🌍 Оплатить из-за рубежа — 20&nbsp;€
-            </button>
-          </div>
-        </div>
-      </aside>
+      <p class="text-sm" style="color: var(--text-medium); max-width: 600px; margin: 0 auto;">
+        После оплаты к вашему аккаунту автоматически привяжется статус <strong>PRO</strong>. 
+        В личном кабинете появится бейдж, а куратор увидит вас в своей панели.
+      </p>
     </div>
   </section>
 
-  <!-- Как работает PRO -->
-  <section id="pro-details" class="pb-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="glass-card shadow-soft px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <h2 class="text-xl sm:text-2xl font-extrabold mb-2">
-          Как работает PRO внутри ваших уроков?
-        </h2>
-        <p class="text-sm text-[var(--ink-2)] mb-6 max-w-2xl">
-          Базовый доступ — это всё, что вам нужно, чтобы начать. PRO подключают, когда хочется
-          двигаться быстрее и с поддержкой: вместо «я заполнила задание и забыла» вы получаете обратную связь
-          и живой диалог.
+  <!-- FEATURES -->
+  <section style="max-width: 1200px; margin: 60px auto; padding: 0 20px;">
+    <h2 style="font-size: 2.5em; font-weight: 900; text-align: center; margin-bottom: 50px; color: var(--text-dark);">
+      Что дает <span class="highlight-text">PRO подписка?</span>
+    </h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
+      <div class="feature-card">
+        <div class="feature-icon">✍️</div>
+        <h3 class="feature-title">Ручная проверка заданий</h3>
+        <p class="feature-description">
+          Все письменные и голосовые задания проверяет живой человек — куратор, 
+          который аккуратно исправляет ошибки и подсказывает, как сказать лучше.
         </p>
+      </div>
 
-        <!-- Таймлайн -->
-        <div class="relative border-l border-dashed border-amber-300 pl-4 ml-1 space-y-5 text-xs sm:text-sm text-[var(--ink-2)]">
-          <div class="absolute -left-1 top-0 h-2 w-2 rounded-full bg-amber-400"></div>
-          <div class="absolute -left-1 bottom-0 h-2 w-2 rounded-full bg-amber-400"></div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Приоритетные ответы</h3>
+        <p class="feature-description">
+          Ваши вопросы в Q&A и обратной связи обрабатываются в приоритетном режиме — 
+          вы получаете ответы быстрее всех остальных студентов.
+        </p>
+      </div>
 
-          <div class="relative">
-            <div class="absolute -left-[1.15rem] top-1.5 h-2 w-2 rounded-full bg-white border border-amber-400"></div>
-            <p class="font-semibold mb-1">1. Делаете задание в уроке</p>
-            <p>Письменное, голосовое или смешанное — любое, где важны формулировки и живой язык.</p>
-          </div>
+      <div class="feature-card">
+        <div class="feature-icon">💛</div>
+        <h3 class="feature-title">Личная поддержка</h3>
+        <p class="feature-description">
+          Куратор видит весь ваш путь, отслеживает прогресс и мягко мотивирует 
+          продолжать, когда хочется все бросить.
+        </p>
+      </div>
 
-          <div class="relative">
-            <div class="absolute -left-[1.15rem] top-1.5 h-2 w-2 rounded-full bg-white border border-amber-400"></div>
-            <p class="font-semibold mb-1">2. Отправляете на проверку</p>
-            <p>Нажимаете кнопку «Отправить на проверку» — система привязывает задание к вашему PRO-аккаунту.</p>
-          </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3 class="feature-title">Реальный прогресс</h3>
+        <p class="feature-description">
+          Вы видите не просто галочки «урок пройден», а конкретную обратную связь, 
+          которая помогает расти с каждым заданием.
+        </p>
+      </div>
 
-          <div class="relative">
-            <div class="absolute -left-[1.15rem] top-1.5 h-2 w-2 rounded-full bg-white border border-amber-400"></div>
-            <p class="font-semibold mb-1">3. Куратор даёт обратную связь</p>
-            <p>Он аккуратно выделяет удачное, мягко исправляет ошибки и даёт более естественные варианты фраз.</p>
-          </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3 class="feature-title">Для всех курсов</h3>
+        <p class="feature-description">
+          Подписка PRO работает для всех курсов PolyTalky — изучаете несколько языков? 
+          Проверка по всем без доплат!
+        </p>
+      </div>
 
-          <div class="relative">
-            <div class="absolute -left-[1.15rem] top-1.5 h-2 w-2 rounded-full bg-white border border-amber-400"></div>
-            <p class="font-semibold mb-1">4. Видите прогресс, а не только галочки</p>
-            <p>От задания к заданию вы замечаете, как меняется язык, а не просто количество «пройденных» уроков.</p>
-          </div>
-        </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3 class="feature-title">Никаких лимитов</h3>
+        <p class="feature-description">
+          Отправляйте на проверку столько заданий, сколько нужно. Куратор всегда 
+          на связи и готов помочь.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- FAQ + ещё кнопки -->
-  <section class="pb-4">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="glass-card shadow-soft px-4 sm:px-6 lg:px-8 py-6 sm:py-7">
-        <h2 class="text-lg sm:text-xl font-extrabold mb-3">Частые вопросы про PRO</h2>
-        <div class="space-y-2 text-sm text-[var(--ink-2)]">
-          <div class="faq-item border border-slate-200 rounded-2xl bg-white overflow-hidden">
-            <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
-              <span>PRO действует только на English Intro или на все курсы?</span>
-              <span class="ml-2 text-lg leading-none">+</span>
-            </button>
-            <div class="px-4 pb-3 hidden text-xs sm:text-sm">
-              Подписка PRO сейчас действует <b>для всех курсов PolyTalky</b>, которые подключены к системе проверки заданий.
-              Если вы учите несколько языков, вам не нужно оформлять отдельный PRO под каждый.
-            </div>
-          </div>
+  <!-- PRICING -->
+  <section style="max-width: 900px; margin: 80px auto; padding: 0 20px;">
+    <div class="pricing-card">
+      <div class="pricing-badge">✨ Самый эффективный формат</div>
+      
+      <h2 style="font-size: 2em; font-weight: 900; color: var(--text-dark); text-align: center; margin-bottom: 8px;">
+        PolyTalky PRO
+      </h2>
+      <p style="text-align: center; color: var(--text-medium); margin-bottom: 24px;">
+        Персональная проверка заданий и поддержка куратора
+      </p>
 
-          <div class="faq-item border border-slate-200 rounded-2xl bg-white overflow-hidden">
-            <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
-              <span>Сколько заданий можно отправлять на проверку?</span>
-              <span class="ml-2 text-lg leading-none">+</span>
-            </button>
-            <div class="px-4 pb-3 hidden text-xs sm:text-sm">
-              Можно отправлять все задания из уроков и задавать вопросы по материалам.
-              Если нагрузка становится слишком большой, куратор подскажет, как распределить её так, чтобы вы получали максимум пользы.
-            </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 40px;">
+        <div style="text-align: center;">
+          <p style="font-size: 0.9em; color: var(--text-medium); margin-bottom: 8px;">Для России</p>
+          <div class="price">
+            2000<span style="font-size: 0.5em;">₽</span>
+            <span class="price-period">/месяц</span>
           </div>
-
-          <div class="faq-item border border-slate-200 rounded-2xl bg-white overflow-hidden">
-            <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
-              <span>Как понять, какой способ оплаты выбрать?</span>
-              <span class="ml-2 text-lg leading-none">+</span>
-            </button>
-            <div class="px-4 pb-3 hidden text-xs sm:text-sm">
-              Если у вас карта российского банка — выбирайте оплату через YooKassa (2000 ₽/мес).
-              Если у вас карта зарубежного банка — оформляйте подписку через Stripe (20 €/мес).
-            </div>
-          </div>
-
-          <div class="faq-item border border-slate-200 rounded-2xl bg-white overflow-hidden">
-            <button class="w-full flex items-center justify-between px-4 py-3 text-left text-xs sm:text-sm" aria-expanded="false">
-              <span>Могу ли я отменить PRO в любой момент?</span>
-              <span class="ml-2 text-lg leading-none">+</span>
-            </button>
-            <div class="px-4 pb-3 hidden text-xs sm:text-sm">
-              Да. Подписка оформляется помесячно.
-              При отмене PRO останется активным до конца оплаченного периода, а затем автоматически выключится.
-            </div>
-          </div>
+          <button id="btn-pro-ru-price" class="btn-primary" style="width: 100%; justify-content: center;">
+            🇷🇺 Оформить PRO
+          </button>
         </div>
 
-        <div class="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs sm:text-sm">
-          <p class="text-[var(--ink-2)] max-w-md">
-            Если остались вопросы — напишите нам через форму обратной связи или в блоке Q&A внутри уроков.
-          </p>
-          <div class="flex flex-wrap gap-2">
-            <button
-              id="btn-pro-ru-bottom"
-              class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-xs sm:text-sm font-semibold text-slate-900 shadow-soft"
-            >
-              🇷🇺 Оплатить из РФ — 2000&nbsp;₽
-            </button>
-            <button
-              id="btn-pro-stripe-bottom"
-              class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs sm:text-sm font-semibold text-white shadow-soft"
-            >
-              🌍 Оплатить из-за рубежа — 20&nbsp;€
-            </button>
+        <div style="text-align: center;">
+          <p style="font-size: 0.9em; color: var(--text-medium); margin-bottom: 8px;">Для зарубежных карт</p>
+          <div class="price">
+            20<span style="font-size: 0.5em;">€</span>
+            <span class="price-period">/месяц</span>
           </div>
+          <button id="btn-pro-stripe-price" class="btn-secondary" style="width: 100%; justify-content: center;">
+            🌍 Оформить PRO
+          </button>
         </div>
+      </div>
 
-        <p class="mt-3 text-[10px] text-[var(--ink-2)]">
-          Чтобы оформить PRO, сначала войдите в ваш <a href="/student/" class="underline">личный кабинет</a>,
-          а затем вернитесь на эту страницу.
+      <div style="background: white; border-radius: 16px; padding: 24px;">
+        <p style="font-size: 0.9em; color: var(--text-medium); text-align: center; line-height: 1.7;">
+          Списание происходит раз в месяц. Подписку можно отменить в любой момент — 
+          PRO останется активным до конца оплаченного периода.
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section style="max-width: 1000px; margin: 80px auto; padding: 0 20px;">
+    <h2 style="font-size: 2.5em; font-weight: 900; text-align: center; margin-bottom: 50px; color: var(--text-dark);">
+      Базовый доступ vs <span class="highlight-text">PRO</span>
+    </h2>
+
+    <div class="comparison-table">
+      <div class="comparison-header" style="display: grid; grid-template-columns: 2fr 1fr 1fr;">
+        <div>Возможность</div>
+        <div style="text-align: center;">Базовый<br>(бесплатно)</div>
+        <div style="text-align: center;">PRO<br>(подписка)</div>
+      </div>
+
+      <div class="comparison-row">
+        <div style="font-weight: 600;">Доступ ко всем видео и материалам</div>
+        <div class="check-icon">✓</div>
+        <div class="check-icon">✓</div>
+      </div>
+
+      <div class="comparison-row">
+        <div style="font-weight: 600;">Словарик и тренажеры</div>
+        <div class="check-icon">✓</div>
+        <div class="check-icon">✓</div>
+      </div>
+
+      <div class="comparison-row">
+        <div style="font-weight: 600;">Интерактивные упражнения</div>
+        <div class="check-icon">✓</div>
+        <div class="check-icon">✓</div>
+      </div>
+
+      <div class="comparison-row">
+        <div style="font-weight: 600;">Ручная проверка письменных заданий</div>
+        <div class="cross-icon">✗</div>
+        <div class="check-icon">✓</div>
+      </div>
+
+      <div class="comparison-row">
+        <div style="font-weight: 600;">Проверка голосовых заданий</div>
+        <div class="cross-icon">✗</div>
+        <div class="check-icon">✓</div>
+      </div>
+
+      <div class="comparison-row">
+        <div style="font-weight: 600;">Детальная обратная связь с комментариями</div>
+        <div class="cross-icon">✗</div>
+        <div class="check-icon">✓</div>
+      </div>
+
+      <div class="comparison-row">
+        <div style="font-weight: 600;">Приоритетные ответы на вопросы</div>
+        <div class="cross-icon">✗</div>
+        <div class="check-icon">✓</div>
+      </div>
+
+      <div class="comparison-row">
+        <div style="font-weight: 600;">Личная поддержка и мотивация</div>
+        <div class="cross-icon">✗</div>
+        <div class="check-icon">✓</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section style="max-width: 1000px; margin: 80px auto; padding: 0 20px;">
+    <h2 style="font-size: 2.5em; font-weight: 900; text-align: center; margin-bottom: 50px; color: var(--text-dark);">
+      Как это <span class="highlight-text">работает?</span>
+    </h2>
+
+    <div style="background: white; border: 2px solid #FFE8B3; border-radius: 24px; padding: 40px;">
+      <div style="position: relative; padding-left: 40px;">
+        <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, #FF9F1C, #FFDE59); border-radius: 2px;"></div>
+
+        <div style="margin-bottom: 40px; position: relative;">
+          <div style="position: absolute; left: -48px; top: 0; width: 24px; height: 24px; background: linear-gradient(135deg, #FF9F1C, #FFDE59); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9em;">1</div>
+          <h3 style="font-size: 1.3em; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;">Делаете задание в уроке</h3>
+          <p style="color: var(--text-medium); line-height: 1.7;">Письменное, голосовое или смешанное — любое, где важны формулировки и живой язык.</p>
+        </div>
+
+        <div style="margin-bottom: 40px; position: relative;">
+          <div style="position: absolute; left: -48px; top: 0; width: 24px; height: 24px; background: linear-gradient(135deg, #FF9F1C, #FFDE59); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9em;">2</div>
+          <h3 style="font-size: 1.3em; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;">Отправляете на проверку</h3>
+          <p style="color: var(--text-medium); line-height: 1.7;">Нажимаете кнопку «Отправить на проверку» — система автоматически привязывает задание к вашему PRO-аккаунту.</p>
+        </div>
+
+        <div style="margin-bottom: 40px; position: relative;">
+          <div style="position: absolute; left: -48px; top: 0; width: 24px; height: 24px; background: linear-gradient(135deg, #FF9F1C, #FFDE59); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9em;">3</div>
+          <h3 style="font-size: 1.3em; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;">Куратор дает обратную связь</h3>
+          <p style="color: var(--text-medium); line-height: 1.7;">Он аккуратно выделяет удачное, мягко исправляет ошибки и дает более естественные варианты фраз.</p>
+        </div>
+
+        <div style="position: relative;">
+          <div style="position: absolute; left: -48px; top: 0; width: 24px; height: 24px; background: linear-gradient(135deg, #FF9F1C, #FFDE59); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9em;">4</div>
+          <h3 style="font-size:1.3em; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;">Видите реальный прогресс</h3>
+          <p style="color: var(--text-medium); line-height: 1.7;">От задания к заданию вы замечаете, как меняется язык — это не просто галочки «пройдено», а настоящее развитие навыков.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section style="max-width: 1200px; margin: 80px auto; padding: 0 20px;">
+    <h2 style="font-size: 2.5em; font-weight: 900; text-align: center; margin-bottom: 50px; color: var(--text-dark);">
+      Что говорят <span class="highlight-text">наши студенты</span>
+    </h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">
+          С PRO я наконец-то поняла, где делаю ошибки. Куратор не просто исправляет, 
+          а объясняет почему правильно именно так. Теперь я говорю увереннее!
+        </p>
+        <p class="testimonial-author">— Анна, изучает английский 3 месяца</p>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">
+          Базового доступа мне было достаточно, но я хотела большего результата. 
+          PRO действительно ускорил процесс — живая обратная связь это совсем другое!
+        </p>
+        <p class="testimonial-author">— Мария, изучает французский</p>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">
+          Куратор помогает не бросить учебу. Когда знаешь, что твои задания проверяют, 
+          появляется ответственность и мотивация делать их качественно.
+        </p>
+        <p class="testimonial-author">— Дмитрий, изучает немецкий</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="max-width: 900px; margin: 80px auto; padding: 0 20px;">
+    <h2 style="font-size: 2.5em; font-weight: 900; text-align: center; margin-bottom: 50px; color: var(--text-dark);">
+      Частые <span class="highlight-text">вопросы</span>
+    </h2>
+
+    <div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>PRO действует на все курсы или только на один?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Подписка PRO действует <strong>для всех курсов PolyTalky</strong>, которые подключены 
+          к системе проверки заданий. Если вы изучаете несколько языков одновременно, 
+          вам не нужно оформлять отдельный PRO под каждый курс.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Сколько заданий можно отправлять на проверку?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Вы можете отправлять <strong>все задания из уроков</strong> и задавать вопросы по материалам. 
+          Никаких лимитов нет. Если нагрузка становится очень большой, куратор подскажет, 
+          как распределить её оптимально для максимальной пользы.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Как быстро куратор проверяет задания?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Обычно проверка занимает <strong>от нескольких часов до 1 рабочего дня</strong>. 
+          PRO-студенты находятся в приоритете, поэтому ваши задания проверяются быстрее 
+          обычных вопросов в Q&A.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Какой способ оплаты выбрать?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Если у вас <strong>карта российского банка</strong> — выбирайте оплату через YooKassa (2000 ₽/мес). 
+          Если у вас <strong>карта зарубежного банка</strong> — оформляйте подписку через Stripe (20 €/мес).
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Могу ли я отменить PRO в любой момент?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Да, конечно! Подписка оформляется помесячно. При отмене PRO останется активным 
+          до конца оплаченного периода, а затем автоматически не продлится. 
+          Вы можете вернуться к PRO в любое время.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Нужно ли мне авторизоваться перед оплатой?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Да, обязательно сначала <strong>войдите в ваш личный кабинет</strong> на PolyTalky, 
+          а затем вернитесь на эту страницу для оформления подписки. Так система сможет 
+          автоматически привязать PRO статус к вашему аккаунту.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Что будет, если я забуду продлить подписку?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Ничего страшного! Подписка продлевается автоматически каждый месяц. 
+          Если вы отмените автопродление или платеж не пройдет, PRO просто отключится 
+          после окончания оплаченного периода. Вы сможете снова оформить его когда захотите.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="max-width: 1000px; margin: 80px auto 60px; padding: 0 20px;">
+    <div class="cta-section">
+      <h2 style="font-size: 2.8em; font-weight: 900; color: var(--text-dark); margin-bottom: 20px; position: relative; z-index: 1;">
+        Готовы учиться эффективнее?
+      </h2>
+      <p style="font-size: 1.2em; color: var(--text-dark); margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; position: relative; z-index: 1;">
+        Оформите PRO подписку и получите личного куратора, который поможет 
+        достичь результата быстрее!
+      </p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; position: relative; z-index: 1;">
+        <button id="btn-pro-ru-cta" style="background: white; color: var(--text-dark); padding: 18px 36px; border-radius: 999px; font-weight: 700; font-size: 1.1em; border: none; cursor: pointer; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15); display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
+          🇷🇺 Оформить PRO — 2000 ₽
+        </button>
+        <button id="btn-pro-stripe-cta" style="background: rgba(0, 0, 0, 0.8); color: white; padding: 18px 36px; border-radius: 999px; font-weight: 700; font-size: 1.1em; border: none; cursor: pointer; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2); display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
+          🌍 Оформить PRO — 20 €
+        </button>
+      </div>
+
+      <p style="margin-top: 24px; font-size: 0.85em; color: var(--text-dark); opacity: 0.8; position: relative; z-index: 1;">
+        Попробуйте месяц и почувствуйте разницу. Отменить можно в любой момент.
+      </p>
+    </div>
+  </section>
+
+  <!-- SUPPORT INFO -->
+  <section style="max-width: 800px; margin: 0 auto 60px; padding: 0 20px;">
+    <div style="background: white; border: 2px solid #FFE8B3; border-radius: 20px; padding: 32px; text-align: center;">
+      <h3 style="font-size: 1.5em; font-weight: 700; color: var(--text-dark); margin-bottom: 16px;">
+        Остались вопросы?
+      </h3>
+      <p style="color: var(--text-medium); line-height: 1.7; margin-bottom: 24px;">
+        Напишите нам через форму обратной связи или задайте вопрос в блоке Q&A внутри любого урока. 
+        Мы всегда рады помочь!
+      </p>
+      <a href="/student/feedback.html" class="btn-secondary" style="text-decoration: none;">
+        Написать в поддержку
+      </a>
     </div>
   </section>
 </main>
 
 <!-- FOOTER -->
-<footer class="border-t border-slate-200 bg-white py-8 text-sm text-slate-700 mt-4">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+<footer style="border-top: 2px solid #FFE8B3; background: white; padding: 40px 20px;">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;">
     <div>
-      <a href="/" class="inline-flex items-center gap-2 font-semibold text-slate-900">
-        <span class="inline-flex h-8 w-8 rounded-xl bg-slate-900 items-center justify-center text-white text-lg">P</span>
+      <a href="/" style="display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.2em; text-decoration: none; color: var(--text-dark);">
+        <img src="/assets/logo.png" alt="PolyTalky" style="height: 40px; width: 40px; border-radius: 12px;">
         PolyTalky
       </a>
-      <p class="mt-3 text-slate-500">Изучайте языки для жизни, а не только для тестов.</p>
-      <p class="mt-4 text-slate-400">© 2025 PolyTalky. Все права защищены.</p>
+      <p style="margin-top: 16px; color: var(--text-medium); font-size: 0.95em;">
+        Изучайте языки для жизни, а не только для тестов.
+      </p>
+      <p style="margin-top: 16px; color: #9ca3af; font-size: 0.85em;">
+        © 2025 PolyTalky. Все права защищены.
+      </p>
     </div>
+
     <div>
-      <h3 class="font-semibold text-slate-900 mb-3">Навигация</h3>
-      <ul class="space-y-2">
-        <li><a href="/courses/" class="hover:underline">Курсы</a></li>
-        <li><a href="/shop/" class="hover:underline">Магазин</a></li>
-        <li><a href="/student/" class="hover:underline">Личный кабинет</a></li>
-        <li><a href="/contact.html" class="hover:underline">Контакты</a></li>
+      <h3 style="font-weight: 700; color: var(--text-dark); margin-bottom: 16px;">Навигация</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+        <li><a href="/courses/" style="color: var(--text-medium); text-decoration: none; transition: color 0.2s;">Курсы</a></li>
+        <li><a href="/shop/" style="color: var(--text-medium); text-decoration: none; transition: color 0.2s;">Магазин</a></li>
+        <li><a href="/student/" style="color: var(--text-medium); text-decoration: none; transition: color 0.2s;">Личный кабинет</a></li>
+        <li><a href="/contact.html" style="color: var(--text-medium); text-decoration: none; transition: color 0.2s;">Контакты</a></li>
       </ul>
     </div>
+
     <div>
-      <h3 class="font-semibold text-slate-900 mb-3">Юридическая информация</h3>
-      <ul class="space-y-2">
-        <li><a href="/legal/privacy.html" class="hover:underline">Политика конфиденциальности</a></li>
-        <li><a href="/legal/offer.html" class="hover:underline">Публичная оферта</a></li>
-        <li><a href="/legal/cookies.html" class="hover:underline">Cookies</a></li>
-        <li><a href="/legal/consent.html" class="hover:underline">Согласие на обработку данных</a></li>
+      <h3 style="font-weight: 700; color: var(--text-dark); margin-bottom: 16px;">Документы</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+        <li><a href="/legal/privacy.html" style="color: var(--text-medium); text-decoration: none; transition: color 0.2s;">Политика конфиденциальности</a></li>
+        <li><a href="/legal/offer.html" style="color: var(--text-medium); text-decoration: none; transition: color 0.2s;">Публичная оферта</a></li>
+        <li><a href="/legal/cookies.html" style="color: var(--text-medium); text-decoration: none; transition: color 0.2s;">Cookies</a></li>
+        <li><a href="/legal/consent.html" style="color: var(--text-medium); text-decoration: none; transition: color 0.2s;">Согласие на обработку</a></li>
       </ul>
     </div>
   </div>
@@ -393,31 +900,68 @@
 <script src="https://js.stripe.com/v3"></script>
 
 <script>
-  // Бургер
+  // ========================================
+  // БУРГЕР МЕНЮ
+  // ========================================
   const burger = document.getElementById("burger");
   const mnav = document.getElementById("mnav");
-  if (burger) burger.addEventListener("click", () => mnav.classList.toggle("hidden"));
+  if (burger) {
+    burger.addEventListener("click", () => mnav.classList.toggle("hidden"));
+  }
 
-  // FAQ аккордеон
-  document.querySelectorAll(".faq-item button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const expanded = btn.getAttribute("aria-expanded") === "true";
-      btn.setAttribute("aria-expanded", expanded ? "false" : "true");
-      const content = btn.parentElement.querySelector("div");
-      if (!content) return;
-      content.classList.toggle("hidden", expanded);
-      const icon = btn.querySelector("span:last-child");
-      if (icon) icon.textContent = expanded ? "+" : "–";
+  // ========================================
+  // FAQ АККОРДЕОН
+  // ========================================
+  document.querySelectorAll(".faq-item").forEach(item => {
+    const question = item.querySelector(".faq-question");
+    question.addEventListener("click", () => {
+      const isActive = item.classList.contains("active");
+      
+      // Закрыть все остальные
+      document.querySelectorAll(".faq-item").forEach(otherItem => {
+        otherItem.classList.remove("active");
+      });
+      
+      // Открыть текущий (если он был закрыт)
+      if (!isActive) {
+        item.classList.add("active");
+      }
     });
   });
 
-  // Универсальная функция: достать текущий uid
+  // ========================================
+  // HOVER ЭФФЕКТЫ ДЛЯ CTA КНОПОК
+  // ========================================
+  const ctaButtons = [
+    document.getElementById("btn-pro-ru-cta"),
+    document.getElementById("btn-pro-stripe-cta")
+  ];
+
+  ctaButtons.forEach(btn => {
+    if (!btn) return;
+    
+    btn.addEventListener("mouseenter", () => {
+      btn.style.transform = "translateY(-3px)";
+      btn.style.boxShadow = "0 16px 36px rgba(0, 0, 0, 0.25)";
+    });
+    
+    btn.addEventListener("mouseleave", () => {
+      btn.style.transform = "translateY(0)";
+      btn.style.boxShadow = btn.id.includes("stripe") 
+        ? "0 12px 28px rgba(0, 0, 0, 0.2)" 
+        : "0 12px 28px rgba(0, 0, 0, 0.15)";
+    });
+  });
+
+  // ========================================
+  // ПОЛУЧЕНИЕ UID ПОЛЬЗОВАТЕЛЯ
+  // ========================================
   async function getCurrentUid() {
     // 1) Пробуем из localStorage
     let uid = localStorage.getItem('pt_uid');
     if (uid) return uid;
 
-    // 2) Если есть Firebase Auth — пробуем взять оттуда и сохранить
+    // 2) Если есть Firebase Auth — пробуем взять оттуда
     try {
       if (window.firebase && firebase.auth) {
         uid = await new Promise(resolve => {
@@ -437,7 +981,9 @@
     return null;
   }
 
-  // Дополнительно пробуем достать email пользователя (для ЮKassa)
+  // ========================================
+  // ПОЛУЧЕНИЕ EMAIL ПОЛЬЗОВАТЕЛЯ
+  // ========================================
   async function getCurrentEmail() {
     try {
       if (window.firebase && firebase.auth) {
@@ -450,7 +996,9 @@
     return null;
   }
 
-  // Оформление PRO через Stripe (20 € / месяц)
+  // ========================================
+  // ОФОРМЛЕНИЕ PRO ЧЕРЕЗ STRIPE (20 €)
+  // ========================================
   async function startProStripeCheckout() {
     try {
       const uid = await getCurrentUid();
@@ -499,7 +1047,9 @@
     }
   }
 
-  // Оплата PRO из РФ через YooKassa (разовый платёж 2000 ₽ за месяц)
+  // ========================================
+  // ОПЛАТА PRO ИЗ РФ ЧЕРЕЗ YOOKASSA (2000 ₽)
+  // ========================================
   async function startProRuCheckout() {
     try {
       const uid = await getCurrentUid();
@@ -541,21 +1091,31 @@
     }
   }
 
-  // Кнопки оформления PRO
-  const btnRuMain    = document.getElementById("btn-pro-ru-main");
-  const btnRuSide    = document.getElementById("btn-pro-ru-side");
-  const btnRuBottom  = document.getElementById("btn-pro-ru-bottom");
-  const btnStMain    = document.getElementById("btn-pro-stripe-main");
-  const btnStSide    = document.getElementById("btn-pro-stripe-side");
-  const btnStBottom  = document.getElementById("btn-pro-stripe-bottom");
+  // ========================================
+  // ПРИВЯЗКА ВСЕХ КНОПОК
+  // ========================================
+  const ruButtons = [
+    "btn-pro-ru-hero",
+    "btn-pro-ru-price",
+    "btn-pro-ru-cta"
+  ];
 
-  [btnRuMain, btnRuSide, btnRuBottom].forEach(btn => {
+  const stripeButtons = [
+    "btn-pro-stripe-hero",
+    "btn-pro-stripe-price",
+    "btn-pro-stripe-cta"
+  ];
+
+  ruButtons.forEach(id => {
+    const btn = document.getElementById(id);
     if (btn) btn.addEventListener("click", startProRuCheckout);
   });
 
-  [btnStMain, btnStSide, btnStBottom].forEach(btn => {
+  stripeButtons.forEach(id => {
+    const btn = document.getElementById(id);
     if (btn) btn.addEventListener("click", startProStripeCheckout);
   });
 </script>
 </body>
 </html>
+
