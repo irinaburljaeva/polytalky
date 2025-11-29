@@ -669,7 +669,48 @@ document.querySelectorAll(".word-tip").forEach(tip => {
     if (word) speakWord(word);
   });
 });
+// ====== Сохранение прогресса и выдача бейджа ======
+async function saveLessonProgressAndBadge() {
+  if (!currentUser || !db) return;
 
+  const userKey = getUserKey();
+  if (!userKey) return;
+
+  try {
+    // 1) Прогресс по уроку
+    const progressCol = collection(db, "progress");
+    // фиксированный id, чтобы не плодить дубликаты для одного и того же урока
+    const progressId  = `${COURSE_ID}__${LESSON_ID}__${userKey}`;
+    const progressRef = doc(progressCol, progressId);
+
+    await setDoc(
+      progressRef,
+      {
+        userId:      userKey,
+        courseId:    COURSE_ID,
+        lessonId:    LESSON_ID,
+        lessonSlug:  LESSON_SLUG,
+        completedAt: serverTimestamp()
+      },
+      { merge: true }
+    );
+
+    // 2) Выдача бейджа пользователю
+    if (AWARD_ON_COMPLETE) {
+      const userRef = doc(db, "users", userKey);
+
+      await setDoc(
+        userRef,
+        {
+          badges: arrayUnion(AWARD_ON_COMPLETE)
+        },
+        { merge: true }
+      );
+    }
+  } catch (e) {
+    console.error("Ошибка сохранения прогресса / бейджа:", e);
+  }
+}
 // ====== Словарик (слова из таблиц) ======
 const openVocabBtn    = document.getElementById("open-vocab-btn");
 const vocabModal      = document.getElementById("vocab-modal");
