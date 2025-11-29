@@ -6,6 +6,7 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+import { saveProAnswer } from "/js/pro-submissions.js
 import {
   collection,
   addDoc,
@@ -17,6 +18,8 @@ import {
   setDoc,
   arrayUnion,
   getDoc
+  where,
+  limit
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Firebase (инициализирован в firebase-init.js в <head>)
@@ -29,11 +32,16 @@ const config = window.lessonConfig || {};
 const LESSON_ID        = config.lessonId        || "";
 const LESSON_SLUG      = config.lessonSlug      || "";
 const COURSE_ID        = config.courseId        || "";
+const COURSE_TITLE     = config.courseTitle     ||  COURSE_ID || "";
+const LESSON_TITLE     = config.lessonTitle     || LESSON_ID || "";
 const LESSON_QA_DOC_ID = config.lessonQaDocId   || LESSON_ID;
 const SUBMISSIONS_ROOT = config.submissionsRoot || "lessonSubmissions";
 const TOTAL_STEPS      = config.totalSteps      || null;
 const AUDIO_NEXT_STEP  = config.audioNextStep   || null;
 const VOCAB_CATEGORY   = config.vocabCategory   || "";
+
+const HAS_HELLO_TASK   = !!config.hasHelloTask;
+const AWARD_ON_COMPLETE = config.awardOnComplete || null;
 
 // Состояние пользователя
 let currentUser = null;
@@ -102,31 +110,75 @@ async function loadUserProfile(user) {
   }
 }
 
-// ====== Загрузка PRO-ответов (hello + аудио) ======
+// ====== Загрузка PRO-ответов ======
 const audioPlay = document.getElementById("audio-playback");
-
 async function loadProAnswers() {
   if (!currentUser || !isProUser || !LESSON_ID) return;
 
-  const userKey = getUserKey();
-  if (!userKey) return;
-
   try {
-    const ref  = doc(db, SUBMISSIONS_ROOT, LESSON_ID, "answers", userKey);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) return;
+    const answersCol = collection(db, SUBMISSIONS_ROOT, LESSON_ID, "answers");
 
-    const data = snap.data();
+    // сначала по userUid
+    let qRef = query(
+      answersCol,
+      where("userUid", "==", currentUser.uid),
+      orderBy("createdAt", "desc"),
+      limit(10)
+    );
 
-    // hello-ответ (если поле есть)
-    const helloInput = document.getElementById("task-hello-input");
-    if (data.helloAnswer && helloInput) {
-      helloInput.value = data.helloAnswer;
+    let snap = await getDocs(qRef);
+
+    // если пусто — пробуем по email (на случай старых данных)
+    if (snap.empty && currentUser.email) {
+      qRef = query(
+        answersCol,
+        where("userEmail", "==", currentUser.email),
+        orderBy("createdAt", "desc"),
+        limit(10)
+      );
+      snap = await getDocs(qRef);
     }
 
-    // аудио-ответ
-    if (data.audioAnswerBase64 && audioPlay) {
-      const url = "data:audio/webm;base64," + data.audioAnswerBase64;
+    if (snap.empty) return;
+
+    const docs = snap.docs.map(d => d.data());
+
+    // 1) УНИВЕРСАЛЬНО: подставляем все текстовые ответы по taskId
+    docs.forEach(docData => {
+      if (!docData.taskId || typeof docData.answerText !== "string") return;
+
+      // ищем элемент с соответствующим taskId
+      const el = document.querySelector(`[data-task-id="${docData.taskId}"]`);
+      if (!el) return;
+
+      if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+        el.value = docData.answerText;
+      } else if (el.isContentEditable) {
+        el.innerText = docData.answerText;
+      } else {
+        // если это, например, <div>, просто показываем текст
+        el.textContent = docData.answerText;
+      }
+    });
+
+    // 2) Приветствие — отдельная логика ТОЛЬКО для уроков, где оно есть
+    if (HAS_HELLO_TASK) {
+      const helloInput = document.getElementById("task-hello-input");
+      if (helloInput) {
+        const helloDoc =
+          docs.find(d => d.taskId === "hello" && typeof d.answerText === "string") ||
+          docs.find(d => typeof d.answerText === "string");
+
+        if (helloDoc && helloDoc.answerText) {
+          helloInput.value = helloDoc.answerText;
+        }
+      }
+    }
+
+    // 3) Аудио — берём первую запись с answerAudioBase64
+    const audioDoc = docs.find(d => d.answerAudioBase64);
+    if (audioDoc && audioDoc.answerAudioBase64 && audioPlay) {
+      const url = "data:audio/webm;base64," + audioDoc.answerAudioBase64;
       audioPlay.src = url;
       audioPlay.style.display = "block";
     }
@@ -297,34 +349,7 @@ document.querySelectorAll(".next-step-btn").forEach(btn => {
 });
 
 // ====== Сохранение заданий PRO (общая функция) ======
-async function saveProSubmission(partialData) {
-  if (!currentUser || !isProUser || !LESSON_ID) return;
-  const userKey = getUserKey();
-  if (!userKey) return;
 
-  const answerRef = doc(
-    db,
-    SUBMISSIONS_ROOT,
-    LESSON_ID,
-    "answers",
-    userKey
-  );
-
-  const baseData = {
-    userEmail:  currentUser.email || null,
-    userUid:    currentUser.uid,
-    isPro:      true,
-    courseId:   COURSE_ID,
-    lessonSlug: LESSON_SLUG,
-    updatedAt:  serverTimestamp()
-  };
-
-  await setDoc(
-    answerRef,
-    { createdAt: serverTimestamp(), ...baseData, ...partialData },
-    { merge: true }
-  );
-}
 
 // ====== Урок 1: мини-задание «приветствие» ======
 const helloInput    = document.getElementById("task-hello-input");
