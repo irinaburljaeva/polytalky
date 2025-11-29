@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Intro — Урок 7</title>
+  <base href="/">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Общие стили для курса English Intro -->
+  <link rel="stylesheet" href="/courses/english-intro/english-intro.css">
+
+  <!-- Firebase init -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
+
+    window.firebaseApp  = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(window.firebaseApp);
+    window.firebaseDb   = getFirestore(window.firebaseApp);
+  </script>
+
+  <style>
+    .hidden{display:none;}
+
+    /* Схема предложения */
+    .sentence-scheme {
+      background: linear-gradient(135deg, #FFF8E5 0%, #FFE8B3 100%);
+      border: 3px solid #FFDE59;
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0;
+      box-shadow: 0 10px 30px rgba(255, 159, 28, 0.2);
+    }
+
+    .sentence-scheme h3 {
+      color: #92400e;
+      font-size: 1.4em;
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .scheme-parts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .scheme-part {
+      background: white;
+      border: 2px solid #FFD4A8;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-weight: 600;
+      font-size: 1em;
+      text-align: center;
+      min-width: 120px;
+      transition: all 0.3s ease;
+    }
+
+    .scheme-part.subject {
+      background: linear-gradient(135deg, #FFE8B3, #FFD89B);
+      color: #78350f;
+    }
+
+    .scheme-part.auxiliary {
+      background: linear-gradient(135deg, #FFDE59, #FFBA08);
+      color: #78350f;
+    }
+
+    .scheme-part.not {
+      background: linear-gradient(135deg, #FFD4A8, #FFB48F);
+      color: #78350f;
+      font-size: 1.2em;
+    }
+
+    .scheme-part.verb {
+      background: linear-gradient(135deg, #FF9F1C, #FF8A5C);
+      color: white;
+    }
+
+    .scheme-part.other {
+      background: linear-gradient(135deg, #FFF8E5, #FFFDF4);
+      color: #78350f;
+    }
+
+    .scheme-arrow {
+      font-size: 1.5em;
+      color: #FF9F1C;
+      font-weight: bold;
+    }
+
+    /* Список самостоятельных глаголов */
+    .modal-verbs-box {
+      background: linear-gradient(135deg, #FFE4E6 0%, #FFF1F2 100%);
+      border: 2px solid #FFD4A8;
+      border-radius: 16px;
+      padding: 25px;
+      margin: 25px 0;
+      box-shadow: 0 8px 24px rgba(255, 159, 28, 0.15);
+    }
+
+    .modal-verbs-box h4 {
+      color: #92400e;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .modal-verbs-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .modal-verb-item {
+      background: white;
+      border: 2px solid #FFE8B3;
+      border-radius: 10px;
+      padding: 12px 15px;
+      font-size: 0.95em;
+      color: #78350f;
+      transition: all 0.2s ease;
+    }
+
+    .modal-verb-item:hover {
+      background: linear-gradient(135deg, #FFF8E5, #FFE8B3);
+      border-color: #FFDE59;
+      transform: translateY(-2px);
+    }
+
+    .modal-verb-item strong {
+      color: #FF9F1C;
+      font-size: 1.1em;
+    }
+
+    /* Упражнение - выбор правильного варианта */
+    .exercise-choice {
+      background: white;
+      border: 2px solid #FFE8B3;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .exercise-choice.correct {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-color: #22c55e;
+    }
+
+    .exercise-choice.incorrect {
+      background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+      border-color: #ef4444;
+    }
+
+    .exercise-question {
+      font-size: 1.1em;
+      color: #78350f;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .choice-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .choice-btn {
+      background: linear-gradient(135deg, #FFF8E5, #FFFDF4);
+      border: 2px solid #FFE8B3;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 1em;
+      color: #78350f;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      font-weight: 500;
+    }
+
+    .choice-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #FFE8B3, #FFD89B);
+      border-color: #FFDE59;
+      transform: translateX(5px);
+    }
+
+    .choice-btn.selected {
+      background: linear-gradient(135deg, #FFDE59, #FFBA08);
+      border-color: #FF9F1C;
+      color: #78350f;
+      font-weight: 600;
+    }
+
+    .choice-btn.correct {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .choice-btn.incorrect {
+      background: linear-gradient(135deg, #fecaca, #fca5a5);
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .choice-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    /* Упражнение - написание предложений */
+    .writing-exercise {
+      background: linear-gradient(135deg, #FFF8E5 0%, #FFFDF4 100%);
+      border: 2px solid #FFE8B3;
+      border-radius: 16px;
+      padding: 25px;
+      margin: 25px 0;
+    }
+
+    .writing-prompt {
+      background: white;
+      border-left: 4px solid #FF9F1C;
+      border-radius: 8px;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      font-size: 1em;
+      color: #78350f;
+      line-height: 1.6;
+    }
+
+    .sentence-textarea {
+      width: 100%;
+      min-height: 120px;
+      border: 2px solid #FFE8B3;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 1em;
+      color: #78350f;
+      resize: vertical;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .sentence-textarea:focus {
+      outline: none;
+      border-color: #FF9F1C;
+      box-shadow: 0 4px 12px rgba(255, 159, 28, 0.2);
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #FF9F1C 0%, #FFDE59 100%);
+      color: #78350f;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 999px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(255, 159, 28, 0.3);
+      margin-top: 15px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(255, 159, 28, 0.4);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .feedback-message {
+      margin-top: 15px;
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-size: 0.95em;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback-message.show {
+      display: block;
+      animation: slideIn 0.4s ease;
+    }
+
+    .feedback-message.success {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-left: 4px solid #22c55e;
+      color: #166534;
+    }
+
+    .feedback-message.info {
+      background: linear-gradient(135deg, #FFF8E5 0%, #FFE8B3 100%);
+      border-left: 4px solid #FFDE59;
+      color: #78350f;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .pro-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, #FFDE59, #FFBA08);
+      color: #78350f;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.75em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 768px) {
+      .scheme-parts {
+        flex-direction: column;
+      }
+
+      .scheme-arrow {
+        transform: rotate(90deg);
+      }
+
+      .scheme-part {
+        min-width: 100%;
+      }
+
+      .modal-verbs-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+ 
+<!-- Фоновые буквы -->
+<div class="bg-letter a">D</div>
+<div class="bg-letter e">O</div>
+<div class="bg-letter i">N</div>
+<div class="bg-letter o">O</div>
+<div class="bg-letter u">T</div>
+
+<!-- Верхняя панель -->
+<header class="top-bar sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+      <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+      PolyTalky
+    </a>
+
+    <div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+      <div id="user-status"></div>
+
+      <a href="/student/feedback.html"
+         id="feedback-link"
+         class="hidden relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white">
+        📩
+        <span id="feedback-dot"
+              class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+      </a>
+
+      <a href="/student/"
+         target="_blank"
+         id="login-btn"
+         class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
+        Войти
+      </a>
+
+      <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
+    </div>
+  </div>
+  
+</header>
+
+<main class="lesson-shell">
+  <!-- HERO -->
+  <section class="hero-card mb-8">
+    <div class="hero-left">
+      <div class="hero-badge">English · Lesson 7</div>
+      <h1 class="hero-title mt-3">
+        Отрицательные предложения в Present Simple
+      </h1>
+
+      <p class="hero-tagline mt-3">
+        Учимся говорить "нет" по-английски правильно
+      </p>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-right-inner">
+        <div class="hero-bg-circle"></div>
+
+        <div class="hero-bubbles-cluster">
+          <div class="hero-bubble hero-bubble--hello">
+            I don't
+          </div>
+          <div class="hero-bubble hero-bubble--morning">
+            She doesn't
+          </div>
+          <div class="hero-bubble hero-bubble--hi">
+            NOT
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Навигация шагов -->
+  <div class="step-nav">
+    <button class="step-dot step-dot--active" data-step="1">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/grammar.png" alt="Схема">
+      </div>
+      <div class="step-dot-label">Схема</div>
+    </button>
+
+    <button class="step-dot" data-step="2">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/order.png" alt="Глаголы">
+      </div>
+      <div class="step-dot-label">Глаголы</div>
+    </button>
+
+    <button class="step-dot" data-step="3">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/practise.png" alt="Практика">
+      </div>
+      <div class="step-dot-label">Практика</div>
+    </button>
+
+    <button class="step-dot" data-step="4">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/finish.png" alt="Финал">
+      </div>
+      <div class="step-dot-label">Финиш</div>
+    </button>
+  </div>
+
+  <!-- ================ ШАГ 1. СХЕМА ОТРИЦАТЕЛЬНЫХ ПРЕДЛОЖЕНИЙ ================ -->
+  <section id="step-1" class="step-panel step-panel--visible">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 1 · Схема</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Отрицательные предложения в Present Simple
+    </h2>
+
+    <p class="step-body-text mb-3">
+      Помимо утвердительных предложений, имеются также <b>отрицательные предложения</b>:
+    </p>
+
+    <div class="example-box">
+      <p class="text-lg mb-2">
+        Мне не нравится этот торт → <span class="word-tip" data-ru="мне не нравится этот торт">I do not like this cake</span>
+      </p>
+    </div>
+
+    <p class="step-body-text mb-4 mt-4">
+      При построении отрицательного предложения нужно очень хорошо запомнить следующую схему:
+    </p>
+
+    <div class="sentence-scheme">
+      <h3>📐 Схема отрицательного предложения</h3>
+      
+      <div class="scheme-parts">
+        <div class="scheme-part subject">
+          ПОДЛЕЖАЩЕЕ<br>
+          <small>(кто/что)</small>
+        </div>
+        <span class="scheme-arrow">→</span>
+        
+        <div class="scheme-part auxiliary">
+          ВСПОМОГАТЕЛЬНЫЙ<br>ГЛАГОЛ<br>
+          <small>(do/does)</small>
+        </div>
+        <span class="scheme-arrow">→</span>
+        
+        <div class="scheme-part not">
+          NOT
+        </div>
+        <span class="scheme-arrow">→</span>
+        
+        <div class="scheme-part verb">
+          СКАЗУЕМОЕ<br>
+          <small>(глагол)</small>
+        </div>
+        <span class="scheme-arrow">→</span>
+        
+        <div class="scheme-part other">
+          ВСЁ ОСТАЛЬНОЕ
+        </div>
+      </div>
+    </div>
+
+    <div class="soft-block soft-block--blue mt-4">
+      <p class="font-semibold mb-2">💡 Важно запомнить:</p>
+      <ul class="list-disc ml-5 text-sm space-y-2">
+        <li>Для I, you, we, they используем <b>do not</b> (сокращенно <b>don't</b>)</li>
+        <li>Для he, she, it используем <b>does not</b> (сокращенно <b>doesn't</b>)</li>
+        <li>Глагол после do/does всегда в начальной форме (без -s/-es)</li>
+      </ul>
+    </div>
+
+    <div class="example-box mt-4">
+      <p class="mb-2"><strong>Примеры:</strong></p>
+      <ul class="space-y-2 ml-4">
+        <li>• I <b>do not</b> like coffee → Я не люблю кофе</li>
+        <li>• She <b>does not</b> work here → Она не работает здесь</li>
+        <li>• They <b>do not</b> speak English → Они не говорят по-английски</li>
+        <li>• He <b>doesn't</b> play football → Он не играет в футбол</li>
+      </ul>
+    </div>
+
+    <button class="btn-main mt-6 next-step-btn" data-next="2">
+      Далее →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 2. САМОСТОЯТЕЛЬНЫЕ ГЛАГОЛЫ ================ -->
+  <section id="step-2" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 2 · Самостоятельные глаголы</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Вспомогательный глагол DO
+    </h2>
+
+    <p class="step-body-text mb-3">
+      <b>Вспомогательный глагол</b> в английском языке — это глагол <b>do</b> (для he, she, it — <b>does</b>).
+    </p>
+
+    <div class="soft-block soft-block--rose mt-4 mb-4">
+      <p class="font-semibold mb-2">⚠️ Важное исключение:</p>
+      <p class="text-sm">
+        В английском существуют <b>самостоятельные глаголы</b> — их совсем немного — и таким глаголам 
+        вспомогательный глагол уже <b>не нужен</b>!
+      </p>
+    </div>
+
+    <p class="step-body-text mb-4">
+      То есть когда у нас в предложении один из этих глаголов, то вспомогательный глагол мы не добавляем, 
+      а отрицательную частицу <b>not</b> ставим сразу к самим глаголам. Во всех остальных случаях мы 
+      действуем по схеме выше.
+    </p>
+
+    <div class="modal-verbs-box">
+      <h4>📋 Список основных самостоятельных глаголов:</h4>
+      
+      <div class="modal-verbs-list">
+        <div class="modal-verb-item">
+          <strong>to be</strong> — быть<br>
+          <small class="text-gray-600">I am <b>not</b> tired</small>
+        </div>
+        
+        <div class="modal-verb-item">
+          <strong>can (could)</strong> — мочь (мог бы)<br>
+          <small class="text-gray-600">I can<b>not</b> swim</small>
+        </div>
+        
+        <div class="modal-verb-item">
+          <strong>shall (should)</strong> — следует (следовало бы)<br>
+          <small class="text-gray-600">You should<b>n't</b> go</small>
+        </div>
+        
+        <div class="modal-verb-item">
+          <strong>must (might)</strong> — должен (мог бы)<br>
+          <small class="text-gray-600">He must<b>n't</b> leave</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="soft-block soft-block--green mt-4">
+      <p class="font-semibold mb-2">📌 Примечание о WILL:</p>
+      <p class="text-sm">
+        *Хотя глагол <b>will</b> самостоятельный, он образует <b>Future Simple</b> — будущее время, 
+        и в Present Simple он не используется.
+      </p>
+    </div>
+
+    <div class="example-box mt-4">
+      <p class="mb-2"><strong>Сравните:</strong></p>
+      <div class="space-y-3">
+        <div class="p-3 bg-white rounded-lg">
+          <p class="font-semibold text-gray-800">С обычным глаголом:</p>
+          <p class="text-sm text-gray-600 ml-4">
+            I <b>do not</b> like coffee. (нужен do)
+          </p>
+        </div>
+        
+        <div class="p-3 bg-white rounded-lg">
+          <p class="font-semibold text-gray-800">С самостоятельным глаголом:</p>
+          <p class="text-sm text-gray-600 ml-4">
+            I <b>am not</b> tired. (do не нужен)
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-main mt-6 next-step-btn" data-next="3">
+      Перейти к практике →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 3. УПРАЖНЕНИЯ ================ -->
+  <section id="step-3" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 3 · Практика</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Упражнение №1: Выберите правильный вариант
+    </h2>
+
+    <p class="step-body-text mb-4">
+      Вспомните схему отрицательного предложения и выберите правильный вариант:
+    </p>
+
+    <!-- Напоминание схемы -->
+    <div class="soft-block soft-block--blue mb-4">
+      <p class="font-semibold mb-2 text-center">
+        ПОДЛЕЖАЩЕЕ → do/does → NOT → ГЛАГОЛ → ВСЁ ОСТАЛЬНОЕ
+      </p>
+    </div>
+
+    <div id="choiceExercises">
+      <!-- Will be filled by JavaScript -->
+    </div>
+
+    <div id="choice-feedback" class="feedback-message"></div>
+
+    <!-- Упражнение 2 -->
+    <div id="writing-exercise-section" class="hidden">
+      <h2 class="text-xl md:text-2xl font-bold mb-3 mt-8">
+        Упражнение №2: Составьте предложения
+      </h2>
+
+      <p class="step-body-text mb-4">
+        Попробуйте составить несколько отрицательных предложений в Present Simple, 
+        опираясь на схему выше.
+      </p>
+
+      <div class="writing-exercise">
+        <div class="writing-prompt">
+          <strong>Задание:</strong> Напишите 3-5 отрицательных предложений в Present Simple.<br>
+          <br>
+          <strong>Примеры тем:</strong>
+          <ul class="list-disc ml-5 mt-2 text-sm">
+            <li>Что вы не любите делать</li>
+            <li>Чего не умеет ваш друг</li>
+            <li>Что не происходит в вашей жизни</li>
+          </ul>
+          <br>
+          <span id="pro-status-message"></span>
+        </div>
+
+        <textarea 
+          id="sentences-textarea" 
+          class="sentence-textarea"
+          placeholder="Напишите здесь свои предложения...&#10;&#10;Например:&#10;I do not like getting up early.&#10;My brother does not play the guitar.&#10;We are not lazy students."
+        ></textarea>
+
+        <button id="submit-sentences-btn" class="submit-btn">
+          Отправить предложения
+        </button>
+
+        <div id="writing-feedback" class="feedback-message"></div>
+      </div>
+    </div>
+
+    <button id="next-btn-step3" class="btn-main mt-6 next-step-btn hidden" data-next="4">
+      Завершить урок →
+    </button>
+  </section>
+
+  <!-- ================ ШАГ 4. ФИНАЛ ================ -->
+  <section id="step-4" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 4 · ФИНАЛ</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+    <h2 class="text-xl md:text-2xl font-bold mb-3">
+      Поздравляем! Урок 7 завершён 🎉
+    </h2>
+
+    <p class="step-body-text mb-3">
+      Вы освоили <b>отрицательные предложения в Present Simple</b>!
+    </p>
+
+    <div class="soft-block soft-block--blue mb-4">
+      <p class="font-semibold mb-2">Что мы узнали:</p>
+      <ul class="list-disc ml-5 text-sm space-y-1">
+        <li>✓ Схема: подлежащее → do/does → NOT → глагол → остальное</li>
+        <li>✓ Для I/you/we/they используем <b>do not (don't)</b></li>
+        <li>✓ Для he/she/it используем <b>does not (doesn't)</b></li>
+        <li>✓ После do/does глагол всегда в начальной форме</li>
+        <li>✓ Самостоятельные глаголы (be, can, must и др.) не требуют do/does</li>
+      </ul>
+    </div>
+
+    <p class="step-body-text mb-4">
+      Теперь вы можете уверенно строить как утвердительные, так и отрицательные предложения 
+      в настоящем времени!
+    </p>
+
+    <div class="flex justify-center my-4">
+      <img src="/assets/gifs/english-lesson7-finish.gif" alt="Finish gif"
+           class="w-64 h-auto rounded-2xl"
+           onerror="this.style.display='none'">
+    </div>
+
+    <div class="mt-5 flex​​​​​​​​​​​​​​​​
