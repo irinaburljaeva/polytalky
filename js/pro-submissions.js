@@ -1,6 +1,3 @@
-// js/pro-submissions.js
-// Универсальное сохранение PRO-заданий в формате, который понимает review.html
-
 import {
   collection,
   addDoc,
@@ -8,80 +5,64 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /**
- * Сохраняет задание PRO-пользователя в коллекцию
- * {submissionsRoot}/{lessonId}/answers/{autoId}
- * в формате, который ждёт админка review.html.
- *
- * options = {
- *   db,
- *   submissionsRoot: "lessonSubmissions",
- *   courseId,
- *   courseTitle,
- *   lessonId,
- *   lessonTitle,
- *   user,          // объект currentUser из Firebase Auth
- *   data,          // partialData из урока (helloAnswer, audioAnswerBase64, taskText и т.п.)
- *   extra          // доп. поля: { taskId, step, ... } (по желанию)
- * }
+ * Универсальное сохранение PRO-задания.
+ * Используется для всех курсов и любых типов заданий.
  */
-export async function saveProForReview(options = {}) {
-  const {
+export async function saveProAnswer({
+  db,
+  courseId,
+  courseTitle,
+  lessonId,
+  lessonTitle,
+  user,
+  taskId = null,
+  step = null,
+  answerText = null,
+  answerAudioBase64 = null,
+  answerImageBase64 = null,
+  meta = {}
+}) {
+  if (!db || !user || !lessonId) return null;
+
+  const answersCol = collection(
     db,
-    submissionsRoot = "lessonSubmissions",
+    "lessonSubmissions",
+    lessonId,
+    "answers"
+  );
+
+  // определяем тип ответа
+  let answerType = "text";
+  if (answerAudioBase64 && answerText) answerType = "text+audio";
+  else if (answerAudioBase64) answerType = "audio";
+  else if (answerImageBase64) answerType = "image";
+  else if (answerText) answerType = "text";
+
+  const payload = {
+    userEmail: user.email,
+    userUid: user.uid,
+
     courseId,
     courseTitle,
     lessonId,
     lessonTitle,
-    user,
-    data = {},
-    extra = {}
-  } = options;
 
-  if (!db || !lessonId || !courseId || !user) return;
+    taskId,
+    step,
 
-  const colRef = collection(db, submissionsRoot, lessonId, "answers");
-
-  // Определяем текст ответа
-  const textAnswer =
-    data.answerText ??
-    data.helloAnswer ??
-    data.text ??
-    null;
-
-  // Тип ответа
-  let answerType = data.answerType || "text";
-  const hasAudio = !!data.audioAnswerBase64;
-  if (!answerType) {
-    if (hasAudio && textAnswer) answerType = "text+audio";
-    else if (hasAudio)          answerType = "audio";
-    else                        answerType = "text";
-  }
-
-  const payload = {
-    // Идентификация курса/урока
-    courseId,
-    courseTitle: courseTitle || courseId,
-    lessonId,
-    lessonTitle: lessonTitle || lessonId,
-
-    // Пользователь
-    userEmail: user.email || null,
-    userUid:   user.uid   || null,
-
-    // Ответ
-    answerText: textAnswer,
     answerType,
-    taskText: data.taskText || null,
-    audioBase64: data.audioAnswerBase64 || null,
+    answerText,
+    answerAudioBase64,
+    answerImageBase64,
 
-    // Статус проверки
-    status: "pending",
+    status: "pending",                // обязательно для review.html
+
+    meta: meta || {},
+
     createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-
-    // Любые дополнительные метаданные
-    ...extra
+    updatedAt: serverTimestamp()
   };
 
-  await addDoc(colRef, payload);
+  const docRef = await addDoc(answersCol, payload);
+  return docRef.id;
 }
