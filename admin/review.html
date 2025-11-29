@@ -676,35 +676,50 @@
   </div>
 
   <!-- Firebase + логика -->
+  <!-- Firebase init -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged,
-      signInWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      query,
-      where,
-      getDocs,
-      doc,
-      updateDoc,
-      orderBy
-    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // TODO: сюда подставь свой реальный конфиг
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      // ...
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db   = getFirestore(app);
+    window.firebaseApp  = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(window.firebaseApp);
+    window.firebaseDb   = getFirestore(window.firebaseApp);
+  </script>
+
+ <script type="module">
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signOut
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp,
+        getDocs,
+        query,
+        orderBy,
+        doc,
+        setDoc,
+        arrayUnion,
+        getDoc
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      const auth = window.firebaseAuth;
+      const db   = window.firebaseDb;
+
 
     const adminUserInfoEl      = document.getElementById("adminUserInfo");
     const filterCourseEl       = document.getElementById("filterCourse");
@@ -741,21 +756,29 @@
     let currentModalSubmissionId = null;
     let isAdminOrCurator = false;
 
-    async function checkAdminClaims(user) {
-      try {
-        const token = await user.getIdTokenResult();
-        const claims = token.claims || {};
+   async function checkAdminClaims(user) {
+  try {
+    const dbUsers = collection(db, "users");
 
-        isAdminOrCurator =
-          claims.role === "admin" ||
-          claims.role === "curator" ||
-          claims.admin === true ||
-          claims.curator === true;
-      } catch (e) {
-        console.error("Ошибка чтения custom claims:", e);
-        isAdminOrCurator = false;
-      }
-    }
+    const emailRef = user.email ? doc(dbUsers, user.email) : null;
+    const uidRef   = user.uid   ? doc(dbUsers, user.uid)   : null;
+
+    const [emailSnap, uidSnap] = await Promise.all([
+      emailRef ? getDoc(emailRef) : Promise.resolve(null),
+      uidRef   ? getDoc(uidRef)   : Promise.resolve(null),
+    ]);
+
+    const emailData = emailSnap && emailSnap.exists() ? (emailSnap.data() || {}) : {};
+    const uidData   = uidSnap   && uidSnap.exists()   ? (uidSnap.data()   || {}) : {};
+
+    const merged = { ...uidData, ...emailData };
+
+    isAdminOrCurator = !!(merged.isAdmin === true || merged.isCurator === true);
+  } catch (e) {
+    console.error("Ошибка проверки прав куратора:", e);
+    isAdminOrCurator = false;
+  }
+}
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
