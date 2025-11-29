@@ -39,7 +39,7 @@ export async function saveProAnswer({
 }) {
   if (!db || !user || !lessonId || !courseId) return null;
 
-  const answersCol = collection(submissionsRoot ? db : db, submissionsRoot, lessonId, "answers");
+  const answersCol = collection(db, submissionsRoot, lessonId, "answers");
 
   // определяем тип ответа
   let answerType = "text";
