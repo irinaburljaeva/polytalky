@@ -3,7 +3,8 @@
 
 import {
   collection,
-  addDoc,
+  doc,
+  setDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -39,7 +40,20 @@ export async function saveProAnswer({
 }) {
   if (!db || !user || !lessonId || !courseId) return null;
 
+  // Ключ ученика: сначала email, потом uid
+  const userKeyRaw = (user.email || user.uid || "").trim();
+  if (!userKeyRaw) return null;
+  const userKey = userKeyRaw.toLowerCase();
+
+  // Коллекция с ответами по уроку
   const answersCol = collection(db, submissionsRoot, lessonId, "answers");
+
+  // Документ: сначала email, потом taskId
+  // Пример: "iraburljaeva@gmail.com__hello"
+  let docId = userKey;
+  if (taskId) docId += `__${taskId}`;
+
+  const answerRef = doc(answersCol, docId);
 
   // определяем тип ответа
   let answerType = "text";
@@ -47,6 +61,8 @@ export async function saveProAnswer({
   else if (answerAudioBase64)         answerType = "audio";
   else if (answerImageBase64)         answerType = "image";
   else if (answerText)                answerType = "text";
+
+  const now = serverTimestamp();
 
   const payload = {
     userEmail: user.email || null,
@@ -66,14 +82,14 @@ export async function saveProAnswer({
     answerAudioBase64,
     answerImageBase64,
 
-    status: "pending", // именно по этому полю фильтрует review.html
+    status: "pending",       // именно по этому полю фильтрует review.html
+    meta:   meta || {},
 
-    meta: meta || {},
-
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp()
+    updatedAt: now,
+    // createdAt запишется один раз и дальше не будет трогаться
+    createdAt: now
   };
 
-  const docRef = await addDoc(answersCol, payload);
-  return docRef.id;
+  await setDoc(answerRef, payload, { merge: true });
+  return docId;
 }
