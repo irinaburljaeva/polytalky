@@ -671,13 +671,14 @@ document.querySelectorAll(".word-tip").forEach(tip => {
 });
 
 // ====== Словарик (слова из таблиц) ======
-const openVocabBtn   = document.getElementById("open-vocab-btn");
-const vocabModal     = document.getElementById("vocab-modal");
-const vocabClose     = document.getElementById("vocab-close");
-const vocabSaveBtn   = document.getElementById("vocab-save-btn");
-const vocabSelectAll = document.getElementById("vocab-select-all");
+// ====== Словарик (слова из таблиц) ======
+const openVocabBtn    = document.getElementById("open-vocab-btn");
+const vocabModal      = document.getElementById("vocab-modal");
+const vocabClose      = document.getElementById("vocab-close");
+const vocabSaveBtn    = document.getElementById("vocab-save-btn");
+const vocabSelectAll  = document.getElementById("vocab-select-all");
 const vocabListVowels = document.getElementById("vocab-list");
-const vocabAuthWarn  = document.getElementById("vocab-auth-warn");
+const vocabAuthWarn   = document.getElementById("vocab-auth-warn");
 
 function buildVocabEntries() {
   const entries = [];
@@ -706,7 +707,8 @@ function buildVocabEntries() {
   });
 
   return Array.from(map.entries()).map(([word, translation]) => ({
-    word, translation
+    word,
+    translation
   }));
 }
 
@@ -738,7 +740,12 @@ function renderVocabWords() {
   });
 }
 
-if (openVocabBtn && vocabModal && vocabClose && vocabSaveBtn && vocabSelectAll) {
+function initVocabModal() {
+  // Если какого-то элемента нет (например, в уроке без словарика) — тихо выходим
+  if (!openVocabBtn || !vocabModal || !vocabClose || !vocabSaveBtn || !vocabSelectAll) {
+    return;
+  }
+
   openVocabBtn.addEventListener("click", () => {
     vocabModal.classList.remove("hidden");
     vocabModal.classList.add("flex");
@@ -817,6 +824,8 @@ if (openVocabBtn && vocabModal && vocabClose && vocabSaveBtn && vocabSelectAll) 
     }, 700);
   });
 }
+
+initVocabModal();
 
 // Старт: показываем первый шаг
 showStep(1);
