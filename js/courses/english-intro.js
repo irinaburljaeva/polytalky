@@ -352,6 +352,7 @@ if (recordBtn && stopBtn && audioPlay) {
     recordBtn.disabled = true;
     stopBtn.disabled   = true;
     recordBtn.textContent = "Запись недоступна в этом браузере";
+        if (recordingWrapper) recordingWrapper.classList.add("hidden");
   }
 
   else {
@@ -367,7 +368,10 @@ if (recordBtn && stopBtn && audioPlay) {
         mediaRecorder = new MediaRecorder(audioStream);
 
         mediaRecorder.addEventListener("dataavailable", e => {
-          if (e.data && e.data.size > 0) audioChunks.push(e.data);
+          if (e.data && e.data.size > 0) {
+            audioChunks.push(e.data);
+          }
+
         });
 
         mediaRecorder.addEventListener("stop", () => {
@@ -381,20 +385,40 @@ if (recordBtn && stopBtn && audioPlay) {
             recordingInterval = null;
           }
 
-          if (!audioChunks.length) {
+               if (!audioChunks.length) {
+            if (recordingWrapper) recordingWrapper.classList.add("hidden");
+            if (recordingStatus) {
+              recordingStatus.classList.add("hidden");
+              recordingStatus.textContent = "● Идёт запись…";
+            }
+            if (recordingBar) recordingBar.style.width = "0%";
+
             if (audioFeedback) {
-              audioFeedback.textContent = "Запись не получилась. Попробуйте ещё раз 😊";
+              audioFeedback.textContent = "Кажется, запись не сохранилась. Попробуйте ещё раз 😊";
               audioFeedback.classList.remove("hidden");
-              setTimeout(() => audioFeedback.classList.add("hidden"), 2200);
+              setTimeout(() => audioFeedback.classList.add("hidden"), 2500);
             }
             return;
           }
 
           const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
           const url       = URL.createObjectURL(audioBlob);
-
-          audioPlay.src = url;
+          audioPlay.src   = url;
           audioPlay.style.display = "block";
+
+          if (recordingWrapper) recordingWrapper.classList.add("hidden");
+          if (recordingStatus) {
+            recordingStatus.textContent = "✓ Запись завершена";
+            setTimeout(() => {
+              recordingStatus.classList.add("hidden");
+              recordingStatus.textContent = "● Идёт запись…";
+            }, 1500);
+          }
+          if (recordingBar) recordingBar.style.width = "100%";
+
+          const nextStepAfterAudio = AUDIO_NEXT_STEP || stepDots.length;
+
+
 
           // сохранить PRO-аудио
           if (currentUser && isProUser) {
