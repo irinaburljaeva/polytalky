@@ -689,4 +689,374 @@
 
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
           Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
-          <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">Тариф PRO</a> даё​​​​​​​​​​​​​​​​
+          <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">Тариф PRO</a> даё​​​​​​​​​​​​​​​​т приоритетную обратную связь и больше внимания к вашим вопросам 💛
+        </div>
+
+        <div class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70"
+             id="qa-list">
+          <p class="text-xs text-gray-500">
+            Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+          </p>
+        </div>
+
+        <form id="qa-form" class="space-y-2">
+          <label class="block text-xs text-gray-600">
+            Ваш вопрос:
+          </label>
+          <textarea id="qa-text"
+                    class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                    rows="3"
+                    placeholder="Например: «Когда еще используется Present Simple?»"></textarea>
+
+          <p class="text-[0.7rem] text-gray-400">
+            Чтобы задать вопрос, нужно войти в аккаунт.  
+            Если вы не авторизованы, перейдите на страницу
+            <a href="/student/" class="underline">входа / регистрации</a>.
+          </p>
+
+          <div class="flex justify-end">
+            <button type="submit"
+                    id="qa-submit"
+                    class="btn-main text-sm px-4 py-1.5">
+              Отправить вопрос →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛЬНОЕ ОКНО ДЛЯ СЛОВАРЯ -->
+  <div id="vocab-modal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+      <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-70"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD4A8] blur-xl opacity-70"></div>
+
+      <div class="relative p-6">
+        <div class="flex justify-between items-start">
+          <h2 class="text-lg font-semibold text-gray-800">
+            Добавить слова в словарик
+          </h2>
+          <button id="vocab-close" class="text-gray-500 text-xl leading-none">&times;</button>
+        </div>
+
+        <p class="text-sm text-gray-600 mt-1">
+          Выберите, какие слова сохранить. Они появятся в вашем словарике в личном кабинете.
+        </p>
+
+        <div id="vocab-auth-warning"
+             class="hidden mt-4 bg-red-50 text-red-700 border border-red-200 rounded-xl p-3 text-sm">
+          Чтобы сохранять слова, нужно войти.
+          <br>
+          <a href="/student/" class="underline font-medium">Перейти к авторизации →</a>
+        </div>
+
+        <div id="vocab-list" class="mt-5 space-y-5 max-h-[330px] overflow-y-auto pr-1">
+          <div class="vocab-category">
+            <h3>📘 Глаголы из урока 6</h3>
+
+            <div id="vocab-words">
+              <!-- JS автоматически вставит чекбоксы -->
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-between items-center">
+          <button id="vocab-select-all"
+                  class="px-4 py-2 rounded-xl bg-gray-100 text-sm text-gray-700 border border-gray-300">
+            Выбрать всё
+          </button>
+
+          <button id="vocab-save" class="btn-main text-sm px-5 py-2">
+            Сохранить →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================= -->
+<!-- КОНФИГ УРОКА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module">
+  window.lessonConfig = {
+    lessonId:        "english-intro-lesson-6",
+    lessonSlug:      "lesson-06-present-simple",
+    courseId:        "english-intro",
+    lessonQaDocId:   "english-intro-lesson-6",
+    submissionsRoot: "lessonSubmissions",
+    totalSteps:      5,
+    audioNextStep:   null,
+    vocabCategory:   "vocabulary-lesson6"
+  };
+</script>
+
+<script>
+// =========================================================
+// 🔸 ШАГ 4 — УПРАЖНЕНИЕ НА PRESENT SIMPLE
+// =========================================================
+
+const exercises = [
+  {
+    text: "I",
+    verb: "like",
+    rest: "chocolate.",
+    correctAnswer: "like",
+    person: "I"
+  },
+  {
+    text: "She",
+    verb: "work",
+    rest: "in an office.",
+    correctAnswer: "works",
+    person: "she"
+  },
+  {
+    text: "They",
+    verb: "play",
+    rest: "football every Sunday.",
+    correctAnswer: "play",
+    person: "they"
+  },
+  {
+    text: "He",
+    verb: "study",
+    rest: "English.",
+    correctAnswer: "studies",
+    person: "he"
+  },
+  {
+    text: "We",
+    verb: "watch",
+    rest: "TV in the evening.",
+    correctAnswer: "watch",
+    person: "we"
+  },
+  {
+    text: "It",
+    verb: "rain",
+    rest: "a lot in autumn.",
+    correctAnswer: "rains",
+    person: "it"
+  },
+  {
+    text: "My sister",
+    verb: "have",
+    rest: "a cat.",
+    correctAnswer: "has",
+    person: "she"
+  },
+  {
+    text: "I",
+    verb: "go",
+    rest: "to school by bus.",
+    correctAnswer: "go",
+    person: "I"
+  },
+  {
+    text: "He",
+    verb: "do",
+    rest: "his homework every day.",
+    correctAnswer: "does",
+    person: "he"
+  },
+  {
+    text: "You",
+    verb: "speak",
+    rest: "English very well.",
+    correctAnswer: "speak",
+    person: "you"
+  }
+];
+
+let userAnswers = [];
+
+function renderExercises() {
+  const container = document.getElementById('exerciseContainer');
+  container.innerHTML = '';
+
+  exercises.forEach((ex, index) => {
+    const div = document.createElement('div');
+    div.className = 'exercise-sentence';
+    div.id = `exercise-${index}`;
+    
+    div.innerHTML = `
+      <span style="font-weight: 600;">${ex.text}</span>
+      <input 
+        type="text" 
+        class="verb-input" 
+        id="input-${index}"
+        placeholder="${ex.verb}"
+        data-correct="${ex.correctAnswer}"
+      >
+      <span>${ex.rest}</span>
+    `;
+    
+    container.appendChild(div);
+  });
+
+  // Add input event listeners
+  document.querySelectorAll('.verb-input').forEach((input, idx) => {
+    input.addEventListener('input', (e) => {
+      userAnswers[idx] = e.target.value.trim().toLowerCase();
+    });
+  });
+}
+
+function checkAnswers() {
+  let allCorrect = true;
+  let correctCount = 0;
+  const totalCount = exercises.length;
+
+  exercises.forEach((ex, index) => {
+    const input = document.getElementById(`input-${index}`);
+    const exerciseDiv = document.getElementById(`exercise-${index}`);
+    const userAnswer = (userAnswers[index] || '').toLowerCase();
+    const correctAnswer = ex.correctAnswer.toLowerCase();
+
+    if (userAnswer === correctAnswer) {
+      input.classList.remove('incorrect');
+      input.classList.add('correct');
+      exerciseDiv.classList.remove('incorrect');
+      exerciseDiv.classList.add('correct');
+      correctCount++;
+    } else {
+      input.classList.remove('correct');
+      input.classList.add('incorrect');
+      exerciseDiv.classList.remove('correct');
+      exerciseDiv.classList.add('incorrect');
+      allCorrect = false;
+    }
+  });
+
+  // Show feedback
+  const feedbackBox = document.getElementById('exercise-feedback');
+  const nextBtn = document.getElementById('next-btn-step4');
+
+  feedbackBox.classList.remove('success', 'error');
+  feedbackBox.classList.add('show');
+
+  if (allCorrect) {
+    feedbackBox.classList.add('success');
+    feedbackBox.innerHTML = `
+      <strong>🎉 Отлично!</strong> Все ответы правильные! Вы отлично разобрались в Present Simple.
+    `;
+    nextBtn.classList.remove('hidden');
+  } else {
+    feedbackBox.classList.add('error');
+    feedbackBox.innerHTML = `
+      <strong>Почти получилось!</strong> Правильных ответов: ${correctCount} из ${totalCount}. 
+      Проверьте красные ответы и попробуйте еще раз. Помните: для he/she/it добавляем -s/-es!
+    `;
+  }
+}
+
+// Initialize exercise
+const checkBtn = document.getElementById('check-answers-btn');
+if (checkBtn) {
+  renderExercises();
+  checkBtn.addEventListener('click', checkAnswers);
+}
+
+// =========================================================
+// 🔸 СЛОВАРИК — СЛОВА ИЗ УРОКА 6
+// =========================================================
+
+const lesson6Words = [
+  { word: "like", translation: "нравиться, любить" },
+  { word: "work", translation: "работать" },
+  { word: "play", translation: "играть" },
+  { word: "study", translation: "учиться, изучать" },
+  { word: "watch", translation: "смотреть" },
+  { word: "live", translation: "жить" },
+  { word: "rain", translation: "идти (о дожде)" },
+  { word: "have", translation: "иметь" },
+  { word: "go", translation: "идти, ходить" },
+  { word: "do", translation: "делать" },
+  { word: "speak", translation: "говорить" },
+  { word: "pizza", translation: "пицца" },
+  { word: "chocolate", translation: "шоколад" },
+  { word: "office", translation: "офис" },
+  { word: "football", translation: "футбол" },
+  { word: "designer", translation: "дизайнер" },
+  { word: "university", translation: "университет" }
+];
+
+const vocabListVowels = document.getElementById("vocab-words");
+
+function renderVocabWords() {
+  if (!vocabListVowels) return;
+
+  vocabListVowels.innerHTML = "";
+
+  lesson6Words.forEach(({ word, translation }) => {
+    const label = document.createElement("label");
+
+    label.innerHTML = `
+      <input type="checkbox"
+             class="vocab-word"
+             data-word="${word}"
+             data-ru="${translation}"
+             data-category="vocabulary-lesson6">
+      <span><strong>${word}</strong></span>
+      <span class="text-gray-400 text-xs">— ${translation}</span>
+    `;
+
+    vocabListVowels.appendChild(label);
+  });
+}
+
+// Initialize vocab modal
+const openVocabBtn = document.getElementById("open-vocab-btn");
+const vocabModal = document.getElementById("vocab-modal");
+const vocabClose = document.getElementById("vocab-close");
+const vocabAuthWarn = document.getElementById("vocab-auth-warning");
+const vocabSaveBtn = document.getElementById("vocab-save");
+const vocabSelectAll = document.getElementById("vocab-select-all");
+
+if (openVocabBtn && vocabModal) {
+  openVocabBtn.addEventListener("click", () => {
+    vocabModal.classList.remove("hidden");
+    vocabModal.classList.add("flex");
+
+    renderVocabWords();
+
+    // Check if user is logged in (this will be handled by main JS)
+    const currentUser = window.firebaseAuth?.currentUser;
+    if (!currentUser) {
+      if (vocabAuthWarn) vocabAuthWarn.classList.remove("hidden");
+      if (vocabSaveBtn) vocabSaveBtn.disabled = true;
+    } else {
+      if (vocabAuthWarn) vocabAuthWarn.classList.add("hidden");
+      if (vocabSaveBtn) vocabSaveBtn.disabled = false;
+    }
+  });
+
+  if (vocabClose) {
+    vocabClose.addEventListener("click", () => {
+      vocabModal.classList.add("hidden");
+      vocabModal.classList.remove("flex");
+    });
+  }
+
+  if (vocabSelectAll) {
+    vocabSelectAll.addEventListener("click", () => {
+      const boxes = document.querySelectorAll(".vocab-word");
+      const anyUnchecked = Array.from(boxes).some(b => !b.checked);
+      boxes.forEach(b => { b.checked = anyUnchecked; });
+    });
+  }
+}
+</script>
+
+<!-- ============================= -->
+<!-- ОБЩИЙ СКРИПТ КУРСА (ВАЖНО!) -->
+<!-- ============================= -->
+<script type="module" src="/js/courses/english-intro.js"></script>
+
+</body>
+</html>
+
