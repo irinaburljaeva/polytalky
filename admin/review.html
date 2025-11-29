@@ -700,21 +700,25 @@
       import {
         getAuth,
         onAuthStateChanged,
+        signInWithEmailAndPassword,
         signOut
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
       import {
         getFirestore,
         collection,
+        collectionGroup,
         addDoc,
         serverTimestamp,
         getDocs,
         query,
+        where,
         orderBy,
         doc,
         setDoc,
         arrayUnion,
-        getDoc
+        getDoc,
+        updateDoc
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
       const auth = window.firebaseAuth;
@@ -850,36 +854,37 @@
     });
 
     async function loadSubmissions() {
-      if (!currentUser || !isAdminOrCurator) return;
+  if (!currentUser || !isAdminOrCurator) return;
 
-      submissionsContainer.innerHTML =
-        "<div class='submissions-empty'>Загрузка…</div>";
+  submissionsContainer.innerHTML =
+    "<div class='submissions-empty'>Загрузка…</div>";
 
-      try {
-        let qRef = collection(db, "lessonSubmissions");
+  try {
+    // читаем ВСЕ answers во всех уроках
+    let qRef = collectionGroup(db, "answers");
 
-        const statusValue = filterStatusEl.value;
-        if (statusValue !== "all") {
-          qRef = query(
-            qRef,
-            where("status", "==", statusValue),
-            orderBy("createdAt", "desc")
-          );
-        } else {
-          qRef = query(qRef, orderBy("createdAt", "desc"));
-        }
-
-        const snap = await getDocs(qRef);
-        currentSubmissions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        buildCourseFilter(currentSubmissions);
-        renderSubmissions();
-      } catch (err) {
-        console.error("Ошибка загрузки заданий:", err);
-        submissionsContainer.innerHTML =
-          "<div class='submissions-empty'>Не удалось загрузить задания.</div>";
-      }
+    // фильтр по статусу
+    const statusValue = filterStatusEl.value;
+    if (statusValue !== "all") {
+      qRef = query(qRef, where("status", "==", statusValue));
     }
+
+    const snap = await getDocs(qRef);
+
+    currentSubmissions = snap.docs.map(d => ({
+      id: d.id,
+      path: d.ref.path, // важно, чтобы обновлять документ правильно
+      ...d.data()
+    }));
+
+    buildCourseFilter(currentSubmissions);
+    renderSubmissions();
+  } catch (err) {
+    console.error("Ошибка загрузки заданий:", err);
+    submissionsContainer.innerHTML =
+      "<div class='submissions-empty'>Не удалось загрузить задания.</div>";
+  }
+}
 
     function buildCourseFilter(submissions) {
       const byCourse = new Map();
@@ -1136,26 +1141,34 @@
       modalBackdrop.classList.add("visible");
     }
 
-    async function updateSubmissionStatus(id, newStatus, feedbackText) {
-      if (!id) return;
-      try {
-        const ref = doc(db, "lessonSubmissions", id);
-        const payload = {
-          status: newStatus,
-          checkedAt: new Date(),
-        };
-        if (typeof feedbackText === "string") {
-          payload.feedback = feedbackText;
-        }
-        await updateDoc(ref, payload);
-        modalBackdrop.classList.remove("visible");
-        currentModalSubmissionId = null;
-        await loadSubmissions();
-      } catch (err) {
-        console.error("Ошибка обновления статуса:", err);
-        alert("Не удалось обновить статус. Проверьте консоль.");
-      }
+   async function updateSubmissionStatus(id, newStatus, feedbackText) {
+  if (!id) return;
+
+  const sub = currentSubmissions.find(s => s.id === id);
+  if (!sub || !sub.path) return;
+
+  try {
+    const ref = doc(db, sub.path); // путь вида lessonSubmissions/lesson-1/answers/ans123
+    const payload = {
+      status: newStatus,
+      checkedAt: new Date()
+    };
+
+    if (typeof feedbackText === "string") {
+      payload.feedback = feedbackText;
     }
+
+    await updateDoc(ref, payload);
+
+    modalBackdrop.classList.remove("visible");
+    currentModalSubmissionId = null;
+    await loadSubmissions();
+
+  } catch (err) {
+    console.error("Ошибка обновления статуса:", err);
+    alert("Не удалось обновить статус. Проверьте консоль.");
+  }
+}
   </script>
 </body>
 </html>
