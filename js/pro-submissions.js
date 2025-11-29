@@ -5,6 +5,7 @@ import {
   collection,
   doc,
   setDoc,
+  getDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -38,58 +39,100 @@ export async function saveProAnswer({
 
   meta = {}
 }) {
-  if (!db || !user || !lessonId || !courseId) return null;
+  try {
+    // Базовая валидация
+    if (!db || !user || !lessonId || !courseId) {
+      console.error("saveProAnswer: отсутствуют обязательные параметры", {
+        hasDb: !!db,
+        hasUser: !!user,
+        lessonId,
+        courseId
+      });
+      return null;
+    }
 
-  // Ключ ученика: сначала email, потом uid
-  const userKeyRaw = (user.email || user.uid || "").trim();
-  if (!userKeyRaw) return null;
-  const userKey = userKeyRaw.toLowerCase();
+    // taskId обязателен — без него потом невозможно подставить ответ в урок
+    if (!taskId) {
+      console.error("saveProAnswer: вызов без taskId — сохранение отменено.");
+      return null;
+    }
 
-  // Коллекция с ответами по уроку
-  const answersCol = collection(db, submissionsRoot, lessonId, "answers");
+    // Должен быть хотя бы один тип ответа
+    if (!answerText && !answerAudioBase64 && !answerImageBase64) {
+      console.warn(
+        "saveProAnswer: нет данных ответа (text/audio/image) — ничего не сохраняем."
+      );
+      return null;
+    }
 
-  // Документ: сначала email, потом taskId
-  // Пример: "iraburljaeva@gmail.com__hello"
-  let docId = userKey;
-  if (taskId) docId += `__${taskId}`;
+    // Ключ ученика: сначала email, потом uid
+    const userKeyRaw = (user.email || user.uid || "").trim();
+    if (!userKeyRaw) {
+      console.error("saveProAnswer: у user нет ни email, ни uid");
+      return null;
+    }
+    const userKey = userKeyRaw.toLowerCase();
 
-  const answerRef = doc(answersCol, docId);
+    // Коллекция с ответами по уроку
+    const answersCol = collection(db, submissionsRoot, lessonId, "answers");
 
-  // определяем тип ответа
-  let answerType = "text";
-  if (answerAudioBase64 && answerText) answerType = "text+audio";
-  else if (answerAudioBase64)         answerType = "audio";
-  else if (answerImageBase64)         answerType = "image";
-  else if (answerText)                answerType = "text";
+    // Документ: email(or uid) + taskId
+    // Пример: "iraburljaeva@gmail.com__hello-text"
+    let docId = userKey + "__" + String(taskId);
+    const answerRef = doc(answersCol, docId);
 
-  const now = serverTimestamp();
+    // определяем тип ответа
+    let answerType = "text";
+    if (answerAudioBase64 && answerText)      answerType = "text+audio";
+    else if (answerAudioBase64)              answerType = "audio";
+    else if (answerImageBase64 && answerText) answerType = "text+image";
+    else if (answerImageBase64)              answerType = "image";
+    else if (answerText)                     answerType = "text";
 
-  const payload = {
-    userEmail: user.email || null,
-    userUid:   user.uid   || null,
+    const now = serverTimestamp();
 
-    courseId,
-    courseTitle: courseTitle || courseId,
+    // Проверяем, существует ли документ, чтобы не перетирать createdAt
+    const existingSnap = await getDoc(answerRef);
+    const isNew        = !existingSnap.exists();
+    const existingData = isNew ? null : existingSnap.data() || {};
 
-    lessonId,
-    lessonTitle: lessonTitle || lessonId,
+    const payload = {
+      userEmail: user.email || null,
+      userUid:   user.uid   || null,
+      userKey, // для удобного поиска в консоли
 
-    taskId,
-    step,
+      courseId,
+      courseTitle: courseTitle || courseId,
 
-    answerType,
-    answerText,
-    answerAudioBase64,
-    answerImageBase64,
+      lessonId,
+      lessonTitle: lessonTitle || lessonId,
 
-    status: "pending",       // именно по этому полю фильтрует review.html
-    meta:   meta || {},
+      taskId,
+      step,
 
-    updatedAt: now,
-    // createdAt запишется один раз и дальше не будет трогаться
-    createdAt: now
-  };
+      answerType,
+      answerText:          answerText          ?? existingData.answerText          ?? null,
+      answerAudioBase64:   answerAudioBase64   ?? existingData.answerAudioBase64   ?? null,
+      answerImageBase64:   answerImageBase64   ?? existingData.answerImageBase64   ?? null,
 
-  await setDoc(answerRef, payload, { merge: true });
-  return docId;
+      status: existingData.status || "pending", // review.html фильтрует по этому полю
+      meta: {
+        ...(existingData.meta || {}),
+        ...(meta || {})
+      },
+
+      updatedAt: now
+    };
+
+    // createdAt проставляем только один раз — при первом сохранении
+    if (isNew || !existingData.createdAt) {
+      payload.createdAt = now;
+    }
+
+    await setDoc(answerRef, payload, { merge: true });
+    return docId;
+  } catch (err) {
+    console.error("saveProAnswer: ошибка при сохранении ответа", err);
+    return null;
+  }
 }
