@@ -498,12 +498,12 @@ if (qaOpenBtns && qaModal && qaList && qaForm && qaText && qaSubmitBtn) {
 
     const text = qaText.value.trim();
     if (!text) {
-      alert("Напишите вопрос 🙂");
+      alert("Напишите вопрос, пожалуйста ");
       return;
     }
 
     if (!currentUser) {
-      alert("Чтобы задать вопрос, войдите в аккаунт.");
+      alert("Чтобы задать вопрос, нужно войти в аккаунт на странице /student/.");
       return;
     }
 
@@ -516,7 +516,7 @@ if (qaOpenBtns && qaModal && qaList && qaForm && qaText && qaSubmitBtn) {
       await addDoc(colRef, {
         text,
         userId:    currentUser.email || currentUser.uid,
-        userEmail: currentUser.email,
+        userEmail: currentUser.email || null,
         createdAt: serverTimestamp(),
         answer: null
       });
@@ -599,23 +599,173 @@ if ("speechSynthesis" in window && window.speechSynthesis) {
   window.speechSynthesis.onvoiceschanged = loadVoices;
   loadVoices();
 }
-
 function speakWord(word) {
-  if (!window.speechSynthesis) return;
-  const u = new SpeechSynthesisUtterance(word);
-  u.lang = "en-US";
-  u.rate = 0.8;
-  if (englishVoices.length) u.voice = englishVoices[0];
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(u);
+  if (!("speechSynthesis" in window) || !window.speechSynthesis) return;
+if (!englishVoices.length) {
+  englishVoices = window.speechSynthesis
+  .getVoices()
+  .filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
 }
+  
+  const utter = new SpeechSynthesisUtterance(word);
+  utter.lang   = "en-US";
+  utter.rate   = 0.8;
+
+  if (englishVoices.length > 0) {
+    utter.voice = englishVoices[0];
+  }
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
+window.speakWord = speakWord;
 
 document.querySelectorAll(".word-tip").forEach(tip => {
   tip.addEventListener("click", () => {
-    const w = tip.textContent.trim();
-    if (w) speakWord(w);
+    const word = tip.textContent.trim();
+    if (word) speakWord(word);
   });
 });
 
-// Старт
+// ====== Словарик (слова из таблиц) ======
+function buildVocabEntries() {
+  const entries = [];
+
+  // Урок 3: слова перечислены вручную
+  if (LESSON_SLUG === "lesson-03") {
+    document.querySelectorAll(".vocab-list li").forEach(li => {
+      const word = li.textContent.trim().toLowerCase();
+      if (word && /^[a-z]+$/.test(word)) {
+        entries.push({ word, translation: "" });
+      }
+    });
+    return entries;
+  }
+
+  // Урок 1 (и другие со словарём в таблицах)
+  const tips = document.querySelectorAll("#step-3 .word-tip");
+  const map  = new Map();
+
+  tips.forEach(tip => {
+    const w  = tip.textContent.trim().toLowerCase();
+    const ru = (tip.dataset.ru || "").trim();
+    if (/^[a-z]+$/.test(w) && !map.has(w)) {
+      map.set(w, ru);
+    }
+  });
+
+  return Array.from(map.entries()).map(([word, translation]) => ({
+    word, translation
+  }));
+}
+
+function renderVocabWords() {
+  if (!vocabListVowels) return;
+
+  const entries = buildVocabEntries();
+  vocabListVowels.innerHTML = "";
+
+  entries.forEach(({ word, translation }) => {
+    const label = document.createElement("label");
+    label.className = "flex items-center gap-2 text-[0.85rem]";
+
+    const ruPart = translation
+      ? `<span class="text-gray-400 text-[0.78rem] ml-1">— ${translation}</span>`
+      : "";
+
+    label.innerHTML = `
+      <input type="checkbox"
+             class="vocab-word"
+             data-word="${word}"
+             data-ru="${translation}"
+             data-category="${VOCAB_CATEGORY}">
+      <span>${word}</span>
+      ${ruPart}
+    `;
+
+    vocabListVowels.appendChild(label);
+  });
+}
+
+if (openVocabBtn && vocabModal && vocabClose && vocabSaveBtn && vocabSelectAll) {
+  openVocabBtn.addEventListener("click", () => {
+    vocabModal.classList.remove("hidden");
+    vocabModal.classList.add("flex");
+
+    renderVocabWords();
+
+    if (!currentUser) {
+      if (vocabAuthWarn) vocabAuthWarn.classList.remove("hidden");
+      vocabSaveBtn.disabled = true;
+    } else {
+      if (vocabAuthWarn) vocabAuthWarn.classList.add("hidden");
+      vocabSaveBtn.disabled = false;
+    }
+  });
+
+  vocabClose.addEventListener("click", () => {
+    vocabModal.classList.add("hidden");
+    vocabModal.classList.remove("flex");
+  });
+
+  vocabSelectAll.addEventListener("click", () => {
+    const boxes = document.querySelectorAll(".vocab-word");
+    const anyUnchecked = Array.from(boxes).some(b => !b.checked);
+    boxes.forEach(b => { b.checked = anyUnchecked; });
+  });
+
+  async function saveWordsToFirestore(entries) {
+    if (!currentUser) return;
+    const userKey = getUserKey();
+    if (!userKey) return;
+
+    const colRef = collection(db, `users/${userKey}/vocabulary`);
+
+    for (const { word, translation } of entries) {
+      await addDoc(colRef, {
+        word,
+        translation: translation || "",
+        lesson:      LESSON_SLUG,
+        courseId:    COURSE_ID,
+        category:    VOCAB_CATEGORY || "",
+        addedAt:     serverTimestamp()
+      });
+    }
+  }
+
+  vocabSaveBtn.addEventListener("click", async () => {
+    if (!currentUser) {
+      alert("Войдите, чтобы сохранить слова.");
+      return;
+    }
+
+    const checked = Array
+      .from(document.querySelectorAll(".vocab-word"))
+      .filter(cb => cb.checked)
+      .map(cb => ({
+        word: cb.dataset.word,
+        translation: cb.dataset.ru || ""
+      }));
+
+    if (checked.length === 0) {
+      alert("Выберите хотя бы одно слово.");
+      return;
+    }
+
+    vocabSaveBtn.disabled  = true;
+    vocabSaveBtn.textContent = "Сохраняем...";
+
+    await saveWordsToFirestore(checked);
+
+    vocabSaveBtn.textContent = "Готово!";
+    setTimeout(() => {
+      vocabModal.classList.add("hidden");
+      vocabModal.classList.remove("flex");
+      vocabSaveBtn.disabled   = false;
+      vocabSaveBtn.textContent = "Добавить выбранные →";
+    }, 700);
+  });
+}
+
+// Старт: показываем первый шаг
 showStep(1);
