@@ -669,7 +669,8 @@ document.querySelectorAll(".word-tip").forEach(tip => {
     if (word) speakWord(word);
   });
 });
-// ====== Сохранение прогресса и выдача бейджа ======
+
+// ====== Сохранение прогресса, XP и streak ======
 async function saveLessonProgressAndBadge() {
   if (!currentUser || !db) return;
 
@@ -677,9 +678,8 @@ async function saveLessonProgressAndBadge() {
   if (!userKey) return;
 
   try {
-    // 1) Прогресс по уроку
+    // === 1) Прогресс по уроку ===
     const progressCol = collection(db, "progress");
-    // фиксированный id, чтобы не плодить дубликаты для одного и того же урока
     const progressId  = `${COURSE_ID}__${LESSON_ID}__${userKey}`;
     const progressRef = doc(progressCol, progressId);
 
@@ -695,20 +695,57 @@ async function saveLessonProgressAndBadge() {
       { merge: true }
     );
 
-    // 2) Выдача бейджа пользователю
+    // === 2) Выдача бейджа (если указан) ===
     if (AWARD_ON_COMPLETE) {
       const userRef = doc(db, "users", userKey);
-
       await setDoc(
         userRef,
-        {
-          badges: arrayUnion(AWARD_ON_COMPLETE)
-        },
+        { badges: arrayUnion(AWARD_ON_COMPLETE) },
         { merge: true }
       );
     }
+
+    // === 3) XP + streak (вариант А) ===
+    const userRef = doc(db, "users", userKey);
+    const snap = await getDoc(userRef);
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    let xp = 0;
+    let streakDays = 1;
+    let lastStudyDate = today;
+
+    if (snap.exists()) {
+      const data = snap.data();
+
+      // XP
+      xp = (data.xp || 0) + 10;
+
+      // STREAK
+      if (data.lastStudyDate === today) {
+        // уже занимались сегодня — streak не растёт
+        streakDays = data.streakDays || 1;
+      } else {
+        // новый день — увеличиваем streak
+        streakDays = (data.streakDays || 0) + 1;
+      }
+    } else {
+      xp = 10; // первый урок в жизни
+      streakDays = 1;
+    }
+
+    await setDoc(
+      userRef,
+      {
+        xp,
+        streakDays,
+        lastStudyDate: today
+      },
+      { merge: true }
+    );
+
   } catch (e) {
-    console.error("Ошибка сохранения прогресса / бейджа:", e);
+    console.error("Ошибка сохранения прогресса / XP / streak:", e);
   }
 }
 // ====== Словарик (слова из таблиц) ======
