@@ -723,6 +723,25 @@ const vocabAuthWarn   = document.getElementById("vocab-auth-warning");
 function buildVocabEntries() {
   const entries = [];
 
+  // === Урок 4: берём слова из скрытого источника ===
+  if (LESSON_SLUG === "lesson-04-tenses") {
+    const tips = document.querySelectorAll("#lesson4-vocab-source .word-tip");
+    const map = new Map();
+
+    tips.forEach(tip => {
+      const word = tip.textContent.trim().toLowerCase();
+      const ru   = (tip.dataset.ru || "").trim();
+
+      if (word && !map.has(word)) map.set(word, ru);
+    });
+
+    return Array.from(map.entries()).map(([word, translation]) => ({
+      word,
+      translation
+    }));
+  }
+
+ 
   // Урок 3: слова перечислены вручную
   if (LESSON_SLUG === "lesson-03") {
     document.querySelectorAll(".vocab-list li").forEach(li => {
