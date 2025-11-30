@@ -130,7 +130,13 @@
       box-shadow: 0 5px 20px rgba(248, 113, 113, 0.35);
       animation: pulse-hint 2s ease-in-out infinite;
     }
-
+ .badge-icon img {
+   width: 140px;
+   height: 140px;
+   display: block;
+   margin: 0 auto 20px;
+ }
+    
     @keyframes pulse-hint {
       0%, 100% {
         transform: scale(1);
@@ -364,9 +370,7 @@
       <p>• Мем стал настолько популярным, что попал в словари английского языка</p>
     </div>
 
-    <div class="explanation-box">
-      <p><strong>Почему это важно для изучения английского?</strong></p>
-      <p>
+    <p class="step-body-text mb-4">
         Понимание интернет-культуры и мемов — важная часть современного английского языка. Это помогает:
       </p>
       <ul class="list-disc">
@@ -383,7 +387,7 @@
 
     <!-- БЕЙДЖ -->
     <div class="badge-container" id="badge-container">
-      <div class="badge-icon">🎵</div>
+
       <div class="badge-title">Never Gonna Give You Up</div>
       <div class="badge-subtitle">Вы получили бейдж!</div>
       <div class="badge-description">
@@ -392,12 +396,7 @@
       </div>
     </div>
 
-    <div class="flex justify-center my-4">
-      <img src="/assets/gifs/english-lesson5-finish.gif" alt="Finish gif"
-           class="w-64 h-auto rounded-2xl"
-           onerror="this.style.display='none'">
-    </div>
-
+ 
     <div class="mt-6 flex flex-wrap gap-3 justify-center">
       <a href="/courses/english-intro/lesson-06.html" class="btn-main">
         Перейти к следующему уроку →
@@ -532,6 +531,21 @@ const step2 = document.getElementById('step-2');
 if (step2) {
   observer.observe(step2, { attributes: true, attributeFilter: ['class'] });
 }
+   // Подставляем картинку бейджа по badgeId
+  (function () {
+    const cfg = window.lessonConfig || {};
+    const badgeContainer = document.getElementById("badge-container");
+    if (!badgeContainer) return;
+
+    const iconEl = badgeContainer.querySelector(".badge-icon");
+    if (!iconEl) return;
+
+    const id   = cfg.badgeId || "rickrolling";
+    const name = cfg.badgeName || id;
+
+    iconEl.innerHTML =
+      '<img src="/assets/badges/' + id + '.png" alt="' + name + '">';
+  })();
 </script>
 
 <!-- ============================= -->
