@@ -2119,7 +2119,7 @@
 
         const [emailSnap, uidSnap] = await Promise.all([
           emailRef ? emailRef.get() : Promise.resolve(null),
-          uidRef   ? uidRef.get()   : Promise.resolve(        ]);
+          uidRef   ? uidRef.get()   : Promise.resolve( );
 
         const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
         const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
