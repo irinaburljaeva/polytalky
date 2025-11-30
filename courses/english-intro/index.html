@@ -414,7 +414,7 @@
 
 <!-- ЛОГИКА СТРАНИЦЫ КАК МОДУЛЬ -->
 <script type="module">
-  // Firebase Auth + Firestore (используем те же версии, что и в уроках)
+  // Firebase Auth + Firestore
   import {
     onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -436,7 +436,7 @@
   const COURSE_ID = "english-intro";
 
   // -----------------------------------
-  // БУРГЕР
+  // БУРГЕР-МЕНЮ
   // -----------------------------------
   const b = document.getElementById('burger');
   const m = document.getElementById('mnav');
@@ -551,7 +551,6 @@
 
   async function loadStateFromFirebaseOrMigrate(userKey) {
     if (!db || !userKey) {
-      // страховка: работаем как локальный
       const local = loadLocalState();
       appState = {
         xp: local.xp,
@@ -561,6 +560,7 @@
         isFromFirebase: false
       };
       currentVocab = appState.vocab;
+      console.log("[Intro] Firebase недоступен, работаем из localStorage");
       return;
     }
 
@@ -578,7 +578,7 @@
         const hasXpField = Object.prototype.hasOwnProperty.call(data, "xp");
 
         if (!hasXpField && local.xp > 0) {
-          // Миграция: если в Firebase ещё нет xp, но есть локальный прогресс
+          // Миграция: в Firebase ещё нет xp, но в localStorage уже есть
           xp = local.xp;
           streakDays = local.streakDays || 0;
           await setDoc(
@@ -595,7 +595,7 @@
           streakDays = data.streakDays || 0;
         }
       } else {
-        // Пользователь есть в auth, но ещё нет документа — создаём по локальному
+        // Документа нет — создаём по локальным данным
         xp = local.xp || 0;
         streakDays = local.streakDays || 0;
         await setDoc(
@@ -609,12 +609,11 @@
         );
       }
 
-      // ---------- progress (завершённые уроки) ----------
+      // ---------- progress: ВСЕ уроки пользователя ----------
       const progressCol = collection(db, "progress");
       const qProg = query(
         progressCol,
-        where("userId", "==", userKey),
-        where("courseId", "==", COURSE_ID)
+        where("userId", "==", userKey)
       );
       const progSnap = await getDocs(qProg);
 
@@ -626,37 +625,20 @@
         }
       });
 
-      // ---------- vocabulary ----------
+      // ---------- vocabulary: ВСЕ слова пользователя ----------
       const vocabCol = collection(db, "users", userKey, "vocabulary");
+      const vsnap = await getDocs(vocabCol);
+
       let vocab = [];
-      try {
-        const qVocab = query(
-          vocabCol,
-          where("courseId", "==", COURSE_ID)
-        );
-        const vsnap = await getDocs(qVocab);
-        vsnap.forEach(vdoc => {
-          const d = vdoc.data();
-          if (!d.word) return;
-          vocab.push({
-            word: d.word,
-            translation: d.translation || "",
-            lessonId: d.lesson || "user"
-          });
+      vsnap.forEach(vdoc => {
+        const d = vdoc.data();
+        if (!d.word) return;
+        vocab.push({
+          word: d.word,
+          translation: d.translation || "",
+          lessonId: d.lesson || "user"
         });
-      } catch (e) {
-        console.warn("Ошибка загрузки словаря, работаем без фильтра по courseId:", e);
-        const vsnap = await getDocs(vocabCol);
-        vsnap.forEach(vdoc => {
-          const d = vdoc.data();
-          if (!d.word) return;
-          vocab.push({
-            word: d.word,
-            translation: d.translation || "",
-            lessonId: d.lesson || "user"
-          });
-        });
-      }
+      });
 
       appState = {
         xp,
@@ -666,6 +648,11 @@
         isFromFirebase: true
       };
       currentVocab = appState.vocab;
+      console.log("[Intro] Загружено из Firebase:", {
+        xp, streakDays,
+        lessons: completedLessons.length,
+        vocab: vocab.length
+      });
 
     } catch (e) {
       console.error("Ошибка загрузки состояния из Firebase, fallback к localStorage:", e);
@@ -814,8 +801,9 @@
           if (!userKey) throw new Error("Нет userKey");
 
           const colRef = collection(db, "users", userKey, "vocabulary");
+          // doc(colRef) — сгенерировать новый ID
           await setDoc(
-            doc(colRef),  // авто-ID
+            doc(colRef),
             {
               word,
               translation,
@@ -831,7 +819,7 @@
 
         } catch (err) {
           console.error("Ошибка сохранения слова в Firestore:", err);
-          // fallback — в локальное состояние
+          // fallback — localStorage
           localAddVocab(word, translation);
           const local = loadLocalState();
           appState.vocab = local.vocab;
@@ -1107,7 +1095,6 @@
       currentUserKey = makeUserKey(user);
 
       if (!user) {
-        // Нет авторизации -> чисто localStorage
         const local = loadLocalState();
         appState = {
           xp: local.xp,
@@ -1116,6 +1103,7 @@
           vocab: local.vocab,
           isFromFirebase: false
         };
+        console.log("[Intro] Пользователь не авторизован, localStorage-режим");
         renderAll();
       } else {
         await loadStateFromFirebaseOrMigrate(currentUserKey);
@@ -1132,6 +1120,7 @@
       vocab: local.vocab,
       isFromFirebase: false
     };
+    console.log("[Intro] FirebaseInit не найден, всё берём из localStorage");
     renderAll();
   }
 </script>
