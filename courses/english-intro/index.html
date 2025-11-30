@@ -227,6 +227,9 @@
           <button data-tab="practice" class="mode-btn inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-full border border-gray-200 bg-[#fffef7]">
             <span>💬</span><span>Практика</span>
           </button>
+          <button data-tab="pro" class="mode-btn inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-full border border-gray-200 bg-[#fffef7]">
+            <span>✨</span><span>PRO-доступ</span>
+          </button>
         </div>
 
         <!-- Панели -->
@@ -271,24 +274,39 @@
           </div>
         </div>
 
+        <!-- УПРАЖНЕНИЯ: несколько форматов -->
         <div id="tab-exercises" class="tab-panel hidden">
           <div class="grid md:grid-cols-[2fr,1fr] gap-6 items-start text-sm text-[var(--ink-2)]">
             <div>
-              <h2 class="text-base sm:text-lg font-extrabold mb-2">Мини-тренажёр</h2>
+              <h2 class="text-base sm:text-lg font-extrabold mb-2">Упражнения по словам</h2>
               <p class="text-xs sm:text-sm mb-3">
-                Когда нет ресурса на новый урок — можно «пощёлкать» слова. Мозг всё равно получает маленькую дозу «я молодец».
+                Когда нет ресурса на новый урок — можно «пощёлкать» слова в одном из режимов. Мозг всё равно получает маленькую дозу «я молодец».
               </p>
-              <div id="quiz-box" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs space-y-2 bg-[#fffef7]"></div>
-              <button id="quiz-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-white text-xs font-semibold">
+
+              <div class="flex flex-wrap gap-2 mb-3 text-[11px]">
+                <button class="ex-mode-btn mode-btn-active px-3 py-1.5 rounded-full border border-gray-200 bg-white" data-mode="cards">
+                  🃏 Карточки
+                </button>
+                <button class="ex-mode-btn px-3 py-1.5 rounded-full border border-gray-200 bg-white" data-mode="quiz">
+                  ✅ Тест
+                </button>
+                <button class="ex-mode-btn px-3 py-1.5 rounded-full border border-gray-200 bg-white" data-mode="typing">
+                  ✍️ Письмо
+                </button>
+              </div>
+
+              <div id="exercise-box" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs space-y-3 bg-[#fffef7]"></div>
+              <button id="exercise-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-white text-xs font-semibold">
                 Следующее задание
               </button>
             </div>
+
             <div class="bg-[#fffef7] border border-gray-200 rounded-2xl p-4 text-xs sm:text-sm">
-              <h3 class="font-semibold mb-2">Как использовать тренажёр</h3>
+              <h3 class="font-semibold mb-2">Как использовать упражнения</h3>
               <ul class="list-disc list-inside space-y-1">
                 <li>Сделайте 3–5 заданий — и считайте, что вы «поддержали серию».</li>
-                <li>Используйте его как разминку перед уроком или как лёгкую практику вечером.</li>
-                <li>Сложные слова пометьте в заметке или вернитесь к уроку, где они встретились.</li>
+                <li>Используйте любой режим как разминку перед уроком или лёгкую практику вечером.</li>
+                <li>Если слово регулярно «падает» — вернитесь к уроку, откуда оно, и посмотрите в контексте.</li>
               </ul>
             </div>
           </div>
@@ -297,9 +315,9 @@
         <div id="tab-practice" class="tab-panel hidden">
           <div class="grid md:grid-cols-[2fr,1fr] gap-6 items-start text-sm text-[var(--ink-2)]">
             <div>
-              <h2 class="text-base sm:text-lg font-extrabold mb-2">Практика языка</h2>
+              <h2 class="text-base sm:text-lg font-extrabold mb-2">Практика языка в жизни</h2>
               <p class="text-xs sm:text-sm mb-3">
-                Здесь — идеи, как использовать английский вне уроков. Можно делать просто для себя или отправлять задания куратору (платная функция).
+                Здесь — простые идеи, как использовать английский вне уроков. Можно делать просто для себя, без обязательных отчётов и проверок.
               </p>
               <div id="practice-idea" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs bg-[#fffef7]"></div>
               <button id="practice-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-white text-xs font-semibold">
@@ -307,29 +325,48 @@
               </button>
             </div>
             <div class="bg-[#fffef7] border border-gray-200 rounded-2xl p-4 text-xs sm:text-sm space-y-2">
-              <h3 class="font-semibold mb-1">Платные функции внутри курса</h3>
-              <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-white">
-                <p class="font-semibold mb-1">🧑‍🏫 Проверка заданий куратором (PRO)</p>
-                <p>Вы выполняете письменные и голосовые задания, а куратор присылает разбор, исправляет ошибки и даёт более естественные формулировки.</p>
-              </div>
-              <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-white">
-                <p class="font-semibold mb-1">📅 Еженедельный чек-ап прогресса (PRO)</p>
-                <p>Раз в неделю вы получаете мини-отчёт: что уже получилось и на чём лучше сфокусироваться в следующих уроках.</p>
-              </div>
+              <h3 class="font-semibold mb-1">Для кого эта практика</h3>
+              <p>Для тех, кто хочет мягко встроить английский в повседневность: голосовые, мини-тексты, подписи к фото, заметки.</p>
               <p class="text-[11px] text-[var(--ink-2)]">
-                Базовый доступ к урокам, словарю и тренажёрам остаётся бесплатным. Платные опции добавляют «живого» человека и обратную связь.
+                Если захочется, чтобы задания проверял живой человек — это уже часть <b>PRO-доступа</b> во вкладке выше.
               </p>
-              <!-- КНОПКА ОФОРМИТЬ PRO -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ОТДЕЛЬНАЯ ВКЛАДКА PRO -->
+        <div id="tab-pro" class="tab-panel hidden">
+          <div class="grid md:grid-cols-[2fr,1fr] gap-6 items-start text-sm text-[var(--ink-2)]">
+            <div>
+              <h2 class="text-base sm:text-lg font-extrabold mb-2">PRO-доступ и платные функции</h2>
+              <p class="text-xs sm:text-sm mb-3">
+                Базовый доступ к урокам, словарю и тренажёрам остаётся бесплатным. PRO добавляет кураторов, проверку заданий и больше персональной поддержки.
+              </p>
+
+              <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-white space-y-2">
+                <p class="font-semibold mb-1">🧑‍🏫 Проверка заданий куратором</p>
+                <p>Вы выполняете письменные и голосовые задания, а куратор присылает разбор, исправляет ошибки и предлагает более естественные формулировки.</p>
+              </div>
+
+              <div class="border border-gray-200 rounded-2xl px-3 py-3 bg-white space-y-2 mt-3">
+                <p class="font-semibold mb-1">📅 Еженедельный чек-ап прогресса</p>
+                <p>Раз в неделю вы получаете мини-отчёт: что уже получилось и на чём лучше сфокусироваться дальше.</p>
+              </div>
+            </div>
+
+            <div class="bg-[#fffef7] border border-gray-200 rounded-2xl p-4 text-xs sm:text-sm space-y-2">
+              <h3 class="font-semibold mb-1">Оформить PRO</h3>
+              <p>Оплата — картами зарубежных банков через Stripe. Сначала войдите в личный кабинет, затем вернитесь на эту страницу.</p>
+
               <button
                 id="btn-pro"
-                class="mt-3 w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--brand-orange)] hover:bg-[var(--brand-yellow-deep)] text-xs sm:text-sm font-semibold text-white shadow-soft"
+                class="mt-2 w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[var(--brand-orange)] hover:bg-[var(--brand-yellow-deep)] text-xs sm:text-sm font-semibold text-white shadow-soft"
               >
                 ✨ Оформить PRO-доступ
               </button>
+
               <p class="mt-1 text-[10px] text-[var(--ink-2)]">
-                Чтобы оформить PRO, сначала войдите в ваш
-                <a href="/student/" class="underline">личный кабинет</a>, а затем вернитесь на эту страницу.
-                Оплата — картами зарубежных банков через Stripe.
+                Если оплата не создаётся или вы видите ошибку — напишите нам, пожалуйста, через форму обратной связи в личном кабинете.
               </p>
             </div>
           </div>
@@ -340,21 +377,21 @@
   </section>
 </main>
 
-<!-- FOOTER (как на главной) -->
+<!-- FOOTER: более нейтральный для курса -->
 <footer class="border-t border-gray-200 bg-white/80 backdrop-blur py-10 text-sm text-gray-700 mt-4">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
     <div>
       <a href="/" class="inline-flex items-center gap-2 font-semibold text-gray-900">
-        <span class="inline-flex h-8 w-8 rounded-xl bg-[var(--brand-yellow-deep)] items-center justify-center">🏷️</span>
-        PolyTalky
+        <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl">
+        <span>PolyTalky · English Intro</span>
       </a>
-      <p class="mt-3 text-gray-500">Изучайте языки для жизни, а не только для тестов.</p>
+      <p class="mt-3 text-gray-500">Английский для жизни: короткие уроки, геймификация и практика без стресса.</p>
       <p class="mt-4 text-gray-400">© 2025 PolyTalky. Все права защищены.</p>
     </div>
     <div>
-      <h3 class="font-semibold text-gray-900 mb-3">Навигация</h3>
+      <h3 class="font-semibold text-gray-900 mb-3">Разделы сайта</h3>
       <ul class="space-y-2">
-        <li><a href="/courses/" class="hover:underline">Курсы</a></li>
+        <li><a href="/courses/" class="hover:underline">Все курсы</a></li>
         <li><a href="/shop/" class="hover:underline">Магазин</a></li>
         <li><a href="/student/" class="hover:underline">Личный кабинет</a></li>
         <li><a href="/contact.html" class="hover:underline">Контакты</a></li>
@@ -375,35 +412,40 @@
 <!-- Stripe.js для Checkout -->
 <script src="https://js.stripe.com/v3"></script>
 
-<!-- СТЕЙТ КУРСА -->
-<script src="/courses/english-intro/english-intro-state.js"></script>
-<script>
-  // Бургер
-  const b=document.getElementById('burger'), m=document.getElementById('mnav');
-  if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
+<!-- ЛОГИКА СТРАНИЦЫ КАК МОДУЛЬ -->
+<script type="module">
+  import { EnglishIntro } from "/courses/english-intro/english-intro-state.js";
 
-  // Описание уроков
+  // Бургер
+  const b = document.getElementById('burger');
+  const m = document.getElementById('mnav');
+  if (b && m) {
+    b.addEventListener('click', () => m.classList.toggle('hidden'));
+  }
+
+  // Описание уроков (id = lessonSlug из lessonConfig)
   const courseLessons = [
-    { id:"lesson-01-hello", title:"Урок 1 · Hello & Goodbye", minutes:10, url:"/courses/english-intro/lesson-01-hello.html" },
-    { id:"lesson-02-intro", title:"Урок 2 · Как представиться", minutes:12, url:"/courses/english-intro/lesson-02-intro.html" },
-    // ...остальные уроки
+    { id:"lesson-01-hello",   title:"Урок 1 · Hello & Goodbye", minutes:10, url:"/courses/english-intro/lesson-01-hello.html" },
+    { id:"lesson-02-intro",   title:"Урок 2 · Как представиться", minutes:12, url:"/courses/english-intro/lesson-02-intro.html" },
+    { id:"lesson-04-tenses",  title:"Урок 4 · Времена (Simple / Continuous / Perfect)", minutes:15, url:"/courses/english-intro/lesson-04.html" },
+    { id:"lesson-05-rickroll",title:"Урок 5 · Культурный феномен: рикролл", minutes:10, url:"/courses/english-intro/lesson-05.html" }
+    // при добавлении новых уроков — просто дописываем сюда
   ];
 
   // Переключатель режимов
   const modeButtons = document.querySelectorAll(".mode-btn");
   const panels = {
-    lessons: document.getElementById("tab-lessons"),
-    vocab: document.getElementById("tab-vocab"),
+    lessons:   document.getElementById("tab-lessons"),
+    vocab:     document.getElementById("tab-vocab"),
     exercises: document.getElementById("tab-exercises"),
-    practice: document.getElementById("tab-practice")
+    practice:  document.getElementById("tab-practice"),
+    pro:       document.getElementById("tab-pro")
   };
 
   modeButtons.forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const tab = btn.dataset.tab;
-      modeButtons.forEach(b=>{
-        b.classList.remove("mode-btn-active");
-      });
+      modeButtons.forEach(b=>b.classList.remove("mode-btn-active"));
       btn.classList.add("mode-btn-active");
       Object.entries(panels).forEach(([name,el])=>{
         if (!el) return;
@@ -412,59 +454,38 @@
     });
   });
 
-  // Универсальная функция: достать текущий uid (как на странице PRO)
+  // Универсальная функция: достать текущий uid (если нужно для Stripe)
   async function getCurrentUid() {
-    // 1) Пробуем из localStorage
     let uid = localStorage.getItem('pt_uid');
-    if (uid) {
-      return uid;
-    }
-
-    // 2) Пробуем взять из Firebase Auth, если он подключён
-    try {
-      if (window.firebase && firebase.auth) {
-        uid = await new Promise(resolve => {
-          const unsub = firebase.auth().onAuthStateChanged(user => {
-            unsub();
-            resolve(user ? user.uid : null);
-          });
-        });
-        if (uid) {
-          localStorage.setItem('pt_uid', uid);
-          return uid;
-        }
-      }
-    } catch (e) {
-      console.warn('Не удалось получить uid из Firebase:', e);
-    }
-
-    // 3) Не нашли
+    if (uid) return uid;
+    // Если на других страницах вы уже сохраняете uid — этого достаточно.
     return null;
   }
 
   // Статы
-  const statLevel = document.getElementById("stat-level");
-  const statXp = document.getElementById("stat-xp");
-  const statStreak = document.getElementById("stat-streak");
+  const statLevel    = document.getElementById("stat-level");
+  const statXp       = document.getElementById("stat-xp");
+  const statStreak   = document.getElementById("stat-streak");
   const progressText = document.getElementById("progress-text");
-  const progressBar = document.getElementById("progress-bar");
-  const badgeRow = document.getElementById("badge-row");
+  const progressBar  = document.getElementById("progress-bar");
+  const badgeRow     = document.getElementById("badge-row");
 
   let currentVocab = [];
 
   function updateStats(){
     const state = EnglishIntro.getState();
     const level = 1 + Math.floor(state.xp / 100);
-    statLevel.textContent = level;
-    statXp.textContent = state.xp;
-    statStreak.textContent = state.streakDays + " дней";
+    statLevel.textContent  = level;
+    statXp.textContent     = state.xp;
+    statStreak.textContent = (state.streakDays || 0) + " дней";
 
     const total = courseLessons.length;
-    const done = courseLessons.filter(l => state.completedLessons.includes(l.id)).length;
+    const done  = courseLessons.filter(l => state.completedLessons.includes(l.id)).length;
     const percent = total ? Math.round(done/total*100) : 0;
     progressText.textContent = `${done} / ${total}`;
-    progressBar.style.width = percent + "%";
+    progressBar.style.width  = percent + "%";
 
+    // Бейджи внутри курса — простая визуализация по прогрессу
     badgeRow.innerHTML = "";
     const earned = [];
 
@@ -474,7 +495,7 @@
     if (done >= 3) {
       earned.push({ label:"3+ урока", emoji:"📚" });
     }
-    if (state.streakDays >= 3) {
+    if ((state.streakDays || 0) >= 3) {
       earned.push({ label:"Серия 3+ дня", emoji:"🔥" });
     }
     if (state.xp >= 50) {
@@ -507,7 +528,7 @@
   // Список уроков
   function renderLessons(){
     const state = EnglishIntro.getState();
-    const box = document.getElementById("lessons-list");
+    const box   = document.getElementById("lessons-list");
     box.innerHTML = "";
     courseLessons.forEach(lesson=>{
       const isDone = state.completedLessons.includes(lesson.id);
@@ -533,7 +554,7 @@
   // Словарик
   function renderVocab(){
     const list = currentVocab;
-    const box = document.getElementById("vocab-list");
+    const box  = document.getElementById("vocab-list");
     box.innerHTML = "";
     if(!list.length){
       box.innerHTML = `<p class="py-2 text-xs text-[var(--ink-2)]">Пока пусто. Пройдите пару уроков или добавьте слова вручную.</p>`;
@@ -553,87 +574,139 @@
   }
 
   const vocabForm = document.getElementById("vocab-form");
-  vocabForm.addEventListener("submit", async (e)=>{
+  vocabForm.addEventListener("submit", (e)=>{
     e.preventDefault();
     const form = e.target;
     const word = form.word.value.trim();
     const translation = form.translation.value.trim();
     if(!word || !translation) return;
 
-    let savedToFirebase = false;
-    try{
-      if (window.firebase && firebase.firestore && firebase.auth) {
-        const user = firebase.auth().currentUser;
-        if (user) {
-          const db = firebase.firestore();
-          const docRef = await db
-            .collection("users")
-            .doc(user.uid)
-            .collection("vocabulary")
-            .add({
-              word,
-              translation,
-              lessonId:"user",
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-          currentVocab.push({ id: docRef.id, word, translation, lessonId:"user" });
-          savedToFirebase = true;
-        }
-      }
-    } catch(err){
-      console.error("Не удалось сохранить слово в Firestore:", err);
-    }
-
-    if(!savedToFirebase){
-      EnglishIntro.addVocab({word, translation, lessonId:"user"});
-      currentVocab = EnglishIntro.getVocab();
-    }
+    // сохраняем в локальном состоянии курса
+    EnglishIntro.addVocab({word, translation, lessonId:"user"});
+    currentVocab = EnglishIntro.getVocab();
 
     form.reset();
     renderVocab();
   });
 
-  // Мини-квиз по словарю
-  const quizBox = document.getElementById("quiz-box");
-  function makeQuiz(){
+  // ===== УПРАЖНЕНИЯ: несколько режимов =====
+  const exerciseBox   = document.getElementById("exercise-box");
+  const exerciseNext  = document.getElementById("exercise-next");
+  const exModeButtons = document.querySelectorAll(".ex-mode-btn");
+  let currentExerciseMode = "cards";
+
+  exModeButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentExerciseMode = btn.dataset.mode;
+      exModeButtons.forEach(b => b.classList.remove("mode-btn-active"));
+      btn.classList.add("mode-btn-active");
+      renderExercise();
+    });
+  });
+
+  function renderExercise(){
     const words = currentVocab;
-    if(words.length < 2){
-      quizBox.innerHTML = `<p>В словаре пока мало слов. Добавьте ещё пару, и тренажёр заработает.</p>`;
+    exerciseBox.innerHTML = "";
+
+    if (words.length < 1) {
+      exerciseBox.innerHTML = `<p>В словаре пока мало слов. Пройдите уроки или добавьте слова во вкладке «Словарик».</p>`;
       return;
     }
-    const correct = words[Math.floor(Math.random()*words.length)];
-    const others = words.filter(w=>w.id!==correct.id);
-    const options = [correct];
-    while(options.length < Math.min(4, words.length)){
-      const cand = others[Math.floor(Math.random()*others.length)];
-      if(!options.includes(cand)) options.push(cand);
-    }
-    options.sort(()=>Math.random()-0.5);
 
-    quizBox.innerHTML = "";
-    const q = document.createElement("p");
-    q.className = "font-semibold";
-    q.textContent = `Как перевести: "${correct.word}"?`;
-    quizBox.appendChild(q);
+    const word = words[Math.floor(Math.random() * words.length)];
 
-    let answered = false;
-    options.forEach(item=>{
-      const btn = document.createElement("button");
-      btn.className = "mt-2 block w-full text-left px-3 py-2 rounded-xl border border-gray-200 bg-white";
-      btn.textContent = item.translation;
-      btn.addEventListener("click", ()=>{
-        if(answered) return;
-        answered = true;
-        if(item.id === correct.id){
-          btn.classList.add("border-emerald-400","bg-emerald-50");
-        }else{
-          btn.classList.add("border-red-300","bg-red-50");
+    if (currentExerciseMode === "cards") {
+      // Карточки: сначала слово, кнопка "Показать перевод"
+      const q = document.createElement("p");
+      q.className = "font-semibold";
+      q.textContent = `Что это за слово: "${word.word}"?`;
+
+      const btnShow = document.createElement("button");
+      btnShow.className = "mt-2 inline-flex px-3 py-2 rounded-xl border border-gray-200 bg-white";
+      btnShow.textContent = "Показать перевод";
+      const ans = document.createElement("p");
+      ans.className = "mt-2 text-[var(--ink-2)] hidden";
+      ans.textContent = `Перевод: ${word.translation}`;
+
+      btnShow.addEventListener("click", ()=>{
+        ans.classList.remove("hidden");
+      });
+
+      exerciseBox.appendChild(q);
+      exerciseBox.appendChild(btnShow);
+      exerciseBox.appendChild(ans);
+    } else if (currentExerciseMode === "quiz") {
+      // Тест: выбор перевода
+      if (words.length < 2) {
+        exerciseBox.innerHTML = `<p>Для теста нужно хотя бы 2 слова. Добавьте ещё одно слово.</p>`;
+        return;
+      }
+      const others = words.filter(w => w !== word);
+      const options = [word];
+      while (options.length < Math.min(4, words.length)) {
+        const cand = others[Math.floor(Math.random()*others.length)];
+        if (!options.includes(cand)) options.push(cand);
+      }
+      options.sort(()=>Math.random()-0.5);
+
+      const q = document.createElement("p");
+      q.className = "font-semibold";
+      q.textContent = `Как перевести: "${word.word}"?`;
+      exerciseBox.appendChild(q);
+
+      let answered = false;
+      options.forEach(item=>{
+        const btn = document.createElement("button");
+        btn.className = "mt-2 block w-full text-left px-3 py-2 rounded-xl border border-gray-200 bg-white";
+        btn.textContent = item.translation;
+        btn.addEventListener("click", ()=>{
+          if(answered) return;
+          answered = true;
+          if(item === word){
+            btn.classList.add("border-emerald-400","bg-emerald-50");
+          }else{
+            btn.classList.add("border-red-300","bg-red-50");
+          }
+        });
+        exerciseBox.appendChild(btn);
+      });
+    } else if (currentExerciseMode === "typing") {
+      // Письмо: вводим перевод
+      const q = document.createElement("p");
+      q.className = "font-semibold";
+      q.textContent = `Напишите перевод: "${word.word}"`;
+      const input = document.createElement("input");
+      input.className = "mt-2 w-full border border-gray-200 rounded-xl px-3 py-2 text-xs";
+      input.placeholder = "ваш вариант перевода";
+      const btnCheck = document.createElement("button");
+      btnCheck.className = "mt-2 inline-flex px-3 py-2 rounded-xl border border-gray-200 bg-white";
+      btnCheck.textContent = "Проверить";
+      const feedback = document.createElement("p");
+      feedback.className = "mt-2 text-[11px]";
+
+      btnCheck.addEventListener("click", ()=>{
+        const val = input.value.trim().toLowerCase();
+        if (!val) return;
+        const correct = (word.translation || "").toLowerCase();
+        if (correct && correct.includes(val)) {
+          feedback.textContent = `👍 Да, подходит! В словарике записано: "${word.translation}".`;
+          feedback.classList.remove("text-red-600");
+          feedback.classList.add("text-emerald-600");
+        } else {
+          feedback.textContent = `Не совсем. В словарике записано: "${word.translation}".`;
+          feedback.classList.remove("text-emerald-600");
+          feedback.classList.add("text-red-600");
         }
       });
-      quizBox.appendChild(btn);
-    });
+
+      exerciseBox.appendChild(q);
+      exerciseBox.appendChild(input);
+      exerciseBox.appendChild(btnCheck);
+      exerciseBox.appendChild(feedback);
+    }
   }
-  document.getElementById("quiz-next").addEventListener("click", makeQuiz);
+
+  exerciseNext.addEventListener("click", renderExercise);
 
   // Практика
   const practiceIdeas = [
@@ -664,7 +737,7 @@
     }
   });
 
-  // Кнопка "Оформить PRO" — как на странице pro.html
+  // Кнопка "Оформить PRO"
   const proBtn = document.getElementById("btn-pro");
   if (proBtn) {
     proBtn.addEventListener("click", async () => {
@@ -714,45 +787,18 @@
     });
   }
 
-  // Загрузка словаря: сначала Firestore (если есть и пользователь залогинен), потом локальный стейт
-  async function loadVocabFromFirebaseIfPossible() {
-    try {
-      if (window.firebase && firebase.firestore && firebase.auth) {
-        await new Promise(resolve => {
-          const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-            unsubscribe();
-            if (!user) {
-              currentVocab = EnglishIntro.getVocab();
-              return resolve();
-            }
-            // фиксируем uid и для других страниц
-            localStorage.setItem('pt_uid', user.uid);
-            const db = firebase.firestore();
-            const snap = await db
-              .collection("users")
-              .doc(user.uid)
-              .collection("vocabulary")
-              .get();
-            currentVocab = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            resolve();
-          });
-        });
-      } else {
-        currentVocab = EnglishIntro.getVocab();
-      }
-    } catch (err) {
-      console.error("Ошибка загрузки словаря из Firestore, используем локальные данные:", err);
-      currentVocab = EnglishIntro.getVocab();
-    }
+  // Загрузка словаря из состояния курса
+  function loadVocabFromState() {
+    currentVocab = EnglishIntro.getVocab();
   }
 
   // init
-  (async function initPage(){
-    await loadVocabFromFirebaseIfPossible();
+  (function initPage(){
+    loadVocabFromState();
     updateStats();
     renderLessons();
     renderVocab();
-    makeQuiz();
+    renderExercise();
     renderPracticeIdea();
   })();
 </script>
