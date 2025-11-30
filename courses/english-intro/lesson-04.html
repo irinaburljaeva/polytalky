@@ -1111,21 +1111,17 @@ if (step4) {
 
 /* ===== Добавляем слова урока 4 в словарик ===== */
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Проверяем, что это урок 4
-  if (window.lessonConfig?.lessonSlug !== "lesson-04-tenses") return;
+if (window.lessonConfig?.lessonSlug === "lesson-04-tenses") {
 
-  // Переопределяем только для урока 4
-  window.buildVocabEntries = function() {
-    const entries = [];
+  window.buildVocabEntries = function () {
     const tips = document.querySelectorAll("#lesson4-vocab-source .word-tip");
     const map = new Map();
 
     tips.forEach(tip => {
-      const w  = tip.textContent.trim().toLowerCase();
-      const ru = (tip.dataset.ru || "").trim();
-      if (!w) return;
-      if (!map.has(w)) map.set(w, ru);
+      const word = tip.textContent.trim().toLowerCase();
+      const translation = (tip.dataset.ru || "").trim();
+      if (!word) return;
+      if (!map.has(word)) map.set(word, translation);
     });
 
     return Array.from(map.entries()).map(([word, translation]) => ({
@@ -1133,7 +1129,8 @@ document.addEventListener("DOMContentLoaded", () => {
       translation
     }));
   };
-});
+
+}
 </script>
 
 <!-- ============================= -->
