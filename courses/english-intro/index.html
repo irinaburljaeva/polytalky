@@ -414,16 +414,33 @@
 
 <!-- ЛОГИКА СТРАНИЦЫ КАК МОДУЛЬ -->
 <script type="module">
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import {
+    collection,
+    getDocs,
+    query,
+    where,
+    doc,
+    getDoc,
+    setDoc,
+    addDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
   import { EnglishIntro } from "/courses/english-intro/english-intro-state.js";
 
-  // Бургер
+  const auth = window.firebaseAuth;
+  const db   = window.firebaseDb;
+  const COURSE_ID = "english-intro";
+
+  // ======= БУРГЕР =======
   const b = document.getElementById('burger');
   const m = document.getElementById('mnav');
   if (b && m) {
     b.addEventListener('click', () => m.classList.toggle('hidden'));
   }
 
-  // Описание уроков (id = lessonSlug из lessonConfig)
+  // ======= ОПИСАНИЕ УРОКОВ =======
   const courseLessons = [
     { id:"lesson-01-hello",   title:"Урок 1 · Hello & Goodbye", minutes:10, url:"/courses/english-intro/lesson-01-hello.html" },
     { id:"lesson-02-intro",   title:"Урок 2 · Как представиться", minutes:12, url:"/courses/english-intro/lesson-02-intro.html" },
@@ -432,7 +449,7 @@
     // при добавлении новых уроков — просто дописываем сюда
   ];
 
-  // Переключатель режимов
+  // ======= ТАБЫ РЕЖИМОВ =======
   const modeButtons = document.querySelectorAll(".mode-btn");
   const panels = {
     lessons:   document.getElementById("tab-lessons"),
@@ -454,15 +471,7 @@
     });
   });
 
-  // Универсальная функция: достать текущий uid (если нужно для Stripe)
-  async function getCurrentUid() {
-    let uid = localStorage.getItem('pt_uid');
-    if (uid) return uid;
-    // Если на других страницах вы уже сохраняете uid — этого достаточно.
-    return null;
-  }
-
-  // Статы
+  // ======= ГЛОБАЛЬНОЕ СОСТОЯНИЕ ДЛЯ UI =======
   const statLevel    = document.getElementById("stat-level");
   const statXp       = document.getElementById("stat-xp");
   const statStreak   = document.getElementById("stat-streak");
@@ -470,22 +479,56 @@
   const progressBar  = document.getElementById("progress-bar");
   const badgeRow     = document.getElementById("badge-row");
 
-  let currentVocab = [];
+  const vocabForm    = document.getElementById("vocab-form");
+  const vocabListBox = document.getElementById("vocab-list");
 
+  const exerciseBox   = document.getElementById("exercise-box");
+  const exerciseNext  = document.getElementById("exercise-next");
+  const exModeButtons = document.querySelectorAll(".ex-mode-btn");
+
+  const practiceBox  = document.getElementById("practice-idea");
+  const practiceNext = document.getElementById("practice-next");
+
+  const btnContinue  = document.getElementById("btn-continue");
+  const proBtn       = document.getElementById("btn-pro");
+
+  let currentUser = null;
+
+  // Состояние, из которого всё рисуем (и для анонима, и для авторизованного)
+  let uiState = {
+    xp: 0,
+    streakDays: 0,
+    completedLessons: []
+  };
+
+  let currentVocab = [];
+  let lastLessonId = null;
+
+  // ======= УТИЛИТА: ключ пользователя =======
+  function getUserKeyFromAuthUser(user) {
+    if (!user) return null;
+    if (user.email) return user.email.toLowerCase();
+    return user.uid;
+  }
+
+  // ======= ОБНОВЛЕНИЕ СТАТ =======
   function updateStats(){
-    const state = EnglishIntro.getState();
-    const level = 1 + Math.floor(state.xp / 100);
+    const xp = uiState.xp || 0;
+    const streak = uiState.streakDays || 0;
+    const doneSet = new Set(uiState.completedLessons || []);
+
+    const level = 1 + Math.floor(xp / 100);
     statLevel.textContent  = level;
-    statXp.textContent     = state.xp;
-    statStreak.textContent = (state.streakDays || 0) + " дней";
+    statXp.textContent     = xp;
+    statStreak.textContent = streak + " дней";
 
     const total = courseLessons.length;
-    const done  = courseLessons.filter(l => state.completedLessons.includes(l.id)).length;
+    const done  = courseLessons.filter(l => doneSet.has(l.id)).length;
     const percent = total ? Math.round(done/total*100) : 0;
     progressText.textContent = `${done} / ${total}`;
     progressBar.style.width  = percent + "%";
 
-    // Бейджи внутри курса — простая визуализация по прогрессу
+    // Бейджи внутри курса — визуал по прогрессу
     badgeRow.innerHTML = "";
     const earned = [];
 
@@ -495,10 +538,10 @@
     if (done >= 3) {
       earned.push({ label:"3+ урока", emoji:"📚" });
     }
-    if ((state.streakDays || 0) >= 3) {
+    if (streak >= 3) {
       earned.push({ label:"Серия 3+ дня", emoji:"🔥" });
     }
-    if (state.xp >= 50) {
+    if (xp >= 50) {
       earned.push({ label:"50+ XP", emoji:"⚡" });
     }
 
@@ -525,13 +568,13 @@
     });
   }
 
-  // Список уроков
+  // ======= СПИСОК УРОКОВ =======
   function renderLessons(){
-    const state = EnglishIntro.getState();
+    const stateDone = new Set(uiState.completedLessons || []);
     const box   = document.getElementById("lessons-list");
     box.innerHTML = "";
     courseLessons.forEach(lesson=>{
-      const isDone = state.completedLessons.includes(lesson.id);
+      const isDone = stateDone.has(lesson.id);
       const card = document.createElement("a");
       card.href = lesson.url;
       card.className = "block border border-gray-200 rounded-2xl px-3 py-3 bg-white hover:bg-[#fff7ce] transition-colors text-xs sm:text-sm";
@@ -551,10 +594,10 @@
     });
   }
 
-  // Словарик
+  // ======= СЛОВАРИК (UI) =======
   function renderVocab(){
-    const list = currentVocab;
-    const box  = document.getElementById("vocab-list");
+    const list = currentVocab || [];
+    const box  = vocabListBox;
     box.innerHTML = "";
     if(!list.length){
       box.innerHTML = `<p class="py-2 text-xs text-[var(--ink-2)]">Пока пусто. Пройдите пару уроков или добавьте слова вручную.</p>`;
@@ -573,26 +616,44 @@
     });
   }
 
-  const vocabForm = document.getElementById("vocab-form");
-  vocabForm.addEventListener("submit", (e)=>{
+  // ======= ДОБАВЛЕНИЕ СЛОВ В СЛОВАРИК =======
+  vocabForm.addEventListener("submit", async (e)=>{
     e.preventDefault();
     const form = e.target;
     const word = form.word.value.trim();
     const translation = form.translation.value.trim();
     if(!word || !translation) return;
 
-    // сохраняем в локальном состоянии курса
-    EnglishIntro.addVocab({word, translation, lessonId:"user"});
-    currentVocab = EnglishIntro.getVocab();
-
-    form.reset();
-    renderVocab();
+    // Авторизованный → Firestore
+    if (currentUser && db) {
+      try {
+        const userKey = getUserKeyFromAuthUser(currentUser);
+        const colRef = collection(db, `users/${userKey}/vocabulary`);
+        await addDoc(colRef, {
+          word,
+          translation,
+          lesson: "user",
+          courseId: COURSE_ID,
+          category: "",
+          addedAt: serverTimestamp()
+        });
+        currentVocab.push({ word, translation, lessonId:"user" });
+        form.reset();
+        renderVocab();
+      } catch (err) {
+        console.error("Ошибка сохранения слова в Firestore:", err);
+        alert("Не удалось сохранить слово. Попробуйте ещё раз.");
+      }
+    } else {
+      // Без авторизации → localStorage через EnglishIntro
+      EnglishIntro.addVocab({word, translation, lessonId:"user"});
+      currentVocab = EnglishIntro.getVocab();
+      form.reset();
+      renderVocab();
+    }
   });
 
-  // ===== УПРАЖНЕНИЯ: несколько режимов =====
-  const exerciseBox   = document.getElementById("exercise-box");
-  const exerciseNext  = document.getElementById("exercise-next");
-  const exModeButtons = document.querySelectorAll(".ex-mode-btn");
+  // ======= УПРАЖНЕНИЯ =======
   let currentExerciseMode = "cards";
 
   exModeButtons.forEach(btn => {
@@ -605,7 +666,7 @@
   });
 
   function renderExercise(){
-    const words = currentVocab;
+    const words = currentVocab || [];
     exerciseBox.innerHTML = "";
 
     if (words.length < 1) {
@@ -616,7 +677,6 @@
     const word = words[Math.floor(Math.random() * words.length)];
 
     if (currentExerciseMode === "cards") {
-      // Карточки: сначала слово, кнопка "Показать перевод"
       const q = document.createElement("p");
       q.className = "font-semibold";
       q.textContent = `Что это за слово: "${word.word}"?`;
@@ -636,7 +696,6 @@
       exerciseBox.appendChild(btnShow);
       exerciseBox.appendChild(ans);
     } else if (currentExerciseMode === "quiz") {
-      // Тест: выбор перевода
       if (words.length < 2) {
         exerciseBox.innerHTML = `<p>Для теста нужно хотя бы 2 слова. Добавьте ещё одно слово.</p>`;
         return;
@@ -671,7 +730,6 @@
         exerciseBox.appendChild(btn);
       });
     } else if (currentExerciseMode === "typing") {
-      // Письмо: вводим перевод
       const q = document.createElement("p");
       q.className = "font-semibold";
       q.textContent = `Напишите перевод: "${word.word}"`;
@@ -708,25 +766,23 @@
 
   exerciseNext.addEventListener("click", renderExercise);
 
-  // Практика
+  // ======= ПРАКТИКА =======
   const practiceIdeas = [
     "Запишите голосовое на телефон, где вы здороваетесь, представляетесь и говорите, из какого вы города.",
     "Напишите мини-диалог знакомства из 4–6 реплик и попробуйте прочитать его вслух с разной интонацией.",
     "Выберите 3 предмета вокруг и подпишите их по-английски (в заметках или стикерами).",
     "Сделайте текстовую заметку «Моё утро» на английском: 3–5 простых предложений в Present Simple."
   ];
-  const practiceBox = document.getElementById("practice-idea");
   function renderPracticeIdea(){
     const idea = practiceIdeas[Math.floor(Math.random()*practiceIdeas.length)];
     practiceBox.textContent = idea;
   }
-  document.getElementById("practice-next").addEventListener("click", renderPracticeIdea);
+  practiceNext.addEventListener("click", renderPracticeIdea);
 
-  // Кнопка "Продолжить"
-  document.getElementById("btn-continue").addEventListener("click", ()=>{
-    const lastId = EnglishIntro.getLastLessonId();
-    if(lastId){
-      const lesson = courseLessons.find(l=>l.id===lastId);
+  // ======= КНОПКА «ПРОДОЛЖИТЬ» =======
+  btnContinue.addEventListener("click", ()=>{
+    if (lastLessonId) {
+      const lesson = courseLessons.find(l=>l.id===lastLessonId);
       if(lesson){
         window.location.href = lesson.url;
         return;
@@ -737,8 +793,13 @@
     }
   });
 
-  // Кнопка "Оформить PRO"
-  const proBtn = document.getElementById("btn-pro");
+  // ======= Stripe / PRO =======
+  async function getCurrentUid() {
+    let uid = localStorage.getItem('pt_uid');
+    if (uid) return uid;
+    return null;
+  }
+
   if (proBtn) {
     proBtn.addEventListener("click", async () => {
       try {
@@ -787,20 +848,188 @@
     });
   }
 
-  // Загрузка словаря из состояния курса
-  function loadVocabFromState() {
-    currentVocab = EnglishIntro.getVocab();
+  // ======= МИГРАЦИЯ localStorage → Firestore (один раз) =======
+  async function migrateLocalToFirestore(userKey) {
+    if (!db || !userKey) return;
+    const markerKey = `englishIntro_migrated_${userKey}`;
+    if (localStorage.getItem(markerKey)) return;
+
+    const state = EnglishIntro.getState ? EnglishIntro.getState() : null;
+    const vocabLocal = EnglishIntro.getVocab ? EnglishIntro.getVocab() : [];
+    if (!state && (!vocabLocal || !vocabLocal.length)) {
+      localStorage.setItem(markerKey,"1");
+      return;
+    }
+
+    try {
+      // Прогресс по урокам
+      if (state && Array.isArray(state.completedLessons)) {
+        const progressCol = collection(db, "progress");
+        for (const lessonId of state.completedLessons) {
+          const progressId = `${COURSE_ID}__${lessonId}__${userKey}`;
+          const progressRef = doc(progressCol, progressId);
+          await setDoc(
+            progressRef,
+            {
+              userId:     userKey,
+              courseId:   COURSE_ID,
+              lessonId,
+              lessonSlug: lessonId,
+              completedAt: serverTimestamp()
+            },
+            { merge: true }
+          );
+        }
+      }
+
+      // XP + streak
+      const userRef = doc(db, "users", userKey);
+      const snap = await getDoc(userRef);
+      const xpLocal = state && typeof state.xp === "number" ? state.xp : 0;
+      const streakLocal = state && typeof state.streakDays === "number" ? state.streakDays : 0;
+      let xpNew = xpLocal;
+      let streakNew = streakLocal;
+
+      if (snap.exists()) {
+        const data = snap.data();
+        xpNew = (data.xp || 0) + xpLocal;
+        streakNew = Math.max(data.streakDays || 0, streakLocal);
+      }
+
+      await setDoc(
+        userRef,
+        { xp: xpNew, streakDays: streakNew },
+        { merge: true }
+      );
+
+      // Словарик
+      if (vocabLocal && vocabLocal.length) {
+        const vocabCol = collection(db, `users/${userKey}/vocabulary`);
+        for (const item of vocabLocal) {
+          await addDoc(vocabCol, {
+            word: item.word,
+            translation: item.translation || "",
+            lesson: item.lessonId || "user",
+            courseId: COURSE_ID,
+            category: item.category || "",
+            addedAt: serverTimestamp()
+          });
+        }
+      }
+
+      localStorage.setItem(markerKey,"1");
+    } catch (e) {
+      console.error("Ошибка миграции локальных данных в Firestore:", e);
+    }
   }
 
-  // init
-  (function initPage(){
-    loadVocabFromState();
+  // ======= ЗАГРУЗКА СОСТОЯНИЯ ИЗ FIRESTORE =======
+  async function loadStateFromFirestore(user) {
+    const userKey = getUserKeyFromAuthUser(user);
+    if (!userKey || !db) return;
+
+    uiState = { xp:0, streakDays:0, completedLessons:[] };
+    currentVocab = [];
+    lastLessonId = null;
+
+    // users/{userKey}
+    try {
+      const userRef = doc(db, "users", userKey);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        uiState.xp         = data.xp || 0;
+        uiState.streakDays = data.streakDays || 0;
+      }
+    } catch (e) {
+      console.error("Ошибка чтения users:", e);
+    }
+
+    // progress
+    try {
+      const progressCol = collection(db, "progress");
+      const qProg = query(
+        progressCol,
+        where("userId","==", userKey),
+        where("courseId","==", COURSE_ID)
+      );
+      const snap = await getDocs(qProg);
+      const ids = [];
+      let latest = null;
+      snap.forEach(docSnap => {
+        const data = docSnap.data();
+        if (data.lessonId) {
+          ids.push(data.lessonId);
+          if (data.completedAt && typeof data.completedAt.toDate === "function") {
+            const dt = data.completedAt.toDate();
+            if (!latest || dt > latest.date) latest = { id: data.lessonId, date: dt };
+          }
+        }
+      });
+      uiState.completedLessons = Array.from(new Set(ids));
+      lastLessonId = latest ? latest.id : null;
+    } catch (e) {
+      console.error("Ошибка чтения progress:", e);
+    }
+
+    // vocabulary
+    try {
+      const vocabCol = collection(db, `users/${userKey}/vocabulary`);
+      const qVocab = query(vocabCol, where("courseId","==", COURSE_ID));
+      const snap = await getDocs(qVocab);
+      currentVocab = [];
+      snap.forEach(docSnap => {
+        const data = docSnap.data();
+        currentVocab.push({
+          word: data.word,
+          translation: data.translation || "",
+          lessonId: data.lesson || "user"
+        });
+      });
+    } catch (e) {
+      console.error("Ошибка чтения словаря:", e);
+    }
+  }
+
+  // ======= ИНИЦИАЛИЗАЦИЯ ДЛЯ АНОНИМА =======
+  function initAnonymous() {
+    const state = EnglishIntro.getState();
+    uiState = {
+      xp: state.xp || 0,
+      streakDays: state.streakDays || 0,
+      completedLessons: state.completedLessons || []
+    };
+    currentVocab = EnglishIntro.getVocab();
+    lastLessonId = EnglishIntro.getLastLessonId ? EnglishIntro.getLastLessonId() : null;
+    renderAll();
+  }
+
+  // ======= ОТРИСОВКА ВСЕГО =======
+  function renderAll() {
     updateStats();
     renderLessons();
     renderVocab();
     renderExercise();
     renderPracticeIdea();
-  })();
+  }
+
+  // ======= АВТОРИЗАЦИЯ / ВЫБОР РЕЖИМА =======
+  if (auth && db) {
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        const userKey = getUserKeyFromAuthUser(user);
+        await migrateLocalToFirestore(userKey);
+        await loadStateFromFirestore(user);
+        renderAll();
+      } else {
+        initAnonymous();
+      }
+    });
+  } else {
+    // если по какой-то причине Firebase не инициализировался — fallback на старый режим
+    initAnonymous();
+  }
 </script>
 </body>
 </html>
