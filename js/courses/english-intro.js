@@ -50,7 +50,7 @@ let isProUser   = false;
 
 function getUserKey() {
   if (!currentUser) return null;
-  if (currentUser.email) return currentUser.email.toLowerCase();
+  if (currentUser.email) return currentUser.email; // БЕЗ toLowerCase()
   return currentUser.uid;
 }
 
