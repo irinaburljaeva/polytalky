@@ -722,6 +722,13 @@ const vocabAuthWarn   = document.getElementById("vocab-auth-warning");
 
 function buildVocabEntries() {
   const entries = [];
+  // 🔥 если customVocab есть — берем только его
+  if (config.customVocab && Array.isArray(config.customVocab)) {
+    return config.customVocab.map(item => ({
+      word: item.word.toLowerCase(),
+      translation: item.ru || ""
+    }));
+  }
 
   // === Урок 4: берём слова из скрытого источника ===
   if (LESSON_SLUG === "lesson-04-tenses") {
