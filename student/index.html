@@ -2455,4 +2455,172 @@
             return;
           }
 
-          const p​​​​​​​​​​​​​​​​
+          const paidFromEmail = Array.isArray(emailData?.courses)     ? emailData.courses     : [];
+          const paidFromUid   = Array.isArray(uidData?.courses)       ? uidData.courses       : [];
+          const freeFromEmail = Array.isArray(emailData?.freeCourses) ? emailData.freeCourses : [];
+          const freeFromUid   = Array.isArray(uidData?.freeCourses)   ? uidData.freeCourses   : [];
+          const badgesEmail   = Array.isArray(emailData?.badges)      ? emailData.badges      : [];
+          const badgesUid     = Array.isArray(uidData?.badges)        ? uidData.badges        : [];
+
+          const progressEmail = emailData?.progress || {};
+          const progressUid   = uidData?.progress   || {};
+          const mergedProgress = {
+            ...(progressUid || {}),
+            ...(progressEmail || {}),
+          };
+
+          const progressCourseIds = Object.keys(mergedProgress || {});
+
+          let mergedPaid = Array.from(new Set([...paidFromUid, ...paidFromEmail]));
+          let mergedFree = Array.from(new Set([
+            ...freeFromUid,
+            ...freeFromEmail,
+            ...progressCourseIds.filter(id => !mergedPaid.includes(id))
+          ]));
+
+          let mergedBadges = Array.from(new Set([...badgesUid, ...badgesEmail]));
+
+          const hasAnyCourse = mergedPaid.length > 0 || mergedFree.length > 0;
+
+          if (hasAnyCourse && !mergedBadges.includes(FIRST_STEP_BADGE_ID)) {
+            mergedBadges.push(FIRST_STEP_BADGE_ID);
+
+            const badgeUpdate = {
+              badges: firebase.firestore.FieldValue.arrayUnion(FIRST_STEP_BADGE_ID),
+            };
+
+            const updates = [];
+            if (uidRef)   updates.push(uidRef.set(badgeUpdate,   { merge: true }));
+            if (emailRef) updates.push(emailRef.set(badgeUpdate, { merge: true }));
+
+            try {
+              await Promise.all(updates);
+            } catch (e) {
+              console.warn('Не удалось сохранить бейдж first-step:', e);
+            }
+          }
+
+          const courses = [];
+
+          for (const id of mergedPaid) {
+            courses.push({
+              id,
+              isPaid: true,
+              isFree: false,
+              progress: mergedProgress[id] || null
+            });
+          }
+
+          for (const id of mergedFree) {
+            if (mergedPaid.includes(id)) continue;
+            courses.push({
+              id,
+              isPaid: false,
+              isFree: true,
+              progress: mergedProgress[id] || null
+            });
+          }
+
+          renderCourses(courses);
+          await loadAndRenderBadges(mergedBadges);
+
+          if (emailRef) {
+            try {
+              await emailRef.set(
+                {
+                  email: emailData?.email || email || null,
+                  courses: mergedPaid,
+                  freeCourses: mergedFree,
+                  badges: mergedBadges,
+                  progress: mergedProgress
+                },
+                { merge: true }
+              );
+            } catch (e) {
+              console.warn('Не удалось мигрировать курсы uid→email:', e);
+            }
+          }
+        } catch (err) {
+          console.error('Ошибка загрузки курсов:', err);
+          renderCourses([]);
+          await loadAndRenderBadges([]);
+        }
+      }
+
+      function renderCourses(courses) {
+        coursesList.innerHTML = '';
+
+        if (!courses || !courses.length) {
+          coursesEmpty.classList.remove('hidden');
+          return;
+        }
+
+        coursesEmpty.classList.add('hidden');
+
+        courses.forEach((c) => {
+          const meta = COURSE_META[c.id] || {
+            title: 'Курс PolyTalky',
+            href: '#',
+            cover: '/assets/courses/placeholder.jpg'
+          };
+
+          const progressData = c.progress || {};
+          const percent = typeof progressData.percent === 'number'
+            ? Math.max(0, Math.min(100, progressData.percent))
+            : 0;
+          const lastLessonId = progressData.lastLessonId || null;
+
+          const isFree = !!c.isFree;
+          const isPaid = !!c.isPaid;
+
+          const badgeLabel = isFree ? 'Бесплатный курс' : 'Оплаченный курс';
+          const badgeClass = isFree
+            ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+            : 'border-amber-300 bg-amber-50 text-amber-700';
+
+          let statusLabel;
+          if (percent > 0 && lastLessonId) {
+            statusLabel = `Прогресс: ${percent}% · последний урок: ${lastLessonId}`;
+          } else if (percent > 0) {
+            statusLabel = `Прогресс: ${percent}%`;
+          } else if (isPaid) {
+            statusLabel = 'Курс оплачен, можно начинать в любой момент.';
+          } else {
+            statusLabel = 'Курс открыт, можно начинать первый урок.';
+          }
+
+          const card = document.createElement('a');
+          card.href = meta.href;
+          card.className = 'soft-card p-3 sm:p-4 flex flex-col gap-2 hover:shadow-md transition-shadow group';
+
+          card.innerHTML = `
+            <div class="flex gap-3 items-center">
+              <div class="h-14 w-14 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0">
+                <img src="${meta.cover}" alt="" class="h-full w-full object-cover group-hover:scale-105 transition-transform" />
+              </div>
+              <div class="flex-1 min-w-0 space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="badge text-[10px] ${badgeClass}">${badgeLabel}</span>
+                </div>
+                <p class="text-sm font-semibold text-slate-900 truncate">${meta.title}</p>
+                <p class="text-[11px] text-slate-500">${statusLabel}</p>
+              </div>
+            </div>
+            <div class="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500" style="width:${percent}%;"></div>
+            </div>
+          `;
+
+          coursesList.appendChild(card);
+        });
+      }
+
+      auth.onAuthStateChanged((user) => {
+        setAuthState(user || null);
+        loadProStatus(user || null);
+      });
+    });
+  </script>
+</body>
+</html>
+​​​​​​​​​​​​​​​​
