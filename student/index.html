@@ -2119,5 +2119,340 @@
 
         const [emailSnap, uidSnap] = await Promise.all([
           emailRef ? emailRef.get() : Promise.resolve(null),
-          uidRef   ? uidRef.get()   : Promise.resolve(null),​​​​​​​​​​​​​​​​
+          uidRef   ? uidRef.get()   : Promise.resolve(        ]);
 
+        const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
+        const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
+
+        const proGlobal =
+          (emailData && emailData.proGlobal) ||
+          (uidData && uidData.proGlobal) ||
+          false;
+
+        const proValidUntil =
+          (emailData && emailData.proValidUntil) ||
+          (uidData && uidData.proValidUntil) ||
+          null;
+
+        if (!proGlobal) {
+          if (proBannerSuccess) proBannerSuccess.style.display = 'none';
+          if (proCancelButton)  proCancelButton.classList.add('hidden');
+          if (proRenewButton)   proRenewButton.classList.add('hidden');
+          return;
+        }
+
+        let hasStripeSub = false;
+
+        try {
+          const enrollSnap = await db
+            .collection('enrollments')
+            .where('userId', '==', uid)
+            .where('tier', '==', 'pro-global-monthly')
+            .where('status', 'in', ['active', 'cancel_at_period_end'])
+            .limit(1)
+            .get();
+
+          if (!enrollSnap.empty) {
+            const d = enrollSnap.docs[0].data() || {};
+            if (d.subscriptionId) {
+              hasStripeSub = true;
+            }
+          }
+        } catch (e) {
+          console.warn('Не удалось прочитать enrollments для PRO:', e);
+        }
+
+        let daysLeft = null;
+        let validUntilText = '';
+
+        if (proValidUntil && typeof proValidUntil.toDate === 'function') {
+          const end = proValidUntil.toDate();
+          validUntilText = end.toLocaleDateString('ru-RU');
+          const now = new Date();
+          const diffMs = end - now;
+          daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+          window.currentProValidUntilText = validUntilText;
+        }
+
+        updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText });
+      }
+
+      function updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText }) {
+        window.currentProHasStripe = !!hasStripeSub;
+        window.currentProValidUntilText = validUntilText || '';
+
+        if (!proGlobal) {
+          if (proChip)         proChip.classList.add('hidden');
+          if (proCancelButton) proCancelButton.classList.add('hidden');
+          if (proRenewButton)  proRenewButton.classList.add('hidden');
+          if (proStatusText)   proStatusText.textContent = '';
+          return;
+        }
+
+        if (proChip) proChip.classList.remove('hidden');
+
+        let text = 'У вас активна подписка PRO.';
+
+        if (hasStripeSub) {
+          if (daysLeft != null && validUntilText) {
+            text = `Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).`;
+          } else {
+            text = 'Подписка PRO активна. Автопродление включено.';
+          }
+
+          if (proCancelButton) proCancelButton.classList.remove('hidden');
+          if (proRenewButton)  proRenewButton.classList.add('hidden');
+        } else {
+          if (daysLeft != null && validUntilText) {
+            text = `Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.`;
+          } else {
+            text = 'Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.';
+          }
+
+          if (proCancelButton) proCancelButton.classList.add('hidden');
+
+          if (proRenewButton) {
+            if (daysLeft != null && daysLeft <= 3 && daysLeft >= 1) {
+              proRenewButton.classList.remove('hidden');
+            } else {
+              proRenewButton.classList.add('hidden');
+            }
+          }
+        }
+
+        if (proStatusText) {
+          proStatusText.textContent = text;
+        }
+      }
+
+      if (proChip) {
+        proChip.addEventListener('click', () => {
+          const hasStripe = !!window.currentProHasStripe;
+          const validText = window.currentProValidUntilText || '';
+
+          if (hasStripe) {
+            openProCancelModal(validText);
+            return;
+          }
+
+          const msg = validText
+            ? `Подписка PRO активна до ${validText}. Автосписания нет — по окончании срока её нужно будет продлить вручную.`
+            : 'Подписка PRO активна. Автосписания нет — по окончании срока её нужно будет продлить вручную.';
+
+          alert(msg);
+        });
+      }
+
+      async function loadAndRenderBadges(userBadgeIds) {
+        try {
+          const earnedIds = Array.isArray(userBadgeIds) ? userBadgeIds : [];
+
+          const snap = await db.collection('badges').get();
+          const badges = [];
+          snap.forEach(doc => {
+            const data = doc.data() || {};
+            const id = doc.id;
+            badges.push({
+              id,
+              title: data.title || data.name || 'Медаль',
+              desc: data.description || data.desc || '',
+              earned: earnedIds.includes(id)
+            });
+          });
+
+          allBadgesCache = badges;
+
+          if (!badges.length) {
+            achievementsList.innerHTML = `
+              <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
+                Как только вы начнёте проходить уроки, здесь появятся первые бейджи и медали за ваши достижения в языках.
+              </div>
+            `;
+            return;
+          }
+
+          renderEarnedBadgesStrip(badges);
+          renderBadgesModalGrid(badges);
+        } catch (err) {
+          console.error('Ошибка загрузки коллекции медалей:', err);
+          achievementsList.innerHTML = `
+            <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
+              Не удалось загрузить коллекцию медалей. Проверьте соединение и попробуйте обновить страницу.
+            </div>
+          `;
+        }
+      }
+
+      async function setAuthState(user) {
+        if (user) {
+          localStorage.setItem('pt_uid', user.uid || '');
+          if (user.email) localStorage.setItem('pt_email', user.email);
+
+          authBoxOut.classList.add('hidden');
+          authBoxIn.classList.remove('hidden');
+          coursesNeedAuth.classList.add('hidden');
+          authUserEmail.textContent = user.email || '';
+
+          await loadUserProfile(user);
+          await loadUserEnrollments(user);
+        } else {
+          localStorage.removeItem('pt_uid');
+          localStorage.removeItem('pt_email');
+
+          authBoxOut.classList.remove('hidden');
+          authBoxIn.classList.add('hidden');
+          coursesNeedAuth.classList.remove('hidden');
+          authUserEmail.textContent = '';
+          profileName.textContent = '';
+          profileAvatarImg.src = '/assets/avatarf.png';
+          if (profileAvatarType) profileAvatarType.value = 'girl';
+          setAvatarChoice('girl');
+          coursesList.innerHTML = '';
+          coursesEmpty.classList.add('hidden');
+          achievementsList.innerHTML = `
+            <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
+              Войдите в аккаунт, чтобы увидеть свои медали и достижения.
+            </div>
+          `;
+          if (coinsCard) {
+            coinsCard.classList.add('hidden');
+          }
+        }
+      }
+
+      async function loadUserProfile(user) {
+        try {
+          const email = user.email || null;
+          const uid   = user.uid   || null;
+          if (!email && !uid) return;
+
+          const usersCol = db.collection('users');
+          const emailRef = email ? usersCol.doc(email) : null;
+          const uidRef   = uid   ? usersCol.doc(uid)   : null;
+
+          const [emailSnap, uidSnap] = await Promise.all([
+            emailRef ? emailRef.get() : Promise.resolve(null),
+            uidRef   ? uidRef.get()   : Promise.resolve(null)
+          ]);
+
+          const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
+          const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
+
+          let data = {
+            ...(uidData || {}),
+            ...(emailData || {}),
+          };
+
+          if (email) data.email = data.email || email;
+
+          const first = data.firstName || '';
+          const last  = data.lastName || '';
+          const avatarType = data.avatarType || 'girl';
+          const displayEmail = data.email || email || '';
+
+          const displayName = (first || last)
+            ? (first + ' ' + (last || '')).trim()
+            : displayEmail || 'Без имени';
+
+          profileName.textContent = displayName;
+          authUserEmail.textContent = displayEmail;
+
+          profileFirst.value = first;
+          profileLast.value  = last;
+
+          setAvatarChoice(avatarType);
+
+          profileMsg.textContent = '';
+
+          updateCoinsUI(data);
+
+          if (emailRef) {
+            try {
+              await emailRef.set(
+                { ...data, email: displayEmail },
+                { merge: true }
+              );
+            } catch (e) {
+              console.warn('Не удалось мигрировать профиль uid→email:', e);
+            }
+          }
+        } catch (err) {
+          console.error('Ошибка профиля:', err);
+        }
+      }
+
+      profileForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        profileMsg.textContent = '';
+
+        const user = auth.currentUser;
+        if (!user) {
+          profileMsg.textContent = 'Сначала войдите в аккаунт.';
+          return;
+        }
+
+        try {
+          const email = user.email;
+          const first = profileFirst.value.trim();
+          const last  = profileLast.value.trim();
+          const avatarType = profileAvatarType ? (profileAvatarType.value || 'girl') : 'girl';
+
+          const payload = {
+            firstName: first,
+            lastName:  last,
+            avatarType: avatarType
+          };
+
+          profileAvatarImg.src = avatarType === 'girl'
+            ? '/assets/avatarf.png'
+            : '/assets/avatar.png';
+
+          await db.collection('users').doc(email).set(payload, { merge: true });
+
+          profileMsg.textContent = 'Профиль обновлён ✔️';
+
+          const again = auth.currentUser;
+          if (again) {
+            await loadUserProfile(again);
+          }
+
+          closeProfileModal();
+        } catch (err) {
+          console.error('profile save error', err);
+          profileMsg.textContent = 'Не удалось сохранить профиль. Проверьте соединение и попробуйте ещё раз.';
+        }
+      });
+
+      async function loadUserEnrollments(user) {
+        coursesList.innerHTML = '';
+        coursesEmpty.classList.add('hidden');
+
+        try {
+          const email = user.email || null;
+          const uid   = user.uid   || null;
+
+          if (!email && !uid) {
+            coursesEmpty.classList.remove('hidden');
+            await loadAndRenderBadges([]);
+            return;
+          }
+
+          const usersCol = db.collection('users');
+          const emailRef = email ? usersCol.doc(email) : null;
+          const uidRef   = uid   ? usersCol.doc(uid)   : null;
+
+          const [emailSnap, uidSnap] = await Promise.all([
+            emailRef ? emailRef.get() : Promise.resolve(null),
+            uidRef   ? uidRef.get()   : Promise.resolve(null)
+          ]);
+
+          const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
+          const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
+
+          if (!emailData && !uidData) {
+            coursesEmpty.classList.remove('hidden');
+            await loadAndRenderBadges([]);
+            return;
+          }
+
+          const p​​​​​​​​​​​​​​​​
