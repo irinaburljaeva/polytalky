@@ -414,33 +414,39 @@
 
 <!-- ЛОГИКА СТРАНИЦЫ КАК МОДУЛЬ -->
 <script type="module">
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  // Firebase Auth + Firestore (используем те же версии, что и в уроках)
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
   import {
     collection,
-    getDocs,
     query,
     where,
+    getDocs,
     doc,
     getDoc,
-    setDoc,
-    addDoc,
-    serverTimestamp
+    setDoc
   } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  import { EnglishIntro } from "/courses/english-intro/english-intro-state.js";
+  // Глобальные объекты из firebaseInit.js (если он подключён)
+  const auth = window.firebaseAuth || null;
+  const db   = window.firebaseDb   || null;
 
-  const auth = window.firebaseAuth;
-  const db   = window.firebaseDb;
   const COURSE_ID = "english-intro";
 
-  // ======= БУРГЕР =======
+  // -----------------------------------
+  // БУРГЕР
+  // -----------------------------------
   const b = document.getElementById('burger');
   const m = document.getElementById('mnav');
   if (b && m) {
     b.addEventListener('click', () => m.classList.toggle('hidden'));
   }
 
-  // ======= ОПИСАНИЕ УРОКОВ =======
+  // -----------------------------------
+  // ОПИСАНИЕ УРОКОВ
+  // -----------------------------------
   const courseLessons = [
     { id:"lesson-01-hello",   title:"Урок 1 · Hello & Goodbye", minutes:10, url:"/courses/english-intro/lesson-01-hello.html" },
     { id:"lesson-02-intro",   title:"Урок 2 · Как представиться", minutes:12, url:"/courses/english-intro/lesson-02-intro.html" },
@@ -449,7 +455,70 @@
     // при добавлении новых уроков — просто дописываем сюда
   ];
 
-  // ======= ТАБЫ РЕЖИМОВ =======
+  // -----------------------------------
+  // ЛОКАЛЬНОЕ СОСТОЯНИЕ (для неавторизованных)
+  // -----------------------------------
+  function loadLocalState() {
+    try {
+      return {
+        xp: Number(localStorage.getItem("local_intro_xp") || 0),
+        streakDays: Number(localStorage.getItem("local_intro_streak") || 0),
+        completedLessons: JSON.parse(localStorage.getItem("local_intro_completed_lessons") || "[]"),
+        vocab: JSON.parse(localStorage.getItem("local_intro_vocab") || "[]")
+      };
+    } catch (e) {
+      console.warn("Local load error", e);
+      return { xp:0, streakDays:0, completedLessons:[], vocab:[] };
+    }
+  }
+
+  function saveLocalState(state) {
+    localStorage.setItem("local_intro_xp", String(state.xp || 0));
+    localStorage.setItem("local_intro_streak", String(state.streakDays || 0));
+    localStorage.setItem(
+      "local_intro_completed_lessons",
+      JSON.stringify(state.completedLessons || [])
+    );
+    localStorage.setItem(
+      "local_intro_vocab",
+      JSON.stringify(state.vocab || [])
+    );
+  }
+
+  function localAddVocab(word, translation) {
+    const s = loadLocalState();
+    s.vocab.push({ word, translation, lessonId:"user" });
+    saveLocalState(s);
+  }
+
+  // -----------------------------------
+  // ГЛОБАЛЬНОЕ СОСТОЯНИЕ СТРАНИЦЫ
+  // -----------------------------------
+  let currentUser     = null;
+  let currentUserKey  = null;
+  let appState = {
+    xp: 0,
+    streakDays: 0,
+    completedLessons: [],
+    vocab: [],
+    isFromFirebase: false
+  };
+
+  let currentVocab = [];
+
+  // -----------------------------------
+  // DOM-ССЫЛКИ ДЛЯ СТАТЫ
+  // -----------------------------------
+  const statLevel    = document.getElementById("stat-level");
+  const statXp       = document.getElementById("stat-xp");
+  const statStreak   = document.getElementById("stat-streak");
+  const progressText = document.getElementById("progress-text");
+  const progressBar  = document.getElementById("progress-bar");
+  const badgeRow     = document.getElementById("badge-row");
+
+  // -----------------------------------
+  // ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ (вкладки)
+  // -----------------------------------
   const modeButtons = document.querySelectorAll(".mode-btn");
   const panels = {
     lessons:   document.getElementById("tab-lessons"),
@@ -471,64 +540,166 @@
     });
   });
 
-  // ======= ГЛОБАЛЬНОЕ СОСТОЯНИЕ ДЛЯ UI =======
-  const statLevel    = document.getElementById("stat-level");
-  const statXp       = document.getElementById("stat-xp");
-  const statStreak   = document.getElementById("stat-streak");
-  const progressText = document.getElementById("progress-text");
-  const progressBar  = document.getElementById("progress-bar");
-  const badgeRow     = document.getElementById("badge-row");
-
-  const vocabForm    = document.getElementById("vocab-form");
-  const vocabListBox = document.getElementById("vocab-list");
-
-  const exerciseBox   = document.getElementById("exercise-box");
-  const exerciseNext  = document.getElementById("exercise-next");
-  const exModeButtons = document.querySelectorAll(".ex-mode-btn");
-
-  const practiceBox  = document.getElementById("practice-idea");
-  const practiceNext = document.getElementById("practice-next");
-
-  const btnContinue  = document.getElementById("btn-continue");
-  const proBtn       = document.getElementById("btn-pro");
-
-  let currentUser = null;
-
-  // Состояние, из которого всё рисуем (и для анонима, и для авторизованного)
-  let uiState = {
-    xp: 0,
-    streakDays: 0,
-    completedLessons: []
-  };
-
-  let currentVocab = [];
-  let lastLessonId = null;
-
-  // ======= УТИЛИТА: ключ пользователя =======
-  function getUserKeyFromAuthUser(user) {
+  // -----------------------------------
+  // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ FIREBASE
+  // -----------------------------------
+  function makeUserKey(user) {
     if (!user) return null;
     if (user.email) return user.email.toLowerCase();
     return user.uid;
   }
 
-  // ======= ОБНОВЛЕНИЕ СТАТ =======
-  function updateStats(){
-    const xp = uiState.xp || 0;
-    const streak = uiState.streakDays || 0;
-    const doneSet = new Set(uiState.completedLessons || []);
+  async function loadStateFromFirebaseOrMigrate(userKey) {
+    if (!db || !userKey) {
+      // страховка: работаем как локальный
+      const local = loadLocalState();
+      appState = {
+        xp: local.xp,
+        streakDays: local.streakDays,
+        completedLessons: local.completedLessons,
+        vocab: local.vocab,
+        isFromFirebase: false
+      };
+      currentVocab = appState.vocab;
+      return;
+    }
 
-    const level = 1 + Math.floor(xp / 100);
-    statLevel.textContent  = level;
-    statXp.textContent     = xp;
-    statStreak.textContent = streak + " дней";
+    const local = loadLocalState();
+    let xp = 0;
+    let streakDays = 0;
+
+    try {
+      // ---------- users/{userKey} ----------
+      const userRef = doc(db, "users", userKey);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        const hasXpField = Object.prototype.hasOwnProperty.call(data, "xp");
+
+        if (!hasXpField && local.xp > 0) {
+          // Миграция: если в Firebase ещё нет xp, но есть локальный прогресс
+          xp = local.xp;
+          streakDays = local.streakDays || 0;
+          await setDoc(
+            userRef,
+            {
+              xp,
+              streakDays,
+              lastStudyDate: new Date().toISOString().slice(0,10)
+            },
+            { merge: true }
+          );
+        } else {
+          xp = data.xp || 0;
+          streakDays = data.streakDays || 0;
+        }
+      } else {
+        // Пользователь есть в auth, но ещё нет документа — создаём по локальному
+        xp = local.xp || 0;
+        streakDays = local.streakDays || 0;
+        await setDoc(
+          userRef,
+          {
+            xp,
+            streakDays,
+            lastStudyDate: new Date().toISOString().slice(0,10)
+          },
+          { merge: true }
+        );
+      }
+
+      // ---------- progress (завершённые уроки) ----------
+      const progressCol = collection(db, "progress");
+      const qProg = query(
+        progressCol,
+        where("userId", "==", userKey),
+        where("courseId", "==", COURSE_ID)
+      );
+      const progSnap = await getDocs(qProg);
+
+      const completedLessons = [];
+      progSnap.forEach(docSnap => {
+        const d = docSnap.data();
+        if (d.lessonId && !completedLessons.includes(d.lessonId)) {
+          completedLessons.push(d.lessonId);
+        }
+      });
+
+      // ---------- vocabulary ----------
+      const vocabCol = collection(db, "users", userKey, "vocabulary");
+      let vocab = [];
+      try {
+        const qVocab = query(
+          vocabCol,
+          where("courseId", "==", COURSE_ID)
+        );
+        const vsnap = await getDocs(qVocab);
+        vsnap.forEach(vdoc => {
+          const d = vdoc.data();
+          if (!d.word) return;
+          vocab.push({
+            word: d.word,
+            translation: d.translation || "",
+            lessonId: d.lesson || "user"
+          });
+        });
+      } catch (e) {
+        console.warn("Ошибка загрузки словаря, работаем без фильтра по courseId:", e);
+        const vsnap = await getDocs(vocabCol);
+        vsnap.forEach(vdoc => {
+          const d = vdoc.data();
+          if (!d.word) return;
+          vocab.push({
+            word: d.word,
+            translation: d.translation || "",
+            lessonId: d.lesson || "user"
+          });
+        });
+      }
+
+      appState = {
+        xp,
+        streakDays,
+        completedLessons,
+        vocab,
+        isFromFirebase: true
+      };
+      currentVocab = appState.vocab;
+
+    } catch (e) {
+      console.error("Ошибка загрузки состояния из Firebase, fallback к localStorage:", e);
+      const local2 = loadLocalState();
+      appState = {
+        xp: local2.xp,
+        streakDays: local2.streakDays,
+        completedLessons: local2.completedLessons,
+        vocab: local2.vocab,
+        isFromFirebase: false
+      };
+      currentVocab = appState.vocab;
+    }
+  }
+
+  // -----------------------------------
+  // РЕНДЕР СТАТЫ
+  // -----------------------------------
+  function updateStats() {
+    const level = 1 + Math.floor((appState.xp || 0) / 100);
+    if (statLevel) statLevel.textContent  = String(level);
+    if (statXp)    statXp.textContent     = String(appState.xp || 0);
+
+    const streak = appState.streakDays || 0;
+    if (statStreak) statStreak.textContent = streak + " дней";
 
     const total = courseLessons.length;
-    const done  = courseLessons.filter(l => doneSet.has(l.id)).length;
+    const done  = courseLessons.filter(l => (appState.completedLessons || []).includes(l.id)).length;
     const percent = total ? Math.round(done/total*100) : 0;
-    progressText.textContent = `${done} / ${total}`;
-    progressBar.style.width  = percent + "%";
+    if (progressText) progressText.textContent = `${done} / ${total}`;
+    if (progressBar)  progressBar.style.width  = percent + "%";
 
-    // Бейджи внутри курса — визуал по прогрессу
+    // Бейджи
+    if (!badgeRow) return;
     badgeRow.innerHTML = "";
     const earned = [];
 
@@ -541,7 +712,7 @@
     if (streak >= 3) {
       earned.push({ label:"Серия 3+ дня", emoji:"🔥" });
     }
-    if (xp >= 50) {
+    if ((appState.xp || 0) >= 50) {
       earned.push({ label:"50+ XP", emoji:"⚡" });
     }
 
@@ -568,13 +739,17 @@
     });
   }
 
-  // ======= СПИСОК УРОКОВ =======
+  // -----------------------------------
+  // СПИСОК УРОКОВ
+  // -----------------------------------
   function renderLessons(){
-    const stateDone = new Set(uiState.completedLessons || []);
-    const box   = document.getElementById("lessons-list");
+    const box = document.getElementById("lessons-list");
+    if (!box) return;
     box.innerHTML = "";
+    const completed = appState.completedLessons || [];
+
     courseLessons.forEach(lesson=>{
-      const isDone = stateDone.has(lesson.id);
+      const isDone = completed.includes(lesson.id);
       const card = document.createElement("a");
       card.href = lesson.url;
       card.className = "block border border-gray-200 rounded-2xl px-3 py-3 bg-white hover:bg-[#fff7ce] transition-colors text-xs sm:text-sm";
@@ -594,66 +769,93 @@
     });
   }
 
-  // ======= СЛОВАРИК (UI) =======
+  // -----------------------------------
+  // СЛОВАРИК
+  // -----------------------------------
   function renderVocab(){
+    const box  = document.getElementById("vocab-list");
+    if (!box) return;
     const list = currentVocab || [];
-    const box  = vocabListBox;
     box.innerHTML = "";
     if(!list.length){
       box.innerHTML = `<p class="py-2 text-xs text-[var(--ink-2)]">Пока пусто. Пройдите пару уроков или добавьте слова вручную.</p>`;
       return;
     }
     list.forEach(item=>{
+      if (!item.word) return;
       const div = document.createElement("div");
       div.className = "flex items-baseline justify-between gap-2 py-1.5";
       div.innerHTML = `
         <div>
-          <p><b>${item.word}</b> — ${item.translation}</p>
-          ${item.lessonId && item.lessonId !== "user" ? `<p class="text-[10px] text-[var(--ink-2)]">Из урока: ${item.lessonId}</p>` : ""}
+          <p><b>${item.word}</b> — ${item.translation || ""}</p>
+          ${item.lessonId && item.lessonId !== "user"
+            ? `<p class="text-[10px] text-[var(--ink-2)]">Из урока: ${item.lessonId}</p>`
+            : ""
+          }
         </div>
       `;
       box.appendChild(div);
     });
   }
 
-  // ======= ДОБАВЛЕНИЕ СЛОВ В СЛОВАРИК =======
-  vocabForm.addEventListener("submit", async (e)=>{
-    e.preventDefault();
-    const form = e.target;
-    const word = form.word.value.trim();
-    const translation = form.translation.value.trim();
-    if(!word || !translation) return;
+  const vocabForm = document.getElementById("vocab-form");
+  if (vocabForm) {
+    vocabForm.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      const form = e.target;
+      const word = form.word.value.trim();
+      const translation = form.translation.value.trim();
+      if(!word || !translation) return;
 
-    // Авторизованный → Firestore
-    if (currentUser && db) {
-      try {
-        const userKey = getUserKeyFromAuthUser(currentUser);
-        const colRef = collection(db, `users/${userKey}/vocabulary`);
-        await addDoc(colRef, {
-          word,
-          translation,
-          lesson: "user",
-          courseId: COURSE_ID,
-          category: "",
-          addedAt: serverTimestamp()
-        });
-        currentVocab.push({ word, translation, lessonId:"user" });
-        form.reset();
-        renderVocab();
-      } catch (err) {
-        console.error("Ошибка сохранения слова в Firestore:", err);
-        alert("Не удалось сохранить слово. Попробуйте ещё раз.");
+      if (currentUser && db) {
+        // Авторизованный: сохраняем в Firestore
+        try {
+          const userKey = currentUserKey || makeUserKey(currentUser);
+          if (!userKey) throw new Error("Нет userKey");
+
+          const colRef = collection(db, "users", userKey, "vocabulary");
+          await setDoc(
+            doc(colRef),  // авто-ID
+            {
+              word,
+              translation,
+              lesson: "user",
+              courseId: COURSE_ID,
+              category: "",
+              addedAt: new Date()
+            }
+          );
+
+          appState.vocab.push({ word, translation, lessonId:"user" });
+          currentVocab = appState.vocab;
+
+        } catch (err) {
+          console.error("Ошибка сохранения слова в Firestore:", err);
+          // fallback — в локальное состояние
+          localAddVocab(word, translation);
+          const local = loadLocalState();
+          appState.vocab = local.vocab;
+          currentVocab   = appState.vocab;
+        }
+      } else {
+        // Неавторизованный: только localStorage
+        localAddVocab(word, translation);
+        const local = loadLocalState();
+        appState.vocab = local.vocab;
+        currentVocab   = appState.vocab;
       }
-    } else {
-      // Без авторизации → localStorage через EnglishIntro
-      EnglishIntro.addVocab({word, translation, lessonId:"user"});
-      currentVocab = EnglishIntro.getVocab();
+
       form.reset();
       renderVocab();
-    }
-  });
+    });
+  }
 
-  // ======= УПРАЖНЕНИЯ =======
+  // -----------------------------------
+  // УПРАЖНЕНИЯ
+  // -----------------------------------
+  const exerciseBox   = document.getElementById("exercise-box");
+  const exerciseNext  = document.getElementById("exercise-next");
+  const exModeButtons = document.querySelectorAll(".ex-mode-btn");
   let currentExerciseMode = "cards";
 
   exModeButtons.forEach(btn => {
@@ -666,6 +868,7 @@
   });
 
   function renderExercise(){
+    if (!exerciseBox) return;
     const words = currentVocab || [];
     exerciseBox.innerHTML = "";
 
@@ -695,6 +898,7 @@
       exerciseBox.appendChild(q);
       exerciseBox.appendChild(btnShow);
       exerciseBox.appendChild(ans);
+
     } else if (currentExerciseMode === "quiz") {
       if (words.length < 2) {
         exerciseBox.innerHTML = `<p>Для теста нужно хотя бы 2 слова. Добавьте ещё одно слово.</p>`;
@@ -729,6 +933,7 @@
         });
         exerciseBox.appendChild(btn);
       });
+
     } else if (currentExerciseMode === "typing") {
       const q = document.createElement("p");
       q.className = "font-semibold";
@@ -764,42 +969,75 @@
     }
   }
 
-  exerciseNext.addEventListener("click", renderExercise);
+  if (exerciseNext) {
+    exerciseNext.addEventListener("click", renderExercise);
+  }
 
-  // ======= ПРАКТИКА =======
+  // -----------------------------------
+  // ПРАКТИКА
+  // -----------------------------------
   const practiceIdeas = [
     "Запишите голосовое на телефон, где вы здороваетесь, представляетесь и говорите, из какого вы города.",
     "Напишите мини-диалог знакомства из 4–6 реплик и попробуйте прочитать его вслух с разной интонацией.",
     "Выберите 3 предмета вокруг и подпишите их по-английски (в заметках или стикерами).",
     "Сделайте текстовую заметку «Моё утро» на английском: 3–5 простых предложений в Present Simple."
   ];
+  const practiceBox = document.getElementById("practice-idea");
   function renderPracticeIdea(){
+    if (!practiceBox) return;
     const idea = practiceIdeas[Math.floor(Math.random()*practiceIdeas.length)];
     practiceBox.textContent = idea;
   }
-  practiceNext.addEventListener("click", renderPracticeIdea);
+  const practiceNext = document.getElementById("practice-next");
+  if (practiceNext) {
+    practiceNext.addEventListener("click", renderPracticeIdea);
+  }
 
-  // ======= КНОПКА «ПРОДОЛЖИТЬ» =======
-  btnContinue.addEventListener("click", ()=>{
-    if (lastLessonId) {
-      const lesson = courseLessons.find(l=>l.id===lastLessonId);
-      if(lesson){
-        window.location.href = lesson.url;
-        return;
+  // -----------------------------------
+  // КНОПКА "ПРОДОЛЖИТЬ"
+  // -----------------------------------
+  function getLastLessonIdFromState() {
+    const completed = appState.completedLessons || [];
+    if (!completed.length) return null;
+
+    let lastId = null;
+    let bestIndex = -1;
+    courseLessons.forEach((l, idx) => {
+      if (completed.includes(l.id) && idx > bestIndex) {
+        bestIndex = idx;
+        lastId = l.id;
       }
-    }
-    if(courseLessons.length){
-      window.location.href = courseLessons[0].url;
-    }
-  });
+    });
+    return lastId;
+  }
 
-  // ======= Stripe / PRO =======
+  const btnContinue = document.getElementById("btn-continue");
+  if (btnContinue) {
+    btnContinue.addEventListener("click", ()=>{
+      const lastId = getLastLessonIdFromState();
+      if(lastId){
+        const lesson = courseLessons.find(l=>l.id===lastId);
+        if(lesson){
+          window.location.href = lesson.url;
+          return;
+        }
+      }
+      if(courseLessons.length){
+        window.location.href = courseLessons[0].url;
+      }
+    });
+  }
+
+  // -----------------------------------
+  // Stripe / PRO
+  // -----------------------------------
   async function getCurrentUid() {
     let uid = localStorage.getItem('pt_uid');
     if (uid) return uid;
     return null;
   }
 
+  const proBtn = document.getElementById("btn-pro");
   if (proBtn) {
     proBtn.addEventListener("click", async () => {
       try {
@@ -848,164 +1086,11 @@
     });
   }
 
-  // ======= МИГРАЦИЯ localStorage → Firestore (один раз) =======
-  async function migrateLocalToFirestore(userKey) {
-    if (!db || !userKey) return;
-    const markerKey = `englishIntro_migrated_${userKey}`;
-    if (localStorage.getItem(markerKey)) return;
-
-    const state = EnglishIntro.getState ? EnglishIntro.getState() : null;
-    const vocabLocal = EnglishIntro.getVocab ? EnglishIntro.getVocab() : [];
-    if (!state && (!vocabLocal || !vocabLocal.length)) {
-      localStorage.setItem(markerKey,"1");
-      return;
-    }
-
-    try {
-      // Прогресс по урокам
-      if (state && Array.isArray(state.completedLessons)) {
-        const progressCol = collection(db, "progress");
-        for (const lessonId of state.completedLessons) {
-          const progressId = `${COURSE_ID}__${lessonId}__${userKey}`;
-          const progressRef = doc(progressCol, progressId);
-          await setDoc(
-            progressRef,
-            {
-              userId:     userKey,
-              courseId:   COURSE_ID,
-              lessonId,
-              lessonSlug: lessonId,
-              completedAt: serverTimestamp()
-            },
-            { merge: true }
-          );
-        }
-      }
-
-      // XP + streak
-      const userRef = doc(db, "users", userKey);
-      const snap = await getDoc(userRef);
-      const xpLocal = state && typeof state.xp === "number" ? state.xp : 0;
-      const streakLocal = state && typeof state.streakDays === "number" ? state.streakDays : 0;
-      let xpNew = xpLocal;
-      let streakNew = streakLocal;
-
-      if (snap.exists()) {
-        const data = snap.data();
-        xpNew = (data.xp || 0) + xpLocal;
-        streakNew = Math.max(data.streakDays || 0, streakLocal);
-      }
-
-      await setDoc(
-        userRef,
-        { xp: xpNew, streakDays: streakNew },
-        { merge: true }
-      );
-
-      // Словарик
-      if (vocabLocal && vocabLocal.length) {
-        const vocabCol = collection(db, `users/${userKey}/vocabulary`);
-        for (const item of vocabLocal) {
-          await addDoc(vocabCol, {
-            word: item.word,
-            translation: item.translation || "",
-            lesson: item.lessonId || "user",
-            courseId: COURSE_ID,
-            category: item.category || "",
-            addedAt: serverTimestamp()
-          });
-        }
-      }
-
-      localStorage.setItem(markerKey,"1");
-    } catch (e) {
-      console.error("Ошибка миграции локальных данных в Firestore:", e);
-    }
-  }
-
-  // ======= ЗАГРУЗКА СОСТОЯНИЯ ИЗ FIRESTORE =======
-  async function loadStateFromFirestore(user) {
-    const userKey = getUserKeyFromAuthUser(user);
-    if (!userKey || !db) return;
-
-    uiState = { xp:0, streakDays:0, completedLessons:[] };
-    currentVocab = [];
-    lastLessonId = null;
-
-    // users/{userKey}
-    try {
-      const userRef = doc(db, "users", userKey);
-      const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        uiState.xp         = data.xp || 0;
-        uiState.streakDays = data.streakDays || 0;
-      }
-    } catch (e) {
-      console.error("Ошибка чтения users:", e);
-    }
-
-    // progress
-    try {
-      const progressCol = collection(db, "progress");
-      const qProg = query(
-        progressCol,
-        where("userId","==", userKey),
-        where("courseId","==", COURSE_ID)
-      );
-      const snap = await getDocs(qProg);
-      const ids = [];
-      let latest = null;
-      snap.forEach(docSnap => {
-        const data = docSnap.data();
-        if (data.lessonId) {
-          ids.push(data.lessonId);
-          if (data.completedAt && typeof data.completedAt.toDate === "function") {
-            const dt = data.completedAt.toDate();
-            if (!latest || dt > latest.date) latest = { id: data.lessonId, date: dt };
-          }
-        }
-      });
-      uiState.completedLessons = Array.from(new Set(ids));
-      lastLessonId = latest ? latest.id : null;
-    } catch (e) {
-      console.error("Ошибка чтения progress:", e);
-    }
-
-    // vocabulary
-    try {
-      const vocabCol = collection(db, `users/${userKey}/vocabulary`);
-      const qVocab = query(vocabCol, where("courseId","==", COURSE_ID));
-      const snap = await getDocs(qVocab);
-      currentVocab = [];
-      snap.forEach(docSnap => {
-        const data = docSnap.data();
-        currentVocab.push({
-          word: data.word,
-          translation: data.translation || "",
-          lessonId: data.lesson || "user"
-        });
-      });
-    } catch (e) {
-      console.error("Ошибка чтения словаря:", e);
-    }
-  }
-
-  // ======= ИНИЦИАЛИЗАЦИЯ ДЛЯ АНОНИМА =======
-  function initAnonymous() {
-    const state = EnglishIntro.getState();
-    uiState = {
-      xp: state.xp || 0,
-      streakDays: state.streakDays || 0,
-      completedLessons: state.completedLessons || []
-    };
-    currentVocab = EnglishIntro.getVocab();
-    lastLessonId = EnglishIntro.getLastLessonId ? EnglishIntro.getLastLessonId() : null;
-    renderAll();
-  }
-
-  // ======= ОТРИСОВКА ВСЕГО =======
+  // -----------------------------------
+  // ОБЩИЙ РЕНДЕР
+  // -----------------------------------
   function renderAll() {
+    currentVocab = appState.vocab || [];
     updateStats();
     renderLessons();
     renderVocab();
@@ -1013,22 +1098,41 @@
     renderPracticeIdea();
   }
 
-  // ======= АВТОРИЗАЦИЯ / ВЫБОР РЕЖИМА =======
+  // -----------------------------------
+  // ИНИЦИАЛИЗАЦИЯ: auth → Firebase или localStorage
+  // -----------------------------------
   if (auth && db) {
     onAuthStateChanged(auth, async (user) => {
-      currentUser = user;
-      if (user) {
-        const userKey = getUserKeyFromAuthUser(user);
-        await migrateLocalToFirestore(userKey);
-        await loadStateFromFirestore(user);
+      currentUser    = user;
+      currentUserKey = makeUserKey(user);
+
+      if (!user) {
+        // Нет авторизации -> чисто localStorage
+        const local = loadLocalState();
+        appState = {
+          xp: local.xp,
+          streakDays: local.streakDays,
+          completedLessons: local.completedLessons,
+          vocab: local.vocab,
+          isFromFirebase: false
+        };
         renderAll();
       } else {
-        initAnonymous();
+        await loadStateFromFirebaseOrMigrate(currentUserKey);
+        renderAll();
       }
     });
   } else {
-    // если по какой-то причине Firebase не инициализировался — fallback на старый режим
-    initAnonymous();
+    // Firebase не подключён — полностью локальный режим
+    const local = loadLocalState();
+    appState = {
+      xp: local.xp,
+      streakDays: local.streakDays,
+      completedLessons: local.completedLessons,
+      vocab: local.vocab,
+      isFromFirebase: false
+    };
+    renderAll();
   }
 </script>
 </body>
