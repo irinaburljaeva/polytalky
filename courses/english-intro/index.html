@@ -567,6 +567,10 @@
     }
     // если id другие — просто поменяй ключи на фактические значения
   };
+  const COURSE_BADGE_IDS = new Set([ 
+    "english-intro-lesson1", 
+    "rickrolling",
+    ]);
   // -----------------------------------
   // ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ (вкладки)
   // -----------------------------------
@@ -748,7 +752,9 @@ function updateStats() {
   if (!badgeRow) return;
   badgeRow.innerHTML = "";
 
-  const userBadges = Array.isArray(appState.badges) ? appState.badges : [];
+  const allUserBadges = Array.isArray(appState.badges) ? appState.badges : [];
+  const userBadges = allUserBadges.filter(
+    (id) => COURSE_BADGE_IDS.has(id) && BADGE_META[id] );
 
   if (!userBadges.length) {
     const p = document.createElement("p");
