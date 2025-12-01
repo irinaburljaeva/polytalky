@@ -116,9 +116,11 @@
       <a href="/courses/" class="hover:opacity-80">Курсы</a>
       <a href="/shop/" class="hover:opacity-80">Магазин</a>
       <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
-      <a href="/courses/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">
-        Начать бесплатно
-      </a>
+      <a id="header-login-link"
+        href="/student/"
+        class="inline-flex items-center gap-2 bg-[var(--brand-yellow)} hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft"
+      > Войти </a> <span id="header-email" class="hidden text-xs px-3 py-1.5 rounded-xl bg-white border border-black/10 shadow-soft max-w-[220px] truncate">
+        </span>
     </nav>
 
     <button id="burger" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft" aria-label="Меню">
@@ -131,9 +133,19 @@
       <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/courses/">Курсы</a>
       <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/shop/">Магазин</a>
       <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="/student/">Личный кабинет</a>
-      <a class="px-3 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold shadow-soft" href="/courses/">Начать бесплатно</a>
-    </div>
-  </div>
+     <a
+  id="header-login-link-mobile"
+  class="px-3 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold shadow-soft"
+  href="/student/"
+>
+  Войти
+</a>
+
+<div
+  id="header-email-mobile"
+  class="hidden px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft text-xs text-[var(--ink-2)] truncate"
+></div>
+  </div> </div>
 </header>
 
 <main>
@@ -515,6 +527,11 @@
   const progressText = document.getElementById("progress-text");
   const progressBar  = document.getElementById("progress-bar");
   const badgeRow     = document.getElementById("badge-row");
+  // Элементы шапки: вход / email
+  const headerLoginLink       = document.getElementById("header-login-link");
+  const headerEmailLabel      = document.getElementById("header-email");
+  const headerLoginLinkMobile = document.getElementById("header-login-link-mobile");
+  const headerEmailMobile     = document.getElementById("header-email-mobile");
 
   // Бейджи курса English Intro: id → картинка + подпись
   const BADGE_META = {
@@ -1115,28 +1132,67 @@ function updateStats() {
   // -----------------------------------
   // ИНИЦИАЛИЗАЦИЯ: auth → Firebase или localStorage
   // -----------------------------------
-  if (auth && db) {
-    onAuthStateChanged(auth, async (user) => {
-      currentUser    = user;
-      currentUserKey = makeUserKey(user);
+if (auth && db) {
+  onAuthStateChanged(auth, async (user) => {
+    currentUser    = user;
+    currentUserKey = makeUserKey(user);
 
-      if (!user) {
-        const local = loadLocalState();
-        appState = {
-          xp: local.xp,
-          streakDays: local.streakDays,
-          completedLessons: local.completedLessons,
-          vocab: local.vocab,
-          isFromFirebase: false
-        };
-        console.log("[Intro] Пользователь не авторизован, localStorage-режим");
-        renderAll();
-      } else {
-        await loadStateFromFirebaseOrMigrate(currentUserKey);
-        renderAll();
+    if (!user) {
+      // --- режим гостя ---
+      const local = loadLocalState();
+      appState = {
+        xp: local.xp,
+        streakDays: local.streakDays,
+        completedLessons: local.completedLessons,
+        vocab: local.vocab,
+        isFromFirebase: false
+      };
+      console.log("[Intro] Пользователь не авторизован, localStorage-режим");
+
+      // Хедер: показываем "Войти"
+      if (headerLoginLink) {
+        headerLoginLink.classList.remove("hidden");
       }
-    });
-  } else {
+      if (headerEmailLabel) {
+        headerEmailLabel.classList.add("hidden");
+        headerEmailLabel.textContent = "";
+      }
+      if (headerLoginLinkMobile) {
+        headerLoginLinkMobile.classList.remove("hidden");
+      }
+      if (headerEmailMobile) {
+        headerEmailMobile.classList.add("hidden");
+        headerEmailMobile.textContent = "";
+      }
+
+      renderAll();
+    } else {
+      // --- пользователь вошёл ---
+      await loadStateFromFirebaseOrMigrate(currentUserKey);
+
+      const email = user.email || "";
+
+      // Хедер: скрываем кнопку "Войти", показываем email
+      if (headerLoginLink) {
+        headerLoginLink.classList.add("hidden");
+      }
+      if (headerEmailLabel) {
+        headerEmailLabel.textContent = email;
+        headerEmailLabel.classList.remove("hidden");
+      }
+
+      if (headerLoginLinkMobile) {
+        headerLoginLinkMobile.classList.add("hidden");
+      }
+      if (headerEmailMobile) {
+        headerEmailMobile.textContent = email;
+        headerEmailMobile.classList.remove("hidden");
+      }
+
+      renderAll();
+    }
+  });
+} else {
     // Firebase не подключён — полностью локальный режим
     const local = loadLocalState();
     appState = {
