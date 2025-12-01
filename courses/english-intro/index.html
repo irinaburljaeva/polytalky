@@ -516,6 +516,20 @@
   const progressBar  = document.getElementById("progress-bar");
   const badgeRow     = document.getElementById("badge-row");
 
+  // Бейджи курса English Intro: id → картинка + подпись
+  const BADGE_META = {
+    // если в Firestore id "english-intro-lesson1"
+    "english-intro-lesson1": {
+      label: "Первый урок",
+      img: "/assets/badges/english-intro-lesson1.png"
+    },
+    // если во втором бейдже id "rickrolling"
+    "rickrolling": {
+      label: "Rickrolling",
+      img: "/assets/badges/rickrolling.png"
+    }
+    // если id другие — просто поменяй ключи на фактические значения
+  };
   // -----------------------------------
   // ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ (вкладки)
   // -----------------------------------
@@ -549,169 +563,192 @@
     return user.uid;
   }
 
-  async function loadStateFromFirebaseOrMigrate(userKey) {
-    if (!db || !userKey) {
-      const local = loadLocalState();
-      appState = {
-        xp: local.xp,
-        streakDays: local.streakDays,
-        completedLessons: local.completedLessons,
-        vocab: local.vocab,
-        isFromFirebase: false
-      };
-      currentVocab = appState.vocab;
-      console.log("[Intro] Firebase недоступен, работаем из localStorage");
-      return;
-    }
-
+async function loadStateFromFirebaseOrMigrate(userKey) {
+  if (!db || !userKey) {
     const local = loadLocalState();
-    let xp = 0;
-    let streakDays = 0;
+    appState = {
+      xp: local.xp,
+      streakDays: local.streakDays,
+      completedLessons: local.completedLessons,
+      vocab: local.vocab,
+      badges: [],
+      isFromFirebase: false
+    };
+    currentVocab = appState.vocab;
+    console.log("[Intro] Firebase недоступен, работаем из localStorage");
+    return;
+  }
 
-    try {
-      // ---------- users/{userKey} ----------
-      const userRef = doc(db, "users", userKey);
-      const userSnap = await getDoc(userRef);
+  const local = loadLocalState();
+  let xp = 0;
+  let streakDays = 0;
+  let badges = [];
 
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        const xp = data.xp || 0;
-        const streakDays = data.streakDays || 0;
-        const badges = Array.isArray(data.badges) ? data.badges : [];
+  try {
+    // ---------- users/{userKey} ----------
+    const userRef = doc(db, "users", userKey);
+    const userSnap = await getDoc(userRef);
 
-        if (!hasXpField && local.xp > 0) {
-          // Миграция: в Firebase ещё нет xp, но в localStorage уже есть
-          xp = local.xp;
-          streakDays = local.streakDays || 0;
-          await setDoc(
-            userRef,
-            {
-              xp,
-              streakDays,
-              lastStudyDate: new Date().toISOString().slice(0,10)
-            },
-            { merge: true }
-          );
-        } else {
-          xp = data.xp || 0;
-          streakDays = data.streakDays || 0;
-        }
-      } else {
-        // Документа нет — создаём по локальным данным
-        xp = local.xp || 0;
+    if (userSnap.exists()) {
+      const data = userSnap.data() || {};
+      const hasXpField = Object.prototype.hasOwnProperty.call(data, "xp");
+
+      xp = data.xp || 0;
+      streakDays = data.streakDays || 0;
+      badges = Array.isArray(data.badges) ? data.badges : [];
+
+      // миграция из localStorage, если надо
+      if (!hasXpField && local.xp > 0) {
+        xp = local.xp;
         streakDays = local.streakDays || 0;
         await setDoc(
           userRef,
           {
             xp,
             streakDays,
-            lastStudyDate: new Date().toISOString().slice(0,10)
+            lastStudyDate: new Date().toISOString().slice(0, 10)
           },
           { merge: true }
         );
       }
-
-      // ---------- progress: ВСЕ уроки пользователя ----------
-      const progressCol = collection(db, "progress");
-      const qProg = query(
-        progressCol,
-        where("userId", "==", userKey)
+    } else {
+      // Документа нет — создаём по локальным данным
+      xp = local.xp || 0;
+      streakDays = local.streakDays || 0;
+      badges = [];
+      await setDoc(
+        userRef,
+        {
+          xp,
+          streakDays,
+          lastStudyDate: new Date().toISOString().slice(0, 10)
+        },
+        { merge: true }
       );
-      const progSnap = await getDocs(qProg);
-
-      const completedLessons = [];
-      progSnap.forEach(docSnap => {
-        const d = docSnap.data();
-        if (d.lessonId && !completedLessons.includes(d.lessonId)) {
-          completedLessons.push(d.lessonId);
-        }
-      });
-
-      // ---------- vocabulary: ВСЕ слова пользователя ----------
-      const vocabCol = collection(db, "users", userKey, "vocabulary");
-      const vsnap = await getDocs(vocabCol);
-
-      let vocab = [];
-      vsnap.forEach(vdoc => {
-        const d = vdoc.data();
-        if (!d.word) return;
-        vocab.push({
-          word: d.word,
-          translation: d.translation || "",
-          lessonId: d.lesson || "user"
-        });
-      });
-
-      appState = {
-        xp,
-        streakDays,
-        completedLessons,
-        vocab,
-        badges,
-        isFromFirebase: true
-      };
-      currentVocab = appState.vocab;
-      console.log("[Intro] Загружено из Firebase:", {
-        xp, streakDays,
-        lessons: completedLessons.length,
-        vocab: vocab.length
-      });
-
-    } catch (e) {
-      console.error("Ошибка загрузки состояния из Firebase, fallback к localStorage:", e);
-      const local2 = loadLocalState();
-      appState = {
-        xp: local2.xp,
-        streakDays: local2.streakDays,
-        completedLessons: local2.completedLessons,
-        vocab: local2.vocab,
-        isFromFirebase: false
-      };
-      currentVocab = appState.vocab;
     }
+
+    // ---------- progress ----------
+    const progressCol = collection(db, "progress");
+    const qProg = query(progressCol, where("userId", "==", userKey));
+    const progSnap = await getDocs(qProg);
+
+    const completedLessons = [];
+    progSnap.forEach(docSnap => {
+      const d = docSnap.data();
+      if (d.lessonId && !completedLessons.includes(d.lessonId)) {
+        completedLessons.push(d.lessonId);
+      }
+    });
+
+    // ---------- vocabulary ----------
+    const vocabCol = collection(db, "users", userKey, "vocabulary");
+    const vsnap = await getDocs(vocabCol);
+
+    const vocab = [];
+    vsnap.forEach(vdoc => {
+      const d = vdoc.data();
+      if (!d.word) return;
+      vocab.push({
+        word: d.word,
+        translation: d.translation || "",
+        lessonId: d.lesson || "user"
+      });
+    });
+
+    appState = {
+      xp,
+      streakDays,
+      completedLessons,
+      vocab,
+      badges,
+      isFromFirebase: true
+    };
+    currentVocab = appState.vocab;
+
+    console.log("[Intro] Загружено из Firebase:", {
+      xp,
+      streakDays,
+      lessons: completedLessons.length,
+      vocab: vocab.length,
+      badges: badges.length
+    });
+
+  } catch (e) {
+    console.error("Ошибка загрузки состояния из Firebase, fallback к localStorage:", e);
+    const local2 = loadLocalState();
+    appState = {
+      xp: local2.xp,
+      streakDays: local2.streakDays,
+      completedLessons: local2.completedLessons,
+      vocab: local2.vocab,
+      badges: [],
+      isFromFirebase: false
+    };
+    currentVocab = appState.vocab;
   }
+}
 
   // -----------------------------------
   // РЕНДЕР СТАТЫ
   // -----------------------------------
-  function updateStats() {
-    const level = 1 + Math.floor((appState.xp || 0) / 100);
-    if (statLevel) statLevel.textContent  = String(level);
-    if (statXp)    statXp.textContent     = String(appState.xp || 0);
+ function updateStats() {
+  const level = 1 + Math.floor((appState.xp || 0) / 100);
+  if (statLevel) statLevel.textContent  = String(level);
+  if (statXp)    statXp.textContent     = String(appState.xp || 0);
 
-    const streak = appState.streakDays || 0;
-    if (statStreak) statStreak.textContent = streak + " дней";
+  const streak = appState.streakDays || 0;
+  if (statStreak) statStreak.textContent = streak + " дней";
 
-    const total = courseLessons.length;
-    const done  = courseLessons.filter(l => (appState.completedLessons || []).includes(l.id)).length;
-    const percent = total ? Math.round(done/total*100) : 0;
-    if (progressText) progressText.textContent = `${done} / ${total}`;
-    if (progressBar)  progressBar.style.width  = percent + "%";
+  const total = courseLessons.length;
+  const done  = courseLessons.filter(l => (appState.completedLessons || []).includes(l.id)).length;
+  const percent = total ? Math.round(done / total * 100) : 0;
+  if (progressText) progressText.textContent = ${done} / ${total};
+  if (progressBar)  progressBar.style.width  = percent + "%";
 
-   
-    if (!earned.length) {
-      const p = document.createElement("p");
-      p.className = "text-[10px] text-[var(--ink-2)]";
-      p.textContent = "Пройдите первый урок, чтобы получить свой первый бейдж 🎖";
-      badgeRow.appendChild(p);
-      return;
-    }
+  // ---- БЕЙДЖИ ----
+  if (!badgeRow) return;
+  badgeRow.innerHTML = "";
 
-    earned.forEach(b=>{
-      const wrap = document.createElement("div");
-      wrap.className = "flex flex-col items-center text-[10px]";
-      const circle = document.createElement("div");
-      circle.className = "h-10 w-10 rounded-full bg-[var(--brand-yellow)] flex items-center justify-center text-lg shadow-soft";
-      circle.textContent = b.emoji;
-      const caption = document.createElement("span");
-      caption.className = "mt-1 text-[10px] text-[var(--ink-2)] text-center max-w-[72px]";
-      caption.textContent = b.label;
-      wrap.appendChild(circle);
-      wrap.appendChild(caption);
-      badgeRow.appendChild(wrap);
-    });
+  const userBadges = Array.isArray(appState.badges) ? appState.badges : [];
+
+  if (!userBadges.length) {
+    const p = document.createElement("p");
+    p.className = "text-[10px] text-[var(--ink-2)]";
+    p.textContent = "Пройдите первый урок, чтобы получить свой первый бейдж 🎖";
+    badgeRow.appendChild(p);
+    return;
   }
 
+  userBadges.forEach(id => {
+    const meta = BADGE_META[id] || {
+      label: id,
+      img: "/assets/badges/medalunknown.png"  
+    };
+
+    const wrap = document.createElement("div");
+    wrap.className = "flex flex-col items-center text-[10px]";
+
+    const circle = document.createElement("div");
+    circle.className =
+      "h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-soft overflow-hidden border border-gray-200";
+
+    const img = document.createElement("img");
+    img.src = meta.img;
+    img.alt = meta.label;
+    img.className = "h-8 w-8 object-contain";
+
+    circle.appendChild(img);
+
+    const caption = document.createElement("span");
+    caption.className =
+      "mt-1 text-[10px] text-[var(--ink-2)] text-center max-w-[88px]";
+    caption.textContent = meta.label;
+
+    wrap.appendChild(circle);
+    wrap.appendChild(caption);
+    badgeRow.appendChild(wrap);
+  });
+}
   // -----------------------------------
   // СПИСОК УРОКОВ
   // -----------------------------------
