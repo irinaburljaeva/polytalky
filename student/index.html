@@ -2395,23 +2395,18 @@
       async function loadUserProfile(user) {
         try {
           const email = user.email || null;
-          const uid   = user.uid   || null;
-          if (!email && !uid) return;
+          if (!email) return;
 
           const usersCol = db.collection('users');
           const emailRef = email ? usersCol.doc(email) : null;
-          const uidRef   = uid   ? usersCol.doc(uid)   : null;
-
-          const [emailSnap, uidSnap] = await Promise.all([
+          
+          const [emailSnap] = await Promise.all([
             emailRef ? emailRef.get() : Promise.resolve(null),
-            uidRef   ? uidRef.get()   : Promise.resolve(null)
-          ]);
+                     ]);
 
           const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
-          const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
-
+         
           let data = {
-            ...(uidData || {}),
             ...(emailData || {}),
           };
 
@@ -2501,9 +2496,8 @@
 
         try {
           const email = user.email || null;
-          const uid   = user.uid   || null;
 
-          if (!email && !uid) {
+          if (!email) {
             coursesEmpty.classList.remove('hidden');
             await loadAndRenderBadges([]);
             return;
@@ -2511,47 +2505,41 @@
 
           const usersCol = db.collection('users');
           const emailRef = email ? usersCol.doc(email) : null;
-          const uidRef   = uid   ? usersCol.doc(uid)   : null;
+         
 
-          const [emailSnap, uidSnap] = await Promise.all([
+          const [emailSnap] = await Promise.all([
             emailRef ? emailRef.get() : Promise.resolve(null),
-            uidRef   ? uidRef.get()   : Promise.resolve(null)
-          ]);
+             ]);
 
           const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
-          const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
-
-          if (!emailData && !uidData) {
+        
+          if (!emailData) {
             coursesEmpty.classList.remove('hidden');
             await loadAndRenderBadges([]);
             return;
           }
 
           const paidFromEmail = Array.isArray(emailData?.courses)     ? emailData.courses     : [];
-          const paidFromUid   = Array.isArray(uidData?.courses)       ? uidData.courses       : [];
-          const freeFromEmail = Array.isArray(emailData?.freeCourses) ? emailData.freeCourses : [];
-          const freeFromUid   = Array.isArray(uidData?.freeCourses)   ? uidData.freeCourses   : [];
-          const badgesEmail   = Array.isArray(emailData?.badges)      ? emailData.badges      : [];
-          const badgesUid     = Array.isArray(uidData?.badges)        ? uidData.badges        : [];
+           const freeFromEmail = Array.isArray(emailData?.freeCourses) ? emailData.freeCourses : [];
+            const badgesEmail   = Array.isArray(emailData?.badges)      ? emailData.badges      : [];
+    
 
           const progressEmail = emailData?.progress || {};
-          const progressUid   = uidData?.progress   || {};
-          const mergedProgress = {
+                  const mergedProgress = {
             ...(progressEmail || {}),
-            ...(progressUid || {}),
+
          
           };
 
           const progressCourseIds = Object.keys(mergedProgress || {});
 
-          let mergedPaid = Array.from(new Set([...paidFromUid, ...paidFromEmail]));
+          let mergedPaid = Array.from(new Set([...paidFromEmail]));
           let mergedFree = Array.from(new Set([
-            ...freeFromUid,
-            ...freeFromEmail,
+               ...freeFromEmail,
             ...progressCourseIds.filter(id => !mergedPaid.includes(id))
           ]));
 
-          let mergedBadges = Array.from(new Set([...badgesUid, ...badgesEmail]));
+          let mergedBadges = Array.from(new Set([...badgesEmail]));
 
           const hasAnyCourse = mergedPaid.length > 0 || mergedFree.length > 0;
 
@@ -2563,8 +2551,7 @@
             };
 
             const updates = [];
-            if (uidRef)   updates.push(uidRef.set(badgeUpdate,   { merge: true }));
-            if (emailRef) updates.push(emailRef.set(badgeUpdate, { merge: true }));
+                  if (emailRef) updates.push(emailRef.set(badgeUpdate, { merge: true }));
 
             try {
               await Promise.all(updates);
