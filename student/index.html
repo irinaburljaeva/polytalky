@@ -2537,8 +2537,9 @@
           const progressEmail = emailData?.progress || {};
           const progressUid   = uidData?.progress   || {};
           const mergedProgress = {
-            ...(progressUid || {}),
             ...(progressEmail || {}),
+            ...(progressUid || {}),
+         
           };
 
           const progressCourseIds = Object.keys(mergedProgress || {});
