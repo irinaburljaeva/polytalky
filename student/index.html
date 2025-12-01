@@ -174,8 +174,8 @@
     /* КОЛЕСО УДАЧИ */
     .wheel-container {
       position: relative;
-      width: 320px;
-      height: 320px;
+      width: 360px;
+      height: 360px;
       margin: 0 auto;
     }
 
@@ -183,20 +183,20 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3), 0 0 0 12px #fff, 0 0 0 16px #fbbf24;
     }
 
     .wheel-pointer {
       position: absolute;
-      top: -15px;
+      top: -20px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-top: 30px solid #ef4444;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 48px solid #ef4444;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
       z-index: 10;
     }
 
@@ -205,19 +205,22 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       background: linear-gradient(135deg, #fbbf24, #f59e0b);
-      border: 4px solid white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      border: 6px solid white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #78350f;
       cursor: pointer;
       z-index: 20;
       transition: transform 0.2s;
+      user-select: none;
     }
 
     .wheel-center-button:hover {
@@ -227,11 +230,30 @@
     .wheel-center-button:active {
       transform: translate(-50%, -50%) scale(0.95);
     }
-
+    
+ .wheel-center-button.spinning {
+    pointer-events: none;
+   opacity: 0.7;
+    }
+    
     .wheel-spinning {
       pointer-events: none;
     }
 
+    .wheel-result {
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
     @keyframes confetti-fall {
       0% { transform: translateY(0) rotate(0deg); opacity: 1; }
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
@@ -247,6 +269,22 @@
     }
 
     @media (max-width:640px){
+
+    .wheel-container {
+      width: 300px;
+      height: 300px;
+    }
+      .wheel-center-button {
+        width: 70px;
+        height: 70px;
+        font-size: 24px;
+      }
+      .wheel-pointer {
+        border-left: 16px solid transparent;
+        border-right: 16px solid transparent;
+        border-top: 32px solid #ef4444;
+      }}
+      
       .pro-banner{
         margin:0 1rem;
         flex-direction:column;
@@ -723,20 +761,20 @@
           </div>
 
           <p class="text-sm text-slate-600">
-            Поздравляем! Вы заходили в личный кабинет 7 дней подряд. Теперь крутите колесо удачи и получите особенный приз 🎁
+            Поздравляем! Вы заходили в личный кабинет 7 дней подряд. Теперь вы можете прокрутить колесо удачи и получить особенный приз 🎁
           </p>
 
           <div class="wheel-container">
             <div class="wheel-pointer"></div>
-            <canvas id="wheel-canvas" class="wheel-canvas" width="320" height="320"></canvas>
+            <canvas id="wheel-canvas" class="wheel-canvas" width="360" height="360"></canvas>
             <button id="wheel-spin-btn" class="wheel-center-button">
-              🎯
+              НАЖМИ СЮДА
             </button>
           </div>
 
           <div id="wheel-result" class="hidden">
             <div class="soft-card p-4 text-center space-y-2">
-              <div class="text-4xl mb-2" id="wheel-result-icon">🎉</div>
+              <div class="text-5xl mb-2" id="wheel-result-icon">🎉</div>
               <p class="text-lg font-bold text-slate-900" id="wheel-result-title">
                 Поздравляем!
               </p>
@@ -953,15 +991,15 @@
 
     // ПРИЗЫ ДЛЯ КОЛЕСА УДАЧИ
     const WHEEL_PRIZES = [
-      { id: 'coins-5', label: '5 коинов', icon: '🪙', coins: 5, weight: 30 },
-      { id: 'coins-10', label: '10 коинов', icon: '🪙', coins: 10, weight: 25 },
-      { id: 'coins-15', label: '15 коинов', icon: '💰', coins: 15, weight: 20 },
-      { id: 'coins-25', label: '25 коинов', icon: '💰', coins: 25, weight: 10 },
-      { id: 'coins-50', label: '50 коинов', icon: '💎', coins: 50, weight: 5 },
-      { id: 'secret-badge', label: 'Секретный бейдж', icon: '🏅', badge: 'wheel-secret', weight: 4 },
-      { id: 'secret-avatar', label: 'Секретный аватар', icon: '🎭', avatar: 'secret', weight: 3 },
-      { id: 'pro-month', label: 'Месяц PRO', icon: '⭐', proMonth: true, weight: 1.5 },
-      { id: 'course-mchny', label: 'Курс MCHNY', icon: '📚', course: 'mchny-course', weight: 1.5 }
+      { id: 'coins-5', label: '5 коинов', color: 'fbbf24', image: '/assets/coin.png', coins: 5, weight: 1 },
+      { id: 'coins-10', label: '10 коинов', color: 'f59e0b', image: '/assets/all/coin10.png', coins: 10, weight: 1 },
+      { id: 'coins-15', label: '15 коинов', color: 'fbbf24', image: '/assets/all/coin15.png', coins: 15, weight: 1 },
+      { id: 'coins-25', label: '25 коинов', color: 'f59e0b', image: '/assets/all/coin25.png', coins: 25, weight: 1 },
+      { id: 'coins-50', label: '50 коинов', color: 'fbbf24', image: '/assets/all/coin50.png', coins: 50, weight: 1 },
+      { id: 'secret-badge', label: 'Секретный бейдж', color: 'f59e0b', image: '/assets/badges/badgewheel.png', badge: 'wheel-secret', weight: 1 },
+      { id: 'secret-avatar', label: 'Секретный аватар', color: 'fbbf24', image: '/assets/all/avatarwheel.png', avatar: 'secret', weight: 1 },
+      { id: 'pro-month', label: 'Месяц PRO', color: 'f59e0b', image: '/assets/all/pro.png', proMonth: true, weight: 1 },
+      { id: 'course-mchny', label: 'Курс MCHNY', color: 'fbbf24', image: '/assets/courses/mchny.jpg', course: 'mchny-course', weight: 1 }
     ];
   </script>
 
@@ -1052,6 +1090,8 @@
 
       let allBadgesCache = [];
       let currentWheelPrize = null;
+      let wheelRotation = 0;
+      let isSpinning = false;
 
       function todayStr() {
         const d = new Date();
@@ -1081,108 +1121,147 @@
         const centerY = wheelCanvas.height / 2;
         const radius = wheelCanvas.width / 2;
 
+        ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
+        const numPrizes = WHEEL_PRIZES.length;
+        
         // Цвета сегментов
         const colors = [
-          '#fbbf24', '#f59e0b', '#d97706', '#b45309',
-          '#92400e', '#78350f', '#451a03', '#1c0a00',
-          '#fde68a'
+          '#fbbf24', '#f59e0b', '#d97706', 
+         
         ];
 
         let currentAngle = 0;
         const totalWeight = WHEEL_PRIZES.reduce((sum, p) => sum + p.weight, 0);
 
         WHEEL_PRIZES.forEach((prize, index) => {
-          const sliceAngle = (prize.weight / totalWeight) * 2 * Math.PI;
+          const sliceAngle = index * sliceAngle;
+          const endAngle = startAngle + sliceAngle;
 
           // Рисуем сегмент
           ctx.beginPath();
           ctx.moveTo(centerX, centerY);
-          ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+          ctx.arc(centerX, centerY, radius, startAngle, endAngle);
           ctx.closePath();
-          ctx.fillStyle = colors[index % colors.length];
+          ctx.fillStyle = prize.color;
           ctx.fill();
           ctx.strokeStyle = '#fff';
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 3;
           ctx.stroke();
 
+          // Изображение в центре сектора
+          const midAngle = startAngle + sliceAngle / 2;
+          const imgX = centerX + Math.cos(midAngle) * (radius * 0.6);
+          const imgY = centerY + Math.sin(midAngle) * (radius * 0.6);
+
+          const img = new Image();
+          img.src = prize.image;
+          img.onload = () => {
+            ctx.save();
+            ctx.translate(imgX, imgY);
+            ctx.rotate(midAngle + Math.PI / 2);
+            ctx.drawImage(img, -20, -20, 40, 40);
+            ctx.restore();
           // Текст
           ctx.save();
-          ctx.translate(centerX, centerY);
-          ctx.rotate(currentAngle + sliceAngle / 2);
+          ctx.translate(imgX, imgY);
+          ctx.rotate(midAngle + Math.PI / 2);
           ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
           ctx.fillStyle = '#fff';
-          ctx.font = 'bold 11px sans-serif';
-          ctx.fillText(prize.icon, radius * 0.7, 5);
-          ctx.restore();
+          ctx.font = 'bold 12px sans-serif';
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 3;
 
-          currentAngle += sliceAngle;
+            const lines = prize.label.split('\n');
+            lines.forEach((line, i) => {
+              ctx.strokeText((line, 0, 28 + i * 14);
+          ctx.fillText(line, 0, 28 + i * 14);
+            });
+              ctx.restore();
+
+          };
         });
-      }
-
+    
       function selectWheelPrize() {
-        const totalWeight = WHEEL_PRIZES.reduce((sum, p) => sum + p.weight, 0);
-        let random = Math.random() * totalWeight;
-
-        for (let prize of WHEEL_PRIZES) {
-          random -= prize.weight;
-          if (random <= 0) {
-            return prize;
+        // Применяем разные веса
+        const weightedPrizes = [];
+        
+        WHEEL_PRIZES.forEach(prize => {
+          let weight = 1;
+          
+          if (prize.coins) {
+            if (prize.coins === 5) weight = 30;
+            else if (prize.coins === 10) weight = 25;
+            else if (prize.coins === 15) weight = 20;
+            else if (prize.coins === 25) weight = 10;
+            else if (prize.coins === 50) weight = 5;
+          } else if (prize.badge) {
+            weight = 4;
+          } else if (prize.avatar) {
+            weight = 3;
+          } else if (prize.proMonth) {
+            weight = 1.5;
+          } else if (prize.course) {
+            weight = 1.5;
           }
-        }
+          
+          for (let i = 0; i < weight * 10; i++) {
+            weightedPrizes.push(prize);
+          }
+        });
 
-        return WHEEL_PRIZES[0]; // fallback
+        const randomIndex = Math.floor(Math.random() * weightedPrizes.length);
+        return weightedPrizes[randomIndex];
       }
-
-      function spinWheel() {
+        
+     function spinWheel() {
+        if (isSpinning) return;
+        
+        isSpinning = true;
         const prize = selectWheelPrize();
         currentWheelPrize = prize;
 
-        // Вычисляем угол выигрышного приза
-        const totalWeight = WHEEL_PRIZES.reduce((sum, p) => sum + p.weight, 0);
-        let currentAngle = 0;
-        let prizeAngle = 0;
-
-        for (let p of WHEEL_PRIZES) {
-          const sliceAngle = (p.weight / totalWeight) * 360;
-          if (p.id === prize.id) {
-            prizeAngle = currentAngle + sliceAngle / 2;
-            break;
-          }
-          currentAngle += sliceAngle;
-        }
-
-        // Анимация вращения
-        const spins = 5; // количество полных оборотов
-        const targetRotation = 360 * spins + (360 - prizeAngle); // чтобы стрелка указала на приз
-        const duration = 4000; // 4 секунды
+        // Находим индекс приза
+        const prizeIndex = WHEEL_PRIZES.findIndex(p => p.id === prize.id);
+        const sliceAngle = 360 / WHEEL_PRIZES.length;
+        
+        // Вычисляем угол так, чтобы центр сектора был наверху
+        const prizeAngle = prizeIndex * sliceAngle + sliceAngle / 2;
+        
+        // Добавляем 5-7 полных оборотов + нужный угол
+        const spins = 5 + Math.random() * 2;
+        const targetRotation = 360 * spins + (360 - prizeAngle);
+        
+        const duration = 5000; // 5 секунд
         const startTime = Date.now();
+        const startRotation = wheelRotation;
 
-        wheelSpinBtn.style.pointerEvents = 'none';
-        wheelCanvas.classList.add('wheel-spinning');
+        wheelSpinBtn.classList.add('spinning');
+        wheelSpinBtn.textContent = '...';
 
         function animate() {
           const elapsed = Date.now() - startTime;
           const progress = Math.min(elapsed / duration, 1);
 
-          // Easing: ease-out
-          const easeOut = 1 - Math.pow(1 - progress, 3);
-          const currentRotation = targetRotation * easeOut;
+          // Easing: сначала быстро, потом медленно
+          const easeOut = 1 - Math.pow(1 - progress, 4);
+          wheelRotation = startRotation + targetRotation * easeOut;
 
-          wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
+          wheelCanvas.style.transform = `rotate(${wheelRotation}deg)`;
 
           if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
-            // Анимация завершена
-            wheelCanvas.classList.remove('wheel-spinning');
+            isSpinning = false;
             showWheelResult(prize);
             createConfetti();
+            wheelSpinBtn.classList.remove('spinning');
+            wheelSpinBtn.textContent = 'SPIN';
           }
         }
 
         animate();
       }
-
       function showWheelResult(prize) {
         wheelResultIcon.textContent = prize.icon;
         wheelResultTitle.textContent = `Вы выиграли: ${prize.label}!`;
