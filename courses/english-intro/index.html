@@ -118,7 +118,7 @@
       <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
       <a id="header-login-link"
         href="/student/"
-        class="inline-flex items-center gap-2 bg-[var(--brand-yellow)} hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft"
+        class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft"
       > Войти </a> <span id="header-email" class="hidden text-xs px-3 py-1.5 rounded-xl bg-white border border-black/10 shadow-soft max-w-[220px] truncate">
         </span>
     </nav>
@@ -720,8 +720,8 @@ function updateStats() {
   const done  = courseLessons.filter(l => (appState.completedLessons || []).includes(l.id)).length;
   const percent = total ? Math.round((done / total) * 100) : 0;
 
-  // ✅ тут должна быть строка или шаблонная строка, а не голые ${}
-  if (progressText) progressText.textContent = ${done} / ${total};
+
+  if (progressText) progressText.textContent = `${done} / ${total}`;
   if (progressBar)  progressBar.style.width  = percent + "%";
 
   // ---- БЕЙДЖИ ----
