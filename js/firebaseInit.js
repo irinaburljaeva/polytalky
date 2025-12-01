@@ -11,14 +11,13 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase
 // Твой Firebase config
 // ------------------------------
 const firebaseConfig = {
-  apiKey: "AIzaSyC-lSpXvd55g0Wx7a8DsU8x0OikYC32Y90",
-  authDomain: "polytalky.firebaseapp.com",
-  projectId: "polytalky",
-  storageBucket: "polytalky.appspot.com",
-  messagingSenderId: "896099750207",
-  appId: "1:896099750207:web:3fc8ab4b49f83ca92fd40d"
-};
-
+    apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
 // ------------------------------
 // Инициализация
 // ------------------------------
