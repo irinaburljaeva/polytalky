@@ -691,7 +691,7 @@ async function loadStateFromFirebaseOrMigrate(userKey) {
   // -----------------------------------
   // РЕНДЕР СТАТЫ
   // -----------------------------------
- function updateStats() {
+function updateStats() {
   const level = 1 + Math.floor((appState.xp || 0) / 100);
   if (statLevel) statLevel.textContent  = String(level);
   if (statXp)    statXp.textContent     = String(appState.xp || 0);
@@ -701,7 +701,9 @@ async function loadStateFromFirebaseOrMigrate(userKey) {
 
   const total = courseLessons.length;
   const done  = courseLessons.filter(l => (appState.completedLessons || []).includes(l.id)).length;
-  const percent = total ? Math.round(done / total * 100) : 0;
+  const percent = total ? Math.round((done / total) * 100) : 0;
+
+  // ✅ тут должна быть строка или шаблонная строка, а не голые ${}
   if (progressText) progressText.textContent = ${done} / ${total};
   if (progressBar)  progressBar.style.width  = percent + "%";
 
@@ -722,7 +724,7 @@ async function loadStateFromFirebaseOrMigrate(userKey) {
   userBadges.forEach(id => {
     const meta = BADGE_META[id] || {
       label: id,
-      img: "/assets/badges/medalunknown.png"  
+      img: "/assets/badges/medalunknown.png" // твоя дефолтная картинка
     };
 
     const wrap = document.createElement("div");
@@ -749,7 +751,8 @@ async function loadStateFromFirebaseOrMigrate(userKey) {
     badgeRow.appendChild(wrap);
   });
 }
-  // -----------------------------------
+
+    // -----------------------------------
   // СПИСОК УРОКОВ
   // -----------------------------------
   function renderLessons(){
