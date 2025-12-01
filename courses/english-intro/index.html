@@ -575,7 +575,9 @@
 
       if (userSnap.exists()) {
         const data = userSnap.data();
-        const hasXpField = Object.prototype.hasOwnProperty.call(data, "xp");
+        const xp = data.xp || 0;
+        const streakDays = data.streakDays || 0;
+        const badges = Array.isArray(data.badges) ? data.badges : [];
 
         if (!hasXpField && local.xp > 0) {
           // Миграция: в Firebase ещё нет xp, но в localStorage уже есть
@@ -645,6 +647,7 @@
         streakDays,
         completedLessons,
         vocab,
+        badges,
         isFromFirebase: true
       };
       currentVocab = appState.vocab;
@@ -685,24 +688,7 @@
     if (progressText) progressText.textContent = `${done} / ${total}`;
     if (progressBar)  progressBar.style.width  = percent + "%";
 
-    // Бейджи
-    if (!badgeRow) return;
-    badgeRow.innerHTML = "";
-    const earned = [];
-
-    if (done >= 1) {
-      earned.push({ label:"Первый урок", emoji:"🌟" });
-    }
-    if (done >= 3) {
-      earned.push({ label:"3+ урока", emoji:"📚" });
-    }
-    if (streak >= 3) {
-      earned.push({ label:"Серия 3+ дня", emoji:"🔥" });
-    }
-    if ((appState.xp || 0) >= 50) {
-      earned.push({ label:"50+ XP", emoji:"⚡" });
-    }
-
+   
     if (!earned.length) {
       const p = document.createElement("p");
       p.className = "text-[10px] text-[var(--ink-2)]";
