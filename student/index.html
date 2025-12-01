@@ -1122,19 +1122,13 @@
         const radius = wheelCanvas.width / 2;
 
         ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
-        const numPrizes = WHEEL_PRIZES.length;
         
-        // Цвета сегментов
-        const colors = [
-          '#fbbf24', '#f59e0b', '#d97706', 
-         
-        ];
-
-        let currentAngle = 0;
-        const totalWeight = WHEEL_PRIZES.reduce((sum, p) => sum + p.weight, 0);
+        // Исправление 1: Считаем угол сегмента (в радианах)
+        const sliceAngle = (2 * Math.PI) / WHEEL_PRIZES.length;
 
         WHEEL_PRIZES.forEach((prize, index) => {
-          const sliceAngle = index * sliceAngle;
+          // Исправление 2: Считаем углы
+          const startAngle = index * sliceAngle;
           const endAngle = startAngle + sliceAngle;
 
           // Рисуем сегмент
@@ -1158,30 +1152,29 @@
           img.onload = () => {
             ctx.save();
             ctx.translate(imgX, imgY);
-            ctx.rotate(midAngle + Math.PI / 2);
+            // Поворачиваем текст и иконку к центру
+            ctx.rotate(midAngle + Math.PI / 2); 
             ctx.drawImage(img, -20, -20, 40, 40);
-            ctx.restore();
-          // Текст
-          ctx.save();
-          ctx.translate(imgX, imgY);
-          ctx.rotate(midAngle + Math.PI / 2);
-          ctx.textAlign = 'center';
+            
+            // Текст
+            ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-          ctx.fillStyle = '#fff';
-          ctx.font = 'bold 12px sans-serif';
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 12px sans-serif';
             ctx.strokeStyle = '#000';
             ctx.lineWidth = 3;
 
             const lines = prize.label.split('\n');
             lines.forEach((line, i) => {
+              // Исправление 3: Убрана лишняя скобка
               ctx.strokeText(line, 0, 28 + i * 14);
-          ctx.fillText(line, 0, 28 + i * 14);
+              ctx.fillText(line, 0, 28 + i * 14);
             });
-              ctx.restore();
-
+            ctx.restore(); // restore относится к save внутри onload
+            ctx.restore(); // restore, который был лишним в старом коде, здесь нужен, чтобы сбросить translate
           };
         });
-    
+      } // Исправление 4: Закрывающая скобка функции
       function selectWheelPrize() {
         // Применяем разные веса
         const weightedPrizes = [];
