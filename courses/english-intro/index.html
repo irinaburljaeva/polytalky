@@ -1241,548 +1241,566 @@ if (auth && db) {
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <script type="text/babel">
-  // Твой React компонент из артифакта здесь
-import React, { useState, useEffect } from ‘react’;
-import { Volume2, Check, X, RotateCw, Star, Zap } from ‘lucide-react’;
+  const { useState, useEffect } = React;
 
-// Примерные слова для демо (в реальности берутся из vocabulary)
-const DEMO_WORDS = [
-{ word: ‘hello’, translation: ‘привет’, transcription: ‘[həˈləʊ]’ },
-{ word: ‘cat’, translation: ‘кот’, transcription: ‘[kæt]’ },
-{ word: ‘dog’, translation: ‘собака’, transcription: ‘[dɒɡ]’ },
-{ word: ‘house’, translation: ‘дом’, transcription: ‘[haʊs]’ },
-{ word: ‘book’, translation: ‘книга’, transcription: ‘[bʊk]’ },
-{ word: ‘water’, translation: ‘вода’, transcription: ‘[ˈwɔːtə]’ },
-{ word: ‘love’, translation: ‘любовь’, transcription: ‘[lʌv]’ },
-{ word: ‘friend’, translation: ‘друг’, transcription: ‘[frend]’ },
-{ word: ‘time’, translation: ‘время’, transcription: ‘[taɪm]’ },
-{ word: ‘food’, translation: ‘еда’, transcription: ‘[fuːd]’ }
-];
+  // Примерные слова для демо (если нет слов из курса)
+  const DEMO_WORDS = [
+    { word: 'hello',  translation: 'привет',  transcription: '[həˈləʊ]' },
+    { word: 'cat',    translation: 'кот',     transcription: '[kæt]' },
+    { word: 'dog',    translation: 'собака',  transcription: '[dɒɡ]' },
+    { word: 'house',  translation: 'дом',     transcription: '[haʊs]' },
+    { word: 'book',   translation: 'книга',   transcription: '[bʊk]' },
+    { word: 'water',  translation: 'вода',    transcription: '[ˈwɔːtə]' },
+    { word: 'love',   translation: 'любовь',  transcription: '[lʌv]' },
+    { word: 'friend', translation: 'друг',    transcription: '[frend]' },
+    { word: 'time',   translation: 'время',   transcription: '[taɪm]' },
+    { word: 'food',   translation: 'еда',     transcription: '[fuːd]' }
+  ];
 
-const PracticeApp = () => {
-const [mode, setMode] = useState(‘menu’);
-const [words, setWords] = useState(
-    window.currentVocab && window.currentVocab.length > 0 
-      ? window.currentVocab 
-      : DEMO_WORDS
-  );
-const [currentIndex, setCurrentIndex] = useState(0);
-const [score, setScore] = useState(0);
-const [streak, setStreak] = useState(0);
-const [flipped, setFlipped] = useState(false);
-const [userInput, setUserInput] = useState(’’);
-const [feedback, setFeedback] = useState(null);
-const [matchPairs, setMatchPairs] = useState([]);
-const [selectedCards, setSelectedCards] = useState([]);
-
-// Flashcards режим
-const FlashcardsMode = () => {
-const currentWord = words[currentIndex];
-
-```
-const handleNext = (isCorrect) => {
-  if (isCorrect) {
-    setScore(score + 10);
-    setStreak(streak + 1);
-  } else {
-    setStreak(0);
-  }
-  
-  setFlipped(false);
-  if (currentIndex < words.length - 1) {
-    setCurrentIndex(currentIndex + 1);
-  } else {
-    setMode('results');
-  }
-};
-
-return (
-  <div className="space-y-6">
-    <div className="flex items-center justify-between">
-      <div className="text-sm font-medium text-gray-600">
-        {currentIndex + 1} / {words.length}
-      </div>
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1 text-amber-600">
-          <Zap size={16} />
-          <span className="text-sm font-bold">{streak}</span>
-        </div>
-        <div className="flex items-center gap-1 text-purple-600">
-          <Star size={16} />
-          <span className="text-sm font-bold">{score}</span>
-        </div>
-      </div>
-    </div>
-
-    <div 
-      className="relative h-64 cursor-pointer"
-      style={{ perspective: '1000px' }}
-      onClick={() => setFlipped(!flipped)}
-    >
-      <div 
-        className="absolute inset-0 transition-all duration-500"
-        style={{
-          transformStyle: 'preserve-3d',
-          transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
-        }}
-      >
-        {/* Front */}
-        <div 
-          className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl shadow-xl flex flex-col items-center justify-center p-8"
-          style={{ backfaceVisibility: 'hidden' }}
-        >
-          <button 
-            className="absolute top-4 right-4 p-2 bg-white/20 rounded-full hover:bg-white/30"
-            onClick={(e) => {
-              e.stopPropagation();
-              speakWord(currentWord.word);
-            }}
-          >
-            <Volume2 size={20} className="text-white" />
-          </button>
-          <div className="text-6xl font-bold text-white mb-4">
-            {currentWord.word}
-          </div>
-          <div className="text-lg text-white/80">
-            {currentWord.transcription}
-          </div>
-          <div className="absolute bottom-6 text-sm text-white/60">
-            Нажмите, чтобы перевернуть
-          </div>
-        </div>
-
-        {/* Back */}
-        <div 
-          className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 rounded-3xl shadow-xl flex flex-col items-center justify-center p-8"
-          style={{ 
-            backfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)'
-          }}
-        >
-          <div className="text-5xl font-bold text-white mb-8">
-            {currentWord.translation}
-          </div>
-          <div className="flex gap-4">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNext(false);
-              }}
-              className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl text-white font-medium flex items-center gap-2"
-            >
-              <X size={20} />
-              Не знал
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNext(true);
-              }}
-              className="px-6 py-3 bg-white/90 hover:bg-white rounded-2xl text-purple-600 font-medium flex items-center gap-2"
-            >
-              <Check size={20} />
-              Знал!
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-      <div 
-        className="h-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all"
-        style={{ width: `${((currentIndex + 1) / words.length) * 100}%` }}
-      />
-    </div>
-  </div>
-);
-```
-
-};
-
-// Match режим
-const MatchMode = () => {
-useEffect(() => {
-const shuffled = […words].sort(() => Math.random() - 0.5).slice(0, 5);
-const pairs = [];
-shuffled.forEach(w => {
-pairs.push({ id: `en-${w.word}`, text: w.word, type: ‘en’, matched: false });
-pairs.push({ id: `ru-${w.word}`, text: w.translation, type: ‘ru’, matched: false });
-});
-setMatchPairs(pairs.sort(() => Math.random() - 0.5));
-}, []);
-
-```
-const handleCardClick = (card) => {
-  if (card.matched) return;
-  
-  if (selectedCards.length === 0) {
-    setSelectedCards([card]);
-  } else if (selectedCards.length === 1) {
-    const first = selectedCards[0];
-    
-    const isMatch = 
-      first.id.split('-')[1] === card.id.split('-')[1] && 
-      first.type !== card.type;
-
-    if (isMatch) {
-      setScore(score + 20);
-      setStreak(streak + 1);
-      setMatchPairs(pairs => 
-        pairs.map(p => 
-          p.id === first.id || p.id === card.id 
-            ? { ...p, matched: true } 
-            : p
-        )
-      );
-      setFeedback('correct');
-    } else {
-      setStreak(0);
-      setFeedback('incorrect');
+  // Озвучка слова
+  function speakWord(word) {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.8;
+      window.speechSynthesis.speak(utterance);
     }
+  }
 
-    setTimeout(() => {
-      setSelectedCards([]);
-      setFeedback(null);
-      
-      const allMatched = matchPairs.every(p => 
-        p.matched || p.id === first.id || p.id === card.id
-      );
-      if (allMatched && isMatch) {
-        setTimeout(() => setMode('results'), 500);
+  function PracticeApp() {
+    // Берём слова либо из окна (если ты потом туда их выведешь), либо DEMO
+    const [words] = useState(() => {
+      const external =
+        (window.currentVocabForPractice || window.currentVocab || [])
+          .filter(w => w.word && w.translation);
+
+      if (external.length) {
+        return external.map(w => ({
+          word: w.word,
+          translation: w.translation,
+          transcription: w.transcription || ''
+        }));
       }
-    }, 600);
-  }
-};
+      return DEMO_WORDS;
+    });
 
-return (
-  <div className="space-y-6">
-    <div className="flex items-center justify-between">
-      <div className="text-lg font-bold text-gray-800">
-        Соедини пары
-      </div>
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1 text-amber-600">
-          <Zap size={16} />
-          <span className="text-sm font-bold">{streak}</span>
-        </div>
-        <div className="flex items-center gap-1 text-purple-600">
-          <Star size={16} />
-          <span className="text-sm font-bold">{score}</span>
-        </div>
-      </div>
-    </div>
+    const [mode, setMode] = useState('menu');   // menu | flashcards | match | typing | results
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [score, setScore] = useState(0);
+    const [streak, setStreak] = useState(0);
+    const [flipped, setFlipped] = useState(false);       // для карточек
+    const [userInput, setUserInput] = useState('');      // для typing
+    const [feedback, setFeedback] = useState(null);      // 'correct' | 'incorrect' | null
+    const [matchPairs, setMatchPairs] = useState([]);    // для match
+    const [selectedCards, setSelectedCards] = useState([]);
 
-    <div className="grid grid-cols-2 gap-3">
-      {matchPairs.map(card => (
-        <button
-          key={card.id}
-          onClick={() => handleCardClick(card)}
-          disabled={card.matched}
-          className={`
-            p-4 rounded-2xl font-medium transition-all
-            ${card.matched 
-              ? 'bg-green-100 text-green-700 opacity-50' 
-              : selectedCards.includes(card)
-                ? 'bg-amber-400 text-white scale-105 shadow-lg'
-                : 'bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200'
-            }
-          `}
-        >
-          {card.text}
-        </button>
-      ))}
-    </div>
+    // ---------- РЕЖИМ КАРТОЧЕК ----------
+    const FlashcardsMode = () => {
+      const currentWord = words[currentIndex];
 
-    {feedback === 'correct' && (
-      <div className="text-center text-green-600 font-bold animate-bounce">
-        ✓ Отлично!
-      </div>
-    )}
-    {feedback === 'incorrect' && (
-      <div className="text-center text-red-600 font-bold" style={{ animation: 'shake 0.5s' }}>
-        ✗ Не совсем
-      </div>
-    )}
-  </div>
-);
-```
+      const handleNext = (isCorrect) => {
+        if (isCorrect) {
+          setScore(prev => prev + 10);
+          setStreak(prev => prev + 1);
+        } else {
+          setStreak(0);
+        }
 
-};
+        setFlipped(false);
+        if (currentIndex < words.length - 1) {
+          setCurrentIndex(prev => prev + 1);
+        } else {
+          setMode('results');
+        }
+      };
 
-// Typing режим
-const TypingMode = () => {
-const currentWord = words[currentIndex];
-
-```
-const handleCheck = () => {
-  const isCorrect = userInput.toLowerCase().trim() === currentWord.word.toLowerCase();
-  
-  if (isCorrect) {
-    setScore(score + 15);
-    setStreak(streak + 1);
-    setFeedback('correct');
-  } else {
-    setStreak(0);
-    setFeedback('incorrect');
-  }
-
-  setTimeout(() => {
-    setUserInput('');
-    setFeedback(null);
-    if (currentIndex < words.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setMode('results');
-    }
-  }, 1000);
-};
-
-return (
-  <div className="space-y-6">
-    <div className="flex items-center justify-between">
-      <div className="text-sm font-medium text-gray-600">
-        {currentIndex + 1} / {words.length}
-      </div>
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1 text-amber-600">
-          <Zap size={16} />
-          <span className="text-sm font-bold">{streak}</span>
-        </div>
-        <div className="flex items-center gap-1 text-purple-600">
-          <Star size={16} />
-          <span className="text-sm font-bold">{score}</span>
-        </div>
-      </div>
-    </div>
-
-    <div className="bg-gradient-to-br from-purple-400 to-pink-500 rounded-3xl p-8 text-center">
-      <button 
-        className="mb-4 p-3 bg-white/20 rounded-full hover:bg-white/30"
-        onClick={() => speakWord(currentWord.word)}
-      >
-        <Volume2 size={24} className="text-white" />
-      </button>
-      <div className="text-4xl font-bold text-white mb-2">
-        {currentWord.translation}
-      </div>
-      <div className="text-lg text-white/80">
-        Напиши слово по-английски
-      </div>
-    </div>
-
-    <div className="space-y-4">
-      <input
-        type="text"
-        value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter' && userInput.trim() && !feedback) {
-            handleCheck();
-          }
-        }}
-        placeholder="Введи слово..."
-        autoFocus
-        className={`
-          w-full px-6 py-4 text-2xl text-center rounded-2xl border-2 
-          focus:outline-none focus:ring-4 transition-all
-          ${feedback === 'correct' 
-            ? 'border-green-500 bg-green-50 ring-green-200' 
-            : feedback === 'incorrect'
-              ? 'border-red-500 bg-red-50 ring-red-200'
-              : 'border-gray-300 focus:border-purple-500 focus:ring-purple-200'
-          }
-        `}
-      />
-      
-      {feedback === 'correct' && (
-        <div className="text-center text-green-600 font-bold text-xl animate-bounce">
-          ✓ Правильно!
-        </div>
-      )}
-      {feedback === 'incorrect' && (
-        <div className="text-center space-y-2">
-          <div className="text-red-600 font-bold text-xl" style={{ animation: 'shake 0.5s' }}>
-            ✗ Неправильно
-          </div>
-          <div className="text-gray-600">
-            Правильно: <span className="font-bold">{currentWord.word}</span>
-          </div>
-        </div>
-      )}
-
-      {!feedback && (
-        <button
-          onClick={handleCheck}
-          disabled={!userInput.trim()}
-          className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-2xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Проверить
-        </button>
-      )}
-    </div>
-
-    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-      <div 
-        className="h-full bg-gradient-to-r from-purple-400 to-pink-500 transition-all"
-        style={{ width: `${((currentIndex + 1) / words.length) * 100}%` }}
-      />
-    </div>
-  </div>
-);
-```
-
-};
-
-// Результаты
-const ResultsScreen = () => {
-const percentage = Math.round((score / (words.length * 15)) * 100);
-
-```
-return (
-  <div className="text-center space-y-6">
-    <div className="text-6xl mb-4">🎉</div>
-    <h2 className="text-3xl font-bold text-gray-800">Отличная работа!</h2>
-    
-    <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl p-8 text-white">
-      <div className="text-6xl font-bold mb-2">{score}</div>
-      <div className="text-xl opacity-90">очков заработано</div>
-    </div>
-
-    <div className="grid grid-cols-2 gap-4">
-      <div className="bg-gray-50 rounded-2xl p-4">
-        <div className="text-3xl font-bold text-gray-800">{words.length}</div>
-        <div className="text-sm text-gray-600">слов изучено</div>
-      </div>
-      <div className="bg-gray-50 rounded-2xl p-4">
-        <div className="text-3xl font-bold text-gray-800">{percentage}%</div>
-        <div className="text-sm text-gray-600">правильно</div>
-      </div>
-    </div>
-
-    <button
-      onClick={() => {
-        setMode('menu');
-        setCurrentIndex(0);
-        setScore(0);
-        setStreak(0);
-      }}
-      className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-2xl hover:shadow-lg transition-all"
-    >
-      Вернуться в меню
-    </button>
-  </div>
-);
-```
-
-};
-
-// Главное меню
-const MainMenu = () => {
-const modes = [
-{
-id: ‘flashcards’,
-title: ‘Карточки’,
-description: ‘Проверь, помнишь ли ты слова’,
-icon: ‘🃏’,
-color: ‘from-amber-400 to-orange-500’
-},
-{
-id: ‘match’,
-title: ‘Соедини пары’,
-description: ‘Найди слово и его перевод’,
-icon: ‘🎯’,
-color: ‘from-blue-400 to-purple-500’
-},
-{
-id: ‘typing’,
-title: ‘Напиши слово’,
-description: ‘Вспомни правильное написание’,
-icon: ‘✍️’,
-color: ‘from-purple-400 to-pink-500’
-}
-];
-
-```
-return (
-  <div className="space-y-6">
-    <div className="text-center mb-8">
-      <h2 className="text-3xl font-bold text-gray-800 mb-2">
-        Выбери режим практики
-      </h2>
-      <p className="text-gray-600">
-        Изучено слов: {words.length}
-      </p>
-    </div>
-
-    <div className="grid gap-4">
-      {modes.map(modeItem => (
-        <button
-          key={modeItem.id}
-          onClick={() => {
-            setMode(modeItem.id);
-            setCurrentIndex(0);
-            setScore(0);
-            setStreak(0);
-          }}
-          className={`
-            bg-gradient-to-r ${modeItem.color} 
-            rounded-3xl p-6 text-white text-left
-            hover:shadow-xl hover:scale-105 transition-all
-          `}
-        >
-          <div className="flex items-start gap-4">
-            <div className="text-5xl">{modeItem.icon}</div>
-            <div className="flex-1">
-              <h3 className="text-2xl font-bold mb-2">{modeItem.title}</h3>
-              <p className="text-white/90">{modeItem.description}</p>
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-medium text-gray-600">
+              {currentIndex + 1} / {words.length}
+            </div>
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-1 text-amber-600">
+                <span>⚡</span>
+                <span className="font-bold">{streak}</span>
+              </div>
+              <div className="flex items-center gap-1 text-purple-600">
+                <span>★</span>
+                <span className="font-bold">{score}</span>
+              </div>
             </div>
           </div>
-        </button>
-      ))}
-    </div>
 
-    <div className="bg-gray-50 rounded-2xl p-6 text-center">
-      <p className="text-sm text-gray-600 mb-2">
-        💡 Совет дня
-      </p>
-      <p className="text-gray-800">
-        Занимайся по 5-10 минут каждый день — это эффективнее, чем редкие долгие сессии!
-      </p>
-    </div>
-  </div>
-);
-```
+          <div
+            className="relative h-64 cursor-pointer"
+            style={{ perspective: '1000px' }}
+            onClick={() => setFlipped(f => !f)}
+          >
+            <div
+              className="absolute inset-0 transition-all duration-500"
+              style={{
+                transformStyle: 'preserve-3d',
+                transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+              }}
+            >
+              {/* Лицевая сторона */}
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl shadow-xl flex flex-col items-center justify-center p-8"
+                style={{ backfaceVisibility: 'hidden' }}
+              >
+                <button
+                  className="absolute top-4 right-4 p-2 bg-white/20 rounded-full hover:bg-white/30"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    speakWord(currentWord.word);
+                  }}
+                >
+                  🔊
+                </button>
+                <div className="text-6xl font-bold text-white mb-4">
+                  {currentWord.word}
+                </div>
+                <div className="text-lg text-white/80">
+                  {currentWord.transcription}
+                </div>
+                <div className="absolute bottom-6 text-sm text-white/60">
+                  Нажмите, чтобы перевернуть
+                </div>
+              </div>
 
-};
+              {/* Обратная сторона */}
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 rounded-3xl shadow-xl flex flex-col items-center justify-center p-8"
+                style={{
+                  backfaceVisibility: 'hidden',
+                  transform: 'rotateY(180deg)'
+                }}
+              >
+                <div className="text-5xl font-bold text-white mb-8">
+                  {currentWord.translation}
+                </div>
+                <div className="flex gap-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNext(false);
+                    }}
+                    className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl text-white font-medium flex items-center gap-2"
+                  >
+                    <span>✗</span>
+                    <span>Не знал</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNext(true);
+                    }}
+                    className="px-6 py-3 bg-white/90 hover:bg-white rounded-2xl text-purple-600 font-medium flex items-center gap-2"
+                  >
+                    <span>✓</span>
+                    <span>Знал!</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-// Функция озвучки
-const speakWord = (word) => {
-if (‘speechSynthesis’ in window) {
-const utterance = new SpeechSynthesisUtterance(word);
-utterance.lang = ‘en-US’;
-utterance.rate = 0.8;
-window.speechSynthesis.speak(utterance);
-}
-};
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all"
+              style={{ width: `${((currentIndex + 1) / words.length) * 100}%` }}
+            />
+          </div>
+        </div>
+      );
+    };
 
-return (
-<div className="max-w-2xl mx-auto p-4">
-<style>{`@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }`}</style>
+    // ---------- РЕЖИМ MATCH (соедини пары) ----------
+    const MatchMode = () => {
+      useEffect(() => {
+        const shuffled = [...words].sort(() => Math.random() - 0.5).slice(0, 5);
+        const pairs = [];
+        shuffled.forEach(w => {
+          pairs.push({ id: `en-${w.word}`, text: w.word, type: 'en', matched: false });
+          pairs.push({ id: `ru-${w.word}`, text: w.translation, type: 'ru', matched: false });
+        });
+        setMatchPairs(pairs.sort(() => Math.random() - 0.5));
+        setSelectedCards([]);
+        setFeedback(null);
+      }, [words]);
 
-```
-  {mode === 'menu' && <MainMenu />}
-  {mode === 'flashcards' && <FlashcardsMode />}
-  {mode === 'match' && <MatchMode />}
-  {mode === 'typing' && <TypingMode />}
-  {mode === 'results' && <ResultsScreen />}
-</div>
-```
+      const handleCardClick = (card) => {
+        if (card.matched) return;
 
-);
-};
+        if (selectedCards.length === 0) {
+          setSelectedCards([card]);
+        } else if (selectedCards.length === 1) {
+          const first = selectedCards[0];
 
-export default PracticeApp;
+          const isMatch =
+            first.id.split('-')[1] === card.id.split('-')[1] &&
+            first.type !== card.type;
+
+          if (isMatch) {
+            setScore(prev => prev + 20);
+            setStreak(prev => prev + 1);
+            setMatchPairs(prevPairs =>
+              prevPairs.map(p =>
+                p.id === first.id || p.id === card.id
+                  ? { ...p, matched: true }
+                  : p
+              )
+            );
+            setFeedback('correct');
+          } else {
+            setStreak(0);
+            setFeedback('incorrect');
+          }
+
+          setTimeout(() => {
+            setSelectedCards([]);
+            setFeedback(null);
+
+            // проверяем, все ли пары собраны
+            const allMatchedNow = (pairs => pairs.every(p => p.matched))(
+              matchPairs.map(p =>
+                (p.id === first.id || p.id === card.id)
+                  ? { ...p, matched: isMatch || p.matched }
+                  : p
+              )
+            );
+            if (allMatchedNow && isMatch) {
+              setMode('results');
+            }
+          }, 600);
+        }
+      };
+
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="text-lg font-bold text-gray-800">
+              Соедини пары
+            </div>
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-1 text-amber-600">
+                <span>⚡</span>
+                <span className="font-bold">{streak}</span>
+              </div>
+              <div className="flex items-center gap-1 text-purple-600">
+                <span>★</span>
+                <span className="font-bold">{score}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {matchPairs.map(card => (
+              <button
+                key={card.id}
+                onClick={() => handleCardClick(card)}
+                disabled={card.matched}
+                className={
+                  'p-4 rounded-2xl font-medium transition-all ' +
+                  (card.matched
+                    ? 'bg-green-100 text-green-700 opacity-50'
+                    : selectedCards.some(c => c.id === card.id)
+                      ? 'bg-amber-400 text-white scale-105 shadow-lg'
+                      : 'bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200')
+                }
+              >
+                {card.text}
+              </button>
+            ))}
+          </div>
+
+          {feedback === 'correct' && (
+            <div className="text-center text-green-600 font-bold animate-bounce">
+              ✓ Отлично!
+            </div>
+          )}
+          {feedback === 'incorrect' && (
+            <div className="text-center text-red-600 font-bold" style={{ animation: 'shake 0.5s' }}>
+              ✗ Не совсем
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // ---------- РЕЖИМ TYPING ----------
+    const TypingMode = () => {
+      const currentWord = words[currentIndex];
+
+      const handleCheck = () => {
+        const isCorrect =
+          userInput.toLowerCase().trim() === currentWord.word.toLowerCase();
+
+        if (isCorrect) {
+          setScore(prev => prev + 15);
+          setStreak(prev => prev + 1);
+          setFeedback('correct');
+        } else {
+          setStreak(0);
+          setFeedback('incorrect');
+        }
+
+        setTimeout(() => {
+          setUserInput('');
+          setFeedback(null);
+          if (currentIndex < words.length - 1) {
+            setCurrentIndex(prev => prev + 1);
+          } else {
+            setMode('results');
+          }
+        }, 1000);
+      };
+
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-medium text-gray-600">
+              {currentIndex + 1} / {words.length}
+            </div>
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-1 text-amber-600">
+                <span>⚡</span>
+                <span className="font-bold">{streak}</span>
+              </div>
+              <div className="flex items-center gap-1 text-purple-600">
+                <span>★</span>
+                <span className="font-bold">{score}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-400 to-pink-500 rounded-3xl p-8 text-center">
+            <button
+              className="mb-4 p-3 bg-white/20 rounded-full hover:bg-white/30"
+              onClick={() => speakWord(currentWord.word)}
+            >
+              🔊
+            </button>
+            <div className="text-4xl font-bold text-white mb-2">
+              {currentWord.translation}
+            </div>
+            <div className="text-lg text-white/80">
+              Напиши слово по-английски
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <input
+              type="text"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && userInput.trim() && !feedback) {
+                  handleCheck();
+                }
+              }}
+              placeholder="Введи слово..."
+              autoFocus
+              className={
+                'w-full px-6 py-4 text-2xl text-center rounded-2xl border-2 ' +
+                'focus:outline-none focus:ring-4 transition-all ' +
+                (feedback === 'correct'
+                  ? 'border-green-500 bg-green-50 ring-green-200'
+                  : feedback === 'incorrect'
+                    ? 'border-red-500 bg-red-50 ring-red-200'
+                    : 'border-gray-300 focus:border-purple-500 focus:ring-purple-200')
+              }
+            />
+
+            {feedback === 'correct' && (
+              <div className="text-center text-green-600 font-bold text-xl animate-bounce">
+                ✓ Правильно!
+              </div>
+            )}
+            {feedback === 'incorrect' && (
+              <div className="text-center space-y-2">
+                <div
+                  className="text-red-600 font-bold text-xl"
+                  style={{ animation: 'shake 0.5s' }}
+                >
+                  ✗ Неправильно
+                </div>
+                <div className="text-gray-600">
+                  Правильно: <span className="font-bold">{currentWord.word}</span>
+                </div>
+              </div>
+            )}
+
+            {!feedback && (
+              <button
+                onClick={handleCheck}
+                disabled={!userInput.trim()}
+                className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-2xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Проверить
+              </button>
+            )}
+          </div>
+
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-purple-400 to-pink-500 transition-all"
+              style={{ width: `${((currentIndex + 1) / words.length) * 100}%` }}
+            />
+          </div>
+        </div>
+      );
+    };
+
+    // ---------- ЭКРАН РЕЗУЛЬТАТОВ ----------
+    const ResultsScreen = () => {
+      const maxPerWord = 15; // грубая оценка
+      const percentage = Math.round((score / (words.length * maxPerWord)) * 100);
+
+      return (
+        <div className="text-center space-y-6">
+          <div className="text-6xl mb-4">🎉</div>
+          <h2 className="text-3xl font-bold text-gray-800">Отличная работа!</h2>
+
+          <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl p-8 text-white">
+            <div className="text-6xl font-bold mb-2">{score}</div>
+            <div className="text-xl opacity-90">очков заработано</div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <div className="text-3xl font-bold text-gray-800">{words.length}</div>
+              <div className="text-sm text-gray-600">слов изучено</div>
+            </div>
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <div className="text-3xl font-bold text-gray-800">{percentage}%</div>
+              <div className="text-sm text-gray-600">примерная точность</div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              setMode('menu');
+              setCurrentIndex(0);
+              setScore(0);
+              setStreak(0);
+              setFlipped(false);
+              setUserInput('');
+              setFeedback(null);
+            }}
+            className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-2xl hover:shadow-lg transition-all"
+          >
+            Вернуться в меню
+          </button>
+        </div>
+      );
+    };
+
+    // ---------- ГЛАВНОЕ МЕНЮ ----------
+    const MainMenu = () => {
+      const modes = [
+        {
+          id: 'flashcards',
+          title: 'Карточки',
+          description: 'Проверь, помнишь ли ты слова',
+          icon: '🃏',
+          color: 'from-amber-400 to-orange-500'
+        },
+        {
+          id: 'match',
+          title: 'Соедини пары',
+          description: 'Найди слово и его перевод',
+          icon: '🎯',
+          color: 'from-blue-400 to-purple-500'
+        },
+        {
+          id: 'typing',
+          title: 'Напиши слово',
+          description: 'Вспомни правильное написание',
+          icon: '✍️',
+          color: 'from-purple-400 to-pink-500'
+        }
+      ];
+
+      return (
+        <div className="space-y-6">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              Выбери режим практики
+            </h2>
+            <p className="text-gray-600">
+              Изучено слов: {words.length}
+            </p>
+          </div>
+
+          <div className="grid gap-4">
+            {modes.map(modeItem => (
+              <button
+                key={modeItem.id}
+                onClick={() => {
+                  setMode(modeItem.id);
+                  setCurrentIndex(0);
+                  setScore(0);
+                  setStreak(0);
+                  setFlipped(false);
+                  setUserInput('');
+                  setFeedback(null);
+                }}
+                className={
+                  'bg-gradient-to-r ' +
+                  modeItem.color +
+                  ' rounded-3xl p-6 text-white text-left ' +
+                  'hover:shadow-xl hover:scale-105 transition-all'
+                }
+              >
+                <div className="flex items-start gap-4">
+                  <div className="text-5xl">{modeItem.icon}</div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold mb-2">{modeItem.title}</h3>
+                    <p className="text-white/90">{modeItem.description}</p>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-gray-50 rounded-2xl p-6 text-center">
+            <p className="text-sm text-gray-600 mb-2">💡 Совет дня</p>
+            <p className="text-gray-800">
+              Занимайтесь по 5–10 минут каждый день — это эффективнее, чем редкие долгие сессии.
+            </p>
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <div className="max-w-2xl mx-auto p-4">
+        {/* Анимация shake для ошибок */}
+        <style>{`
+          @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+          }
+        `}</style>
+
+        {mode === 'menu'      && <MainMenu />}
+        {mode === 'flashcards'&& <FlashcardsMode />}
+        {mode === 'match'     && <MatchMode />}
+        {mode === 'typing'    && <TypingMode />}
+        {mode === 'results'   && <ResultsScreen />}
+      </div>
+    );
+  }
+
+  // Монтируем React в корень практики
+  const rootEl = document.getElementById('practice-react-root');
+  if (rootEl && window.ReactDOM && ReactDOM.createRoot) {
+    const root = ReactDOM.createRoot(rootEl);
+    root.render(<PracticeApp />);
+  }
 </script>
 
 </body>
