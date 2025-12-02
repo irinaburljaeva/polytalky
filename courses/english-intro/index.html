@@ -1364,8 +1364,10 @@ const MatchMode = () => {
 
   // Теперь используем начальные пары для matchPairs
   useEffect(() => {
-    setMatchPairs(initialPairs);
-    setSelectedCards([]);
+    if (matchPairs.length === 0) {
+  setMatchPairs(initialPairs);
+  }
+       setSelectedCards([]);
     setFeedback(null);
   }, []); // Пустой массив - выполнится один раз
 
@@ -1624,6 +1626,8 @@ const MatchMode = () => {
               setFlipped(false);
               setUserInput('');
               setFeedback(null);
+              setMatchPairs([]);
+              setSelectedCards([]);
             }}
             className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-2xl hover:shadow-lg transition-all"
           >
@@ -1682,6 +1686,8 @@ const MatchMode = () => {
                   setFlipped(false);
                   setUserInput('');
                   setFeedback(null);
+                  setMatchPairs([]);
+              setSelectedCards([]);
                 }}
                 className={
                   'bg-gradient-to-r ' +
