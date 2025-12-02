@@ -591,7 +591,15 @@
       btn.classList.add("mode-btn-active");
       Object.entries(panels).forEach(([name,el])=>{
         if (!el) return;
-        el.classList.toggle("hidden", name!==tab);
+        if (name === "exercises") {
+  // React-узел НЕ скрываем, только контейнер
+  el.style.display = (name === tab) ? "block" : "block";
+  const inner = el.firstElementChild;
+  if (inner) inner.style.display = (name === tab) ? "block" : "none";
+} else {
+  // остальные вкладки скрываем обычным способом
+  el.classList.toggle("hidden", name !== tab);
+}
       });
     });
   });
