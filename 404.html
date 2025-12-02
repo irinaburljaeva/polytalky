@@ -61,20 +61,8 @@
 
     <div class="flex flex-col lg:flex-row gap-10 lg:gap-14 items-stretch lg:items-start">
 
-  <!-- Текстовый блок — на мобилке должен быть вторым -->
-  <div class="flex-1 order-2 lg:order-1">
-    ...
-  </div>
-
-  <!-- Блок с бейджем — на мобилке должен быть первым -->
-  <div class="flex-1 max-w-lg mx-auto lg:mx-0 order-1 lg:order-2">
-    ...
-  </div>
-
-</div>
-
-      <!-- Текстовый блок -->
-      <div class="flex-1">
+      <!-- Текстовый блок — на мобилке второй, на десктопе слева -->
+      <div class="flex-1 order-2 lg:order-1">
         <p class="uppercase tracking-wide text-xs text-[var(--text-soft)] mb-3">
           Ошибка 404
         </p>
@@ -117,21 +105,21 @@
         </div>
       </div>
 
-      <!-- Иллюстрация / карточка справа (уходит вниз на мобиле) -->
-      <div class="flex-1 max-w-lg mx-auto lg:mx-0">
+      <!-- Блок с бейджем — на мобилке первый, на десктопе справа -->
+      <div class="flex-1 max-w-lg mx-auto lg:mx-0 order-1 lg:order-2">
         <div class="relative">
           <div class="absolute -inset-4 bg-[var(--yellow-soft)] rounded-3xl blur-2xl opacity-70"></div>
 
           <div class="relative bg-white rounded-3xl border border-[var(--border)] shadow-xl p-6 sm:p-8">
             <div class="floaty flex justify-center mb-5">
-  <div class="h-28 w-28 sm:h-32 sm:w-32 rounded-2xl bg-transparent flex items-center justify-center shadow-inner overflow-hidden">
-    <img
-      src="/assets/badges/Lost-in-translation.png"
-      alt="Lost in Translation"
-      class="w-24 h-24 sm:w-28 sm:h-28 object-contain"
-    >
-  </div>
-</div>
+              <div class="h-28 w-28 sm:h-32 sm:w-32 rounded-2xl bg-transparent flex items-center justify-center shadow-inner overflow-hidden">
+                <img
+                  src="/assets/badges/Lost-in-translation.png"
+                  alt="Lost in Translation"
+                  class="w-24 h-24 sm:w-28 sm:h-28 object-contain"
+                >
+              </div>
+            </div>
 
             <p class="text-xs uppercase tracking-wide text-[var(--text-soft)] text-center mb-2">
               Вы получили бейдж Lost in Translation
@@ -201,27 +189,23 @@
   const db   = getFirestore(app);
 
   async function giveLostInTranslationBadge(user) {
-  if (!user || !user.email) return;
+    if (!user || !user.email) return;
 
-  const userKey = user.email.toLowerCase();
-  const badgeId = "lost-in-translation";
+    const userKey = user.email.toLowerCase();
+    const badgeId = "lost-in-translation";
 
-  // Правильный путь
-  const badgeRef = doc(db, "users", userKey, "badges", badgeId);
+    const badgeRef = doc(db, "users", userKey, "badges", badgeId);
+    const badgeSnap = await getDoc(badgeRef);
+    if (badgeSnap.exists()) return;
 
-  // Проверяем, есть ли уже запись
-  const badgeSnap = await getDoc(badgeRef);
-  if (badgeSnap.exists()) return;
+    await setDoc(badgeRef, {
+      id: badgeId,
+      title: "Lost in Translation",
+      earnedAt: new Date().toISOString()
+    });
 
-  // Создаём правильный объект
-  await setDoc(badgeRef, {
-    id: badgeId,  // <----- ДОЛЖНО совпадать с названием документа!
-    title: "Lost in Translation",
-    earnedAt: new Date().toISOString()
-  });
-
-  console.log("Бейдж Lost in Translation начислен!");
-}
+    console.log("Бейдж Lost in Translation начислен!");
+  }
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
