@@ -885,7 +885,12 @@ function updateStats() {
           );
 
           appState.vocab.push({ word, translation, lessonId:"user" });
+          appState.vocab = local.vocab
           currentVocab = appState.vocab;
+          window.currentVocab = currentVocab;
+  window.dispatchEvent(
+    new CustomEvent("pt-vocab-updated", { detail: { vocab: currentVocab } })
+    );
 
         } catch (err) {
           console.error("Ошибка сохранения слова в Firestore:", err);
@@ -1170,6 +1175,9 @@ function updateStats() {
     function renderAll() {
     currentVocab = appState.vocab || [];
       window.currentVocab = currentVocab;
+      window.dispatchEvent(
+  new CustomEvent("pt-vocab-updated", { detail: { vocab: currentVocab } })
+        );
     updateStats();
     renderLessons();
     renderVocab();
@@ -1262,6 +1270,21 @@ if (auth && db) {
 
 <script type="text/babel">
   const { useState, useEffect } = React;
+  useEffect(() => {
+    function handleUpdate(e) {
+      const v =
+        (e.detail && e.detail.vocab) ||
+        window.currentVocab ||
+        [];
+      setWords(v.length ? v : DEMO_WORDS);
+    }
+
+    window.addEventListener("pt-vocab-updated", handleUpdate);
+    // дергаем один раз при монтировании, чтобы взять уже загруженные слова
+    handleUpdate({ detail: { vocab: window.currentVocab || [] } });
+
+    return () => window.removeEventListener("pt-vocab-updated", handleUpdate);
+  }, []);
 
   // Примерные слова для демо (если нет слов из курса)
   const DEMO_WORDS = [
@@ -1436,7 +1459,7 @@ if (auth && db) {
           pairs.push({ id: `ru-${w.word}`, text: w.translation, type: 'ru', matched: false });
         });
        setMatchPairs(pairs.sort(() => Math.random() - 0.5));
-      }, []); // Пустой массив зависимостей!
+      }, [words]); // 
 
       const handleCardClick = (card) => {
         if (card.matched) return;
