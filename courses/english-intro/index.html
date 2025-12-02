@@ -1295,7 +1295,7 @@ if (auth && db) {
   }
 
    function ExercisesApp() {
-    const [words] = useState(() => {
+    const [words, setWords] = useState(() => {
       const external = (window.currentVocab || []).filter(w => w.word && w.translation);
       return external.length ? external : DEMO_WORDS;
     });
