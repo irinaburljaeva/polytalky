@@ -1169,6 +1169,7 @@ function updateStats() {
   // -----------------------------------
     function renderAll() {
     currentVocab = appState.vocab || [];
+      window.currentVocab = currentVocab;
     updateStats();
     renderLessons();
     renderVocab();
@@ -1803,7 +1804,7 @@ if (auth && db) {
   const rootEl = document.getElementById('practice-react-root');
   if (rootEl && window.ReactDOM && ReactDOM.createRoot) {
     const root = ReactDOM.createRoot(rootEl);
-    root.render(<PracticeApp />);
+    root.render(<ExercisesApp />);
   }
 </script>
 
