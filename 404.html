@@ -61,8 +61,8 @@
 
     <div class="flex flex-col lg:flex-row gap-10 lg:gap-14 items-stretch lg:items-start">
 
-      <!-- Текстовый блок — на мобилке второй, на десктопе слева -->
-      <div class="flex-1 order-2 lg:order-1">
+      <!-- Текстовый блок (Ошибка 404 + описание) -->
+      <div class="flex-1">
         <p class="uppercase tracking-wide text-xs text-[var(--text-soft)] mb-3">
           Ошибка 404
         </p>
@@ -77,8 +77,8 @@
           Но не переживайте — помогу быстро вернуться к изучению языка мечты 💛
         </p>
 
-        <!-- Мини-карточки -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+        <!-- Карточки курсов: показываем ТОЛЬКО на планшете/десктопе -->
+        <div class="hidden sm:grid sm:grid-cols-3 gap-3 text-sm">
           <div class="rounded-xl bg-white border border-[var(--border)] p-4 shadow-sm">
             <div class="text-2xl mb-1">🇪🇸</div>
             <p class="font-semibold">Испанский с нуля</p>
@@ -105,8 +105,8 @@
         </div>
       </div>
 
-      <!-- Блок с бейджем — на мобилке первый, на десктопе справа -->
-      <div class="flex-1 max-w-lg mx-auto lg:mx-0 order-1 lg:order-2">
+      <!-- Блок с бейджем -->
+      <div class="flex-1 max-w-lg mx-auto lg:mx-0">
         <div class="relative">
           <div class="absolute -inset-4 bg-[var(--yellow-soft)] rounded-3xl blur-2xl opacity-70"></div>
 
@@ -134,7 +134,7 @@
             </p>
 
             <div class="bg-[#fafafa] border border-[var(--border)] rounded-xl p-4 text-sm text-[var(--text-soft)]">
-              Попробуйте:
+              <p>Попробуйте:</p>
               <ul class="list-disc list-inside space-y-1 mt-2">
                 <li>проверить адрес страницы;</li>
                 <li>перейти к <a href="/courses/" class="text-[var(--yellow)] underline">каталогу курсов</a>;</li>
@@ -145,6 +145,33 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- Карточки курсов ДЛЯ МОБИЛКИ (после бейджа) -->
+    <div class="mt-8 grid grid-cols-1 gap-3 text-sm sm:hidden">
+      <div class="rounded-xl bg-white border border-[var(--border)] p-4 shadow-sm">
+        <div class="text-2xl mb-1">🇪🇸</div>
+        <p class="font-semibold">Испанский с нуля</p>
+        <p class="text-[var(--text-soft)] text-xs mt-1">
+          Бесплатный курс для старта.
+        </p>
+      </div>
+
+      <div class="rounded-xl bg-white border border-[var(--border)] p-4 shadow-sm">
+        <div class="text-2xl mb-1">🇫🇮</div>
+        <p class="font-semibold">Финский для путешествий</p>
+        <p class="text-[var(--text-soft)] text-xs mt-1">
+          Фразы для поездок.
+        </p>
+      </div>
+
+      <div class="rounded-xl bg-white border border-[var(--border)] p-4 shadow-sm">
+        <div class="text-2xl mb-1">🌍</div>
+        <p class="font-semibold">Все языки</p>
+        <p class="text-[var(--text-soft)] text-xs mt-1">
+          Смотрите весь каталог.
+        </p>
+      </div>
     </div>
 
   </div>
