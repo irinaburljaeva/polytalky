@@ -805,7 +805,7 @@ function updateStats() {
     box.innerHTML = "";
     const completed = appState.completedLessons || [];
 
-    courseLessons.forEach(lesson=>{
+    courseLessons.forEach((lesson, index)=>{
       const isDone = completed.includes(lesson.id);
       const card = document.createElement("a");
       card.href = lesson.url;
@@ -814,7 +814,7 @@ function updateStats() {
         <div class="flex items-center justify-between gap-2 mb-1">
           <div class="flex items-center gap-2">
             <span class="inline-flex h-6 w-6 rounded-full text-[11px] items-center justify-center ${isDone ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-500"}">
-              ${isDone ? "✓" : (lesson.id.split("-")[1] || "•")}
+              ${isDone ? "✓" : String(index + 1).padStart(2, "0")}
             </span>
             <span class="font-semibold text-[var(--ink)] line-clamp-1">${lesson.title}</span>
           </div>
