@@ -189,25 +189,27 @@
   const db   = getFirestore(app);
 
   async function giveLostInTranslationBadge(user) {
-    if (!user || !user.email) return;
+  if (!user || !user.email) return;
 
-    // Сохраняем по email, чтобы не было дублей по uid
-    const userKey = user.email.toLowerCase();
+  const userKey = user.email.toLowerCase();
+  const badgeId = "lost-in-translation";
 
-    const badgeRef = doc(db, "users", userKey, "badges", "lost-in-translation");
-    const badgeSnap = await getDoc(badgeRef);
+  // Правильный путь
+  const badgeRef = doc(db, "users", userKey, "badges", badgeId);
 
-    // Если бейдж уже есть — ничего не делаем
-    if (badgeSnap.exists()) return;
+  // Проверяем, есть ли уже запись
+  const badgeSnap = await getDoc(badgeRef);
+  if (badgeSnap.exists()) return;
 
-    await setDoc(badgeRef, {
-      id: "Lost-in-translation",
-      title: "Lost in Translation",
-      earnedAt: new Date().toISOString()
-    });
+  // Создаём правильный объект
+  await setDoc(badgeRef, {
+    id: badgeId,  // <----- ДОЛЖНО совпадать с названием документа!
+    title: "Lost in Translation",
+    earnedAt: new Date().toISOString()
+  });
 
-    console.log("Бейдж Lost in Translation начислен!");
-  }
+  console.log("Бейдж Lost in Translation начислен!");
+}
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
