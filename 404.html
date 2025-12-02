@@ -61,6 +61,18 @@
 
     <div class="flex flex-col lg:flex-row gap-10 lg:gap-14 items-stretch lg:items-start">
 
+  <!-- Текстовый блок — на мобилке должен быть вторым -->
+  <div class="flex-1 order-2 lg:order-1">
+    ...
+  </div>
+
+  <!-- Блок с бейджем — на мобилке должен быть первым -->
+  <div class="flex-1 max-w-lg mx-auto lg:mx-0 order-1 lg:order-2">
+    ...
+  </div>
+
+</div>
+
       <!-- Текстовый блок -->
       <div class="flex-1">
         <p class="uppercase tracking-wide text-xs text-[var(--text-soft)] mb-3">
