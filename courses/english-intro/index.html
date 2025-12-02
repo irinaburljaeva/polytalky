@@ -292,40 +292,12 @@
             <div>
               <h2 class="text-base sm:text-lg font-extrabold mb-2">Упражнения по словам</h2>
               <p class="text-xs sm:text-sm mb-3">
-                Когда нет ресурса на новый урок — можно «пощёлкать» слова в одном из режимов. Мозг всё равно получает маленькую дозу «я молодец».
+                Когда нет ресурса на новый урок — можно «пощёлкать» слова в одном из режимов.
               </p>
 
-              <div class="flex flex-wrap gap-2 mb-3 text-[11px]">
-                <button class="ex-mode-btn mode-btn-active px-3 py-1.5 rounded-full border border-gray-200 bg-white" data-mode="cards">
-                  🃏 Карточки
-                </button>
-                <button class="ex-mode-btn px-3 py-1.5 rounded-full border border-gray-200 bg-white" data-mode="quiz">
-                  ✅ Тест
-                </button>
-                <button class="ex-mode-btn px-3 py-1.5 rounded-full border border-gray-200 bg-white" data-mode="typing">
-                  ✍️ Письмо
-                </button>
-              </div>
-
-              <div id="exercise-box" class="border border-gray-200 rounded-2xl px-3 py-3 text-xs space-y-3 bg-[#fffef7]"></div>
-              <button id="exercise-next" class="mt-3 px-4 py-2 rounded-xl border border-gray-200 bg-white text-xs font-semibold">
-                Следующее задание
-              </button>
-            </div>
-
-            <div class="bg-[#fffef7] border border-gray-200 rounded-2xl p-4 text-xs sm:text-sm">
-              <h3 class="font-semibold mb-2">Как использовать упражнения</h3>
-              <ul class="list-disc list-inside space-y-1">
-                <li>Сделайте 3–5 заданий — и считайте, что вы «поддержали серию».</li>
-                <li>Используйте любой режим как разминку перед уроком или лёгкую практику вечером.</li>
-                <li>Если слово регулярно «падает» — вернитесь к уроку, откуда оно, и посмотрите в контексте.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-    <div id="tab-practice" class="tab-panel hidden">
-  <div id="practice-react-root"></div>
+           
+    <div id="tab-exercises" class="tab-panel hidden">
+  <div id="exercises-react-root"></div>
 </div>
 
           <div class="grid md:grid-cols-[2fr,1fr] gap-6 items-start text-sm text-[var(--ink-2)]">
@@ -348,6 +320,26 @@
             </div>
           </div>
         </div>
+
+            <!-- ВКЛАДКА: Практика -->
+
+  <div id="tab-practice" class="tab-panel hidden">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-2xl font-bold mb-4">Практика языка в жизни</h2>
+      <div class="bg-white rounded-2xl p-6 border shadow-sm">
+        <p class="text-gray-700 mb-4">
+          Здесь — простые идеи, как использовать английский вне уроков:
+        </p>
+        <ul class="list-disc list-inside space-y-2 text-gray-600">
+          <li>Запишите голосовое на телефон с приветствием</li>
+          <li>Напишите мини-диалог из 4-6 реплик</li>
+          <li>Подпишите 3 предмета вокруг вас по-английски</li>
+          <li>Сделайте заметку «Моё утро» в Present Simple</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
 
         <!-- ОТДЕЛЬНАЯ ВКЛАДКА PRO -->
         <div id="tab-pro" class="tab-panel hidden">
@@ -1267,33 +1259,23 @@ if (auth && db) {
     }
   }
 
-  function PracticeApp() {
-    // Берём слова либо из окна (если ты потом туда их выведешь), либо DEMO
+   function ExercisesApp() {
     const [words] = useState(() => {
-      const external =
-        (window.currentVocabForPractice || window.currentVocab || [])
-          .filter(w => w.word && w.translation);
-
-      if (external.length) {
-        return external.map(w => ({
-          word: w.word,
-          translation: w.translation,
-          transcription: w.transcription || ''
-        }));
-      }
-      return DEMO_WORDS;
+      const external = (window.currentVocab || []).filter(w => w.word && w.translation);
+      return external.length ? external : DEMO_WORDS;
     });
 
-    const [mode, setMode] = useState('menu');   // menu | flashcards | match | typing | results
+    const [mode, setMode] = useState('menu');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [score, setScore] = useState(0);
     const [streak, setStreak] = useState(0);
-    const [flipped, setFlipped] = useState(false);       // для карточек
-    const [userInput, setUserInput] = useState('');      // для typing
-    const [feedback, setFeedback] = useState(null);      // 'correct' | 'incorrect' | null
-    const [matchPairs, setMatchPairs] = useState([]);    // для match
+    const [flipped, setFlipped] = useState(false);
+    const [userInput, setUserInput] = useState('');
+    const [feedback, setFeedback] = useState(null);
+    const [matchPairs, setMatchPairs] = useState([]);
     const [selectedCards, setSelectedCards] = useState([]);
 
+  
     // ---------- РЕЖИМ КАРТОЧЕК ----------
     const FlashcardsMode = () => {
       const currentWord = words[currentIndex];
@@ -1419,16 +1401,14 @@ if (auth && db) {
     // ---------- РЕЖИМ MATCH (соедини пары) ----------
     const MatchMode = () => {
       useEffect(() => {
-        const shuffled = [...words].sort(() => Math.random() - 0.5).slice(0, 5);
+                const shuffled = [...words].sort(() => Math.random() - 0.5).slice(0, 5);
         const pairs = [];
         shuffled.forEach(w => {
           pairs.push({ id: `en-${w.word}`, text: w.word, type: 'en', matched: false });
           pairs.push({ id: `ru-${w.word}`, text: w.translation, type: 'ru', matched: false });
         });
-        setMatchPairs(pairs.sort(() => Math.random() - 0.5));
-        setSelectedCards([]);
-        setFeedback(null);
-      }, [words]);
+       setMatchPairs(pairs.sort(() => Math.random() - 0.5));
+      }, []); // Пустой массив зависимостей!
 
       const handleCardClick = (card) => {
         if (card.matched) return;
@@ -1437,7 +1417,7 @@ if (auth && db) {
           setSelectedCards([card]);
         } else if (selectedCards.length === 1) {
           const first = selectedCards[0];
-
+          
           const isMatch =
             first.id.split('-')[1] === card.id.split('-')[1] &&
             first.type !== card.type;
@@ -1461,18 +1441,14 @@ if (auth && db) {
           setTimeout(() => {
             setSelectedCards([]);
             setFeedback(null);
-
-            // проверяем, все ли пары собраны
-            const allMatchedNow = (pairs => pairs.every(p => p.matched))(
-              matchPairs.map(p =>
-                (p.id === first.id || p.id === card.id)
-                  ? { ...p, matched: isMatch || p.matched }
-                  : p
-              )
-            );
-            if (allMatchedNow && isMatch) {
-              setMode('results');
-            }
+             // Проверка завершения
+            setMatchPairs(prevPairs => {
+              const allMatched = prevPairs.every(p => p.matched);
+              if (allMatched) {
+                setTimeout(() => setMode('results'), 500);
+              }
+              return prevPairs;
+            });
           }, 600);
         }
       };
@@ -1485,7 +1461,7 @@ if (auth && db) {
             </div>
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1 text-amber-600">
-                <span>⚡</span>
+                <span>⚡️</span>
                 <span className="font-bold">{streak}</span>
               </div>
               <div className="flex items-center gap-1 text-purple-600">
@@ -1494,6 +1470,7 @@ if (auth && db) {
               </div>
             </div>
           </div>
+
 
           <div className="grid grid-cols-2 gap-3">
             {matchPairs.map(card => (
