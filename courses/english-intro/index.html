@@ -168,17 +168,20 @@
           Уроки, словарик, тренажёры и практика — в одном пространстве.
         </p>
 
-        <div class="flex flex-wrap gap-3 pt-1">
-          <a href="/courses/english-intro/lesson-01-hello.html"
-             class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-sm font-semibold text-[#1a1a1a] shadow-soft">
-            ▶ Начать с Урока 1
-          </a>
-          <button id="btn-continue"
-                  class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-black/10 bg-white/90 hover:bg-[#fff3c6] text-sm text-[var(--ink-2)] shadow-soft">
-            ⏱ Продолжить с места остановки
-          </button>
-        </div>
+     <div class="flex flex-wrap gap-3 pt-1">
+  <!-- Основная кнопка: по умолчанию "Начать курс" -->
+  <a id="btn-start"
+     href="/courses/english-intro/lesson-01-hello.html"
+     class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] text-sm font-semibold text-[#1a1a1a] shadow-soft">
+    ▶ Начать курс
+  </a>
 
+  <!-- Кнопка "Продолжить" скрыта, пока не знаем прогресс -->
+  <button id="btn-continue"
+          class="hidden inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-black/10 bg-white/90 hover:bg-[#fff3c6] text-sm text-[var(--ink-2)] shadow-soft">
+    ⏱ Продолжить с места остановки
+  </button>
+</div>
         <div class="flex flex-wrap gap-2 text-[11px] text-[var(--ink-2)] pt-2">
           <span class="pill">10–15 минут на урок</span>
           <span class="pill">Мультимедиа: текст, видео, картинки, задания</span>
@@ -451,13 +454,38 @@
   // -----------------------------------
   // ОПИСАНИЕ УРОКОВ
   // -----------------------------------
+    // ID здесь должны совпадать с lessonId в window.lessonConfig на страницах уроков
   const courseLessons = [
-    { id:"lesson-01-hello",   title:"Урок 1 · Гласные буквы английского и буквосочетания", minutes:10, url:"/courses/english-intro/lesson-01-hello.html" },
-    { id:"lesson-02",   title:"Урок 2 · Согласные буквы английского и буквосочетания", minutes:12, url:"/courses/english-intro/lesson-02-intro.html" },
-    { id:"lesson-03",  title:"Урок 3 · Порядок слов в предложении и глагол to be", minutes:15, url:"/courses/english-intro/lesson-03.html" },
-     { id:"lesson-04-tenses",  title:"Урок 4 · Времена (Simple / Continuous / Perfect)", minutes:15, url:"/courses/english-intro/lesson-04.html" },
-    { id:"lesson-05-rickroll",title:"Урок 5 · Культурный феномен", minutes:10, url:"/courses/english-intro/lesson-05.html" }
-    // при добавлении новых уроков — просто дописываем сюда
+    {
+      id: "english-intro-lesson-1",
+      title: "Урок 1 · Гласные буквы английского и буквосочетания",
+      minutes: 10,
+      url: "/courses/english-intro/lesson-01-hello.html"
+    },
+    {
+      id: "english-intro-lesson-2",
+      title: "Урок 2 · Согласные буквы английского и буквосочетания",
+      minutes: 12,
+      url: "/courses/english-intro/lesson-02-intro.html"
+    },
+    {
+      id: "english-intro-lesson-3",
+      title: "Урок 3 · Порядок слов в предложении и глагол to be",
+      minutes: 15,
+      url: "/courses/english-intro/lesson-03.html"
+    },
+    {
+      id: "english-intro-lesson-4",
+      title: "Урок 4 · Времена (Simple / Continuous / Perfect)",
+      minutes: 15,
+      url: "/courses/english-intro/lesson-04.html"
+    },
+    {
+      id: "english-intro-lesson-5",
+      title: "Урок 5 · Культурный феномен",
+      minutes: 10,
+      url: "/courses/english-intro/lesson-05.html"
+    }
   ];
 
   // -----------------------------------
@@ -1042,7 +1070,25 @@ function updateStats() {
   }
 
   const btnContinue = document.getElementById("btn-continue");
+  function updateStartContinueButtons() {
+    const btnStart = document.getElementById("btn-start");
+    const btnContinueEl = document.getElementById("btn-continue");
+    if (!btnStart || !btnContinueEl) return;
+
+    const doneCount = (appState.completedLessons || []).length;
+
+    if (doneCount === 0) {
+      // Курс ещё не начинали: показываем "Начать курс"
+      btnStart.classList.remove("hidden");
+      btnContinueEl.classList.add("hidden");
+    } else {
+      // Уже что-то пройдено: показываем "Продолжить"
+      btnStart.classList.add("hidden");
+      btnContinueEl.classList.remove("hidden");
+    }
+  }
   if (btnContinue) {
+
     btnContinue.addEventListener("click", ()=>{
       const lastId = getLastLessonIdFromState();
       if(lastId){
@@ -1057,6 +1103,8 @@ function updateStats() {
       }
     });
   }
+
+    
 
   // -----------------------------------
   // Stripe / PRO
@@ -1119,13 +1167,14 @@ function updateStats() {
   // -----------------------------------
   // ОБЩИЙ РЕНДЕР
   // -----------------------------------
-  function renderAll() {
+    function renderAll() {
     currentVocab = appState.vocab || [];
     updateStats();
     renderLessons();
     renderVocab();
     renderExercise();
     renderPracticeIdea();
+    updateStartContinueButtons();   // <- добавили
   }
 
   // -----------------------------------
