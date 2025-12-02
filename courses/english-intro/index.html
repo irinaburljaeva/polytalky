@@ -1349,113 +1349,121 @@ if (auth && db) {
       );
     };
 
-    // ---------- РЕЖИМ MATCH (соедини пары) ----------
-    const MatchMode = () => {
-      useEffect(() => {
-                const shuffled = [...words].sort(() => Math.random() - 0.5).slice(0, 5);
-        const pairs = [];
-        shuffled.forEach(w => {
-          pairs.push({ id: `en-${w.word}`, text: w.word, type: 'en', matched: false });
-          pairs.push({ id: `ru-${w.word}`, text: w.translation, type: 'ru', matched: false });
-        });
-       setMatchPairs(pairs.sort(() => Math.random() - 0.5));
-      }, []); // 
+// ---------- РЕЖИМ MATCH (соедини пары) ----------
+const MatchMode = () => {
+  // ИСПРАВЛЕНИЕ: создаём пары один раз при инициализации состояния
+  const [initialPairs] = useState(() => {
+    const shuffled = [...words].sort(() => Math.random() - 0.5).slice(0, 5);
+    const pairs = [];
+    shuffled.forEach(w => {
+      pairs.push({ id: `en-${w.word}`, text: w.word, type: 'en', matched: false });
+      pairs.push({ id: `ru-${w.word}`, text: w.translation, type: 'ru', matched: false });
+    });
+    return pairs.sort(() => Math.random() - 0.5);
+  });
 
-      const handleCardClick = (card) => {
-        if (card.matched) return;
+  // Теперь используем начальные пары для matchPairs
+  useEffect(() => {
+    setMatchPairs(initialPairs);
+    setSelectedCards([]);
+    setFeedback(null);
+  }, []); // Пустой массив - выполнится один раз
 
-        if (selectedCards.length === 0) {
-          setSelectedCards([card]);
-        } else if (selectedCards.length === 1) {
-          const first = selectedCards[0];
-          
-          const isMatch =
-            first.id.split('-')[1] === card.id.split('-')[1] &&
-            first.type !== card.type;
+  const handleCardClick = (card) => {
+    if (card.matched) return;
 
-          if (isMatch) {
-            setScore(prev => prev + 20);
-            setStreak(prev => prev + 1);
-            setMatchPairs(prevPairs =>
-              prevPairs.map(p =>
-                p.id === first.id || p.id === card.id
-                  ? { ...p, matched: true }
-                  : p
-              )
-            );
-            setFeedback('correct');
-          } else {
-            setStreak(0);
-            setFeedback('incorrect');
+    if (selectedCards.length === 0) {
+      setSelectedCards([card]);
+    } else if (selectedCards.length === 1) {
+      const first = selectedCards[0];
+      
+      const isMatch =
+        first.id.split('-')[1] === card.id.split('-')[1] &&
+        first.type !== card.type;
+
+      if (isMatch) {
+        setScore(prev => prev + 20);
+        setStreak(prev => prev + 1);
+        setMatchPairs(prevPairs =>
+          prevPairs.map(p =>
+            p.id === first.id || p.id === card.id
+              ? { ...p, matched: true }
+              : p
+          )
+        );
+        setFeedback('correct');
+      } else {
+        setStreak(0);
+        setFeedback('incorrect');
+      }
+
+      setTimeout(() => {
+        setSelectedCards([]);
+        setFeedback(null);
+        
+        setMatchPairs(prevPairs => {
+          const allMatched = prevPairs.every(p => p.matched);
+          if (allMatched) {
+            setTimeout(() => setMode('results'), 500);
           }
+          return prevPairs;
+        });
+      }, 600);
+    }
+  };
 
-          setTimeout(() => {
-            setSelectedCards([]);
-            setFeedback(null);
-             // Проверка завершения
-            setMatchPairs(prevPairs => {
-              const allMatched = prevPairs.every(p => p.matched);
-              if (allMatched) {
-                setTimeout(() => setMode('results'), 500);
-              }
-              return prevPairs;
-            });
-          }, 600);
-        }
-      };
-
-      return (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="text-lg font-bold text-gray-800">
-              Соедини пары
-            </div>
-            <div className="flex items-center gap-4 text-xs">
-              <div className="flex items-center gap-1 text-amber-600">
-                <span>⚡️</span>
-                <span className="font-bold">{streak}</span>
-              </div>
-              <div className="flex items-center gap-1 text-purple-600">
-                <span>★</span>
-                <span className="font-bold">{score}</span>
-              </div>
-            </div>
-          </div>
-
-
-          <div className="grid grid-cols-2 gap-3">
-            {matchPairs.map(card => (
-              <button
-                key={card.id}
-                onClick={() => handleCardClick(card)}
-                disabled={card.matched}
-                className={
-                  'p-4 rounded-2xl font-medium transition-all ' +
-                  (card.matched
-                    ? 'bg-green-100 text-green-700 opacity-50'
-                    : selectedCards.some(c => c.id === card.id)
-                      ? 'bg-amber-400 text-white scale-105 shadow-lg'
-                      : 'bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200')
-                }
-              >
-                {card.text}
-              </button>
-            ))}
-          </div>
-
-          {feedback === 'correct' && (
-            <div className="text-center text-green-600 font-bold animate-bounce">
-              ✓ Отлично!
-            </div>
-          )}
-          {feedback === 'incorrect' && (
-            <div className="text-center text-red-600 font-bold" style={{ animation: 'shake 0.5s' }}>
-              ✗ Не совсем
-            </div>
-          )}
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="text-lg font-bold text-gray-800">
+          Соедини пары
         </div>
-      );
-    };
+        <div className="flex items-center gap-4 text-xs">
+          <div className="flex items-center gap-1 text-amber-600">
+            <span>⚡</span>
+            <span className="font-bold">{streak}</span>
+          </div>
+          <div className="flex items-center gap-1 text-purple-600">
+            <span>★</span>
+            <span className="font-bold">{score}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        {matchPairs.map(card => (
+          <button
+            key={card.id}
+            onClick={() => handleCardClick(card)}
+            disabled={card.matched}
+            className={
+              'p-4 rounded-2xl font-medium transition-all ' +
+              (card.matched
+                ? 'bg-green-100 text-green-700 opacity-50'
+                : selectedCards.some(c => c.id === card.id)
+                  ? 'bg-amber-400 text-white scale-105 shadow-lg'
+                  : 'bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200')
+            }
+          >
+            {card.text}
+          </button>
+        ))}
+      </div>
+
+      {feedback === 'correct' && (
+        <div className="text-center text-green-600 font-bold animate-bounce">
+          ✓ Отлично!
+        </div>
+      )}
+      {feedback === 'incorrect' && (
+        <div className="text-center text-red-600 font-bold" style={{ animation: 'shake 0.5s' }}>
+          ✗ Не совсем
+        </div>
+      )}
+    </div>
+  );
+};
+
 
     // ---------- РЕЖИМ TYPING ----------
     const TypingMode = () => {
