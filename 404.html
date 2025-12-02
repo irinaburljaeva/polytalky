@@ -42,10 +42,10 @@
 <!-- Header -->
 <header class="bg-white border-b border-[var(--border)] sticky top-0 z-40">
   <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-   <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
-        <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
-        PolyTalky
-      </a>
+    <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+      <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+      PolyTalky
+    </a>
 
     <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--text-soft)]">
       <a href="/courses/" class="hover:text-[var(--text)]">Курсы</a>
@@ -77,7 +77,6 @@
           Но не переживайте — помогу быстро вернуться к изучению языка мечты 💛
         </p>
 
-       
         <!-- Мини-карточки -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
           <div class="rounded-xl bg-white border border-[var(--border)] p-4 shadow-sm">
@@ -113,10 +112,14 @@
 
           <div class="relative bg-white rounded-3xl border border-[var(--border)] shadow-xl p-6 sm:p-8">
             <div class="floaty flex justify-center mb-5">
-              <div class="h-28 w-28 sm:h-32 sm:w-32 rounded-2xl bg-[var(--yellow-soft)] flex items-center justify-center shadow-inner text-5xl sm:text-6xl">
-                🧭
-              </div>
-            </div>
+  <div class="h-28 w-28 sm:h-32 sm:w-32 rounded-2xl bg-[var(--yellow-soft)] flex items-center justify-center shadow-inner overflow-hidden">
+    <img
+      src="/assets/badges/lost-in-translation.png"
+      alt="Lost in Translation"
+      class="w-24 h-24 sm:w-28 sm:h-28 object-contain"
+    >
+  </div>
+</div>
 
             <p class="text-xs uppercase tracking-wide text-[var(--text-soft)] text-center mb-2">
               Lost in Translation
@@ -165,55 +168,39 @@
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 </script>
-<!-- Firebase auto-award Lost in Translation badge -->
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore-compat.js"></script>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<!-- Firebase + авто-выдача бейджа Lost in Translation -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
-      authDomain: "polytalky-70999.firebaseapp.com",
-      projectId: "polytalky-70999",
-      storageBucket: "polytalky-70999.firebasestorage.app",
-      messagingSenderId: "62407152289",
-      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+    authDomain: "polytalky-70999.firebaseapp.com",
+    projectId: "polytalky-70999",
+    storageBucket: "polytalky-70999.firebasestorage.app",
+    messagingSenderId: "62407152289",
+    appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+  };
 
-    window.firebaseApp  = initializeApp(firebaseConfig);
-    window.firebaseAuth = getAuth(window.firebaseApp);
-    window.firebaseDb   = getFirestore(window.firebaseApp);
-  </script>
-<script>
-  // --- ИНИЦИАЛИЗАЦИЯ FIREBASE ---
-  
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
 
-
-  // --- ФУНКЦИЯ ВЫДАЧИ БЕЙДЖА ---
   async function giveLostInTranslationBadge(user) {
     if (!user || !user.email) return;
 
-    const userKey = user.email; // ВАЖНО: сохраняем по email
+    // Сохраняем по email, чтобы не было дублей по uid
+    const userKey = user.email.toLowerCase();
 
-    const badgeRef = db
-      .collection("users")
-      .doc(userKey)
-      .collection("badges")
-      .doc("lost-in-translation");
+    const badgeRef = doc(db, "users", userKey, "badges", "lost-in-translation");
+    const badgeSnap = await getDoc(badgeRef);
 
-    const badgeDoc = await badgeRef.get();
+    // Если бейдж уже есть — ничего не делаем
+    if (badgeSnap.exists()) return;
 
-    // Если уже есть — ничего не делаем
-    if (badgeDoc.exists) return;
-
-    // Если нет — создаём
-    await badgeRef.set({
+    await setDoc(badgeRef, {
       id: "lost-in-translation",
       title: "Lost in Translation",
       earnedAt: new Date().toISOString()
@@ -222,14 +209,14 @@
     console.log("Бейдж Lost in Translation начислен!");
   }
 
-
-  // --- СЛУШАТЕЛЬ АВТОРИЗАЦИИ ---
-  auth.onAuthStateChanged(user => {
+  onAuthStateChanged(auth, (user) => {
     if (user) {
-      giveLostInTranslationBadge(user);
+      giveLostInTranslationBadge(user).catch((err) => {
+        console.error("Ошибка начисления бейджа Lost in Translation:", err);
+      });
     }
   });
 </script>
-  
+
 </body>
 </html>
