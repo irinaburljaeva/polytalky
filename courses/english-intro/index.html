@@ -1459,7 +1459,7 @@ if (auth && db) {
           pairs.push({ id: `ru-${w.word}`, text: w.translation, type: 'ru', matched: false });
         });
        setMatchPairs(pairs.sort(() => Math.random() - 0.5));
-      }, [words]); // 
+      }, []); // 
 
       const handleCardClick = (card) => {
         if (card.matched) return;
