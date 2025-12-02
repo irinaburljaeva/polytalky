@@ -921,129 +921,6 @@ function updateStats() {
   }
 
   // -----------------------------------
-  // УПРАЖНЕНИЯ
-  // -----------------------------------
-  const exerciseBox   = document.getElementById("exercise-box");
-  const exerciseNext  = document.getElementById("exercise-next");
-  const exModeButtons = document.querySelectorAll(".ex-mode-btn");
-  let currentExerciseMode = "cards";
-
-  exModeButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      currentExerciseMode = btn.dataset.mode;
-      exModeButtons.forEach(b => b.classList.remove("mode-btn-active"));
-      btn.classList.add("mode-btn-active");
-      renderExercise();
-    });
-  });
-
-  function renderExercise(){
-    if (!exerciseBox) return;
-    const words = currentVocab || [];
-    exerciseBox.innerHTML = "";
-
-    if (words.length < 1) {
-      exerciseBox.innerHTML = `<p>В словаре пока мало слов. Пройдите уроки или добавьте слова во вкладке «Словарик».</p>`;
-      return;
-    }
-
-    const word = words[Math.floor(Math.random() * words.length)];
-
-    if (currentExerciseMode === "cards") {
-      const q = document.createElement("p");
-      q.className = "font-semibold";
-      q.textContent = `Что это за слово: "${word.word}"?`;
-
-      const btnShow = document.createElement("button");
-      btnShow.className = "mt-2 inline-flex px-3 py-2 rounded-xl border border-gray-200 bg-white";
-      btnShow.textContent = "Показать перевод";
-      const ans = document.createElement("p");
-      ans.className = "mt-2 text-[var(--ink-2)] hidden";
-      ans.textContent = `Перевод: ${word.translation}`;
-
-      btnShow.addEventListener("click", ()=>{
-        ans.classList.remove("hidden");
-      });
-
-      exerciseBox.appendChild(q);
-      exerciseBox.appendChild(btnShow);
-      exerciseBox.appendChild(ans);
-
-    } else if (currentExerciseMode === "quiz") {
-      if (words.length < 2) {
-        exerciseBox.innerHTML = `<p>Для теста нужно хотя бы 2 слова. Добавьте ещё одно слово.</p>`;
-        return;
-      }
-      const others = words.filter(w => w !== word);
-      const options = [word];
-      while (options.length < Math.min(4, words.length)) {
-        const cand = others[Math.floor(Math.random()*others.length)];
-        if (!options.includes(cand)) options.push(cand);
-      }
-      options.sort(()=>Math.random()-0.5);
-
-      const q = document.createElement("p");
-      q.className = "font-semibold";
-      q.textContent = `Как перевести: "${word.word}"?`;
-      exerciseBox.appendChild(q);
-
-      let answered = false;
-      options.forEach(item=>{
-        const btn = document.createElement("button");
-        btn.className = "mt-2 block w-full text-left px-3 py-2 rounded-xl border border-gray-200 bg-white";
-        btn.textContent = item.translation;
-        btn.addEventListener("click", ()=>{
-          if(answered) return;
-          answered = true;
-          if(item === word){
-            btn.classList.add("border-emerald-400","bg-emerald-50");
-          }else{
-            btn.classList.add("border-red-300","bg-red-50");
-          }
-        });
-        exerciseBox.appendChild(btn);
-      });
-
-    } else if (currentExerciseMode === "typing") {
-      const q = document.createElement("p");
-      q.className = "font-semibold";
-      q.textContent = `Напишите перевод: "${word.word}"`;
-      const input = document.createElement("input");
-      input.className = "mt-2 w-full border border-gray-200 rounded-xl px-3 py-2 text-xs";
-      input.placeholder = "ваш вариант перевода";
-      const btnCheck = document.createElement("button");
-      btnCheck.className = "mt-2 inline-flex px-3 py-2 rounded-xl border border-gray-200 bg-white";
-      btnCheck.textContent = "Проверить";
-      const feedback = document.createElement("p");
-      feedback.className = "mt-2 text-[11px]";
-
-      btnCheck.addEventListener("click", ()=>{
-        const val = input.value.trim().toLowerCase();
-        if (!val) return;
-        const correct = (word.translation || "").toLowerCase();
-        if (correct && correct.includes(val)) {
-          feedback.textContent = `👍 Да, подходит! В словарике записано: "${word.translation}".`;
-          feedback.classList.remove("text-red-600");
-          feedback.classList.add("text-emerald-600");
-        } else {
-          feedback.textContent = `Не совсем. В словарике записано: "${word.translation}".`;
-          feedback.classList.remove("text-emerald-600");
-          feedback.classList.add("text-red-600");
-        }
-      });
-
-      exerciseBox.appendChild(q);
-      exerciseBox.appendChild(input);
-      exerciseBox.appendChild(btnCheck);
-      exerciseBox.appendChild(feedback);
-    }
-  }
-
-  if (exerciseNext) {
-    exerciseNext.addEventListener("click", renderExercise);
-  }
-
-  // -----------------------------------
   // ПРАКТИКА
   // -----------------------------------
   const practiceIdeas = [
@@ -1182,14 +1059,11 @@ function updateStats() {
     function renderAll() {
     currentVocab = appState.vocab || [];
       window.currentVocab = currentVocab;
-      window.dispatchEvent(
-  new CustomEvent("pt-vocab-updated", { detail: { vocab: currentVocab } })
-        );
+   
     updateStats();
     renderLessons();
     renderVocab();
-    renderExercise();
-    renderPracticeIdea();
+     renderPracticeIdea();
     updateStartContinueButtons();   // <- добавили
   }
 
@@ -1211,6 +1085,13 @@ if (auth && db) {
         vocab: local.vocab,
         isFromFirebase: false
       };
+      currentVocab = appState.vocab || [];
+      window.currentVocab = currentVocab;
+      window.dispatchEvent(
+        new CustomEvent("pt-vocab-updated", { detail: { vocab: currentVocab } })
+      );
+
+      console.log("[Intro] Пользователь не авторизован, localStorage-режим");
       console.log("[Intro] Пользователь не авторизован, localStorage-режим");
 
       // Хедер: показываем "Войти"
@@ -1234,6 +1115,12 @@ if (auth && db) {
       // --- пользователь вошёл ---
       await loadStateFromFirebaseOrMigrate(currentUserKey);
 
+      currentVocab = appState.vocab || [];
+      window.currentVocab = currentVocab;
+      window.dispatchEvent(
+        new CustomEvent("pt-vocab-updated", { detail: { vocab: currentVocab } })
+      );
+  
       const email = user.email || "";
 
       // Хедер: скрываем кнопку "Войти", показываем email
@@ -1267,7 +1154,12 @@ if (auth && db) {
       isFromFirebase: false
     };
     console.log("[Intro] FirebaseInit не найден, всё берём из localStorage");
-    renderAll();
+  currentVocab = appState.vocab || [];
+    window.currentVocab = currentVocab;
+    window.dispatchEvent(
+      new CustomEvent("pt-vocab-updated", { detail: { vocab: currentVocab } })
+    );  
+  renderAll();
   }
 </script>
   <!-- React для интерактивной практики -->
