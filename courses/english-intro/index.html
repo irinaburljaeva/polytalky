@@ -1350,6 +1350,7 @@ if (auth && db) {
     };
 
 // ––––– РЕЖИМ MATCH (соедини пары) –––––
+// ––––– РЕЖИМ MATCH (соедини пары) –––––
 const MatchMode = () => {
 // ИСПРАВЛЕНИЕ: создаём пары один раз при инициализации состояния
 const [localMatchPairs, setLocalMatchPairs] = useState(() => {
@@ -1363,8 +1364,7 @@ return pairs.sort(() => Math.random() - 0.5);
 });
 
 const [localSelectedCards, setLocalSelectedCards] = useState([]);
-const [localFeedback, setLocalFeedback] = useState(null);
-  // Теперь используем начальные пары для matchPairs
+const [localFeedback, setLocalFeedback] = useState(null); // Теперь используем начальные пары для matchPairs
   useEffect(() => {
     if (matchPairs.length === 0) {
   setMatchPairs(initialPairs);
