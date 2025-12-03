@@ -1223,9 +1223,7 @@ if (auth && db) {
     const [flipped, setFlipped] = useState(false);
     const [userInput, setUserInput] = useState('');
     const [feedback, setFeedback] = useState(null);
-    const [matchPairs, setMatchPairs] = useState([]);
-    const [selectedCards, setSelectedCards] = useState([]);
-
+    
   
     // ---------- РЕЖИМ КАРТОЧЕК ----------
     const FlashcardsMode = () => {
@@ -1349,37 +1347,29 @@ if (auth && db) {
       );
     };
 
-// ––––– РЕЖИМ MATCH (соедини пары) –––––
-// ––––– РЕЖИМ MATCH (соедини пары) –––––
+// ---------- РЕЖИМ MATCH (соедини пары) ----------
 const MatchMode = () => {
-// ИСПРАВЛЕНИЕ: создаём пары один раз при инициализации состояния
-const [localMatchPairs, setLocalMatchPairs] = useState(() => {
-const shuffled = […words].sort(() => Math.random() - 0.5).slice(0, 5);
-const pairs = [];
-shuffled.forEach(w => {
-pairs.push({ id: `en-${w.word}`, text: w.word, type: ‘en’, matched: false });
-pairs.push({ id: `ru-${w.word}`, text: w.translation, type: ‘ru’, matched: false });
-});
-return pairs.sort(() => Math.random() - 0.5);
-});
+  // Создаём пары один раз при инициализации состояния
+  const [localMatchPairs, setLocalMatchPairs] = useState(() => {
+    const shuffled = [...words].sort(() => Math.random() - 0.5).slice(0, 5);
+    const pairs = [];
+    shuffled.forEach(w => {
+      pairs.push({ id: `en-${w.word}`, text: w.word, type: 'en', matched: false });
+      pairs.push({ id: `ru-${w.word}`, text: w.translation, type: 'ru', matched: false });
+    });
+    return pairs.sort(() => Math.random() - 0.5);
+  });
 
-const [localSelectedCards, setLocalSelectedCards] = useState([]);
-const [localFeedback, setLocalFeedback] = useState(null); // Теперь используем начальные пары для matchPairs
-  useEffect(() => {
-    if (matchPairs.length === 0) {
-  setMatchPairs(initialPairs);
-  }
-       setSelectedCards([]);
-    setFeedback(null);
-  }, []); // Пустой массив - выполнится один раз
+  const [localSelectedCards, setLocalSelectedCards] = useState([]);
+  const [localFeedback, setLocalFeedback] = useState(null);
 
   const handleCardClick = (card) => {
     if (card.matched) return;
 
-    if (selectedCards.length === 0) {
-      setSelectedCards([card]);
-    } else if (selectedCards.length === 1) {
-      const first = selectedCards[0];
+    if (localSelectedCards.length === 0) {
+      setLocalSelectedCards([card]);
+    } else if (localSelectedCards.length === 1) {
+      const first = localSelectedCards[0];
       
       const isMatch =
         first.id.split('-')[1] === card.id.split('-')[1] &&
@@ -1388,24 +1378,24 @@ const [localFeedback, setLocalFeedback] = useState(null); // Теперь исп
       if (isMatch) {
         setScore(prev => prev + 20);
         setStreak(prev => prev + 1);
-        setMatchPairs(prevPairs =>
+        setLocalMatchPairs(prevPairs =>
           prevPairs.map(p =>
             p.id === first.id || p.id === card.id
               ? { ...p, matched: true }
               : p
           )
         );
-        setFeedback('correct');
+        setLocalFeedback('correct');
       } else {
         setStreak(0);
-        setFeedback('incorrect');
+        setLocalFeedback('incorrect');
       }
 
       setTimeout(() => {
-        setSelectedCards([]);
-        setFeedback(null);
+        setLocalSelectedCards([]);
+        setLocalFeedback(null);
         
-        setMatchPairs(prevPairs => {
+        setLocalMatchPairs(prevPairs => {
           const allMatched = prevPairs.every(p => p.matched);
           if (allMatched) {
             setTimeout(() => setMode('results'), 500);
@@ -1435,7 +1425,7 @@ const [localFeedback, setLocalFeedback] = useState(null); // Теперь исп
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        {matchPairs.map(card => (
+        {localMatchPairs.map(card => (
           <button
             key={card.id}
             onClick={() => handleCardClick(card)}
@@ -1444,7 +1434,7 @@ const [localFeedback, setLocalFeedback] = useState(null); // Теперь исп
               'p-4 rounded-2xl font-medium transition-all ' +
               (card.matched
                 ? 'bg-green-100 text-green-700 opacity-50'
-                : selectedCards.some(c => c.id === card.id)
+                : localSelectedCards.some(c => c.id === card.id)
                   ? 'bg-amber-400 text-white scale-105 shadow-lg'
                   : 'bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200')
             }
@@ -1454,12 +1444,12 @@ const [localFeedback, setLocalFeedback] = useState(null); // Теперь исп
         ))}
       </div>
 
-      {feedback === 'correct' && (
+      {localFeedback === 'correct' && (
         <div className="text-center text-green-600 font-bold animate-bounce">
           ✓ Отлично!
         </div>
       )}
-      {feedback === 'incorrect' && (
+      {localFeedback === 'incorrect' && (
         <div className="text-center text-red-600 font-bold" style={{ animation: 'shake 0.5s' }}>
           ✗ Не совсем
         </div>
@@ -1628,8 +1618,7 @@ const [localFeedback, setLocalFeedback] = useState(null); // Теперь исп
               setFlipped(false);
               setUserInput('');
               setFeedback(null);
-              setMatchPairs([]);
-              setSelectedCards([]);
+              
             }}
             className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-2xl hover:shadow-lg transition-all"
           >
@@ -1688,8 +1677,7 @@ const [localFeedback, setLocalFeedback] = useState(null); // Теперь исп
                   setFlipped(false);
                   setUserInput('');
                   setFeedback(null);
-                  setMatchPairs([]);
-              setSelectedCards([]);
+                  
                 }}
                 className={
                   'bg-gradient-to-r ' +
