@@ -732,7 +732,7 @@
   // ========================================
   // ЗАГРУЗКА ОБРАТНОЙ СВЯЗИ
   // ========================================
-  async function loadFeedback(user) {
+async function loadFeedback(user) {
   const userKey = user.email || user.uid;
   
   try {
@@ -752,18 +752,22 @@
       if (answerSnap.exists()) {
         const data = answerSnap.data();
         
-        // Определяем контент ответа (может быть в разных полях)
+        // Определяем контент ответа
         let content = '';
-        if (data.sentences) {
+        if (data.answerText) {
+          content = data.answerText;
+        } else if (data.answer) {
+          content = data.answer;
+        } else if (data.sentences) {
           content = Array.isArray(data.sentences) 
             ? data.sentences.join('\n') 
             : data.sentences;
         } else if (data.helloAnswer) {
           content = data.helloAnswer;
-        } else if (data.answer) {
-          content = data.answer;
-        } else if (data.audioAnswerBase64) {
+        } else if (data.answerAudioBase64) {
           content = '[Аудио-ответ отправлен]';
+        } else if (data.answerImageBase64) {
+          content = '[Изображение отправлено]';
         } else if (data.text) {
           content = data.text;
         } else {
@@ -772,13 +776,18 @@
 
         // Обработка timestamp
         let timestamp = new Date();
-        if (data.submittedAt && typeof data.submittedAt.toMillis === 'function') {
+        if (data.createdAt && typeof data.createdAt.toMillis === 'function') {
+          timestamp = new Date(data.createdAt.toMillis());
+        } else if (data.submittedAt && typeof data.submittedAt.toMillis === 'function') {
           timestamp = new Date(data.submittedAt.toMillis());
         } else if (data.updatedAt && typeof data.updatedAt.toMillis === 'function') {
           timestamp = new Date(data.updatedAt.toMillis());
-        } else if (data.createdAt && typeof data.createdAt.toMillis === 'function') {
-          timestamp = new Date(data.createdAt.toMillis());
         }
+
+        // Определяем статус проверки
+        const status = data.status || 'pending';
+        const reviewed = (status === 'approved' || status === 'needs-fix');
+        const needsReview = (status === 'pending');
 
         feedbackData.push({
           id: `${lessonId}-${userKey}`,
@@ -787,14 +796,16 @@
           courseId: data.courseId || 'english-intro',
           submittedAt: timestamp,
           content: content,
-          curatorResponse: data.curatorFeedback || null,
-          reviewed: data.reviewed || false,
-          needsReview: data.needsReview !== false // По умолчанию true
+          curatorResponse: data.feedback || data.curatorFeedback || null,
+          reviewed: reviewed,
+          needsReview: needsReview,
+          status: status
         });
       }
     }
 
     console.log(`Загружено заданий: ${feedbackData.length}`); // Для отладки
+    console.log('Задания:', feedbackData); // Для отладки
     
     allFeedback = feedbackData;
     updateStats();
@@ -802,7 +813,6 @@
   } catch (e) {
     console.error("Ошибка загрузки обратной связи:", e);
     
-    // Показываем сообщение об ошибке пользователю
     const container = document.getElementById('feedbackList');
     const emptyState = document.getElementById('emptyState');
     emptyState.classList.add('hidden');
@@ -816,7 +826,6 @@
     `;
   }
 }
-
 
 
   function getLessonTitle(lessonId) {
@@ -906,8 +915,20 @@
 
   function createFeedbackCard(feedback) {
   const status = feedback.reviewed ? 'reviewed' : 'pending';
-  const statusText = feedback.reviewed ? 'Проверено' : 'На проверке';
-  const statusIcon = feedback.reviewed ? '✅' : '⏳';
+  const statusText = feedback.status === 'approved' 
+    ? 'Одобрено' 
+    : feedback.status === 'needs-fix'
+    ? 'Нужны правки'
+    : feedback.reviewed 
+    ? 'Проверено' 
+    : 'На проверке';
+  const statusIcon = feedback.status === 'approved'
+    ? '✅'
+    : feedback.status === 'needs-fix'
+    ? '⚠️'
+    : feedback.reviewed
+    ? '✅'
+    : '⏳';
 
   const dateStr = feedback.submittedAt instanceof Date
     ? feedback.submittedAt.toLocaleDateString('ru-RU', {
@@ -927,7 +948,7 @@
         <div class="curator-signature">— Ваш куратор PolyTalky</div>
       </div>
     `
-    : feedback.needsReview && !feedback.reviewed
+    : feedback.needsReview
     ? `
       <div style="background: #fef3c7; border: 2px solid #fbbf24; border-radius: 12px; padding: 16px; color: #92400e;">
         <strong>⏳ Задание на проверке</strong><br>
