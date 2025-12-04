@@ -597,6 +597,40 @@
       </select>
     </div>
 
+    <!-- Кнопка написать куратору -->
+<div style="margin-bottom: 32px; text-align: center;">
+  <button id="writeToCuratorBtn" class="btn-primary">
+    ✍️ Написать куратору
+  </button>
+</div>
+
+<!-- Модальное окно для сообщения куратору -->
+<div id="curatorMessageModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center;">
+  <div style="background: white; border-radius: 24px; padding: 32px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+    <h2 style="font-size: 1.8em; font-weight: 900; color: var(--text-dark); margin-bottom: 16px;">
+      Написать куратору
+    </h2>
+    <p style="color: var(--text-medium); margin-bottom: 24px;">
+      Задайте вопрос или поделитесь мыслями о курсе. Куратор ответит в течение 24-48 часов.
+    </p>
+    
+    <textarea 
+      id="curatorMessageText" 
+      placeholder="Напишите ваше сообщение..."
+      style="width: 100%; min-height: 150px; padding: 16px; border: 2px solid #FFE8B3; border-radius: 12px; font-family: inherit; resize: vertical;"
+    ></textarea>
+    
+    <div style="display: flex; gap: 12px; margin-top: 20px;">
+      <button id="sendToCuratorBtn" class="btn-primary" style="flex: 1;">
+        📤 Отправить
+      </button>
+      <button id="closeCuratorModalBtn" class="btn-primary" style="flex: 1; background: #e5e7eb; color: #374151;">
+        Отмена
+      </button>
+    </div>
+  </div>
+</div>
+
     <!-- Feedback List -->
     <div id="feedbackList" class="feedback-list">
       <!-- Will be populated by JavaScript -->
@@ -625,7 +659,8 @@
     getDocs,
     orderBy,
     doc,
-    getDoc
+    getDoc,
+    addDoc
   } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   import {
@@ -643,99 +678,144 @@
   // ПРОВЕРКА PRO СТАТУСА
   // ========================================
   async function checkProStatus(user) {
-    try {
-      const email = user.email || null;
-      const uid = user.uid || null;
-      
-      if (!email && !uid) {
-        return false;
-      }
-
-      const emailRef = email ? doc(db, "users", email) : null;
-      const uidRef = uid ? doc(db, "users", uid) : null;
-
-      const [emailSnap, uidSnap] = await Promise.all([
-        emailRef ? getDoc(emailRef) : Promise.resolve(null),
-        uidRef ? getDoc(uidRef) : Promise.resolve(null),
-      ]);
-
-      const emailData = emailSnap && emailSnap.exists() ? emailSnap.data() : {};
-      const uidData = uidSnap && uidSnap.exists() ? uidSnap.data() : {};
-      const merged = { ...uidData, ...emailData };
-
-      const proGlobal = merged.proGlobal === true;
-      let proValidUntil = merged.proValidUntil || merged.proUntil || null;
-      
-      if (proValidUntil && typeof proValidUntil.toDate === "function") {
-        proValidUntil = proValidUntil.toDate();
-      }
-
-      const legacyPro = merged.proActive || merged.isPro || merged.hasPro || 
-                        (merged.pro && merged.pro.active);
-
-      let active = !!(proGlobal || legacyPro);
-
-      if (proValidUntil instanceof Date) {
-        const now = new Date();
-        if (proValidUntil <= now) {
-          active = false;
-        }
-      }
-
-      return active;
-    } catch (e) {
-      console.error("Ошибка проверки PRO статуса:", e);
+  try {
+    const email = user.email || null;
+    const uid = user.uid || null;
+    
+    if (!email && !uid) {
+      console.log("Нет email и uid у пользователя");
       return false;
     }
+
+    const emailRef = email ? doc(db, "users", email) : null;
+    const uidRef = uid ? doc(db, "users", uid) : null;
+
+    const [emailSnap, uidSnap] = await Promise.all([
+      emailRef ? getDoc(emailRef) : Promise.resolve(null),
+      uidRef ? getDoc(uidRef) : Promise.resolve(null),
+    ]);
+
+    const emailData = emailSnap && emailSnap.exists() ? emailSnap.data() : {};
+    const uidData = uidSnap && uidSnap.exists() ? uidSnap.data() : {};
+    const merged = { ...uidData, ...emailData };
+
+    console.log("PRO статус пользователя:", merged); // Для отладки
+
+    const proGlobal = merged.proGlobal === true;
+    let proValidUntil = merged.proValidUntil || merged.proUntil || null;
+    
+    if (proValidUntil && typeof proValidUntil.toDate === "function") {
+      proValidUntil = proValidUntil.toDate();
+    }
+
+    const legacyPro = merged.proActive || merged.isPro || merged.hasPro || 
+                      (merged.pro && merged.pro.active);
+
+    let active = !!(proGlobal || legacyPro);
+
+    if (proValidUntil instanceof Date) {
+      const now = new Date();
+      if (proValidUntil <= now) {
+        active = false;
+      }
+    }
+
+    console.log("PRO активен:", active); // Для отладки
+    return active;
+  } catch (e) {
+    console.error("Ошибка проверки PRO статуса:", e);
+    return false;
   }
+}
+
 
   // ========================================
   // ЗАГРУЗКА ОБРАТНОЙ СВЯЗИ
   // ========================================
   async function loadFeedback(user) {
-    const userKey = user.email || user.uid;
+  const userKey = user.email || user.uid;
+  
+  try {
+    // Загружаем ВСЕ документы из lessonSubmissions
+    const submissionsRef = collection(db, "lessonSubmissions");
+    const submissionsSnap = await getDocs(submissionsRef);
     
-    try {
-      // Загружаем все отправленные задания пользователя
-      const lessons = ['english-intro-lesson-1', 'english-intro-lesson-7']; // Добавьте все ID уроков
-      const feedbackData = [];
+    const feedbackData = [];
 
-      for (const lessonId of lessons) {
-        const answerRef = doc(db, "lessonSubmissions", lessonId, "answers", userKey);
-        const answerSnap = await getDoc(answerRef);
+    for (const lessonDoc of submissionsSnap.docs) {
+      const lessonId = lessonDoc.id;
+      
+      // Проверяем есть ли ответ пользователя в этом уроке
+      const answerRef = doc(db, "lessonSubmissions", lessonId, "answers", userKey);
+      const answerSnap = await getDoc(answerRef);
 
-        if (answerSnap.exists()) {
-          const data = answerSnap.data();
-          feedbackData.push({
-            id: `${lessonId}-${userKey}`,
-            lessonId: lessonId,
-            lessonTitle: getLessonTitle(lessonId),
-            courseId: data.courseId || 'english-intro',
-            submittedAt: data.submittedAt || data.updatedAt || data.createdAt,
-            content: data.sentences || data.helloAnswer || data.audioAnswerBase64 || '',
-            curatorResponse: data.curatorFeedback || null,
-            reviewed: data.reviewed || false,
-            needsReview: data.needsReview || false
-          });
-        }
+      if (answerSnap.exists()) {
+        const data = answerSnap.data();
+        
+        // Определяем контент ответа (может быть в разных полях)
+        let content = '';
+        if (data.sentences) content = data.sentences;
+        else if (data.helloAnswer) content = data.helloAnswer;
+        else if (data.answer) content = data.answer;
+        else if (data.audioAnswerBase64) content = '[Аудио-ответ]';
+        else if (data.text) content = data.text;
+        else content = '[Ответ пользователя]';
+
+        feedbackData.push({
+          id: `${lessonId}-${userKey}`,
+          lessonId: lessonId,
+          lessonTitle: getLessonTitle(lessonId),
+          courseId: data.courseId || 'english-intro',
+          submittedAt: data.submittedAt || data.updatedAt || data.createdAt,
+          content: content,
+          curatorResponse: data.curatorFeedback || null,
+          reviewed: data.reviewed || false,
+          needsReview: data.needsReview || false
+        });
       }
-
-      allFeedback = feedbackData;
-      updateStats();
-      renderFeedback();
-    } catch (e) {
-      console.error("Ошибка загрузки обратной связи:", e);
     }
+
+    allFeedback = feedbackData;
+    updateStats();
+    renderFeedback();
+  } catch (e) {
+    console.error("Ошибка загрузки обратной связи:", e);
+    
+    // Показываем сообщение об ошибке пользователю
+    const container = document.getElementById('feedbackList');
+    container.innerHTML = `
+      <div style="background: #fee; border: 2px solid #fcc; border-radius: 12px; padding: 24px; text-align: center;">
+        <div style="font-size: 3em; margin-bottom: 16px;">⚠️</div>
+        <div style="font-size: 1.2em; font-weight: 700; margin-bottom: 8px;">Ошибка загрузки</div>
+        <div>Не удалось загрузить обратную связь. Попробуйте обновить страницу.</div>
+      </div>
+    `;
   }
+}
+
 
   function getLessonTitle(lessonId) {
-    const titles = {
-      'english-intro-lesson-1': 'Урок 1: Hello and Introduction',
-      'english-intro-lesson-7': 'Урок 7: Отрицательные предложения',
-      // Добавьте остальные уроки
-    };
-    return titles[lessonId] || lessonId;
+  const titles = {
+    'english-intro-lesson-1': 'Урок 1: Hello and Introduction',
+    'english-intro-lesson-2': 'Урок 2: Согласные буквы',
+    'english-intro-lesson-3': 'Урок 3: Порядок слов',
+    'english-intro-lesson-4': 'Урок 4: Времена',
+    'english-intro-lesson-5': 'Урок 5: Культурный феномен',
+    'english-intro-lesson-7': 'Урок 7: Отрицательные предложения',
+  };
+  
+  // Если название не найдено, делаем читаемую версию из ID
+  if (!titles[lessonId]) {
+    // Преобразуем "english-intro-lesson-1" в "English Intro: Lesson 1"
+    const parts = lessonId.split('-');
+    const course = parts.slice(0, -2).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    const lessonNum = parts[parts.length - 1];
+    return `${course}: Урок ${lessonNum}`;
   }
+  
+  return titles[lessonId];
+}
+
 
   // ========================================
   // ОБНОВЛЕНИЕ СТАТИСТИКИ
@@ -866,6 +946,70 @@
     div.textContent = text;
     return div.innerHTML;
   }
+  // ========================================
+// НАПИСАТЬ КУРАТОРУ
+// ========================================
+const writeToCuratorBtn = document.getElementById('writeToCuratorBtn');
+const curatorMessageModal = document.getElementById('curatorMessageModal');
+const closeCuratorModalBtn = document.getElementById('closeCuratorModalBtn');
+const sendToCuratorBtn = document.getElementById('sendToCuratorBtn');
+const curatorMessageText = document.getElementById('curatorMessageText');
+
+if (writeToCuratorBtn) {
+  writeToCuratorBtn.addEventListener('click', () => {
+    curatorMessageModal.style.display = 'flex';
+  });
+}
+
+if (closeCuratorModalBtn) {
+  closeCuratorModalBtn.addEventListener('click', () => {
+    curatorMessageModal.style.display = 'none';
+    curatorMessageText.value = '';
+  });
+}
+
+if (sendToCuratorBtn) {
+  sendToCuratorBtn.addEventListener('click', async () => {
+    const message = curatorMessageText.value.trim();
+    
+    if (!message) {
+      alert('Пожалуйста, напишите сообщение');
+      return;
+    }
+    
+    if (!currentUser) {
+      alert('Ошибка: пользователь не авторизован');
+      return;
+    }
+    
+    try {
+      sendToCuratorBtn.disabled = true;
+      sendToCuratorBtn.textContent = 'Отправляем...';
+      
+      // Сохраняем сообщение в Firestore
+      const messagesRef = collection(db, "curatorMessages");
+      await addDoc(messagesRef, {
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        message: message,
+        createdAt: new Date(),
+        read: false,
+        replied: false
+      });
+      
+      alert('✅ Сообщение отправлено! Куратор ответит в течение 24-48 часов.');
+      curatorMessageModal.style.display = 'none';
+      curatorMessageText.value = '';
+    } catch (e) {
+      console.error('Ошибка отправки сообщения:', e);
+      alert('Не удалось отправить сообщение. Попробуйте ещё раз.');
+    } finally {
+      sendToCuratorBtn.disabled = false;
+      sendToCuratorBtn.textContent = '📤 Отправить';
+    }
+  });
+}
+
 
   // ========================================
   // ИНИЦИАЛИЗАЦИЯ
