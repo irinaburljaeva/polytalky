@@ -754,27 +754,48 @@
         
         // Определяем контент ответа (может быть в разных полях)
         let content = '';
-        if (data.sentences) content = data.sentences;
-        else if (data.helloAnswer) content = data.helloAnswer;
-        else if (data.answer) content = data.answer;
-        else if (data.audioAnswerBase64) content = '[Аудио-ответ]';
-        else if (data.text) content = data.text;
-        else content = '[Ответ пользователя]';
+        if (data.sentences) {
+          content = Array.isArray(data.sentences) 
+            ? data.sentences.join('\n') 
+            : data.sentences;
+        } else if (data.helloAnswer) {
+          content = data.helloAnswer;
+        } else if (data.answer) {
+          content = data.answer;
+        } else if (data.audioAnswerBase64) {
+          content = '[Аудио-ответ отправлен]';
+        } else if (data.text) {
+          content = data.text;
+        } else {
+          content = '[Ответ пользователя]';
+        }
+
+        // Обработка timestamp
+        let timestamp = new Date();
+        if (data.submittedAt && typeof data.submittedAt.toMillis === 'function') {
+          timestamp = new Date(data.submittedAt.toMillis());
+        } else if (data.updatedAt && typeof data.updatedAt.toMillis === 'function') {
+          timestamp = new Date(data.updatedAt.toMillis());
+        } else if (data.createdAt && typeof data.createdAt.toMillis === 'function') {
+          timestamp = new Date(data.createdAt.toMillis());
+        }
 
         feedbackData.push({
           id: `${lessonId}-${userKey}`,
           lessonId: lessonId,
           lessonTitle: getLessonTitle(lessonId),
           courseId: data.courseId || 'english-intro',
-          submittedAt: data.submittedAt || data.updatedAt || data.createdAt,
+          submittedAt: timestamp,
           content: content,
           curatorResponse: data.curatorFeedback || null,
           reviewed: data.reviewed || false,
-          needsReview: data.needsReview || false
+          needsReview: data.needsReview !== false // По умолчанию true
         });
       }
     }
 
+    console.log(`Загружено заданий: ${feedbackData.length}`); // Для отладки
+    
     allFeedback = feedbackData;
     updateStats();
     renderFeedback();
@@ -783,15 +804,19 @@
     
     // Показываем сообщение об ошибке пользователю
     const container = document.getElementById('feedbackList');
+    const emptyState = document.getElementById('emptyState');
+    emptyState.classList.add('hidden');
     container.innerHTML = `
-      <div style="background: #fee; border: 2px solid #fcc; border-radius: 12px; padding: 24px; text-align: center;">
+      <div style="background: #fee2e2; border: 2px solid #fca5a5; border-radius: 12px; padding: 24px; text-align: center;">
         <div style="font-size: 3em; margin-bottom: 16px;">⚠️</div>
-        <div style="font-size: 1.2em; font-weight: 700; margin-bottom: 8px;">Ошибка загрузки</div>
-        <div>Не удалось загрузить обратную связь. Попробуйте обновить страницу.</div>
+        <div style="font-size: 1.2em; font-weight: 700; margin-bottom: 8px; color: #991b1b;">Ошибка загрузки</div>
+        <div style="color: #7f1d1d;">Не удалось загрузить обратную связь. Попробуйте обновить страницу.</div>
+        <div style="margin-top: 12px; font-size: 0.85em; color: #991b1b;">Ошибка: ${e.message}</div>
       </div>
     `;
   }
 }
+
 
 
   function getLessonTitle(lessonId) {
@@ -880,65 +905,66 @@
   }
 
   function createFeedbackCard(feedback) {
-    const status = feedback.reviewed ? 'reviewed' : 'pending';
-    const statusText = feedback.reviewed ? 'Проверено' : 'На проверке';
-    const statusIcon = feedback.reviewed ? '✅' : '⏳';
+  const status = feedback.reviewed ? 'reviewed' : 'pending';
+  const statusText = feedback.reviewed ? 'Проверено' : 'На проверке';
+  const statusIcon = feedback.reviewed ? '✅' : '⏳';
 
-    const dateStr = feedback.submittedAt 
-      ? new Date(feedback.submittedAt.toMillis()).toLocaleDateString('ru-RU', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        })
-      : 'Дата неизвестна';
+  const dateStr = feedback.submittedAt instanceof Date
+    ? feedback.submittedAt.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    : 'Дата неизвестна';
 
-    const curatorSection = feedback.curatorResponse 
-      ? `
-        <div class="curator-response">
-          <div class="curator-label">Обратная связь от куратора:</div>
-          <div class="curator-text">${escapeHtml(feedback.curatorResponse)}</div>
-          <div class="curator-signature">— Ваш куратор PolyTalky</div>
-        </div>
-      `
-      : feedback.needsReview && !feedback.reviewed
-      ? `
-        <div style="background: #fef3c7; border: 2px solid #fbbf24; border-radius: 12px; padding: 16px; color: #92400e;">
-          <strong>⏳ Задание на проверке</strong><br>
-          Куратор скоро проверит ваше задание и оставит подробную обратную связь.
-        </div>
-      `
-      : '';
+  const curatorSection = feedback.curatorResponse 
+    ? `
+      <div class="curator-response">
+        <div class="curator-label">Обратная связь от куратора:</div>
+        <div class="curator-text">${escapeHtml(feedback.curatorResponse)}</div>
+        <div class="curator-signature">— Ваш куратор PolyTalky</div>
+      </div>
+    `
+    : feedback.needsReview && !feedback.reviewed
+    ? `
+      <div style="background: #fef3c7; border: 2px solid #fbbf24; border-radius: 12px; padding: 16px; color: #92400e;">
+        <strong>⏳ Задание на проверке</strong><br>
+        Куратор скоро проверит ваше задание и оставит подробную обратную связь.
+      </div>
+    `
+    : '';
 
-    return `
-      <div class="feedback-card ${status}">
-        <div class="feedback-header">
-          <div>
-            <div class="feedback-title">${feedback.lessonTitle​​​​​​​​​​​​​​​​}</div>
-            <div class="feedback-meta">
-              <div class="meta-item">
-                📅 ${dateStr}
-              </div>
-              <div class="meta-item">
-                📚 ${feedback.courseId}
-              </div>
+  return `
+    <div class="feedback-card ${status}">
+      <div class="feedback-header">
+        <div>
+          <div class="feedback-title">${escapeHtml(feedback.lessonTitle)}</div>
+          <div class="feedback-meta">
+            <div class="meta-item">
+              📅 ${dateStr}
+            </div>
+            <div class="meta-item">
+              📚 ${feedback.courseId}
             </div>
           </div>
-          <div class="status-badge ${status}">
-            ${statusIcon} ${statusText}
-          </div>
         </div>
-
-        <div class="feedback-content">
-          <div class="content-label">Ваш ответ:</div>
-          <div class="content-text">${escapeHtml(feedback.content)}</div>
+        <div class="status-badge ${status}">
+          ${statusIcon} ${statusText}
         </div>
-
-        ${curatorSection}
       </div>
-    `;
-  }
+
+      <div class="feedback-content">
+        <div class="content-label">Ваш ответ:</div>
+        <div class="content-text">${escapeHtml(feedback.content)}</div>
+      </div>
+
+      ${curatorSection}
+    </div>
+  `;
+}
+
 
   function escapeHtml(text) {
     if (!text) return '';
