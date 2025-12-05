@@ -722,4 +722,329 @@
         Ваш вопрос:
       </label>
       <textarea id="qa-text"
-                class="w-full border border
+                class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                rows="3"
+                placeholder="Например: «Когда использовать do, а когда does?»"></textarea>
+
+      <p class="text-[0.7rem] text-gray-400">
+        Чтобы задать вопрос, нужно войти в аккаунт.  
+        Если вы не авторизованы, перейдите на страницу
+        <a href="/student/" class="underline">входа / регистрации</a>.
+      </p>
+
+      <div class="flex justify-end">
+        <button type="submit"
+                id="qa-submit"
+                class="btn-main text-sm px-4 py-1.5">
+          Отправить вопрос →
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+```
+
+  </div>
+
+</main>
+
+<!-- ============================= -->
+
+<!-- КОНФИГ УРОКА (ВАЖНО!) -->
+
+<!-- ============================= -->
+
+<script type="module">
+  window.lessonConfig = {
+    lessonId:        "english-intro-lesson-8",
+    lessonSlug:      "lesson-08-questions",
+    courseId:        "english-intro",
+    courseTitle:     "Интенсив английского",
+    lessonTitle:     "Урок 8 - Вопросительные предложения",
+    lessonQaDocId:   "english-intro-lesson-8",
+    submissionsRoot: "lessonSubmissions",
+    totalSteps:      5,
+    audioNextStep:   null,
+    vocabCategory:   "vocabulary-lesson8",
+    hasHelloTask:    false
+  };
+</script>
+
+<script>
+// =========================================================
+// 🔸 ШАГ 3 — DRAG & DROP ТРЕНАЖЁР (3 вопроса)
+// =========================================================
+
+const dragQuestions = [
+  {
+    words: ["Where", "do", "you", "live", "?"],
+    correct: "Where do you live ?"
+  },
+  {
+    words: ["What", "does", "she", "do", "?"],
+    correct: "What does she do ?"
+  },
+  {
+    words: ["Do", "you", "like", "sport", "?"],
+    correct: "Do you like sport ?"
+  }
+];
+
+let currentDragQuestion = 0;
+let currentSentence = [];
+let draggedElement = null;
+let touchStartPos = { x: 0, y: 0 };
+
+function initDragQuestion() {
+  const questionData = dragQuestions[currentDragQuestion];
+  const n = currentDragQuestion + 1;
+  
+  const wordBank = document.getElementById(`word-bank-${n}`);
+  const sentenceBuilder = document.getElementById(`sentence-builder-${n}`);
+  const feedback = document.getElementById(`feedback-${n}`);
+  
+  if (!wordBank || !sentenceBuilder) return;
+  
+  currentSentence = [];
+  feedback.innerHTML = "";
+  sentenceBuilder.classList.remove("correct", "wrong");
+  
+  wordBank.innerHTML = "";
+  sentenceBuilder.innerHTML = '<span class="text-gray-400 text-sm">Перетащите слова сюда...</span>';
+  
+  const shuffled = [...questionData.words].sort(() => Math.random() - 0.5);
+  
+  shuffled.forEach(word => {
+    const chip = document.createElement("div");
+    chip.className = "word-chip";
+    chip.textContent = word;
+    chip.draggable = true;
+    
+    // Desktop drag
+    chip.addEventListener("dragstart", (e) => {
+      draggedElement = chip;
+      e.dataTransfer.effectAllowed = "move";
+    });
+    
+    // Mobile touch
+    chip.addEventListener("touchstart", handleTouchStart);
+    chip.addEventListener("touchmove", handleTouchMove);
+    chip.addEventListener("touchend", handleTouchEnd);
+    
+    chip.addEventListener("click", () => selectWordDrag(word, chip));
+    
+    wordBank.appendChild(chip);
+  });
+  
+  // Drop zone events
+  sentenceBuilder.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
+  
+  sentenceBuilder.addEventListener("drop", (e) => {
+    e.preventDefault();
+    if (draggedElement) {
+      const word = draggedElement.textContent;
+      selectWordDrag(word, draggedElement);
+    }
+  });
+}
+
+function handleTouchStart(e) {
+  draggedElement = e.currentTarget;
+  const touch = e.touches[0];
+  touchStartPos = { x: touch.clientX, y: touch.clientY };
+}
+
+function handleTouchMove(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const dx = Math.abs(touch.clientX - touchStartPos.x);
+  const dy = Math.abs(touch.clientY - touchStartPos.y);
+  
+  if (dx > 10 || dy > 10) {
+    // Visual feedback for dragging
+  }
+}
+
+function handleTouchEnd(e) {
+  const touch = e.changedTouches[0];
+  const n = currentDragQuestion + 1;
+  const sentenceBuilder = document.getElementById(`sentence-builder-${n}`);
+  
+  if (!sentenceBuilder) return;
+  
+  const rect = sentenceBuilder.getBoundingClientRect();
+  
+  if (
+    touch.clientX >= rect.left && touch.clientX <= rect.right &&
+    touch.clientY >= rect.top && touch.clientY <= rect.bottom
+  ) {
+    const word = draggedElement.textContent;
+    selectWordDrag(word, draggedElement);
+  }
+  
+  draggedElement = null;
+}
+
+function selectWordDrag(word, chip) {
+  const n = currentDragQuestion + 1;
+  const sentenceBuilder = document.getElementById(`sentence-builder-${n}`);
+  const feedback = document.getElementById(`feedback-${n}`);
+  
+  if (!sentenceBuilder || !feedback) return;
+  
+  currentSentence.push(word);
+  chip.remove();
+  
+  renderDragSentence();
+  
+  const joined = currentSentence.join(" ");
+  const correct = dragQuestions[currentDragQuestion].correct;
+  
+  if (joined === correct) {
+    sentenceBuilder.classList.add("correct");
+    feedback.innerHTML = '<div class="feedback-message feedback-correct">✓ Отлично! Вопрос составлен правильно!</div>';
+    
+    setTimeout(() => {
+      currentDragQuestion++;
+      
+      if (currentDragQuestion >= dragQuestions.length) {
+        document.getElementById("next-btn-step3").classList.remove("hidden");
+        feedback.innerHTML = '<div class="feedback-message feedback-info">🎉 Все вопросы выполнены! Можно идти дальше.</div>';
+        return;
+      }
+      
+      for (let i = 1; i <= 3; i++) {
+        const block = document.getElementById(`question-${i}-block`);
+        if (block) block.classList.add("hidden");
+      }
+      
+      document.getElementById(`question-${currentDragQuestion + 1}-block`)?.classList.remove("hidden");
+      
+      requestAnimationFrame(() => {
+        initDragQuestion();
+      });
+    }, 1500);
+    
+    return;
+  }
+  
+  if (!correct.startsWith(joined)) {
+    sentenceBuilder.classList.add("wrong");
+    feedback.innerHTML = '<div class="feedback-message feedback-wrong">✗ Неправильно. Попробуйте ещё раз!</div>';
+    
+    setTimeout(() => {
+      currentSentence = [];
+      sentenceBuilder.classList.remove("wrong");
+      feedback.innerHTML = "";
+      initDragQuestion();
+    }, 1500);
+  }
+}
+
+function renderDragSentence() {
+  const n = currentDragQuestion + 1;
+  const sentenceBuilder = document.getElementById(`sentence-builder-${n}`);
+  
+  if (!sentenceBuilder) return;
+  
+  sentenceBuilder.innerHTML = "";
+  
+  currentSentence.forEach(word => {
+    const chip = document.createElement("div");
+    chip.className = "word-chip";
+    chip.textContent = word;
+    sentenceBuilder.appendChild(chip);
+  });
+}
+
+// Initialize first drag question
+initDragQuestion();
+
+// =========================================================
+// 🔸 ШАГ 4 — ПРАКТИКА ПИСЬМА
+// =========================================================
+
+const questionsInput = document.getElementById("questions-input");
+const questionCounter = document.getElementById("question-counter");
+const step4Submit = document.getElementById("step4-submit");
+const step4Feedback = document.getElementById("step4-feedback");
+const step4NextBtn = document.getElementById("next-btn-step4");
+
+function countQuestions(text) {
+  if (!text.trim()) return 0;
+  
+  const lines = text.split("\n").filter(line => {
+    const trimmed = line.trim();
+    return trimmed.length > 0 && trimmed.includes("?");
+  });
+  
+  return lines.length;
+}
+
+if (questionsInput && questionCounter) {
+  questionsInput.addEventListener("input", () => {
+    const count = countQuestions(questionsInput.value);
+    questionCounter.textContent = `${count} ${count === 1 ? 'вопрос' : count < 5 ? 'вопроса' : 'вопросов'} написано`;
+  });
+}
+
+if (step4Submit) {
+  step4Submit.addEventListener("click", async () => {
+    const text = questionsInput.value.trim();
+    const count = countQuestions(text);
+    
+    if (count < 5) {
+      step4Feedback.className = "feedback-message feedback-wrong";
+      step4Feedback.innerHTML = "⚠️ Напишите минимум 5 вопросов, чтобы продолжить.";
+      step4Feedback.classList.remove("hidden");
+      return;
+    }
+    
+    step4Feedback.className = "feedback-message feedback-correct";
+    step4Feedback.innerHTML = "✓ Отлично! Вы написали " + count + " вопросов. Продолжайте практиковаться!";
+    step4Feedback.classList.remove("hidden");
+    
+    step4Submit.classList.add("hidden");
+    step4NextBtn.classList.remove("hidden");
+    
+    // Сохранение для PRO пользователей
+    if (window.currentUser && window.isProUser) {
+      try {
+        const { saveProAnswer } = await import("/js/pro-submissions.js");
+        await saveProAnswer({
+          db: window.firebaseDb,
+          user: window.currentUser,
+          submissionsRoot: window.lessonConfig.submissionsRoot,
+          courseId: window.lessonConfig.courseId,
+          courseTitle: window.lessonConfig.courseTitle,
+          lessonId: window.lessonConfig.lessonId,
+          lessonTitle: window.lessonConfig.lessonTitle,
+          taskId: "questions-text",
+          step: 4,
+          answerText: text
+        });
+      } catch (e) {
+        console.error("Ошибка сохранения:", e);
+      }
+    } else {
+      // Сохранение для обычных пользователей
+      const key = `${window.lessonConfig.lessonId}_questions`;
+      localStorage.setItem(key, text);
+    }
+  });
+}
+
+</script>
+
+<!-- ============================= -->
+
+<!-- ОБЩИЙ СКРИПТ КУРСА (ВАЖНО!) -->
+
+<!-- ============================= -->
+
+<script type="module" src="/js/courses/english-intro.js"></script>
+
+</body>
+</html>
