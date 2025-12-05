@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Intro — Урок 8: Вопросительные предложения</title>
+  <base href="/">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+
+  <!-- Tailwind -->
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Общие стили для курса English Intro -->
+
+  <link rel="stylesheet" href="/courses/english-intro/english-intro.css">
+
+  <!-- Firebase init -->
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
+
+    window.firebaseApp  = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(window.firebaseApp);
+    window.firebaseDb   = getFirestore(window.firebaseApp);
+  </script>
+
+  <style>
+    .hidden { display: none; }
+
+    /* Стили для drag & drop упражнения */
+    .word-chip {
+      display: inline-block;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: grab;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      user-select: none;
+      margin: 4px;
+    }
+
+    .word-chip:active {
+      cursor: grabbing;
+      transform: scale(1.05);
+    }
+
+    .word-bank {
+      min-height: 80px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px;
+      padding: 12px;
+      background: #f8fafc;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .sentence-builder {
+      min-height: 80px;
+      border: 2px dashed #fbbf24;
+      border-radius: 14px;
+      padding: 12px;
+      background: #fffef5;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .sentence-builder.correct {
+      border-color: #22c55e;
+      background: #f0fdf4;
+    }
+
+    .sentence-builder.wrong {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    /* Стили для заданий с вводом текста */
+    .question-input {
+      width: 100%;
+      min-height: 100px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    .question-input:focus {
+      outline: none;
+      border-color: #fbbf24;
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+    }
+
+    .counter {
+      font-size: 0.85rem;
+      color: #6b7280;
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    /* Визуальная схема */
+    .schema-box {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      padding: 30px;
+      margin: 25px 0;
+      color: white;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .schema-parts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .schema-part {
+      background: rgba(255, 255, 255, 0.95);
+      color: #667eea;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .schema-part:hover {
+      transform: translateY(-3px);
+    }
+
+    .schema-arrow {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .example-box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .example-box h4 {
+      color: #667eea;
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+    }
+
+    .example-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 0.95rem;
+      color: #374151;
+    }
+
+    .example-item:last-child {
+      border-bottom: none;
+    }
+
+    .example-en {
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+
+    .example-ru {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+
+    /* Анимации */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .feedback-message {
+      animation: slideIn 0.4s ease;
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-top: 15px;
+      font-size: 0.95rem;
+    }
+
+    .feedback-correct {
+      background: #d1fae5;
+      border-left: 4px solid #10b981;
+      color: #065f46;
+    }
+
+    .feedback-wrong {
+      background: #fee2e2;
+      border-left: 4px solid #ef4444;
+      color: #991b1b;
+    }
+
+    .feedback-info {
+      background: #dbeafe;
+      border-left: 4px solid #3b82f6;
+      color: #1e40af;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<!-- Фоновые буквы -->
+
+<div class="bg-letter a">?</div>
+<div class="bg-letter e">Q</div>
+<div class="bg-letter i">W</div>
+<div class="bg-letter o">H</div>
+<div class="bg-letter u">Y</div>
+
+<!-- Верхняя панель -->
+
+<header class="top-bar sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+      <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+      PolyTalky
+    </a>
+
+```
+<div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+  <div id="user-status"></div>
+
+  <a href="/student/feedback.html"
+     id="feedback-link"
+     class="hidden relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white">
+    📩
+    <span id="feedback-dot"
+          class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+  </a>
+
+  <a href="/student/"
+     target="_blank"
+     id="login-btn"
+     class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
+    Войти
+  </a>
+
+  <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
+</div>
+```
+
+  </div>
+</header>
+
+<main class="lesson-shell">
+  <!-- HERO -->
+  <section class="hero-card mb-8">
+    <div class="hero-left">
+      <div class="hero-badge">English · Lesson 8</div>
+      <h1 class="hero-title mt-3">
+        Вопросительные предложения в
+        <span class="em">Present Simple</span>
+      </h1>
+
+```
+  <p class="hero-tagline mt-3">
+    Учимся задавать вопросы правильно и уверенно
+  </p>
+</div>
+
+<div class="hero-right">
+  <div class="hero-right-inner">
+    <div class="hero-bg-circle"></div>
+
+    <div class="hero-bubbles-cluster">
+      <div class="hero-bubble hero-bubble--hello">
+        Do you...?
+      </div>
+      <div class="hero-bubble hero-bubble--morning">
+        What do...?
+      </div>
+      <div class="hero-bubble hero-bubble--hi">
+        How does...?
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Навигация шагов -->
+
+  <div class="step-nav">
+    <button class="step-dot step-dot--active" data-step="1">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/order.png" alt="Введение">
+      </div>
+      <div class="step-dot-label">Структура</div>
+    </button>
+
+```
+<button class="step-dot" data-step="2">
+  <div class="step-dot-circle">
+    <img src="/assets/lessons/video.png" alt="Видео">
+  </div>
+  <div class="step-dot-label">Видео</div>
+</button>
+
+<button class="step-dot" data-step="3">
+  <div class="step-dot-circle">
+    <img src="/assets/lessons/practise.png" alt="Тренажёр">
+  </div>
+  <div class="step-dot-label">Тренажёр</div>
+</button>
+
+<button class="step-dot" data-step="4">
+  <div class="step-dot-circle">
+    <img src="/assets/lessons/task.png" alt="Задание">
+  </div>
+  <div class="step-dot-label">Практика</div>
+</button>
+
+<button class="step-dot" data-step="5">
+  <div class="step-dot-circle">
+    <img src="/assets/lessons/finish.png" alt="Финал">
+  </div>
+  <div class="step-dot-label">Финиш</div>
+</button>
+```
+
+  </div>
+
+  <!-- ================ ШАГ 1. СТРУКТУРА ВОПРОСОВ ================ -->
+
+  <section id="step-1" class="step-panel step-panel--visible">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 1 · Структура вопросов</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+```
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Как строятся вопросительные предложения?
+</h2>
+
+<p class="step-body-text mb-3">
+  Вопросительные предложения заканчиваются знаком вопроса (<b>?</b>) и строятся по особой схеме.
+  В английском языке порядок слов в вопросе отличается от утверждения!
+</p>
+
+<div class="schema-box">
+  <h3 class="text-xl font-bold mb-4 text-center">Схема вопросительного предложения</h3>
+  
+  <div class="schema-parts">
+    <div class="schema-part">Вопросительное слово</div>
+    <span class="schema-arrow">→</span>
+    <div class="schema-part">Do/Does</div>
+    <span class="schema-arrow">→</span>
+    <div class="schema-part">Подлежащее</div>
+    <span class="schema-arrow">→</span>
+    <div class="schema-part">Глагол</div>
+    <span class="schema-arrow">→</span>
+    <div class="schema-part">Остальное</div>
+  </div>
+
+  <div class="example-box">
+    <h4>Примеры:</h4>
+    
+    <div class="example-item">
+      <div class="example-en">What do you like?</div>
+      <div class="example-ru">Что тебе нравится?</div>
+    </div>
+
+    <div class="example-item">
+      <div class="example-en">Where does she live?</div>
+      <div class="example-ru">Где она живёт?</div>
+    </div>
+
+    <div class="example-item">
+      <div class="example-en">How do they work?</div>
+      <div class="example-ru">Как они работают?</div>
+    </div>
+  </div>
+</div>
+
+<div class="soft-block soft-block--blue mt-4">
+  <p class="font-semibold mb-2">Важно запомнить:</p>
+  <ul class="list-disc ml-5 text-sm space-y-2">
+    <li>Вспомогательный глагол <b>Do</b> обычно не переводится</li>
+    <li>Для he/she/it используем <b>Does</b> (основной глагол остаётся без -s!)</li>
+    <li>Вопросительного слова может не быть — это <b>общий вопрос</b></li>
+    <li>На общий вопрос отвечают <b>Да</b> или <b>Нет</b></li>
+  </ul>
+</div>
+
+<div class="soft-block soft-block--green mt-4">
+  <p class="font-semibold mb-2">Общие вопросы (без вопросительного слова):</p>
+  
+  <div class="example-item">
+    <div class="example-en">Do you speak English?</div>
+    <div class="example-ru">Ты говоришь по-английски?</div>
+  </div>
+
+  <div class="example-item">
+    <div class="example-en">Does he like coffee?</div>
+    <div class="example-ru">Он любит кофе?</div>
+  </div>
+</div>
+
+<button class="btn-main mt-6 next-step-btn" data-next="2">
+  Перейти к видео →
+</button>
+```
+
+  </section>
+
+  <!-- ================ ШАГ 2. ВИДЕО ================ -->
+
+  <section id="step-2" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 2 · Видео</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+```
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Смотрим, как задавать вопросы на практике
+</h2>
+
+<p class="step-body-text mb-4">
+  Посмотрите видео и обратите внимание, как меняется порядок слов в вопросах,
+  и как используется вспомогательный глагол <b>do/does</b>.
+</p>
+
+<div class="flex justify-center mt-4">
+  <div class="w-full max-w-2xl aspect-video rounded-2xl overflow-hidden shadow-md">
+    <iframe
+      class="w-full h-full"
+      src="https://www.youtube.com/embed/LDRtk-SB8hA"
+      title="Present Simple Questions"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>
+  </div>
+</div>
+
+<div class="soft-block mt-5">
+  <p class="text-sm">
+    <b>Ключевые моменты из видео:</b>
+  </p>
+  <ul class="list-disc ml-5 text-sm mt-2 space-y-1">
+    <li>Вспомогательный глагол всегда идёт перед подлежащим</li>
+    <li>Does используется только с he/she/it</li>
+    <li>После does основной глагол теряет окончание -s</li>
+  </ul>
+</div>
+
+<button class="btn-main mt-6 next-step-btn" data-next="3">
+  Перейти к тренажёру →
+</button>
+```
+
+  </section>
+
+  <!-- ================ ШАГ 3. ТРЕНАЖЁР ================ -->
+
+  <section id="step-3" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 3 · Тренажёр</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+```
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Соберите правильные вопросы
+</h2>
+
+<p class="step-body-text mb-4">
+  Перетащите слова в правильном порядке, чтобы получился корректный вопрос.
+  Помните о схеме: вопросительное слово → do/does → подлежащее → глагол → остальное.
+</p>
+
+<!-- Вопрос 1 -->
+<div class="mb-6" id="question-1-block">
+  <p class="text-sm font-semibold text-gray-700 mb-2">Вопрос 1 из 3</p>
+  <p class="text-sm text-gray-600 mb-3">Переведите: "Где ты живёшь?"</p>
+  
+  <div id="word-bank-1" class="word-bank">
+    <!-- Слова добавятся JS -->
+  </div>
+
+  <div id="sentence-builder-1" class="sentence-builder">
+    <span class="text-gray-400 text-sm">Перетащите слова сюда...</span>
+  </div>
+
+  <div id="feedback-1"></div>
+</div>
+
+<!-- Вопрос 2 -->
+<div class="mb-6 hidden" id="question-2-block">
+  <p class="text-sm font-semibold text-gray-700 mb-2">Вопрос 2 из 3</p>
+  <p class="text-sm text-gray-600 mb-3">Переведите: "Что она делает?"</p>
+  
+  <div id="word-bank-2" class="word-bank">
+  </div>
+
+  <div id="sentence-builder-2" class="sentence-builder">
+    <span class="text-gray-400 text-sm">Перетащите слова сюда...</span>
+  </div>
+
+  <div id="feedback-2"></div>
+</div>
+
+<!-- Вопрос 3 -->
+<div class="mb-6 hidden" id="question-3-block">
+  <p class="text-sm font-semibold text-gray-700 mb-2">Вопрос 3 из 3</p>
+  <p class="text-sm text-gray-600 mb-3">Переведите: "Ты любишь спорт?"</p>
+  
+  <div id="word-bank-3" class="word-bank">
+  </div>
+
+  <div id="sentence-builder-3" class="sentence-builder">
+    <span class="text-gray-400 text-sm">Перетащите слова сюда...</span>
+  </div>
+
+  <div id="feedback-3"></div>
+</div>
+
+<button id="next-btn-step3" class="btn-main mt-6 next-step-btn hidden" data-next="4">
+  Перейти к практике →
+</button>
+```
+
+  </section>
+
+  <!-- ================ ШАГ 4. ПРАКТИКА ================ -->
+
+  <section id="step-4" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 4 · Практика письма</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+```
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Напишите свои вопросы
+</h2>
+
+<p class="step-body-text mb-3">
+  Давайте попрактикуемся! Напишите <b>5-10 вопросов в Present Simple</b>,
+  используя лексику по теме <b>"Части тела"</b>, которую вы изучали ранее.
+</p>
+
+<div class="soft-block soft-block--blue mb-4">
+  <p class="font-semibold mb-2">Слова для вдохновения:</p>
+  <div class="flex flex-wrap gap-2 text-sm">
+    <span class="word-chip">head (голова)</span>
+    <span class="word-chip">eyes (глаза)</span>
+    <span class="word-chip">hands (руки)</span>
+    <span class="word-chip">legs (ноги)</span>
+    <span class="word-chip">heart (сердце)</span>
+    <span class="word-chip">face (лицо)</span>
+    <span class="word-chip">fingers (пальцы)</span>
+    <span class="word-chip">body (тело)</span>
+  </div>
+</div>
+
+<p class="step-body-text text-sm mb-3">
+  <b>Примеры вопросов:</b><br>
+  • Do you wash your hands before eating?<br>
+  • Does she have blue eyes?<br>
+  • What do you do when your head hurts?
+</p>
+
+<textarea 
+  id="questions-input" 
+  data-task-id="questions-text"
+  class="question-input" 
+  placeholder="Напишите свои вопросы здесь. Каждый вопрос с новой строки.&#10;&#10;Например:&#10;Do you have long legs?&#10;What does your friend do with his hands?&#10;..."></textarea>
+
+<div class="counter" id="question-counter">0 вопросов написано</div>
+
+<div id="step4-feedback" class="hidden"></div>
+
+<button id="step4-submit" class="btn-main mt-5">
+  Отправить вопросы →
+</button>
+
+<button id="next-btn-step4" class="btn-main mt-5 next-step-btn hidden" data-next="5">
+  Завершить урок →
+</button>
+```
+
+  </section>
+
+  <!-- ================ ШАГ 5. ФИНАЛ ================ -->
+
+  <section id="step-5" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 5 · ФИНАЛ</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+```
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Отличная работа! 🎉
+</h2>
+
+<p class="step-body-text mb-3">
+  Ну что же, вот мы и вступили одной ногой на этого ужасного зверя под названием <b>Tenses</b>!
+  Теперь нам нужно постараться запомнить всё необходимое касательно <b>Simple</b>, и практиковаться,
+  практиковаться и ещё раз практиковаться!
+</p>
+
+<div class="flex justify-center my-5">
+  <img src="/assets/gifs/english-lesson8-finish.gif" alt="Finish gif"
+       class="w-64 h-auto rounded-2xl">
+</div>
+
+<div class="soft-block soft-block--green mb-4">
+  <p class="font-semibold mb-2">Что вы освоили в этом уроке:</p>
+  <ul class="list-disc ml-5 text-sm space-y-1">
+    <li>✓ Структуру вопросительных предложений в Present Simple</li>
+    <li>✓ Использование вспомогательных глаголов do/does</li>
+    <li>✓ Разницу между общими и специальными вопросами</li>
+    <li>✓ Практику составления собственных вопросов</li>
+  </ul>
+</div>
+
+<p class="step-body-text mb-4">
+  Продолжайте практиковаться каждый день — и скоро вы будете задавать вопросы автоматически,
+  не задумываясь о структуре!
+</p>
+
+<p class="text-center text-lg font-semibold text-purple-600 mb-4">
+  See you tomorrow! 👋
+</p>
+
+<div class="mt-5 flex flex-wrap gap-3">
+  <a href="/courses/english-intro/lesson-09.html" class="btn-main">
+    Перейти к следующему уроку →
+  </a>
+
+  <a href="/courses/english-intro/" class="btn-ghost">
+    Вернуться к курсу
+  </a>
+</div>
+```
+
+  </section>
+
+  <!-- МОДАЛКА Q&A -->
+
+  <div id="qa-modal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+
+```
+<div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+  <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
+  <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
+
+  <div class="relative p-6 space-y-4">
+    <div class="flex justify-between items-start gap-4">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">
+          Вопросы по уроку
+        </h2>
+        <p class="text-sm text-gray-600 mt-1">
+          Напишите свой вопрос — мы ответим и ответ увидят другие участники.
+        </p>
+      </div>
+
+      <button id="qa-close"
+              class="text-gray-500 text-xl leading-none">&times;</button>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+      Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
+      <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">Тариф PRO</a> даёт приоритетную обратную связь и больше внимания к вашим вопросам 💛
+    </div>
+
+    <div class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70"
+         id="qa-list">
+      <p class="text-xs text-gray-500">
+        Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+      </p>
+    </div>
+
+    <form id="qa-form" class="space-y-2">
+      <label class="block text-xs text-gray-600">
+        Ваш вопрос:
+      </label>
+      <textarea id="qa-text"
+                class="w-full border border
