@@ -447,7 +447,7 @@
 
     <button class="step-dot" data-step="2">
       <div class="step-dot-circle">
-        <img src="/assets/grammar/.png" alt="Глаголы">
+        <img src="/assets/grammar.png" alt="Глаголы">
       </div>
       <div class="step-dot-label">Глаголы</div>
     </button>
@@ -718,11 +718,11 @@
     <div class="soft-block soft-block--blue mb-4">
       <p class="font-semibold mb-2">Что мы узнали:</p>
       
-        <li>✓ Схема: подлежащее → do/does → NOT → глагол → остальное</li>
-        <li>✓ Для I/you/we/they используем <b>do not (don't)</b></li>
-        <li>✓ Для he/she/it используем <b>does not (doesn't)</b></li>
-        <li>✓ После do/does глагол всегда в начальной форме</li>
-        <li>✓ Самостоятельные глаголы (be, can, must и др.) не требуют do/does</li>
+        <li> Схема: подлежащее → do/does → NOT → глагол → остальное</li>
+        <li> Для I/you/we/they используем <b>do not (don't)</b></li>
+        <li> Для he/she/it используем <b>does not (doesn't)</b></li>
+        <li> После do/does глагол всегда в начальной форме</li>
+        <li> Самостоятельные глаголы (be, can, must и др.) не требуют do/does</li>
     
     </div>
 
@@ -737,14 +737,16 @@
            onerror="this.style.display='none'">
     </div>
 
+     <div class="mt-5 flex flex-wrap gap-3">
+       <button class="btn-main" id="open-vocab-btn">
+       Добавить слова в словарик
+      </button>
+    
     <div class="mt-5 flex flex-wrap gap-3">
       <a href="/courses/english-intro/lesson-08.html" class="btn-main">
         Перейти к следующему уроку →
       </a>
 
-      <a href="/courses/english-intro/" class="btn-ghost">
-        Вернуться к курсу
-      </a>
     </div>
   </section>
 
@@ -809,7 +811,67 @@
       </div>
     </div>
   </div>
+<!-- ВСПЛЫВАЮЩЕЕ ОКНО СЛОВАРЯ -->
+  <div id="vocab-modal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
 
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+
+      <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-70"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-70"></div>
+
+      <div class="relative p-6">
+        
+        <div class="flex justify-between items-start">
+          <h2 class="text-lg font-semibold text-gray-800">
+            Добавить слова в словарик
+          </h2>
+
+          <button id="vocab-close" class="text-gray-500 text-xl leading-none">&times;</button>
+        </div>
+
+        <p class="text-sm text-gray-600 mt-1">
+          Выберите слова из этого урока, которые хотите сохранить. Они появятся в вашем словарике.
+        </p>
+
+        <div id="vocab-auth-warning"
+             class="hidden mt-4 bg-red-50 text-red-700 border border-red-200 rounded-xl p-3 text-sm">
+          Чтобы сохранять слова, нужно войти в аккаунт.
+          <br>
+          <a href="/student" class="underline font-medium">Перейти к авторизации →</a>
+        </div>
+
+        <div id="vocab-list" class="mt-5 space-y-5 max-h-[330px] overflow-y-auto pr-1">
+
+          <div class="vocab-category" data-category="vocabulary-lesson7">
+            <h3 class="text-[0.8rem] font-semibold text-gray-700 mb-2 flex items-center gap-1">
+              📘 Слова из урока 7
+            </h3>
+
+            <div id="vocab-vowels" class="grid grid-cols-1 gap-2 pl-1">
+              <!-- сюда english-intro.js подставит чекбоксы -->
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mt-6 flex justify-between items-center">
+
+          <button id="vocab-select-all"
+                  class="px-4 py-2 rounded-xl bg-gray-100 text-sm text-gray-700 border border-gray-300">
+            Выбрать всё
+          </button>
+
+          <button id="vocab-save"
+                  class="btn-main text-sm px-5 py-2">
+            Добавить выбранные →
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
 </main>
 
 <!-- ============================= -->
@@ -825,6 +887,23 @@
     totalSteps:      4,
     audioNextStep:   null,
     vocabCategory:   "vocabulary-lesson7"
+ customVocab: [
+      { word: "like",    ru: "любить, нравиться" },
+      { word: "coffee",  ru: "кофе" },
+      { word: "work",    ru: "работать" },
+      { word: "here",    ru: "здесь" },
+      { word: "speak",   ru: "говорить" },
+      { word: "can", ru: "могу" },
+      { word: "play",    ru: "играть" },
+      { word: "must", ru: "должен" },
+      { word: "tired",   ru: "уставший" },
+      { word: "swim",    ru: "плавать" },
+    { word: "cake",    ru: "торт" },
+    { word: "leave",    ru: "покидать, оставлять" },
+     { word: "could",    ru: "мог бы" },
+     { word: "should",    ru: "следует" }
+    ]
+    
   };
 </script>
 
