@@ -678,178 +678,189 @@
   // ПРОВЕРКА PRO СТАТУСА
   // ========================================
   async function checkProStatus(user) {
-  try {
-    const email = user.email || null;
-    const uid = user.uid || null;
-    
-    if (!email && !uid) {
-      console.log("Нет email и uid у пользователя");
+    try {
+      const email = user.email || null;
+      const uid = user.uid || null;
+      
+      if (!email && !uid) {
+        console.log("Нет email и uid у пользователя");
+        return false;
+      }
+
+      const emailRef = email ? doc(db, "users", email) : null;
+      const uidRef = uid ? doc(db, "users", uid) : null;
+
+      const [emailSnap, uidSnap] = await Promise.all([
+        emailRef ? getDoc(emailRef) : Promise.resolve(null),
+        uidRef ? getDoc(uidRef) : Promise.resolve(null),
+      ]);
+
+      const emailData = emailSnap && emailSnap.exists() ? emailSnap.data() : {};
+      const uidData = uidSnap && uidSnap.exists() ? uidSnap.data() : {};
+      const merged = { ...uidData, ...emailData };
+
+      console.log("PRO статус пользователя:", merged);
+
+      const proGlobal = merged.proGlobal === true;
+      let proValidUntil = merged.proValidUntil || merged.proUntil || null;
+      
+      if (proValidUntil && typeof proValidUntil.toDate === "function") {
+        proValidUntil = proValidUntil.toDate();
+      }
+
+      const legacyPro = merged.proActive || merged.isPro || merged.hasPro || 
+                        (merged.pro && merged.pro.active);
+
+      let active = !!(proGlobal || legacyPro);
+
+      if (proValidUntil instanceof Date) {
+        const now = new Date();
+        if (proValidUntil <= now) {
+          active = false;
+        }
+      }
+
+      console.log("PRO активен:", active);
+      return active;
+    } catch (e) {
+      console.error("Ошибка проверки PRO статуса:", e);
       return false;
     }
-
-    const emailRef = email ? doc(db, "users", email) : null;
-    const uidRef = uid ? doc(db, "users", uid) : null;
-
-    const [emailSnap, uidSnap] = await Promise.all([
-      emailRef ? getDoc(emailRef) : Promise.resolve(null),
-      uidRef ? getDoc(uidRef) : Promise.resolve(null),
-    ]);
-
-    const emailData = emailSnap && emailSnap.exists() ? emailSnap.data() : {};
-    const uidData = uidSnap && uidSnap.exists() ? uidSnap.data() : {};
-    const merged = { ...uidData, ...emailData };
-
-    console.log("PRO статус пользователя:", merged); // Для отладки
-
-    const proGlobal = merged.proGlobal === true;
-    let proValidUntil = merged.proValidUntil || merged.proUntil || null;
-    
-    if (proValidUntil && typeof proValidUntil.toDate === "function") {
-      proValidUntil = proValidUntil.toDate();
-    }
-
-    const legacyPro = merged.proActive || merged.isPro || merged.hasPro || 
-                      (merged.pro && merged.pro.active);
-
-    let active = !!(proGlobal || legacyPro);
-
-    if (proValidUntil instanceof Date) {
-      const now = new Date();
-      if (proValidUntil <= now) {
-        active = false;
-      }
-    }
-
-    console.log("PRO активен:", active); // Для отладки
-    return active;
-  } catch (e) {
-    console.error("Ошибка проверки PRO статуса:", e);
-    return false;
   }
-}
-
 
   // ========================================
   // ЗАГРУЗКА ОБРАТНОЙ СВЯЗИ
   // ========================================
-async function loadFeedback(user) {
-  const userKey = user.email || user.uid;
-  
-  try {
-    // Загружаем ВСЕ документы из lessonSubmissions
-    const submissionsRef = collection(db, "lessonSubmissions");
-    const submissionsSnap = await getDocs(submissionsRef);
+  async function loadFeedback(user) {
+    const userKey = user.email || user.uid;
     
-    const feedbackData = [];
-
-    for (const lessonDoc of submissionsSnap.docs) {
-      const lessonId = lessonDoc.id;
+    console.log("🔍 Начинаем загрузку заданий для пользователя:", userKey);
+    
+    try {
+      // Загружаем ВСЕ документы из lessonSubmissions
+      const submissionsRef = collection(db, "lessonSubmissions");
+      const submissionsSnap = await getDocs(submissionsRef);
       
-      // Проверяем есть ли ответ пользователя в этом уроке
-      const answerRef = doc(db, "lessonSubmissions", lessonId, "answers", userKey);
-      const answerSnap = await getDoc(answerRef);
+      console.log("📚 Найдено уроков в базе:", submissionsSnap.size);
+      
+      const feedbackData = [];
 
-      if (answerSnap.exists()) {
-        const data = answerSnap.data();
+      for (const lessonDoc of submissionsSnap.docs) {
+        const lessonId = lessonDoc.id;
+        console.log("  Проверяем урок:", lessonId);
         
-        // Определяем контент ответа
-        let content = '';
-        if (data.answerText) {
-          content = data.answerText;
-        } else if (data.answer) {
-          content = data.answer;
-        } else if (data.sentences) {
-          content = Array.isArray(data.sentences) 
-            ? data.sentences.join('\n') 
-            : data.sentences;
-        } else if (data.helloAnswer) {
-          content = data.helloAnswer;
-        } else if (data.answerAudioBase64) {
-          content = '[Аудио-ответ отправлен]';
-        } else if (data.answerImageBase64) {
-          content = '[Изображение отправлено]';
-        } else if (data.text) {
-          content = data.text;
+        // Проверяем есть ли ответ пользователя в этом уроке
+        const answerRef = doc(db, "lessonSubmissions", lessonId, "answers", userKey);
+        const answerSnap = await getDoc(answerRef);
+
+        if (answerSnap.exists()) {
+          const data = answerSnap.data();
+          console.log("    ✅ Найден ответ в уроке:", lessonId, data);
+          
+          // Определяем контент ответа
+          let content = '';
+          if (data.answerText) {
+            content = data.answerText;
+          } else if (data.answer) {
+            content = data.answer;
+          } else if (data.sentences) {
+            content = Array.isArray(data.sentences) 
+              ? data.sentences.join('\n') 
+              : data.sentences;
+          } else if (data.helloAnswer) {
+            content = data.helloAnswer;
+          } else if (data.answerAudioBase64) {
+            content = '[Аудио-ответ отправлен]';
+          } else if (data.answerImageBase64) {
+            content = '[Изображение отправлено]';
+          } else if (data.text) {
+            content = data.text;
+          } else {
+            content = '[Ответ пользователя]';
+          }
+
+          // Обработка timestamp
+          let timestamp = new Date();
+          if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+            timestamp = data.createdAt.toDate();
+          } else if (data.createdAt && typeof data.createdAt.toMillis === 'function') {
+            timestamp = new Date(data.createdAt.toMillis());
+          } else if (data.submittedAt && typeof data.submittedAt.toDate === 'function') {
+            timestamp = data.submittedAt.toDate();
+          } else if (data.submittedAt && typeof data.submittedAt.toMillis === 'function') {
+            timestamp = new Date(data.submittedAt.toMillis());
+          } else if (data.updatedAt && typeof data.updatedAt.toDate === 'function') {
+            timestamp = data.updatedAt.toDate();
+          } else if (data.updatedAt && typeof data.updatedAt.toMillis === 'function') {
+            timestamp = new Date(data.updatedAt.toMillis());
+          }
+
+          // Определяем статус проверки
+          const status = data.status || 'pending';
+          const reviewed = (status === 'approved' || status === 'needs-fix');
+          const needsReview = (status === 'pending');
+
+          feedbackData.push({
+            id: `${lessonId}-${userKey}`,
+            lessonId: lessonId,
+            lessonTitle: getLessonTitle(lessonId),
+            courseId: data.courseId || 'english-intro',
+            submittedAt: timestamp,
+            content: content,
+            curatorResponse: data.feedback || data.curatorFeedback || null,
+            reviewed: reviewed,
+            needsReview: needsReview,
+            status: status
+          });
         } else {
-          content = '[Ответ пользователя]';
+          console.log("    ❌ Ответ не найден в уроке:", lessonId);
         }
+      }
 
-        // Обработка timestamp
-        let timestamp = new Date();
-        if (data.createdAt && typeof data.createdAt.toMillis === 'function') {
-          timestamp = new Date(data.createdAt.toMillis());
-        } else if (data.submittedAt && typeof data.submittedAt.toMillis === 'function') {
-          timestamp = new Date(data.submittedAt.toMillis());
-        } else if (data.updatedAt && typeof data.updatedAt.toMillis === 'function') {
-          timestamp = new Date(data.updatedAt.toMillis());
-        }
-
-        // Определяем статус проверки
-        const status = data.status || 'pending';
-        const reviewed = (status === 'approved' || status === 'needs-fix');
-        const needsReview = (status === 'pending');
-
-        feedbackData.push({
-          id: `${lessonId}-${userKey}`,
-          lessonId: lessonId,
-          lessonTitle: getLessonTitle(lessonId),
-          courseId: data.courseId || 'english-intro',
-          submittedAt: timestamp,
-          content: content,
-          curatorResponse: data.feedback || data.curatorFeedback || null,
-          reviewed: reviewed,
-          needsReview: needsReview,
-          status: status
-        });
+      console.log(`✅ Загружено заданий: ${feedbackData.length}`);
+      console.log('📋 Все задания:', feedbackData);
+      
+      allFeedback = feedbackData;
+      updateStats();
+      renderFeedback();
+    } catch (e) {
+      console.error("❌ Ошибка загрузки обратной связи:", e);
+      
+      const container = document.getElementById('feedbackList');
+      const emptyState = document.getElementById('emptyState');
+      if (emptyState) emptyState.classList.add('hidden');
+      if (container) {
+        container.innerHTML = `
+          <div style="background: #fee2e2; border: 2px solid #fca5a5; border-radius: 12px; padding: 24px; text-align: center;">
+            <div style="font-size: 3em; margin-bottom: 16px;">⚠️</div>
+            <div style="font-size: 1.2em; font-weight: 700; margin-bottom: 8px; color: #991b1b;">Ошибка загрузки</div>
+            <div style="color: #7f1d1d;">Не удалось загрузить обратную связь. Попробуйте обновить страницу.</div>
+            <div style="margin-top: 12px; font-size: 0.85em; color: #991b1b;">Ошибка: ${e.message}</div>
+          </div>
+        `;
       }
     }
-
-    console.log(`Загружено заданий: ${feedbackData.length}`); // Для отладки
-    console.log('Задания:', feedbackData); // Для отладки
-    
-    allFeedback = feedbackData;
-    updateStats();
-    renderFeedback();
-  } catch (e) {
-    console.error("Ошибка загрузки обратной связи:", e);
-    
-    const container = document.getElementById('feedbackList');
-    const emptyState = document.getElementById('emptyState');
-    emptyState.classList.add('hidden');
-    container.innerHTML = `
-      <div style="background: #fee2e2; border: 2px solid #fca5a5; border-radius: 12px; padding: 24px; text-align: center;">
-        <div style="font-size: 3em; margin-bottom: 16px;">⚠️</div>
-        <div style="font-size: 1.2em; font-weight: 700; margin-bottom: 8px; color: #991b1b;">Ошибка загрузки</div>
-        <div style="color: #7f1d1d;">Не удалось загрузить обратную связь. Попробуйте обновить страницу.</div>
-        <div style="margin-top: 12px; font-size: 0.85em; color: #991b1b;">Ошибка: ${e.message}</div>
-      </div>
-    `;
   }
-}
-
 
   function getLessonTitle(lessonId) {
-  const titles = {
-    'english-intro-lesson-1': 'Урок 1: Hello and Introduction',
-    'english-intro-lesson-2': 'Урок 2: Согласные буквы',
-    'english-intro-lesson-3': 'Урок 3: Порядок слов',
-    'english-intro-lesson-4': 'Урок 4: Времена',
-    'english-intro-lesson-5': 'Урок 5: Культурный феномен',
-    'english-intro-lesson-7': 'Урок 7: Отрицательные предложения',
-  };
-  
-  // Если название не найдено, делаем читаемую версию из ID
-  if (!titles[lessonId]) {
-    // Преобразуем "english-intro-lesson-1" в "English Intro: Lesson 1"
-    const parts = lessonId.split('-');
-    const course = parts.slice(0, -2).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    const lessonNum = parts[parts.length - 1];
-    return `${course}: Урок ${lessonNum}`;
+    const titles = {
+      'english-intro-lesson-1': 'Урок 1: Hello and Introduction',
+      'english-intro-lesson-2': 'Урок 2: Согласные буквы',
+      'english-intro-lesson-3': 'Урок 3: Порядок слов',
+      'english-intro-lesson-4': 'Урок 4: Времена',
+      'english-intro-lesson-5': 'Урок 5: Культурный феномен',
+      'english-intro-lesson-7': 'Урок 7: Отрицательные предложения',
+    };
+    
+    if (!titles[lessonId]) {
+      const parts = lessonId.split('-');
+      const course = parts.slice(0, -2).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      const lessonNum = parts[parts.length - 1];
+      return `${course}: Урок ${lessonNum}`;
+    }
+    
+    return titles[lessonId];
   }
-  
-  return titles[lessonId];
-}
-
 
   // ========================================
   // ОБНОВЛЕНИЕ СТАТИСТИКИ
@@ -860,10 +871,15 @@ async function loadFeedback(user) {
     const pending = allFeedback.filter(f => !f.reviewed && f.needsReview).length;
     const progress = total > 0 ? Math.round((reviewed / total) * 100) : 0;
 
-    document.getElementById('totalSubmissions').textContent = total;
-    document.getElementById('pendingCount').textContent = pending;
-    document.getElementById('reviewedCount').textContent = reviewed;
-    document.getElementById('progressPercent').textContent = progress + '%';
+    const totalEl = document.getElementById('totalSubmissions');
+    const pendingEl = document.getElementById('pendingCount');
+    const reviewedEl = document.getElementById('reviewedCount');
+    const progressEl = document.getElementById('progressPercent');
+
+    if (totalEl) totalEl.textContent = total;
+    if (pendingEl) pendingEl.textContent = pending;
+    if (reviewedEl) reviewedEl.textContent = reviewed;
+    if (progressEl) progressEl.textContent = progress + '%';
   }
 
   // ========================================
@@ -873,35 +889,52 @@ async function loadFeedback(user) {
     const container = document.getElementById('feedbackList');
     const emptyState = document.getElementById('emptyState');
 
+    if (!container || !emptyState) {
+      console.error("Не найдены элементы feedbackList или emptyState");
+      return;
+    }
+
     // Применяем фильтры
     let filtered = [...allFeedback];
 
-    const courseFilter = document.getElementById('courseFilter').value;
-    if (courseFilter !== 'all') {
-      filtered = filtered.filter(f => f.courseId === courseFilter);
+    const courseFilterEl = document.getElementById('courseFilter');
+    const statusFilterEl = document.getElementById('statusFilter');
+    const sortFilterEl = document.getElementById('sortFilter');
+
+    if (courseFilterEl) {
+      const courseFilter = courseFilterEl.value;
+      if (courseFilter !== 'all') {
+        filtered = filtered.filter(f => f.courseId === courseFilter);
+      }
     }
 
-    const statusFilter = document.getElementById('statusFilter').value;
-    if (statusFilter === 'pending') {
-      filtered = filtered.filter(f => !f.reviewed && f.needsReview);
-    } else if (statusFilter === 'reviewed') {
-      filtered = filtered.filter(f => f.reviewed);
+    if (statusFilterEl) {
+      const statusFilter = statusFilterEl.value;
+      if (statusFilter === 'pending') {
+        filtered = filtered.filter(f => !f.reviewed && f.needsReview);
+      } else if (statusFilter === 'reviewed') {
+        filtered = filtered.filter(f => f.reviewed);
+      }
     }
 
-    const sortFilter = document.getElementById('sortFilter').value;
-    if (sortFilter === 'newest') {
-      filtered.sort((a, b) => {
-        const aTime = a.submittedAt?.toMillis?.() || 0;
-        const bTime = b.submittedAt?.toMillis?.() || 0;
-        return bTime - aTime;
-      });
-    } else {
-      filtered.sort((a, b) => {
-        const aTime = a.submittedAt?.toMillis?.() || 0;
-        const bTime = b.submittedAt?.toMillis?.() || 0;
-        return aTime - bTime;
-      });
+    if (sortFilterEl) {
+      const sortFilter = sortFilterEl.value;
+      if (sortFilter === 'newest') {
+        filtered.sort((a, b) => {
+          const aTime = a.submittedAt instanceof Date ? a.submittedAt.getTime() : 0;
+          const bTime = b.submittedAt instanceof Date ? b.submittedAt.getTime() : 0;
+          return bTime - aTime;
+        });
+      } else {
+        filtered.sort((a, b) => {
+          const aTime = a.submittedAt instanceof Date ? a.submittedAt.getTime() : 0;
+          const bTime = b.submittedAt instanceof Date ? b.submittedAt.getTime() : 0;
+          return aTime - bTime;
+        });
+      }
     }
+
+    console.log("🎨 Отрисовываем задания. Всего:", allFeedback.length, "После фильтров:", filtered.length);
 
     if (filtered.length === 0) {
       container.innerHTML = '';
@@ -914,78 +947,77 @@ async function loadFeedback(user) {
   }
 
   function createFeedbackCard(feedback) {
-  const status = feedback.reviewed ? 'reviewed' : 'pending';
-  const statusText = feedback.status === 'approved' 
-    ? 'Одобрено' 
-    : feedback.status === 'needs-fix'
-    ? 'Нужны правки'
-    : feedback.reviewed 
-    ? 'Проверено' 
-    : 'На проверке';
-  const statusIcon = feedback.status === 'approved'
-    ? '✅'
-    : feedback.status === 'needs-fix'
-    ? '⚠️'
-    : feedback.reviewed
-    ? '✅'
-    : '⏳';
+    const status = feedback.reviewed ? 'reviewed' : 'pending';
+    const statusText = feedback.status === 'approved' 
+      ? 'Одобрено' 
+      : feedback.status === 'needs-fix'
+      ? 'Нужны правки'
+      : feedback.reviewed 
+      ? 'Проверено' 
+      : 'На проверке';
+    const statusIcon = feedback.status === 'approved'
+      ? '✅'
+      : feedback.status === 'needs-fix'
+      ? '⚠️'
+      : feedback.reviewed
+      ? '✅'
+      : '⏳';
 
-  const dateStr = feedback.submittedAt instanceof Date
-    ? feedback.submittedAt.toLocaleDateString('ru-RU', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    : 'Дата неизвестна';
+    const dateStr = feedback.submittedAt instanceof Date
+      ? feedback.submittedAt.toLocaleDateString('ru-RU', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      : 'Дата неизвестна';
 
-  const curatorSection = feedback.curatorResponse 
-    ? `
-      <div class="curator-response">
-        <div class="curator-label">Обратная связь от куратора:</div>
-        <div class="curator-text">${escapeHtml(feedback.curatorResponse)}</div>
-        <div class="curator-signature">— Ваш куратор PolyTalky</div>
-      </div>
-    `
-    : feedback.needsReview
-    ? `
-      <div style="background: #fef3c7; border: 2px solid #fbbf24; border-radius: 12px; padding: 16px; color: #92400e;">
-        <strong>⏳ Задание на проверке</strong><br>
-        Куратор скоро проверит ваше задание и оставит подробную обратную связь.
-      </div>
-    `
-    : '';
+    const curatorSection = feedback.curatorResponse 
+      ? `
+        <div class="curator-response">
+          <div class="curator-label">Обратная связь от куратора:</div>
+          <div class="curator-text">${escapeHtml(feedback.curatorResponse)}</div>
+          <div class="curator-signature">— Ваш куратор PolyTalky</div>
+        </div>
+      `
+      : feedback.needsReview
+      ? `
+        <div style="background: #fef3c7; border: 2px solid #fbbf24; border-radius: 12px; padding: 16px; color: #92400e;">
+          <strong>⏳ Задание на проверке</strong><br>
+          Куратор скоро проверит ваше задание и оставит подробную обратную связь.
+        </div>
+      `
+      : '';
 
-  return `
-    <div class="feedback-card ${status}">
-      <div class="feedback-header">
-        <div>
-          <div class="feedback-title">${escapeHtml(feedback.lessonTitle)}</div>
-          <div class="feedback-meta">
-            <div class="meta-item">
-              📅 ${dateStr}
-            </div>
-            <div class="meta-item">
-              📚 ${feedback.courseId}
+    return `
+      <div class="feedback-card ${status}">
+        <div class="feedback-header">
+          <div>
+            <div class="feedback-title">${escapeHtml(feedback.lessonTitle)}</div>
+            <div class="feedback-meta">
+              <div class="meta-item">
+                📅 ${dateStr}
+              </div>
+              <div class="meta-item">
+                📚 ${feedback.courseId}
+              </div>
             </div>
           </div>
+          <div class="status-badge ${status}">
+            ${statusIcon} ${statusText}
+          </div>
         </div>
-        <div class="status-badge ${status}">
-          ${statusIcon} ${statusText}
+
+        <div class="feedback-content">
+          <div class="content-label">Ваш ответ:</div>
+          <div class="content-text">${escapeHtml(feedback.content)}</div>
         </div>
+
+        ${curatorSection}
       </div>
-
-      <div class="feedback-content">
-        <div class="content-label">Ваш ответ:</div>
-        <div class="content-text">${escapeHtml(feedback.content)}</div>
-      </div>
-
-      ${curatorSection}
-    </div>
-  `;
-}
-
+    `;
+  }
 
   function escapeHtml(text) {
     if (!text) return '';
@@ -993,70 +1025,69 @@ async function loadFeedback(user) {
     div.textContent = text;
     return div.innerHTML;
   }
+
   // ========================================
-// НАПИСАТЬ КУРАТОРУ
-// ========================================
-const writeToCuratorBtn = document.getElementById('writeToCuratorBtn');
-const curatorMessageModal = document.getElementById('curatorMessageModal');
-const closeCuratorModalBtn = document.getElementById('closeCuratorModalBtn');
-const sendToCuratorBtn = document.getElementById('sendToCuratorBtn');
-const curatorMessageText = document.getElementById('curatorMessageText');
+  // НАПИСАТЬ КУРАТОРУ
+  // ========================================
+  const writeToCuratorBtn = document.getElementById('writeToCuratorBtn');
+  const curatorMessageModal = document.getElementById('curatorMessageModal');
+  const closeCuratorModalBtn = document.getElementById('closeCuratorModalBtn');
+  const sendToCuratorBtn = document.getElementById('sendToCuratorBtn');
+  const curatorMessageText = document.getElementById('curatorMessageText');
 
-if (writeToCuratorBtn) {
-  writeToCuratorBtn.addEventListener('click', () => {
-    curatorMessageModal.style.display = 'flex';
-  });
-}
+  if (writeToCuratorBtn) {
+    writeToCuratorBtn.addEventListener('click', () => {
+      curatorMessageModal.style.display = 'flex';
+    });
+  }
 
-if (closeCuratorModalBtn) {
-  closeCuratorModalBtn.addEventListener('click', () => {
-    curatorMessageModal.style.display = 'none';
-    curatorMessageText.value = '';
-  });
-}
-
-if (sendToCuratorBtn) {
-  sendToCuratorBtn.addEventListener('click', async () => {
-    const message = curatorMessageText.value.trim();
-    
-    if (!message) {
-      alert('Пожалуйста, напишите сообщение');
-      return;
-    }
-    
-    if (!currentUser) {
-      alert('Ошибка: пользователь не авторизован');
-      return;
-    }
-    
-    try {
-      sendToCuratorBtn.disabled = true;
-      sendToCuratorBtn.textContent = 'Отправляем...';
-      
-      // Сохраняем сообщение в Firestore
-      const messagesRef = collection(db, "curatorMessages");
-      await addDoc(messagesRef, {
-        userId: currentUser.uid,
-        userEmail: currentUser.email,
-        message: message,
-        createdAt: new Date(),
-        read: false,
-        replied: false
-      });
-      
-      alert('✅ Сообщение отправлено! Куратор ответит в течение 24-48 часов.');
+  if (closeCuratorModalBtn) {
+    closeCuratorModalBtn.addEventListener('click', () => {
       curatorMessageModal.style.display = 'none';
       curatorMessageText.value = '';
-    } catch (e) {
-      console.error('Ошибка отправки сообщения:', e);
-      alert('Не удалось отправить сообщение. Попробуйте ещё раз.');
-    } finally {
-      sendToCuratorBtn.disabled = false;
-      sendToCuratorBtn.textContent = '📤 Отправить';
-    }
-  });
-}
+    });
+  }
 
+  if (sendToCuratorBtn) {
+    sendToCuratorBtn.addEventListener('click', async () => {
+      const message = curatorMessageText.value.trim();
+      
+      if (!message) {
+        alert('Пожалуйста, напишите сообщение');
+        return;
+      }
+      
+      if (!currentUser) {
+        alert('Ошибка: пользователь не авторизован');
+        return;
+      }
+      
+      try {
+        sendToCuratorBtn.disabled = true;
+        sendToCuratorBtn.textContent = 'Отправляем...';
+        
+        const messagesRef = collection(db, "curatorMessages");
+        await addDoc(messagesRef, {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          message: message,
+          createdAt: new Date(),
+          read: false,
+          replied: false
+        });
+        
+        alert('✅ Сообщение отправлено! Куратор ответит в течение 24-48 часов.');
+        curatorMessageModal.style.display = 'none';
+        curatorMessageText.value = '';
+      } catch (e) {
+        console.error('Ошибка отправки сообщения:', e);
+        alert('Не удалось отправить сообщение. Попробуйте ещё раз.');
+      } finally {
+        sendToCuratorBtn.disabled = false;
+        sendToCuratorBtn.textContent = '📤 Отправить';
+      }
+    });
+  }
 
   // ========================================
   // ИНИЦИАЛИЗАЦИЯ
@@ -1066,10 +1097,12 @@ if (sendToCuratorBtn) {
     const accessDenied = document.getElementById('accessDenied');
     const mainContent = document.getElementById('mainContent');
 
+    console.log("🔐 Auth state changed:", user ? user.email : "не авторизован");
+
     if (!user) {
-      // Не авторизован
-      loadingState.classList.add('hidden');
-      accessDenied.classList.remove('hidden');
+      if (loadingState) loadingState.classList.add('hidden');
+      if (accessDenied) accessDenied.classList.remove('hidden');
+      if (mainContent) mainContent.classList.add('hidden');
       return;
     }
 
@@ -1077,15 +1110,16 @@ if (sendToCuratorBtn) {
     isProUser = await checkProStatus(user);
 
     if (!isProUser) {
-      // Не PRO пользователь
-      loadingState.classList.add('hidden');
-      accessDenied.classList.remove('hidden');
+      if (loadingState) loadingState.classList.add('hidden');
+      if (accessDenied) accessDenied.classList.remove('hidden');
+      if (mainContent) mainContent.classList.add('hidden');
       return;
     }
 
     // PRO пользователь - показываем контент
-    loadingState.classList.add('hidden');
-    mainContent.classList.remove('hidden');
+    if (loadingState) loadingState.classList.add('hidden');
+    if (accessDenied) accessDenied.classList.add('hidden');
+    if (mainContent) mainContent.classList.remove('hidden');
 
     // Загружаем обратную связь
     await loadFeedback(user);
@@ -1094,16 +1128,20 @@ if (sendToCuratorBtn) {
   // ========================================
   // ФИЛЬТРЫ
   // ========================================
-  document.getElementById('courseFilter')?.addEventListener('change', renderFeedback);
-  document.getElementById('statusFilter')?.addEventListener('change', renderFeedback);
-  document.getElementById('sortFilter')?.addEventListener('change', renderFeedback);
+  const courseFilterEl = document.getElementById('courseFilter');
+  const statusFilterEl = document.getElementById('statusFilter');
+  const sortFilterEl = document.getElementById('sortFilter');
+
+  if (courseFilterEl) courseFilterEl.addEventListener('change', renderFeedback);
+  if (statusFilterEl) statusFilterEl.addEventListener('change', renderFeedback);
+  if (sortFilterEl) sortFilterEl.addEventListener('change', renderFeedback);
 
   // ========================================
   // БУРГЕР МЕНЮ
   // ========================================
   const burger = document.getElementById('burger');
   const mnav = document.getElementById('mnav');
-  if (burger) {
+  if (burger && mnav) {
     burger.addEventListener('click', () => mnav.classList.toggle('hidden'));
   }
 </script>
