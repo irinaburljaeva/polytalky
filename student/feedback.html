@@ -732,24 +732,70 @@
   // ЗАГРУЗКА ОБРАТНОЙ СВЯЗИ
   // ========================================
   async function loadFeedback(user) {
-    const userKey = user.email || user.uid;
+  const userKey = user.email || user.uid;
+  
+  console.log("🔍 Начинаем загрузку заданий для пользователя:", userKey);
+  
+  try {
+    const feedbackData = [];
     
-    console.log("🔍 Начинаем загрузку заданий для пользователя:", userKey);
+    // Получаем профиль пользователя, чтобы узнать, в каких уроках он участвовал
+    const userDocRef = doc(db, "users", userKey);
+    const userDocSnap = await getDoc(userDocRef);
     
-    try {
-      // Загружаем ВСЕ документы из lessonSubmissions
-      const submissionsRef = collection(db, "lessonSubmissions");
-      const submissionsSnap = await getDocs(submissionsRef);
+    let lessonIds = [];
+    
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+      console.log("👤 Данные пользователя:", userData);
       
-      console.log("📚 Найдено уроков в базе:", submissionsSnap.size);
+      // Получаем список уроков из progress
+      if (userData.progress && typeof userData.progress === 'object') {
+        lessonIds = Object.keys(userData.progress);
+        console.log("📚 Найдены уроки в progress:", lessonIds);
+      }
       
-      const feedbackData = [];
+      // Также проверяем freeCourses и courses для получения всех возможных уроков
+      const allCourses = [
+        ...(Array.isArray(userData.courses) ? userData.courses : []),
+        ...(Array.isArray(userData.freeCourses) ? userData.freeCourses : [])
+      ];
+      
+      console.log("📖 Курсы пользователя:", allCourses);
+      
+      // Для каждого курса добавляем стандартные ID уроков
+      allCourses.forEach(courseId => {
+        // Генерируем ID уроков для каждого курса (обычно уроки нумеруются от 1 до 10)
+        for (let i = 1; i <= 10; i++) {
+          lessonIds.push(`${courseId}-lesson-${i}`);
+        }
+      });
+      
+      // Убираем дубликаты
+      lessonIds = [...new Set(lessonIds)];
+    }
+    
+    console.log("🔍 Будем проверять уроки:", lessonIds);
 
-      for (const lessonDoc of submissionsSnap.docs) {
-        const lessonId = lessonDoc.id;
-        console.log("  Проверяем урок:", lessonId);
-        
-        // Проверяем есть ли ответ пользователя в этом уроке
+    // Если не нашли никаких уроков, проверяем базовые английские уроки
+    if (lessonIds.length === 0) {
+      lessonIds = [
+        'english-intro-lesson-1',
+        'english-intro-lesson-2',
+        'english-intro-lesson-3',
+        'english-intro-lesson-4',
+        'english-intro-lesson-5',
+        'english-intro-lesson-6',
+        'english-intro-lesson-7'
+      ];
+      console.log("⚠️ Используем базовые ID уроков");
+    }
+
+    // Проверяем каждый урок
+    for (const lessonId of lessonIds) {
+      console.log("  Проверяем урок:", lessonId);
+      
+      try {
         const answerRef = doc(db, "lessonSubmissions", lessonId, "answers", userKey);
         const answerSnap = await getDoc(answerRef);
 
@@ -812,55 +858,38 @@
             needsReview: needsReview,
             status: status
           });
-        } else {
-          console.log("    ❌ Ответ не найден в уроке:", lessonId);
         }
-      }
-
-      console.log(`✅ Загружено заданий: ${feedbackData.length}`);
-      console.log('📋 Все задания:', feedbackData);
-      
-      allFeedback = feedbackData;
-      updateStats();
-      renderFeedback();
-    } catch (e) {
-      console.error("❌ Ошибка загрузки обратной связи:", e);
-      
-      const container = document.getElementById('feedbackList');
-      const emptyState = document.getElementById('emptyState');
-      if (emptyState) emptyState.classList.add('hidden');
-      if (container) {
-        container.innerHTML = `
-          <div style="background: #fee2e2; border: 2px solid #fca5a5; border-radius: 12px; padding: 24px; text-align: center;">
-            <div style="font-size: 3em; margin-bottom: 16px;">⚠️</div>
-            <div style="font-size: 1.2em; font-weight: 700; margin-bottom: 8px; color: #991b1b;">Ошибка загрузки</div>
-            <div style="color: #7f1d1d;">Не удалось загрузить обратную связь. Попробуйте обновить страницу.</div>
-            <div style="margin-top: 12px; font-size: 0.85em; color: #991b1b;">Ошибка: ${e.message}</div>
-          </div>
-        `;
+      } catch (err) {
+        // Урок может не существовать - это нормально
+        console.log("    ⚠️ Урок не существует или нет доступа:", lessonId);
       }
     }
-  }
 
-  function getLessonTitle(lessonId) {
-    const titles = {
-      'english-intro-lesson-1': 'Урок 1: Hello and Introduction',
-      'english-intro-lesson-2': 'Урок 2: Согласные буквы',
-      'english-intro-lesson-3': 'Урок 3: Порядок слов',
-      'english-intro-lesson-4': 'Урок 4: Времена',
-      'english-intro-lesson-5': 'Урок 5: Культурный феномен',
-      'english-intro-lesson-7': 'Урок 7: Отрицательные предложения',
-    };
+    console.log(`✅ Загружено заданий: ${feedbackData.length}`);
+    console.log('📋 Все задания:', feedbackData);
     
-    if (!titles[lessonId]) {
-      const parts = lessonId.split('-');
-      const course = parts.slice(0, -2).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-      const lessonNum = parts[parts.length - 1];
-      return `${course}: Урок ${lessonNum}`;
+    allFeedback = feedbackData;
+    updateStats();
+    renderFeedback();
+  } catch (e) {
+    console.error("❌ Ошибка загрузки обратной связи:", e);
+    
+    const container = document.getElementById('feedbackList');
+    const emptyState = document.getElementById('emptyState');
+    if (emptyState) emptyState.classList.add('hidden');
+    if (container) {
+      container.innerHTML = `
+        <div style="background: #fee2e2; border: 2px solid #fca5a5; border-radius: 12px; padding: 24px; text-align: center;">
+          <div style="font-size: 3em; margin-bottom: 16px;">⚠️</div>
+          <div style="font-size: 1.2em; font-weight: 700; margin-bottom: 8px; color: #991b1b;">Ошибка загрузки</div>
+          <div style="color: #7f1d1d;">Не удалось загрузить обратную связь. Попробуйте обновить страницу.</div>
+          <div style="margin-top: 12px; font-size: 0.85em; color: #991b1b;">Ошибка: ${e.message}</div>
+        </div>
+      `;
     }
-    
-    return titles[lessonId];
   }
+}
+
 
   // ========================================
   // ОБНОВЛЕНИЕ СТАТИСТИКИ
