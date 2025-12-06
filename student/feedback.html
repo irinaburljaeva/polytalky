@@ -169,6 +169,20 @@
       font-weight: 600;
     }
 
+    .status-badge.approved {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  color: #166534;
+}
+
+.status-badge.needs-fix {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #b91c1c;
+}
+
+.status-badge.pending {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+}
     /* Фильтры */
     .filters-bar {
       background: white;
@@ -1033,78 +1047,77 @@
   }
 
   function createFeedbackCard(feedback) {
-    const status = feedback.reviewed ? 'reviewed' : 'pending';
-    const statusText = feedback.status === 'approved' 
-      ? 'Одобрено' 
+
+  // Текст статуса
+  const statusText =
+    feedback.status === 'approved'
+      ? 'Одобрено'
       : feedback.status === 'needs-fix'
       ? 'Нужны правки'
-      : feedback.reviewed 
-      ? 'Проверено' 
       : 'На проверке';
-    const statusIcon = feedback.status === 'approved'
+
+  // Иконка статуса
+  const statusIcon =
+    feedback.status === 'approved'
       ? '✅'
       : feedback.status === 'needs-fix'
       ? '⚠️'
-      : feedback.reviewed
-      ? '✅'
       : '⏳';
 
-    const dateStr = feedback.submittedAt instanceof Date
-      ? feedback.submittedAt.toLocaleDateString('ru-RU', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        })
-      : 'Дата неизвестна';
+  // Цветовая подсветка
+  const statusClass =
+    feedback.status === 'approved'
+      ? 'approved'
+      : feedback.status === 'needs-fix'
+      ? 'needs-fix'
+      : 'pending';
 
-    const curatorSection = feedback.curatorResponse 
-      ? `
+  // Дата
+  const dateStr = feedback.timestamp
+    ? feedback.timestamp.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    : 'Дата неизвестна';
+
+  const curatorSection = feedback.curatorResponse
+    ? `
         <div class="curator-response">
           <div class="curator-label">Обратная связь от куратора:</div>
           <div class="curator-text">${escapeHtml(feedback.curatorResponse)}</div>
           <div class="curator-signature">— Ваш куратор PolyTalky</div>
         </div>
       `
-      : feedback.needsReview
-      ? `
-        <div style="background: #fef3c7; border: 2px solid #fbbf24; border-radius: 12px; padding: 16px; color: #92400e;">
-          <strong>⏳ Задание на проверке</strong><br>
-          Куратор скоро проверит ваше задание и оставит подробную обратную связь.
-        </div>
-      `
-      : '';
+    : '';
 
-    return `
-      <div class="feedback-card ${status}">
-        <div class="feedback-header">
-          <div>
-            <div class="feedback-title">${escapeHtml(feedback.lessonTitle)}</div>
-            <div class="feedback-meta">
-              <div class="meta-item">
-                📅 ${dateStr}
-              </div>
-              <div class="meta-item">
-                📚 ${feedback.courseId}
-              </div>
-            </div>
-          </div>
-          <div class="status-badge ${status}">
-            ${statusIcon} ${statusText}
+  return `
+    <div class="feedback-card">
+      <div class="feedback-header">
+        <div>
+          <div class="feedback-title">${escapeHtml(feedback.lessonId)}</div>
+          <div class="feedback-meta">
+            <div class="meta-item">📅 ${dateStr}</div>
+            <div class="meta-item">📚 ${feedback.courseId}</div>
           </div>
         </div>
 
-        <div class="feedback-content">
-          <div class="content-label">Ваш ответ:</div>
-          <div class="content-text">${escapeHtml(feedback.content)}</div>
+        <div class="status-badge ${statusClass}">
+          ${statusIcon} ${statusText}
         </div>
-
-        ${curatorSection}
       </div>
-    `;
-  }
 
+      <div class="feedback-content">
+        <div class="content-label">Ваш ответ:</div>
+        <div class="content-text">${escapeHtml(feedback.content)}</div>
+      </div>
+
+      ${curatorSection}
+    </div>
+  `;
+}
   function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
