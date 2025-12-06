@@ -32,15 +32,20 @@
 
   <style>
     :root {
-      --accent-yellow: #FFDE59;
-      --accent-yellow-deep: #FFBA08;
-      --accent-orange: #FF9F1C;
-      --accent-peach: #FFD4A8;
-      --bg-cream: #FFF8E5;
-      --bg-cream-soft: #FFFDF4;
-      --text-dark: #78350f;
-      --text-medium: #92400e;
-    }
+  /* Фирменные акценты оставляем */
+  --accent-yellow: #FFDE59;
+  --accent-yellow-deep: #FFBA08;
+  --accent-orange: #FF9F1C;
+  --accent-peach: #FFE3CC;
+
+  /* Фон делаем более светлым и нейтральным */
+  --bg-cream: #FFFDF9;
+  --bg-cream-soft: #FFFFFF;
+
+  /* Текст – тёмно-серый вместо коричневого */
+  --text-dark: #111827;   /* почти чёрный, как в современных UI */
+  --text-medium: #4B5563; /* спокойный серый для подзаголовков */
+}
 
     body {
       font-family: system-ui, -apple-system, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -206,15 +211,16 @@
       gap: 24px;
     }
 
-    .feedback-card {
-      background: white;
-      border: 2px solid #FFE8B3;
-      border-radius: 20px;
-      padding: 28px;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
+   .feedback-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #FFE8B3;
+  border-radius: 20px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
 
     .feedback-card::before {
       content: '';
@@ -930,7 +936,7 @@
 
     // рендер карточек (используем уже существующую логику)
     allFeedback = feedbackData;
-    renderFeedbackCards(feedbackData);
+    renderFeedback(feedbackData);
   } catch (err) {
     console.error("🔥 Общая ошибка загрузки feedback:", err);
     if (loadingState) loadingState.classList.add("hidden");
