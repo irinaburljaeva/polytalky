@@ -947,38 +947,43 @@
   // ========================================
   // ОБНОВЛЕНИЕ СТАТИСТИКИ
   // ========================================
-  function updateStats() {
-    const total = allFeedback.length;
-    const reviewed = allFeedback.filter(f => f.reviewed).length;
-    const pending = allFeedback.filter(f => !f.reviewed && f.needsReview).length;
-    const progress = total > 0 ? Math.round((reviewed / total) * 100) : 0;
+  function updateStats(list) {
+  // Берём либо переданный список, либо глобальный allFeedback
+  const source = Array.isArray(list) ? list : (Array.isArray(allFeedback) ? allFeedback : []);
 
-    const totalEl = document.getElementById('totalSubmissions');
-    const pendingEl = document.getElementById('pendingCount');
-    const reviewedEl = document.getElementById('reviewedCount');
-    const progressEl = document.getElementById('progressPercent');
+  const total    = source.length;
+  const reviewed = source.filter(f => f.reviewed).length;
+  const pending  = source.filter(f => !f.reviewed && f.needsReview).length;
+  const progress = total > 0 ? Math.round((reviewed / total) * 100) : 0;
 
-    if (totalEl) totalEl.textContent = total;
-    if (pendingEl) pendingEl.textContent = pending;
-    if (reviewedEl) reviewedEl.textContent = reviewed;
-    if (progressEl) progressEl.textContent = progress + '%';
-  }
+  const totalEl    = document.getElementById('totalSubmissions');
+  const pendingEl  = document.getElementById('pendingCount');
+  const reviewedEl = document.getElementById('reviewedCount');
+  const progressEl = document.getElementById('progressPercent');
 
+  if (totalEl)    totalEl.textContent    = total;
+  if (pendingEl)  pendingEl.textContent  = pending;
+  if (reviewedEl) reviewedEl.textContent = reviewed;
+  if (progressEl) progressEl.textContent = progress + '%';
+}
   // ========================================
   // ОТРИСОВКА ОБРАТНОЙ СВЯЗИ
   // ========================================
   function renderFeedback() {
-    const container = document.getElementById('feedbackList');
-    const emptyState = document.getElementById('emptyState');
+  const container  = document.getElementById('feedbackList');
+  const emptyState = document.getElementById('emptyState');
 
-    if (!container || !emptyState) {
-      console.error("Не найдены элементы feedbackList или emptyState");
-      return;
-    }
+  if (!container || !emptyState) {
+    console.error("Не найдены элементы feedbackList или emptyState");
+    return;
+  }
 
-    // Применяем фильтры
-    let filtered = [...allFeedback];
+  // Сначала обновляем статистику по всем заданиям
+  updateStats(allFeedback);
 
+  // Применяем фильтры для отображения
+  let filtered = [...allFeedback];
+    
     const courseFilterEl = document.getElementById('courseFilter');
     const statusFilterEl = document.getElementById('statusFilter');
     const sortFilterEl = document.getElementById('sortFilter');
