@@ -948,12 +948,11 @@
   // ОБНОВЛЕНИЕ СТАТИСТИКИ
   // ========================================
   function updateStats(list) {
-  // Берём либо переданный список, либо глобальный allFeedback
-  const source = Array.isArray(list) ? list : (Array.isArray(allFeedback) ? allFeedback : []);
+  const source = Array.isArray(list) ? list : allFeedback;
 
   const total    = source.length;
-  const reviewed = source.filter(f => f.reviewed).length;
-  const pending  = source.filter(f => !f.reviewed && f.needsReview).length;
+  const pending  = source.filter(f => f.status === "pending").length;
+  const reviewed = source.filter(f => f.status === "approved" || f.status === "needs-fix").length;
   const progress = total > 0 ? Math.round((reviewed / total) * 100) : 0;
 
   const totalEl    = document.getElementById('totalSubmissions');
