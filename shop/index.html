@@ -1055,7 +1055,7 @@
         <button class="text-sm underline" id="payClose">Закрыть</button>
       </div>
       <p class="text-[var(--ink-2)] mt-1">
-        Сначала оплатите, затем нажмите «Подтвердить оплату» — активируем доступ и вышлем чек на email.
+        После успешной оплаты доступ к курсу откроется автоматически.
       </p>
 
       <div id="tabRU" class="mt-4 hidden">
@@ -1105,25 +1105,7 @@
     </div>
   </div>
 
-  <!-- CONFIRM MODAL -->
-  <div id="confirmModal" class="hidden fixed inset-0 bg-black/40 items-center justify-center z-50">
-    <div class="modal rounded-2xl p-6 max-w-lg w-full text-sm">
-      <div class="flex items-center justify-between mb-2">
-        <h3 class="text-xl font-extrabold">Подтверждение оплаты</h3>
-        <button class="text-sm underline" id="cf-close">Закрыть</button>
-      </div>
-      <form id="confirmForm" class="space-y-3">
-        <div>
-          <label class="text-sm text-[var(--ink-2)]">Email для доступа и чека</label>
-          <input id="cf-email" name="email" type="email" class="mt-1 w-full bg-white border border-black/10 rounded-lg px-3 py-2" required>
-        </div>
-        <div>
-          <label class="text-sm text-[var(--ink-2)]">Оплачено через</label>
-          <select id="cf-channel" name="channel" class="mt-1 w-full bg-white border border-black/10 rounded-lg px-3 py-2">
-            <option value="ru-yoomoney">Россия — ЮMoney</option>
-            <option value="ru-sbp">Россия — СБП</option>
-            <option value="int-card">Другие страны — любая карта</option>
-            <option value="test-promo">Тест без оплаты (промокод)</option>
+ 
           </select>
         </div>
         <div>
@@ -1584,8 +1566,7 @@
 });
 
       // ----- CONFIRM -----
-      const confirmModal = document.getElementById('confirmModal');
-      const cfEmail = document.getElementById('cf-email');
+     
       const cfItems = document.getElementById('cf-items');
       const cfChannel = document.getElementById('cf-channel');
       const cfNote = document.getElementById('cf-note');
@@ -1616,14 +1597,7 @@
           cfNote.value = '';
         }
 
-        confirmModal.classList.remove('hidden');
-        confirmModal.classList.add('flex');
-      };
-
-      const closeConfirm = () => {
-  confirmModal.classList.add('hidden');
-  confirmModal.classList.remove('flex');
-};
+    
       document.getElementById('cf-close').addEventListener('click', closeConfirm);
     });
    </script>
