@@ -1106,24 +1106,6 @@
   </div>
 
  
-          </select>
-        </div>
-        <div>
-          <label class="text-sm text-[var(--ink-2)]">Курсы</label>
-          <textarea id="cf-items" name="items" rows="3" class="mt-1 w-full bg-white border border-black/10 rounded-lg px-3 py-2" readonly></textarea>
-        </div>
-        <div>
-          <label class="text-sm text-[var(--ink-2)]">Комментарий (ID транзакции и т.п.)</label>
-          <input id="cf-note" name="note" type="text" class="mt-1 w-full bg-white border border-black/10 rounded-lg px-3 py-2" placeholder="(необязательно)">
-        </div>
-        <button type="submit" class="btn btn-brand w-full">Отправить подтверждение</button>
-        <p class="text-xs text-[var(--ink-2)] text-center">
-          Скоро вам придет доступ на указанный email.
-        </p>
-      </form>
-    </div>
-  </div>
-
   <script src="https://js.stripe.com/v3/"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -1565,41 +1547,7 @@
   }
 });
 
-      // ----- CONFIRM -----
-     
-      const cfItems = document.getElementById('cf-items');
-      const cfChannel = document.getElementById('cf-channel');
-      const cfNote = document.getElementById('cf-note');
-
-      const openConfirm = (items) => {
-        const list = items && items.length ? items : getCart();
-        cfEmail.value = bmEmailFromCartOrSession();
-        // Прием платежей в корзине
-        cfItems.value = list
-          .map(c =>
-            lastRegion === 'int'
-              ? `${c.title} — €${c.priceEur}`          // если "из-за рубежа" → евро
-              : `${c.title} — ${fmtRub(c.priceRub)}`   // по умолчанию → рубли
-          )
-          .join('\n');
-  
-        const totals = calcTotals(list);
-
-        // Если применён TEST100 и по нему итоговая сумма стала 0 —
-        // помечаем покупку как тестовую, но только на этапе подтверждения,
-        // не блокируя оплату и QR.
-        if (appliedPromo && appliedPromo.code === 'TEST100'
-            && totals.finalRub <= 0 && totals.finalEur <= 0) {
-          cfChannel.value = 'test-promo';
-          cfNote.value = 'Тестовая покупка по промокоду TEST100';
-        } else {
-          cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
-          cfNote.value = '';
-        }
-
-    
-      document.getElementById('cf-close').addEventListener('click', closeConfirm);
-    });
+   
    </script>
 
 
