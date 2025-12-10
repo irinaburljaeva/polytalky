@@ -1505,73 +1505,117 @@
       }
 
       // Кнопки оплаты в корзине (РФ)
-    document.getElementById('cartPayRU').addEventListener('click', async () => {
-  const emailInput = document.getElementById('cartEmail');
-  const email = (emailInput?.value || '').trim();
+      document.getElementById('cartPayRU').addEventListener('click', async () => {
+        const emailInput = document.getElementById('cartEmail');
+        const email = (emailInput?.value || '').trim();
 
-  if (!email) {
-    alert('Введите email для доступа и чека');
-    return;
-  }
+        if (!email) {
+          alert('Введите email для доступа и чека');
+          return;
+        }
 
-  const cart = getCart();
-  if (!cart.length) {
-    alert('Корзина пуста');
-    return;
-  }
+        const cart = getCart();
+        if (!cart.length) {
+          alert('Корзина пуста');
+          return;
+        }
 
-  // сохраняем email, как и раньше
-  sessionStorage.setItem('pt_last_email', email);
+        // сохраняем email, как и раньше
+        sessionStorage.setItem('pt_last_email', email);
 
-  // считаем сумму в рублях с учётом промокода
-  const totals = calcTotals(cart);
-  const amountRub = totals.finalRub;
+        // считаем сумму в рублях с учётом промокода
+        const totals = calcTotals(cart);
+        const amountRub = totals.finalRub;
 
-  if (!amountRub || amountRub <= 0) {
-    alert('Сумма заказа должна быть больше 0 ₽');
-    return;
-  }
+        if (!amountRub || amountRub <= 0) {
+          alert('Сумма заказа должна быть больше 0 ₽');
+          return;
+        }
 
-  try {
-    const res = await fetch('https://polytalky-backend.onrender.com/api/yookassa/create-payment', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        amountRub,
-        promoCode: (window.promoInput?.value || '').trim() || null,
-        items: cart.map(c => ({
-          id: c.id,
-          title: c.title,
-          priceRub: c.priceRub,
-          quantity: 1
-        }))
-      })
-    });
+        try {
+          const res = await fetch('https://polytalky-backend.onrender.com/api/yookassa/create-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email,
+              amountRub,
+              promoCode: (window.promoInput?.value || '').trim() || null,
+              items: cart.map(c => ({
+                id: c.id,
+                title: c.title,
+                priceRub: c.priceRub,
+                quantity: 1,
+              })),
+            }),
+          });
 
-    if (!res.ok) {
-      console.error('YooKassa HTTP error', res.status);
-      alert('Не удалось создать платёж. Попробуйте ещё раз.');
-      return;
-    }
+          if (!res.ok) {
+            console.error('YooKassa HTTP error', res.status);
+            alert('Не удалось создать платёж. Попробуйте ещё раз.');
+            return;
+          }
 
-    const data = await res.json();
+          const data = await res.json();
 
-    if (data && data.confirmationUrl) {
-      // переходим на страницу оплаты Юкассы
-      window.location.href = data.confirmationUrl;
-    } else {
-      console.error('Unexpected response from backend', data);
-      alert('Сервер не вернул ссылку на оплату. Проверь настройки backend.');
-    }
-  } catch (err) {
-    console.error('Ошибка соединения с backend для YooKassa', err);
-    alert('Ошибка соединения с сервером. Попробуйте ещё раз.');
-  }
-});
+          if (data && data.confirmationUrl) {
+            // переходим на страницу оплаты Юкассы
+            window.location.href = data.confirmationUrl;
+          } else {
+            console.error('Unexpected response from backend', data);
+            alert('Сервер не вернул ссылку на оплату. Проверь настройки backend.');
+          }
+        } catch (err) {
+          console.error('Ошибка соединения с backend для YooKassa', err);
+          alert('Ошибка соединения с сервером. Попробуйте ещё раз.');
+        }
+      });
 
-   
-   </script>
+      // ----- CONFIRM -----
+      const confirmModal = document.getElementById('confirmModal');
+      const cfEmail = document.getElementById('cf-email');
+      const cfItems = document.getElementById('cf-items');
+      const cfChannel = document.getElementById('cf-channel');
+      const cfNote = document.getElementById('cf-note');
+
+      const openConfirm = (items) => {
+        const list = items && items.length ? items : getCart();
+        cfEmail.value = bmEmailFromCartOrSession();
+
+        cfItems.value = list
+          .map((c) =>
+            lastRegion === 'int'
+              ? `${c.title} — €${c.priceEur}`
+              : `${c.title} — ${fmtRub(c.priceRub)}`
+          )
+          .join('\n');
+
+        const totals = calcTotals(list);
+
+        if (
+          appliedPromo &&
+          appliedPromo.code === 'TEST100' &&
+          totals.finalRub <= 0 &&
+          totals.finalEur <= 0
+        ) {
+          cfChannel.value = 'test-promo';
+          cfNote.value = 'Тестовая покупка по промокоду TEST100';
+        } else {
+          cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
+          cfNote.value = '';
+        }
+
+        confirmModal.classList.remove('hidden');
+        confirmModal.classList.add('flex');
+      };
+
+      const closeConfirm = () => {
+        confirmModal.classList.add('hidden');
+        confirmModal.classList.remove('flex');
+      };
+
+      document.getElementById('cf-close').addEventListener('click', closeConfirm);
+    });  
+  </script>
 
 
 <script type="module">
