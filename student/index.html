@@ -1251,12 +1251,15 @@ const ix = cx + Math.cos(mid) * iconRadius;
   const prize = list[prizeIndex];
   currentWheelPrize = prize;
 
-  // математика вращения: ставим центр выбранного сектора наверх
-  const sliceAngle = 360 / list.length;
-  const prizeAngle = prizeIndex * sliceAngle + sliceAngle / 2;
+  // указатель сверху = 270° (или -90°)
+const POINTER_ANGLE = 270;
 
-  const spins = 5 + Math.random() * 2; // 5–7 оборотов
-  const targetRotation = 360 * spins + (360 - prizeAngle);
+// на сколько нужно докрутить, чтобы центр нужного сектора попал под стрелку
+let align = POINTER_ANGLE - prizeAngle;
+align = (align % 360 + 360) % 360; // нормализация 0..359
+
+const spins = 5 + Math.random() * 2; // 5–7 оборотов
+const targetRotation = 360 * spins + align;
 
   const duration = 5000;
   const startTime = Date.now();
