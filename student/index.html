@@ -254,24 +254,31 @@
 }
 
 @media (max-width:640px){
-  .wheel-center-button{width:88px;height:88px;font-size:13px;}
-}
-      .wheel-pointer {
-        border-left: 16px solid transparent;
-        border-right: 16px solid transparent;
-        border-top: 32px solid #ef4444;
-      }}
-      
-      .pro-banner{
-        margin:0 1rem;
-        flex-direction:column;
-        align-items:flex-start;
-      }
-      .pro-banner__btn{
-        margin-left:0;
-        margin-top:6px;
-      }
+  .pro-banner{
+    margin:0 1rem;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .pro-banner__btn{
+    margin-left:0;
+    margin-top:6px;
+  }
 
+  .wheel-container{ width:280px; height:280px; }
+
+  .wheel-center-button{
+    width:88px;
+    height:88px;
+    font-size:13px;
+  }
+
+  /* если хотите именно красный указатель на мобиле — добавьте так: */
+  .wheel-pointer{
+    border-left:16px solid transparent;
+    border-right:16px solid transparent;
+    border-top:32px solid #ef4444;
+  }
+}
       .card{
         border-radius: 1rem;
         box-shadow: 0 10px 24px rgba(15,23,42,0.14);
@@ -1324,7 +1331,7 @@ const prizeIndex = list.findIndex(p => p.id === prize.id);
             showWheelResult(prize);
             createConfetti();
             wheelSpinBtn.classList.remove('spinning');
-            wheelSpinBtn.textContent = 'КРУТИМ';
+            wheelSpinBtn.textContent = 'КРУТИТЬ';
           }
         }
 
@@ -1454,7 +1461,8 @@ const prizeIndex = list.findIndex(p => p.id === prize.id);
 
       // Рисуем колесо при загрузке
       if (wheelCanvas) {
-  loadWheelImagesOnce().then(drawWheel);
+        initWheelOrdeer();
+  loadWheelImagesOnce(wheelOrder).then(drawWheel);
 }
 
       // ============================================
@@ -1560,15 +1568,15 @@ const prizeIndex = list.findIndex(p => p.id === prize.id);
           }
 
           if (coinsState.mode === 'wheel') {
-            // Открываем модалку колеса удачи
             wheelModal.classList.remove('hidden');
             wheelModal.classList.add('flex');
             wheelResult.classList.add('hidden');
             wheelSpinBtn.style.pointerEvents = 'auto';
             wheelCanvas.style.transform = 'rotate(0deg)';
             currentWheelPrize = null;
-            drawWheel();
-            return;
+            initWheelOrder();
+            loadWheelImagesOnce(wheelOrder).then(drawWheel);
+                       return;
           }
 
           const docRef = db.collection('users').doc(email);
