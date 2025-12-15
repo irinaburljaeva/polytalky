@@ -255,7 +255,7 @@
       PolyTalky
     </a>
 
-
+```
 <div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
   <div id="user-status"></div>
 
@@ -276,7 +276,7 @@
 
   <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
 </div>
-
+```
 
   </div>
 </header>
@@ -290,7 +290,7 @@
         Звук <span class="em">TH</span> и повторение времён
       </h1>
 
-
+```
   <p class="hero-tagline mt-3">
     Осваиваем один из самых сложных звуков английского языка
   </p>
@@ -313,7 +313,7 @@
     </div>
   </div>
 </div>
-
+```
 
   </section>
 
@@ -327,7 +327,7 @@
       <div class="step-dot-label">Звук TH</div>
     </button>
 
-
+```
 <button class="step-dot" data-step="2">
   <div class="step-dot-circle">
     <img src="/assets/lessons/video.png" alt="Видео">
@@ -362,7 +362,7 @@
   </div>
   <div class="step-dot-label">Финиш</div>
 </button>
-
+```
 
   </div>
 
@@ -374,6 +374,7 @@
       <button class="step-icon" type="button" data-open-qa>❓</button>
     </div>
 
+```
 <h2 class="text-xl md:text-2xl font-bold mb-3">
   Рассмотрим один из самых сложных звуков английского языка
 </h2>
@@ -425,7 +426,7 @@
 <button class="btn-main mt-6 next-step-btn" data-next="2">
   Смотреть видео →
 </button>
-
+```
 
   </section>
 
@@ -437,7 +438,7 @@
       <button class="step-icon" type="button" data-open-qa>❓</button>
     </div>
 
-
+```
 <h2 class="text-xl md:text-2xl font-bold mb-3">
   Посмотрите, как правильно произносить звук TH
 </h2>
@@ -465,7 +466,7 @@
 <button class="btn-main mt-6 next-step-btn" data-next="3">
   Перейти к практике →
 </button>
-
+```
 
   </section>
 
@@ -477,7 +478,7 @@
       <button class="step-icon" type="button" data-open-qa>❓</button>
     </div>
 
-
+```
 <h2 class="text-xl md:text-2xl font-bold mb-3">
   Потренируйтесь произносить слова со звуком TH
 </h2>
@@ -519,7 +520,7 @@
 <button id="next-btn-step3" class="btn-main mt-6 next-step-btn hidden" data-next="4">
   Дальше →
 </button>
-
+```
 
   </section>
 
@@ -531,7 +532,7 @@
       <button class="step-icon" type="button" data-open-qa>❓</button>
     </div>
 
-
+```
 <h2 class="text-xl md:text-2xl font-bold mb-3">
   Вернёмся к теме времён (Tenses)
 </h2>
@@ -590,7 +591,7 @@
 <button class="btn-main mt-6 next-step-btn" data-next="5">
   Перейти к записи →
 </button>
-
+```
 
   </section>
 
@@ -602,6 +603,7 @@
       <button class="step-icon" type="button" data-open-qa>❓</button>
     </div>
 
+```
 <h2 class="text-xl md:text-2xl font-bold mb-3">
   Запишите свое произношение
 </h2>
@@ -651,7 +653,7 @@
 <button class="btn-main mt-6 next-step-btn" data-next="6">
   Завершить урок →
 </button>
-
+```
 
   </section>
 
@@ -663,7 +665,7 @@
       <button class="step-icon" type="button" data-open-qa>❓</button>
     </div>
 
-
+```
 <h2 class="text-xl md:text-2xl font-bold mb-3">
   Поздравляем! Урок 9 завершён 🎉
 </h2>
@@ -701,7 +703,7 @@
     Перейти к следующему уроку →
   </a>
 </div>
-
+```
 
   </section>
 
@@ -713,7 +715,7 @@
       <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
       <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
 
-
+```
   <div class="relative p-6 space-y-4">
     <div class="flex justify-between items-start gap-4">
       <div>
@@ -742,4 +744,312 @@
       </p>
     </div>
 
-    <form id="qa-form" class="space-y-
+    <form id="qa-form" class="space-y-2">
+      <label class="block text-xs text-gray-600">
+        Ваш вопрос:
+      </label>
+      <textarea id="qa-text"
+                class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                rows="3"
+                placeholder="Например: «Как отличить глухой звук от звонкого?»"></textarea>
+
+      <p class="text-[0.7rem] text-gray-400">
+        Чтобы задать вопрос, нужно войти в аккаунт.  
+        Если вы не авторизованы, перейдите на страницу
+        <a href="/student/" class="underline">входа / регистрации</a>.
+      </p>
+
+      <div class="flex justify-end">
+        <button type="submit"
+                id="qa-submit"
+                class="btn-main text-sm px-4 py-1.5">
+          Отправить вопрос →
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- МОДАЛКА СЛОВАРЯ -->
+
+  <div id="vocab-modal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+      <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-70"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-70"></div>
+
+```
+  <div class="relative p-6">
+    <div class="flex justify-between items-start">
+      <h2 class="text-lg font-semibold text-gray-800">
+        Добавить слова в словарик
+      </h2>
+
+      <button id="vocab-close" class="text-gray-500 text-xl leading-none">&times;</button>
+    </div>
+
+    <p class="text-sm text-gray-600 mt-1">
+      Выберите слова из этого урока, которые хотите сохранить.
+    </p>
+
+    <div id="vocab-auth-warning"
+         class="hidden mt-4 bg-red-50 text-red-700 border border-red-200 rounded-xl p-3 text-sm">
+      Чтобы сохранять слова, нужно войти в аккаунт.
+      <br>
+      <a href="/student" class="underline font-medium">Перейти к авторизации →</a>
+    </div>
+
+    <div id="vocab-list" class="mt-5 space-y-5 max-h-[330px] overflow-y-auto pr-1">
+      <div class="vocab-category" data-category="vocabulary-lesson9">
+        <h3 class="text-[0.8rem] font-semibold text-gray-700 mb-2 flex items-center gap-1">
+          📘 Слова со звуком TH
+        </h3>
+
+        <div id="vocab-vowels" class="grid grid-cols-1 gap-2 pl-1">
+          <!-- сюда english-intro.js подставит чекбоксы -->
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-between items-center">
+      <button id="vocab-select-all"
+              class="px-4 py-2 rounded-xl bg-gray-100 text-sm text-gray-700 border border-gray-300">
+        Выбрать всё
+      </button>
+
+      <button id="vocab-save"
+              class="btn-main text-sm px-5 py-2">
+        Добавить выбранные →
+      </button>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</main>
+
+<!-- ============================= -->
+
+<!-- КОНФИГ УРОКА (ВАЖНО!) -->
+
+<!-- ============================= -->
+
+<script type="module">
+  window.lessonConfig = {
+    lessonId:        "english-intro-lesson-9",
+    lessonSlug:      "lesson-09-th-sound",
+    lessonTitle:     "Урок 9 - Звук TH",
+    courseTitle:     "Интенсив английского",
+    courseId:        "english-intro",
+    lessonQaDocId:   "english-intro-lesson-9",
+    submissionsRoot: "lessonSubmissions",
+    totalSteps:      6,
+    audioNextStep:   6,
+    vocabCategory:   "vocabulary-lesson9",
+    customVocab: [
+      { word: "think",    ru: "думать" },
+      { word: "thank",    ru: "благодарить" },
+      { word: "thing",    ru: "вещь" },
+      { word: "three",    ru: "три" },
+      { word: "thought",  ru: "мысль" },
+      { word: "this",     ru: "это (близко)" },
+      { word: "that",     ru: "то (далеко)" },
+      { word: "they",     ru: "они" },
+      { word: "there",    ru: "там" },
+      { word: "the",      ru: "определенный артикль" },
+      { word: "with",     ru: "с" },
+      { word: "brother",  ru: "брат" },
+      { word: "mother",   ru: "мать" },
+      { word: "father",   ru: "отец" }
+    ]
+  };
+</script>
+
+<!-- ============================= -->
+
+<!-- СПЕЦИФИЧНАЯ ЛОГИКА УРОКА 9 -->
+
+<!-- ============================= -->
+
+<script type="module">
+  // ===============================
+  // 🔸 ШАГ 3 — ПРАКТИКА СЛОВ И УПРАЖНЕНИЕ
+  // ===============================
+
+  const practiceWords = [
+    { word: "think", translation: "думать", type: "voiceless" },
+    { word: "this", translation: "это", type: "voiced" },
+    { word: "thank", translation: "благодарить", type: "voiceless" },
+    { word: "they", translation: "они", type: "voiced" },
+    { word: "three", translation: "три", type: "voiceless" },
+    { word: "that", translation: "то", type: "voiced" },
+    { word: "thing", translation: "вещь", type: "voiceless" },
+    { word: "there", translation: "там", type: "voiced" },
+    { word: "thought", translation: "мысль", type: "voiceless" },
+    { word: "the", translation: "артикль", type: "voiced" },
+    { word: "with", translation: "с", type: "voiced" },
+    { word: "brother", translation: "брат", type: "voiced" }
+  ];
+
+  // Загрузка голосов для озвучки
+  let englishVoices = [];
+  if ("speechSynthesis" in window && window.speechSynthesis) {
+    const loadVoices = () => {
+      englishVoices = window.speechSynthesis
+        .getVoices()
+        .filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+    };
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+  }
+
+  function speakWord(word) {
+    if (!("speechSynthesis" in window) || !window.speechSynthesis) return;
+    
+    if (!englishVoices.length) {
+      englishVoices = window.speechSynthesis
+        .getVoices()
+        .filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+    }
+
+    const utter = new SpeechSynthesisUtterance(word);
+    utter.lang = "en-US";
+    utter.rate = 0.75;
+
+    if (englishVoices.length > 0) {
+      utter.voice = englishVoices[0];
+    }
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+  }
+
+  // Отрисовка карточек со словами
+  function renderPracticeWords() {
+    const grid = document.querySelector(".practice-word-grid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    practiceWords.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "practice-word";
+      card.innerHTML = `
+        <span class="sound-icon">🔊</span>
+        <div class="word-text">${item.word}</div>
+        <div class="word-translation">${item.translation}</div>
+      `;
+
+      card.addEventListener("click", () => {
+        speakWord(item.word);
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  // Упражнение на определение типа звука
+  const exerciseWords = [
+    { word: "think", correct: "voiceless" },
+    { word: "this", correct: "voiced" },
+    { word: "three", correct: "voiceless" },
+    { word: "they", correct: "voiced" },
+    { word: "thank", correct: "voiceless" }
+  ];
+
+  let currentExercise = 0;
+
+  function renderExercise() {
+    if (currentExercise >= exerciseWords.length) {
+      document.getElementById("th-progress").textContent = "Упражнение завершено! ✓";
+      document.getElementById("th-feedback").textContent = "Отличная работа! Вы справились со всеми заданиями 🎉";
+      document.getElementById("next-btn-step3").classList.remove("hidden");
+      
+      // Скрываем кнопки
+      document.querySelectorAll(".sound-option-btn").forEach(btn => {
+        btn.style.display = "none";
+      });
+      return;
+    }
+
+    const exercise = exerciseWords[currentExercise];
+    
+    document.getElementById("th-progress").textContent = 
+      `Упражнение ${currentExercise + 1} из ${exerciseWords.length}`;
+    document.getElementById("exercise-word").textContent = exercise.word;
+    document.getElementById("th-feedback").textContent = "";
+
+    // Сброс стилей кнопок
+    document.querySelectorAll(".sound-option-btn").forEach(btn => {
+      btn.classList.remove("correct", "incorrect");
+      btn.disabled = false;
+    });
+  }
+
+  // Обработка ответов
+  document.querySelectorAll(".sound-option-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const selected = e.target.dataset.sound;
+      const exercise = exerciseWords[currentExercise];
+      const feedback = document.getElementById("th-feedback");
+
+      // Отключаем все кнопки
+      document.querySelectorAll(".sound-option-btn").forEach(b => {
+        b.disabled = true;
+      });
+
+      if (selected === exercise.correct) {
+        e.target.classList.add("correct");
+        feedback.textContent = "✓ Правильно! Отлично справились!";
+        feedback.style.color = "#166534";
+      } else {
+        e.target.classList.add("incorrect");
+        // Подсвечиваем правильный ответ
+        document.querySelectorAll(".sound-option-btn").forEach(b => {
+          if (b.dataset.sound === exercise.correct) {
+            b.classList.add("correct");
+          }
+        });
+        feedback.textContent = "✗ Неправильно. Обратите внимание на правильный вариант.";
+        feedback.style.color = "#991b1b";
+      }
+
+      // Переход к следующему слову
+      setTimeout(() => {
+        currentExercise++;
+        renderExercise();
+      }, 1500);
+    });
+  });
+
+  // Инициализация при показе шага 3
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.target.id === 'step-3' && 
+          mutation.target.classList.contains('step-panel--visible')) {
+        renderPracticeWords();
+        renderExercise();
+      }
+    });
+  });
+
+  const step3 = document.getElementById('step-3');
+  if (step3) {
+    observer.observe(step3, { attributes: true, attributeFilter: ['class'] });
+  }
+</script>
+
+<!-- ============================= -->
+
+<!-- ОБЩИЙ СКРИПТ КУРСА (ВАЖНО!) -->
+
+<!-- ============================= -->
+
+<script type="module" src="/js/courses/english-intro.js"></script>
+
+</body>
+</html>
