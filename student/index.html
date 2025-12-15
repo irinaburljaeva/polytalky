@@ -1250,6 +1250,8 @@ const ix = cx + Math.cos(mid) * iconRadius;
   const prizeIndex = pickWeightedIndex(list);
   const prize = list[prizeIndex];
   currentWheelPrize = prize;
+       const sliceAngle = 360 / list.length;
+const prizeAngle = prizeIndex * sliceAngle + sliceAngle / 2;
 
   // указатель сверху = 270° (или -90°)
 const POINTER_ANGLE = 270;
