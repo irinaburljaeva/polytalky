@@ -171,114 +171,100 @@
       to   { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(16,185,129,.28); }
     }
 
-    /* КОЛЕСО УДАЧИ */
-    .wheel-container {
-      position: relative;
-      width: 360px;
-      height: 360px;
-      margin: 0 auto;
-    }
+/* КОЛЕСО УДАЧИ */
+.wheel-container{
+  position:relative;
+  width:360px;
+  height:360px;
+  margin:0 auto;
+}
 
-    .wheel-canvas {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.3), 0 0 0 12px #fff, 0 0 0 16px #fbbf24;
-    }
+/* мягкий “премиум”-вид под ваш UI */
+.wheel-canvas{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  display:block;
 
-    .wheel-pointer {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-top: 48px solid #ef4444;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
-      z-index: 10;
-    }
+  /* вместо “чёрной ямы” — мягкая тень как у card */
+  box-shadow:
+    0 18px 45px rgba(15,23,42,.14),
+    0 0 0 10px rgba(255,255,255,.92),
+    0 0 0 14px rgba(255,186,8,.55);
 
-    .wheel-center-button {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
-      border: 6px solid white;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      font-weight: bold;
-      color: #78350f;
-      cursor: pointer;
-      z-index: 20;
-      transition: transform 0.2s;
-      user-select: none;
-    }
+  /* чтобы вращение было приятным */
+  transform-origin:50% 50%;
+}
 
-    .wheel-center-button:hover {
-      transform: translate(-50%, -50%) scale(1.1);
-    }
+/* указатель в фирменном стиле: белый + жёлтая окантовка */
+.wheel-pointer{
+  position:absolute;
+  top:-18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;height:0;
+  border-left:18px solid transparent;
+  border-right:18px solid transparent;
+  border-top:42px solid rgba(255,255,255,.98);
+  filter:drop-shadow(0 6px 10px rgba(15,23,42,.22));
+  z-index:10;
+}
+.wheel-pointer::after{
+  content:"";
+  position:absolute;
+  left:-18px; top:-42px;
+  width:0;height:0;
+  border-left:18px solid transparent;
+  border-right:18px solid transparent;
+  border-top:42px solid rgba(255,186,8,.65);
+  transform:translateY(4px) scale(.92);
+  z-index:-1;
+}
 
-    .wheel-center-button:active {
-      transform: translate(-50%, -50%) scale(0.95);
-    }
-    
- .wheel-center-button.spinning {
-    pointer-events: none;
-   opacity: 0.7;
-    }
-    
-    .wheel-spinning {
-      pointer-events: none;
-    }
+/* центр-кнопка — как настоящая кнопка */
+.wheel-center-button{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:92px;
+  height:92px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#fff7d6,#ffffff);
+  border:8px solid rgba(255,186,8,.75);
+  box-shadow:0 18px 45px rgba(15,23,42,.18);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-    .wheel-result {
-      animation: slideUp 0.5s ease-out;
-    }
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:.06em;
+  color:#0F172A;
+  text-transform:uppercase;
+  cursor:pointer;
+  z-index:20;
 
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    @keyframes confetti-fall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
+  padding:10px;
+  line-height:1.05;
+  text-align:center;
+  user-select:none;
+}
+.wheel-center-button:hover{
+  transform:translate(-50%,-50%) scale(1.05);
+}
+.wheel-center-button:active{
+  transform:translate(-50%,-50%) scale(.98);
+}
+.wheel-center-button.spinning{
+  pointer-events:none;
+  opacity:.7;
+}
 
-    .confetti {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      pointer-events: none;
-      z-index: 999;
-      animation: confetti-fall 3s linear forwards;
-    }
-
-    @media (max-width:640px){
-
-    .wheel-container {
-      width: 300px;
-      height: 300px;
-    }
-      .wheel-center-button {
-        width: 70px;
-        height: 70px;
-        font-size: 24px;
-      }
+@media (max-width:640px){
+  .wheel-container{width:300px;height:300px;}
+  .wheel-center-button{width:84px;height:84px;font-size:13px;}
+}
       .wheel-pointer {
         border-left: 16px solid transparent;
         border-right: 16px solid transparent;
@@ -768,7 +754,7 @@
             <div class="wheel-pointer"></div>
             <canvas id="wheel-canvas" class="wheel-canvas" width="360" height="360"></canvas>
             <button id="wheel-spin-btn" class="wheel-center-button">
-              НАЖМИ СЮДА
+              КРУТИТЬ
             </button>
           </div>
 
@@ -1169,68 +1155,112 @@ const btnResetPassword = document.getElementById('btn-reset-password');
       // КОЛЕСО УДАЧИ: ЛОГИКА И АНИМАЦИЯ
       // ============================================
 
-      function drawWheel() {
-        if (!wheelCanvas) return;
-        const ctx = wheelCanvas.getContext('2d');
-        const centerX = wheelCanvas.width / 2;
-        const centerY = wheelCanvas.height / 2;
-        const radius = wheelCanvas.width / 2;
+// --- Wheel assets cache ---
+const wheelImgCache = new Map(); // url -> Image
 
-        ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
-        
-        // Исправление 1: Считаем угол сегмента (в радианах)
-        const sliceAngle = (2 * Math.PI) / WHEEL_PRIZES.length;
+function loadWheelImagesOnce() {
+  const tasks = WHEEL_PRIZES.map(p => new Promise((resolve) => {
+    if (!p.image) return resolve();
+    if (wheelImgCache.has(p.image)) return resolve();
 
-        WHEEL_PRIZES.forEach((prize, index) => {
-          // Исправление 2: Считаем углы
-          const startAngle = index * sliceAngle;
-          const endAngle = startAngle + sliceAngle;
+    const img = new Image();
+    img.onload = () => { wheelImgCache.set(p.image, img); resolve(); };
+    img.onerror = () => resolve();
+    img.src = p.image;
+  }));
+  return Promise.all(tasks);
+}
 
-          // Рисуем сегмент
-          ctx.beginPath();
-          ctx.moveTo(centerX, centerY);
-          ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-          ctx.closePath();
-          ctx.fillStyle = prize.color;
-          ctx.fill();
-          ctx.strokeStyle = '#fff';
-          ctx.lineWidth = 3;
-          ctx.stroke();
+function drawWheel() {
+  if (!wheelCanvas) return;
 
-          // Изображение в центре сектора
-          const midAngle = startAngle + sliceAngle / 2;
-          const imgX = centerX + Math.cos(midAngle) * (radius * 0.6);
-          const imgY = centerY + Math.sin(midAngle) * (radius * 0.6);
+  const ctx = wheelCanvas.getContext('2d');
+  const w = wheelCanvas.width;
+  const h = wheelCanvas.height;
+  const cx = w / 2;
+  const cy = h / 2;
+  const r  = w / 2;
 
-          const img = new Image();
-          img.src = prize.image;
-          img.onload = () => {
-            ctx.save();
-            ctx.translate(imgX, imgY);
-            // Поворачиваем текст и иконку к центру
-            ctx.rotate(midAngle + Math.PI / 2); 
-            ctx.drawImage(img, -20, -20, 40, 40);
-            
-            // Текст
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 12px sans-serif';
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 3;
+  ctx.clearRect(0, 0, w, h);
 
-            const lines = prize.label.split('\n');
-            lines.forEach((line, i) => {
-              // Исправление 3: Убрана лишняя скобка
-              ctx.strokeText(line, 0, 28 + i * 14);
-              ctx.fillText(line, 0, 28 + i * 14);
-            });
-            ctx.restore(); // restore относится к save внутри onload
-            ctx.restore(); // restore, который был лишним в старом коде, здесь нужен, чтобы сбросить translate
-          };
-        });
-      } // Исправление 4: Закрывающая скобка функции
-      function selectWheelPrize() {
+  const slice = (2 * Math.PI) / WHEEL_PRIZES.length;
+
+  // мягкое внутреннее кольцо (дороже выглядит)
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r - 2, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(255,255,255,.55)';
+  ctx.fill();
+  ctx.restore();
+
+  WHEEL_PRIZES.forEach((prize, i) => {
+    const a0 = i * slice;
+    const a1 = a0 + slice;
+
+    // сектор
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r - 4, a0, a1);
+    ctx.closePath();
+
+    // вместо “плоской заливки” — лёгкий градиент
+    const g = ctx.createRadialGradient(cx, cy, r*0.10, cx, cy, r);
+    g.addColorStop(0, prize.color);
+    g.addColorStop(1, 'rgba(255,255,255,.10)');
+    ctx.fillStyle = g;
+    ctx.fill();
+
+    // разделители — тоньше и мягче
+    ctx.strokeStyle = 'rgba(255,255,255,.85)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // центр сектора
+    const mid = a0 + slice / 2;
+    const px = cx + Math.cos(mid) * (r * 0.58);
+    const py = cy + Math.sin(mid) * (r * 0.58);
+
+    // иконка
+    const img = prize.image ? wheelImgCache.get(prize.image) : null;
+    if (img) {
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(mid + Math.PI / 2);
+
+      // “стикер”-подложка под иконку (чтобы все иконки были единообразны)
+      ctx.beginPath();
+      ctx.arc(0, 0, 24, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(255,255,255,.85)';
+      ctx.fill();
+
+      ctx.drawImage(img, -18, -18, 36, 36);
+      ctx.restore();
+    }
+
+    // подпись (короче/чище)
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(mid);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(15,23,42,.88)';
+    ctx.font = '800 12px system-ui, -apple-system, Segoe UI, Roboto, Arial';
+    ctx.fillText(prize.label, r * 0.73, 4);
+    ctx.restore();
+  });
+
+  // центральное “окошко” под кнопку (чтобы переход был плавный)
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 0.18, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(255,255,255,.72)';
+  ctx.fill();
+  ctx.restore();
+}
+
+       function selectWheelPrize() {
         // Применяем разные веса
         const weightedPrizes = [];
         
@@ -1304,7 +1334,7 @@ const btnResetPassword = document.getElementById('btn-reset-password');
             showWheelResult(prize);
             createConfetti();
             wheelSpinBtn.classList.remove('spinning');
-            wheelSpinBtn.textContent = 'НАЖМИ';
+            wheelSpinBtn.textContent = 'КРУТИМ';
           }
         }
 
@@ -1434,8 +1464,8 @@ const btnResetPassword = document.getElementById('btn-reset-password');
 
       // Рисуем колесо при загрузке
       if (wheelCanvas) {
-        drawWheel();
-      }
+  loadWheelImagesOnce().then(drawWheel);
+}
 
       // ============================================
       // КОИНЫ: ОБНОВЛЕНИЕ UI
