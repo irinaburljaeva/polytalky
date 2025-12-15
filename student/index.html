@@ -221,14 +221,13 @@
   z-index:-1;
 }
 
-/* центр-кнопка — как настоящая кнопка */
 .wheel-center-button{
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  width:92px;
-  height:92px;
+  width:96px;
+  height:96px;
   border-radius:50%;
   background:linear-gradient(135deg,#fff7d6,#ffffff);
   border:8px solid rgba(255,186,8,.75);
@@ -237,33 +236,25 @@
   align-items:center;
   justify-content:center;
 
-  font-size:14px;
   font-weight:900;
-  letter-spacing:.06em;
+  letter-spacing:.08em;
   color:#0F172A;
   text-transform:uppercase;
   cursor:pointer;
   z-index:20;
 
   padding:10px;
-  line-height:1.05;
+  line-height:1;
   text-align:center;
-  user-select:none;
-}
-.wheel-center-button:hover{
-  transform:translate(-50%,-50%) scale(1.05);
-}
-.wheel-center-button:active{
-  transform:translate(-50%,-50%) scale(.98);
-}
-.wheel-center-button.spinning{
-  pointer-events:none;
-  opacity:.7;
+
+  /* главное: не даём тексту вылезти */
+  overflow:hidden;
+  white-space:nowrap;
+  font-size:14px;
 }
 
 @media (max-width:640px){
-  .wheel-container{width:300px;height:300px;}
-  .wheel-center-button{width:84px;height:84px;font-size:13px;}
+  .wheel-center-button{width:88px;height:88px;font-size:13px;}
 }
       .wheel-pointer {
         border-left: 16px solid transparent;
@@ -1120,6 +1111,20 @@ const btnResetPassword = document.getElementById('btn-reset-password');
       const wheelResultDesc = document.getElementById('wheel-result-description');
       const wheelClaimBtn   = document.getElementById('wheel-claim-btn');
 
+      let wheelOrder = []; // визуальный порядок секторов (перемешанный)
+
+function shuffle(arr){
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function initWheelOrder(){
+  wheelOrder = shuffle([...WHEEL_PRIZES]); // монеты перемешаются с остальным
+}
+      
       let coinsState = {
         balance: 0,
         streak: 0,
@@ -1155,14 +1160,12 @@ const btnResetPassword = document.getElementById('btn-reset-password');
       // КОЛЕСО УДАЧИ: ЛОГИКА И АНИМАЦИЯ
       // ============================================
 
-// --- Wheel assets cache ---
-const wheelImgCache = new Map(); // url -> Image
+const wheelImgCache = new Map();
 
-function loadWheelImagesOnce() {
-  const tasks = WHEEL_PRIZES.map(p => new Promise((resolve) => {
+function loadWheelImagesOnce(list) {
+  const tasks = list.map(p => new Promise((resolve) => {
     if (!p.image) return resolve();
     if (wheelImgCache.has(p.image)) return resolve();
-
     const img = new Image();
     img.onload = () => { wheelImgCache.set(p.image, img); resolve(); };
     img.onerror = () => resolve();
@@ -1171,95 +1174,81 @@ function loadWheelImagesOnce() {
   return Promise.all(tasks);
 }
 
-function drawWheel() {
+function drawWheel(){
   if (!wheelCanvas) return;
 
   const ctx = wheelCanvas.getContext('2d');
   const w = wheelCanvas.width;
   const h = wheelCanvas.height;
-  const cx = w / 2;
-  const cy = h / 2;
-  const r  = w / 2;
+  const cx = w/2, cy = h/2;
+  const r = w/2;
 
-  ctx.clearRect(0, 0, w, h);
+  ctx.clearRect(0,0,w,h);
 
-  const slice = (2 * Math.PI) / WHEEL_PRIZES.length;
+  const list = (wheelOrder && wheelOrder.length) ? wheelOrder : WHEEL_PRIZES;
+  const slice = (2*Math.PI)/list.length;
 
-  // мягкое внутреннее кольцо (дороже выглядит)
+  // лёгкое внутреннее “молочное” кольцо
   ctx.save();
   ctx.beginPath();
-  ctx.arc(cx, cy, r - 2, 0, Math.PI * 2);
+  ctx.arc(cx, cy, r-2, 0, Math.PI*2);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(255,255,255,.55)';
+  ctx.fillStyle = 'rgba(255,255,255,.45)';
   ctx.fill();
   ctx.restore();
 
-  WHEEL_PRIZES.forEach((prize, i) => {
+  list.forEach((prize, i) => {
     const a0 = i * slice;
     const a1 = a0 + slice;
 
     // сектор
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, r - 4, a0, a1);
+    ctx.arc(cx, cy, r-4, a0, a1);
     ctx.closePath();
 
-    // вместо “плоской заливки” — лёгкий градиент
-    const g = ctx.createRadialGradient(cx, cy, r*0.10, cx, cy, r);
-    g.addColorStop(0, prize.color);
-    g.addColorStop(1, 'rgba(255,255,255,.10)');
-    ctx.fillStyle = g;
+    ctx.fillStyle = prize.color || '#fbbf24';
     ctx.fill();
 
-    // разделители — тоньше и мягче
+    // разделители
     ctx.strokeStyle = 'rgba(255,255,255,.85)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // центр сектора
-    const mid = a0 + slice / 2;
-    const px = cx + Math.cos(mid) * (r * 0.58);
-    const py = cy + Math.sin(mid) * (r * 0.58);
+    // иконка ближе к краю + больше
+    const mid = a0 + slice/2;
+    const iconRadius = r * 0.78;   // ближе к краю
+    const ix = cx + Math.cos(mid) * iconRadius;
+    const iy = cy + Math.sin(mid) * iconRadius;
 
-    // иконка
     const img = prize.image ? wheelImgCache.get(prize.image) : null;
-    if (img) {
-      ctx.save();
-      ctx.translate(px, py);
-      ctx.rotate(mid + Math.PI / 2);
 
-      // “стикер”-подложка под иконку (чтобы все иконки были единообразны)
-      ctx.beginPath();
-      ctx.arc(0, 0, 24, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.fillStyle = 'rgba(255,255,255,.85)';
-      ctx.fill();
-
-      ctx.drawImage(img, -18, -18, 36, 36);
-      ctx.restore();
-    }
-
-    // подпись (короче/чище)
+    // “стикер”-подложка под иконку (чтобы выглядело ровно)
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(mid);
-    ctx.textAlign = 'center';
-    ctx.fillStyle = 'rgba(15,23,42,.88)';
-    ctx.font = '800 12px system-ui, -apple-system, Segoe UI, Roboto, Arial';
-    ctx.fillText(prize.label, r * 0.73, 4);
+    ctx.translate(ix, iy);
+    ctx.rotate(mid + Math.PI/2);
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 30, 0, Math.PI*2);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(255,255,255,.88)';
+    ctx.fill();
+
+    if (img) {
+      ctx.drawImage(img, -26, -26, 52, 52); // крупнее
+    }
     ctx.restore();
   });
 
-  // центральное “окошко” под кнопку (чтобы переход был плавный)
+  // центральное “окошко” под кнопку, чтобы визуально не спорило с иконками
   ctx.save();
   ctx.beginPath();
-  ctx.arc(cx, cy, r * 0.18, 0, Math.PI * 2);
+  ctx.arc(cx, cy, r*0.22, 0, Math.PI*2);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(255,255,255,.72)';
+  ctx.fillStyle = 'rgba(255,255,255,.70)';
   ctx.fill();
   ctx.restore();
 }
-
        function selectWheelPrize() {
         // Применяем разные веса
         const weightedPrizes = [];
@@ -1300,8 +1289,9 @@ function drawWheel() {
         currentWheelPrize = prize;
 
         // Находим индекс приза
-        const prizeIndex = WHEEL_PRIZES.findIndex(p => p.id === prize.id);
-        const sliceAngle = 360 / WHEEL_PRIZES.length;
+        const list = (wheelOrder && wheelOrder.length) ? wheelOrder : WHEEL_PRIZES;
+const prizeIndex = list.findIndex(p => p.id === prize.id);
+        const sliceAngle = 360 / list.length;
         
         // Вычисляем угол так, чтобы центр сектора был наверху
         const prizeAngle = prizeIndex * sliceAngle + sliceAngle / 2;
