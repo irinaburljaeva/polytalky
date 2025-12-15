@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Intro — Урок 9</title>
+  <base href="/">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+
+  <!-- Tailwind -->
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Общие стили для курса English Intro -->
+
+  <link rel="stylesheet" href="/courses/english-intro/english-intro.css">
+
+  <!-- Firebase init -->
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+      authDomain: "polytalky-70999.firebaseapp.com",
+      projectId: "polytalky-70999",
+      storageBucket: "polytalky-70999.firebasestorage.app",
+      messagingSenderId: "62407152289",
+      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+    };
+
+    window.firebaseApp  = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(window.firebaseApp);
+    window.firebaseDb   = getFirestore(window.firebaseApp);
+  </script>
+
+  <style>
+    .hidden { display: none; }
+
+    /* Карточка звука TH */
+    .th-sound-card {
+      background: linear-gradient(135deg, #FFF8E5 0%, #FFE8B3 100%);
+      border: 3px solid #FFDE59;
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0;
+      box-shadow: 0 10px 30px rgba(255, 159, 28, 0.2);
+    }
+
+    .th-sound-card h3 {
+      color: #92400e;
+      font-size: 1.4em;
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    /* Интерактивные слова для практики */
+    .practice-word-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 25px 0;
+    }
+
+    .practice-word {
+      background: white;
+      border: 2px solid #FFE8B3;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .practice-word:hover {
+      background: linear-gradient(135deg, #FFF8E5, #FFE8B3);
+      border-color: #FFDE59;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255, 159, 28, 0.3);
+    }
+
+    .practice-word .word-text {
+      font-size: 1.5em;
+      font-weight: 700;
+      color: #FF9F1C;
+      margin-bottom: 10px;
+    }
+
+    .practice-word .word-translation {
+      font-size: 0.9em;
+      color: #78350f;
+    }
+
+    .practice-word .sound-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+    }
+
+    /* Упражнение на выбор правильного звука */
+    .th-exercise {
+      background: linear-gradient(135deg, #FFE4E6 0%, #FFF1F2 100%);
+      border: 2px solid #FFD4A8;
+      border-radius: 16px;
+      padding: 25px;
+      margin: 25px 0;
+    }
+
+    .exercise-word {
+      font-size: 2em;
+      font-weight: 700;
+      color: #FF9F1C;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .sound-options {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin: 25px 0;
+    }
+
+    .sound-option-btn {
+      background: white;
+      border: 2px solid #FFE8B3;
+      border-radius: 12px;
+      padding: 15px 30px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sound-option-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #FFE8B3, #FFD89B);
+      border-color: #FFDE59;
+      transform: translateY(-3px);
+    }
+
+    .sound-option-btn.correct {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .sound-option-btn.incorrect {
+      background: linear-gradient(135deg, #fecaca, #fca5a5);
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .sound-option-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    /* Счетчик прогресса */
+    .exercise-progress {
+      text-align: center;
+      font-size: 0.9em;
+      color: #78350f;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    /* Повторение времен */
+    .tenses-review-box {
+      background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+      border: 2px solid #bbf7d0;
+      border-radius: 16px;
+      padding: 25px;
+      margin: 30px 0;
+    }
+
+    .tenses-review-box h4 {
+      color: #166534;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .tenses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .tense-card {
+      background: white;
+      border: 2px solid #d1fae5;
+      border-radius: 10px;
+      padding: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .tense-card:hover {
+      border-color: #22c55e;
+      transform: translateY(-3px);
+    }
+
+    .tense-card .tense-name {
+      font-weight: 700;
+      color: #166534;
+      font-size: 1.1em;
+      margin-bottom: 8px;
+    }
+
+    .tense-card .tense-desc {
+      font-size: 0.9em;
+      color: #78350f;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .practice-word-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sound-options {
+        flex-direction: column;
+      }
+
+      .tenses-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+<!-- Фоновые буквы -->
+
+<div class="bg-letter a">T</div>
+<div class="bg-letter e">H</div>
+<div class="bg-letter i">θ</div>
+<div class="bg-letter o">ð</div>
+<div class="bg-letter u">TH</div>
+
+<!-- Верхняя панель -->
+
+<header class="top-bar sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="/" class="flex items-center gap-2 font-semibold text-[0.9rem] text-[#374151]">
+      <img src="/assets/logo.png" alt="PolyTalky" class="w-7 h-7">
+      PolyTalky
+    </a>
+
+
+<div class="flex items-center gap-3 text-[0.78rem] text-gray-600">
+  <div id="user-status"></div>
+
+  <a href="/student/feedback.html"
+     id="feedback-link"
+     class="hidden relative flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white">
+    📩
+    <span id="feedback-dot"
+          class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+  </a>
+
+  <a href="/student/"
+     target="_blank"
+     id="login-btn"
+     class="hidden border border-gray-300 rounded-full px-3 py-1.5 text-[0.75rem] text-gray-600 bg-white">
+    Войти
+  </a>
+
+  <a href="/courses/english-intro/" class="back-to-course-btn">Назад к курсу</a>
+</div>
+
+
+  </div>
+</header>
+
+<main class="lesson-shell">
+  <!-- HERO -->
+  <section class="hero-card mb-8">
+    <div class="hero-left">
+      <div class="hero-badge">English · Lesson 9</div>
+      <h1 class="hero-title mt-3">
+        Звук <span class="em">TH</span> и повторение времён
+      </h1>
+
+
+  <p class="hero-tagline mt-3">
+    Осваиваем один из самых сложных звуков английского языка
+  </p>
+</div>
+
+<div class="hero-right">
+  <div class="hero-right-inner">
+    <div class="hero-bg-circle"></div>
+
+    <div class="hero-bubbles-cluster">
+      <div class="hero-bubble hero-bubble--hello">
+        think
+      </div>
+      <div class="hero-bubble hero-bubble--morning">
+        this
+      </div>
+      <div class="hero-bubble hero-bubble--hi">
+        θ / ð
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  </section>
+
+  <!-- Навигация шагов -->
+
+  <div class="step-nav">
+    <button class="step-dot step-dot--active" data-step="1">
+      <div class="step-dot-circle">
+        <img src="/assets/lessons/consonants.png" alt="Введение">
+      </div>
+      <div class="step-dot-label">Звук TH</div>
+    </button>
+
+
+<button class="step-dot" data-step="2">
+  <div class="step-dot-circle">
+    <img src="/assets/lessons/video.png" alt="Видео">
+  </div>
+  <div class="step-dot-label">Видео</div>
+</button>
+
+<button class="step-dot" data-step="3">
+  <div class="step-dot-circle">
+    <img src="/assets/lessons/practise.png" alt="Практика">
+  </div>
+  <div class="step-dot-label">Практика</div>
+</button>
+
+<button class="step-dot" data-step="4">
+  <div class="step-dot-circle">
+    <img src="/assets/lessons/tenses.png" alt="Времена">
+  </div>
+  <div class="step-dot-label">Повторение</div>
+</button>
+
+<button class="step-dot" data-step="5">
+  <div class="step-dot-circle">
+    <img src="/assets/lessons/task.png" alt="Задание">
+  </div>
+  <div class="step-dot-label">Запись</div>
+</button>
+
+<button class="step-dot" data-step="6">
+  <div class="step-dot-circle">
+    <img src="/assets/lessons/finish.png" alt="Финал">
+  </div>
+  <div class="step-dot-label">Финиш</div>
+</button>
+
+
+  </div>
+
+  <!-- ================ ШАГ 1. ВВЕДЕНИЕ В ЗВУК TH ================ -->
+
+  <section id="step-1" class="step-panel step-panel--visible">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 1 · Звук TH</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Рассмотрим один из самых сложных звуков английского языка
+</h2>
+
+<p class="step-body-text mb-3">
+  Сегодня мы поговорим о звуке <b>TH</b> — одном из самых характерных и одновременно 
+  самых сложных звуков для русскоязычных людей.
+</p>
+
+<div class="th-sound-card">
+  <h3>🎯 Два варианта звука TH</h3>
+  
+  <div class="mt-4 space-y-4">
+    <div class="bg-white rounded-xl p-4">
+      <p class="font-bold text-lg mb-2">1. Глухой звук [θ]</p>
+      <p class="text-gray-700 mb-2">Язык между зубами, воздух проходит без голоса</p>
+      <p class="text-sm text-gray-600">
+        Примеры: <b>think, thank, thing, three, thought</b>
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl p-4">
+      <p class="font-bold text-lg mb-2">2. Звонкий звук [ð]</p>
+      <p class="text-gray-700 mb-2">Язык между зубами, воздух проходит с голосом</p>
+      <p class="text-sm text-gray-600">
+        Примеры: <b>this, that, they, there, the</b>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="soft-block soft-block--blue mt-4">
+  <p class="font-semibold mb-2">💡 Почему этот звук такой сложный?</p>
+  <p class="text-sm">
+    Столь тяжелый он для нас за счет того, что данного звука <b>не существует в русском языке</b>. 
+    Соответственно, русскоязычным людям предстоит много-много практиковать его, 
+    чтобы он начал звучать естественно.
+  </p>
+</div>
+
+<div class="soft-block soft-block--green mt-4">
+  <p class="font-semibold mb-2">✨ Совет</p>
+  <p class="text-sm">
+    Советуем посвящать <b>5 минут каждый день</b> на тренировку и оттачивание этого звука, 
+    и уже через месяц вы заговорите так же, как и носители языка!
+  </p>
+</div>
+
+<button class="btn-main mt-6 next-step-btn" data-next="2">
+  Смотреть видео →
+</button>
+
+
+  </section>
+
+  <!-- ================ ШАГ 2. ВИДЕО ================ -->
+
+  <section id="step-2" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 2 · Видео</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Посмотрите, как правильно произносить звук TH
+</h2>
+
+<p class="step-body-text mb-4">
+  Обратите внимание на положение языка и на разницу между глухим [θ] и звонким [ð] звуками.
+</p>
+
+<div class="w-full flex justify-center my-4">
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/R9CdgopSW0I"
+    title="Звук TH в английском"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<p class="soft-note mt-4">
+  Повторяйте за диктором, не стесняясь — только практика приведёт к идеальному произношению!
+</p>
+
+<button class="btn-main mt-6 next-step-btn" data-next="3">
+  Перейти к практике →
+</button>
+
+
+  </section>
+
+  <!-- ================ ШАГ 3. ПРАКТИКА ================ -->
+
+  <section id="step-3" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 3 · Практика</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Потренируйтесь произносить слова со звуком TH
+</h2>
+
+<p class="step-body-text mb-3">
+  Нажимайте на карточки, чтобы услышать правильное произношение. 
+  Повторяйте каждое слово вслух!
+</p>
+
+<div class="practice-word-grid">
+  <!-- JavaScript will populate this -->
+</div>
+
+<div class="th-exercise mt-8">
+  <div class="exercise-progress" id="th-progress">
+    Упражнение 1 из 5
+  </div>
+
+  <p class="text-sm text-gray-700 mb-4 text-center">
+    Выберите правильный тип звука для каждого слова
+  </p>
+
+  <div class="exercise-word" id="exercise-word">
+    think
+  </div>
+
+  <div class="sound-options">
+    <button class="sound-option-btn" data-sound="voiceless">
+      Глухой [θ]
+    </button>
+    <button class="sound-option-btn" data-sound="voiced">
+      Звонкий [ð]
+    </button>
+  </div>
+
+  <p id="th-feedback" class="text-center mt-4 font-medium"></p>
+</div>
+
+<button id="next-btn-step3" class="btn-main mt-6 next-step-btn hidden" data-next="4">
+  Дальше →
+</button>
+
+
+  </section>
+
+  <!-- ================ ШАГ 4. ПОВТОРЕНИЕ ВРЕМЁН ================ -->
+
+  <section id="step-4" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 4 · Повторение</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Вернёмся к теме времён (Tenses)
+</h2>
+
+<p class="step-body-text mb-3">
+  Вы еще помните какие времена существуют в английском языке?
+</p>
+
+<div class="soft-block soft-block--blue mb-4">
+  <p class="font-semibold mb-2">📚 Основные группы времён:</p>
+  <p class="text-sm">
+    <b>Simple, Continuous, Perfect, Perfect Continuous</b> + каждое из них делится на 
+    <b>Past, Present и Future</b>.
+  </p>
+</div>
+
+<div class="tenses-review-box">
+  <h4>Краткое напоминание</h4>
+
+  <div class="tenses-grid">
+    <div class="tense-card">
+      <div class="tense-name">Simple</div>
+      <div class="tense-desc">
+        Констатация факта, регулярные действия
+      </div>
+    </div>
+
+    <div class="tense-card">
+      <div class="tense-name">Continuous</div>
+      <div class="tense-desc">
+        Описание действий на протяжении каких-то моментов
+      </div>
+    </div>
+
+    <div class="tense-card">
+      <div class="tense-name">Perfect</div>
+      <div class="tense-desc">
+        Результат каких-то действий
+      </div>
+    </div>
+
+    <div class="tense-card">
+      <div class="tense-name">Perfect Continuous</div>
+      <div class="tense-desc">
+        Результат каких-то действий на протяжении каких-то моментов
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="step-body-text text-sm mt-4">
+  Пока все это еще может казаться невозможно сложным и запутанным, 
+  но <b>со временем и практикой</b> вы во всем разберетесь!
+</p>
+
+<button class="btn-main mt-6 next-step-btn" data-next="5">
+  Перейти к записи →
+</button>
+
+
+  </section>
+
+  <!-- ================ ШАГ 5. АУДИОЗАПИСЬ ================ -->
+
+  <section id="step-5" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 5 · Запись</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Запишите свое произношение
+</h2>
+
+<p class="step-body-text mb-3">
+  Попробуйте произнести несколько слов со звуком TH и запишите себя. 
+  Это поможет услышать свои ошибки и улучшить произношение!
+</p>
+
+<div class="soft-block soft-block--blue mt-5">
+  <div class="audio-task-header">
+    <div class="audio-mic-circle">🎙️</div>
+    <div>
+      <p class="text-[0.85rem] mb-2">
+        Произнесите слова: <b>think, this, three, they, thank</b>
+      </p>
+
+      <p class="soft-note mb-1">
+        Нажмите «Записать», произнесите слова четко, затем остановите запись.
+      </p>
+      <p class="soft-note mt-2">
+        На тарифе <b>PRO</b> ваша запись попадёт куратору — он послушает и подскажет, 
+        как улучшить произношение.
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-2 flex gap-3">
+    <button class="btn-main" id="record-btn">⏺️ Записать</button>
+    <button class="btn-ghost" id="stop-btn" disabled>⏹️ Стоп</button>
+  </div>
+
+  <div class="recording-bar-wrapper hidden" id="recording-wrapper">
+    <div class="recording-bar-fill" id="recording-bar"></div>
+  </div>
+  <p class="recording-status hidden" id="recording-status">
+    ● Идёт запись…
+  </p>
+
+  <audio id="audio-playback" data-task-id="audio-th" class="mt-4 w-full" controls style="display:none;"></audio>
+
+  <p id="audio-feedback" class="mini-toast mt-3 hidden">
+    ⭐️ Отлично получилось! Вы молодец.
+  </p>
+</div>
+
+<button class="btn-main mt-6 next-step-btn" data-next="6">
+  Завершить урок →
+</button>
+
+
+  </section>
+
+  <!-- ================ ШАГ 6. ФИНАЛ ================ -->
+
+  <section id="step-6" class="step-panel">
+    <div class="step-panel-header">
+      <span class="step-pill">Шаг 6 · ФИНАЛ</span>
+      <button class="step-icon" type="button" data-open-qa>❓</button>
+    </div>
+
+
+<h2 class="text-xl md:text-2xl font-bold mb-3">
+  Поздравляем! Урок 9 завершён 🎉
+</h2>
+
+<p class="step-body-text mb-3">
+  Вы познакомились со звуком TH и повторили основные группы времён!
+</p>
+
+<div class="soft-block soft-block--blue mb-4">
+  <p class="font-semibold mb-2">Что мы узнали:</p>
+  <ul class="list-disc ml-5 text-sm space-y-2">
+    <li>Звук TH имеет два варианта: глухой [θ] и звонкий [ð]</li>
+    <li>Для освоения звука нужна ежедневная практика (5 минут в день)</li>
+    <li>Повторили 4 группы времён: Simple, Continuous, Perfect, Perfect Continuous</li>
+    <li>Каждая группа делится на Past, Present и Future</li>
+  </ul>
+</div>
+
+<p class="step-body-text mb-4">
+  Продолжайте практиковаться, и скоро английское произношение станет для вас естественным!
+</p>
+
+<div class="flex justify-center my-4">
+  <img src="/assets/gifs/english-lesson9-finish.gif" alt="Finish gif"
+       class="w-64 h-auto rounded-2xl"
+       onerror="this.style.display='none'">
+</div>
+
+<div class="mt-5 flex flex-wrap gap-3">
+  <button class="btn-main" id="open-vocab-btn">
+    Добавить слова в словарик →
+  </button>
+
+  <a href="/courses/english-intro/lesson-10.html" class="btn-ghost">
+    Перейти к следующему уроку →
+  </a>
+</div>
+
+
+  </section>
+
+  <!-- МОДАЛКА Q&A -->
+
+  <div id="qa-modal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl relative overflow-hidden">
+      <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-[#FFE8B3] blur-xl opacity-60"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#FFD6C4] blur-xl opacity-60"></div>
+
+
+  <div class="relative p-6 space-y-4">
+    <div class="flex justify-between items-start gap-4">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">
+          Вопросы по уроку
+        </h2>
+        <p class="text-sm text-gray-600 mt-1">
+          Напишите свой вопрос — мы ответим и ответ увидят другие участники.
+        </p>
+      </div>
+
+      <button id="qa-close"
+              class="text-gray-500 text-xl leading-none">&times;</button>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+      Хотите получать ответы ещё быстрее и задавать вопросы куратору лично?  
+      <a href="/courses/pro.html" target="_blank" class="underline text-amber-700 font-semibold">Тариф PRO</a> 
+      даёт приоритетную обратную связь и больше внимания к вашим вопросам 💛
+    </div>
+
+    <div class="max-h-64 overflow-y-auto border border-gray-100 rounded-xl p-3 bg-gray-50/70"
+         id="qa-list">
+      <p class="text-xs text-gray-500">
+        Пока вопросов нет — вы можете быть первым, кто задаст вопрос 🙂
+      </p>
+    </div>
+
+    <form id="qa-form" class="space-y-
