@@ -1193,7 +1193,12 @@ function drawWheel(){
     // сектор
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-  
+     ctx.arc(cx, cy, r-4, a0, a1);
+     ctx.closePath();
+     ctx.fillStyle = prize.color || '#fbbf24';
+     ctx.fill();
+
+     
     // разделители
     ctx.strokeStyle = 'rgba(255,255,255,.85)';
     ctx.lineWidth = 2;
@@ -1213,13 +1218,10 @@ function drawWheel(){
     ctx.rotate(mid + Math.PI/2);
 
     ctx.beginPath();
-    ctx.arc(0, 0, 30, 0, Math.PI*2);
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(255,255,255,.88)';
-    ctx.fill();
+    
 
     if (img) {
-      ctx.drawImage(img, -26, -26, 52, 52); // крупнее
+      ctx.drawImage(img, -26, -26, 52, 52); 
     }
     ctx.restore();
   });
