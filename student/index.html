@@ -512,7 +512,7 @@
                   <div class="min-w-0">
                     <div class="flex items-center gap-2">
                       <p id="profile-name" class="text-sm font-semibold text-slate-900 truncate">
-                        ...
+                        КРУТИМ
                       </p>
 
                       <button
@@ -1228,44 +1228,20 @@ const ix = cx + Math.cos(mid) * iconRadius;
   ctx.restore();
 });
 }
-       function selectWheelPrize() {
-        // Применяем разные веса
-        const weightedPrizes = [];
-        
-        WHEEL_PRIZES.forEach(prize => {
-          let weight = 1;
-          
-          if (prize.coins) {
-            if (prize.coins === 5) weight = 30;
-            else if (prize.coins === 10) weight = 25;
-            else if (prize.coins === 15) weight = 20;
-            else if (prize.coins === 25) weight = 10;
-            else if (prize.coins === 50) weight = 5;
-          } else if (prize.badge) {
-            weight = 4;
-          } else if (prize.avatar) {
-            weight = 3;
-          } else if (prize.proMonth) {
-            weight = 1.5;
-          } else if (prize.course) {
-            weight = 1.5;
-          }
-          
-          for (let i = 0; i < weight * 10; i++) {
-            weightedPrizes.push(prize);
-          }
-        });
-
-        const randomIndex = Math.floor(Math.random() * weightedPrizes.length);
-        return weightedPrizes[randomIndex];
-      }
         
      function spinWheel() {
         if (isSpinning) return;
         
         isSpinning = true;
-        const prize = selectWheelPrize();
-        currentWheelPrize = prize;
+       const list = wheelOrder;
+const prizeIndex = Math.floor(Math.random() * list.length);
+const prize = list[prizeIndex];
+currentWheelPrize = prize;
+       const sliceAngle = 360 / list.length;
+const prizeAngle = prizeIndex * sliceAngle + sliceAngle / 2;
+
+const spins = 5 + Math.random() * 2;
+const targetRotation = 360 * spins + (360 - prizeAngle);
 
         // Находим индекс приза
         const list = (wheelOrder && wheelOrder.length) ? wheelOrder : WHEEL_PRIZES;
