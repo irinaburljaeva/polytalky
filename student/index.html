@@ -835,6 +835,57 @@
                   placeholder="Фамилия (или никнейм)"
                 />
               </div>
+              <!-- EMAIL (только для чтения) -->
+<div>
+  <label for="profile-email" class="block text-xs font-medium text-slate-600 mb-1">
+    Email
+  </label>
+  <input
+    id="profile-email"
+    type="email"
+    readonly
+    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-slate-50 text-slate-500"
+    placeholder="you@example.com"
+  />
+  <p class="text-[11px] text-slate-500 mt-1">
+    Email берётся из аккаунта и редактируется только через поддержку.
+  </p>
+</div>
+
+<!-- СМЕНА ПАРОЛЯ -->
+<div class="pt-2 border-t border-slate-200/70">
+  <p class="text-xs font-semibold tracking-[.18em] uppercase text-slate-600 mb-2">
+    Сменить пароль
+  </p>
+
+  <div class="space-y-2">
+    <input
+      id="pw-current"
+      type="password"
+      autocomplete="current-password"
+      class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+      placeholder="Текущий пароль"
+    />
+    <input
+      id="pw-new"
+      type="password"
+      autocomplete="new-password"
+      class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+      placeholder="Новый пароль (минимум 6 символов)"
+    />
+  </div>
+
+  <div class="flex flex-col sm:flex-row gap-2 mt-2">
+    <button type="button" id="btn-change-password" class="btn btn-ghost w-full sm:w-auto">
+      Сменить пароль
+    </button>
+    <button type="button" id="btn-reset-password" class="btn btn-ghost w-full sm:w-auto">
+      Отправить письмо для сброса
+    </button>
+  </div>
+
+  <p id="pw-msg" class="text-xs text-slate-500 min-h-[1rem] mt-2"></p>
+</div>
             </div>
 
             <div>
@@ -1032,6 +1083,13 @@
       const profileAvatarType = document.getElementById('profile-avatar-type');
       const avatarChoiceButtons = document.querySelectorAll('.avatar-choice');
       const proChip          = document.getElementById('pro-chip');
+      const profileEmail = document.getElementById('profile-email');
+
+const pwCurrent = document.getElementById('pw-current');
+const pwNew = document.getElementById('pw-new');
+const pwMsg = document.getElementById('pw-msg');
+const btnChangePassword = document.getElementById('btn-change-password');
+const btnResetPassword = document.getElementById('btn-reset-password');
 
       const avatarPreviewModal = document.getElementById('avatar-preview-modal');
       const avatarPreviewImg   = document.getElementById('avatar-preview-img');
@@ -1986,6 +2044,87 @@
 
       authLogout?.addEventListener('click', async () => {
         await auth.signOut();
+        if (btnResetPassword) {
+  btnResetPassword.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+      alert('Сначала войдите в аккаунт.');
+      return;
+    }
+    try {
+      await auth.sendPasswordResetEmail(user.email);
+      if (pwMsg) {
+        pwMsg.textContent = 'Мы отправили письмо для сброса пароля. Проверьте почту и папку «Спам».';
+        pwMsg.classList.remove('text-red-500');
+        pwMsg.classList.add('text-emerald-600');
+      }
+    } catch (e) {
+      console.error(e);
+      if (pwMsg) {
+        pwMsg.textContent = 'Не удалось отправить письмо. Попробуйте ещё раз.';
+        pwMsg.classList.remove('text-emerald-600');
+        pwMsg.classList.add('text-red-500');
+      }
+    }
+  });
+}
+        if (btnChangePassword) {
+  btnChangePassword.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+      alert('Сначала войдите в аккаунт.');
+      return;
+    }
+
+    const current = (pwCurrent?.value || '').trim();
+    const next = (pwNew?.value || '').trim();
+
+    if (!current || !next) {
+      if (pwMsg) {
+        pwMsg.textContent = 'Введите текущий и новый пароль.';
+        pwMsg.classList.add('text-red-500');
+      }
+      return;
+    }
+    if (next.length < 6) {
+      if (pwMsg) {
+        pwMsg.textContent = 'Новый пароль должен быть минимум 6 символов.';
+        pwMsg.classList.add('text-red-500');
+      }
+      return;
+    }
+
+    btnChangePassword.disabled = true;
+
+    try {
+      const cred = firebase.auth.EmailAuthProvider.credential(user.email, current);
+      await user.reauthenticateWithCredential(cred);
+      await user.updatePassword(next);
+
+      if (pwMsg) {
+        pwMsg.textContent = 'Пароль успешно изменён ✔️';
+        pwMsg.classList.remove('text-red-500');
+        pwMsg.classList.add('text-emerald-600');
+      }
+      if (pwCurrent) pwCurrent.value = '';
+      if (pwNew) pwNew.value = '';
+    } catch (e) {
+      console.error(e);
+      let msg = 'Не удалось сменить пароль. Попробуйте ещё раз.';
+      if (e.code === 'auth/wrong-password') msg = 'Текущий пароль неверный.';
+      if (e.code === 'auth/too-many-requests') msg = 'Слишком много попыток. Попробуйте позже.';
+      if (e.code === 'auth/requires-recent-login') msg = 'Нужно перелогиниться и повторить попытку.';
+
+      if (pwMsg) {
+        pwMsg.textContent = msg;
+        pwMsg.classList.remove('text-emerald-600');
+        pwMsg.classList.add('text-red-500');
+      }
+    } finally {
+      btnChangePassword.disabled = false;
+    }
+  });
+}
       });
 
       // ============================================
@@ -2420,6 +2559,7 @@
 
           profileName.textContent = displayName;
           authUserEmail.textContent = displayEmail;
+          if (profileEmail) profileEmail.value = displayEmail || '';
 
           profileFirst.value = first;
           profileLast.value  = last;
