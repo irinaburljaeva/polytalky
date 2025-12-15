@@ -1193,12 +1193,7 @@ function drawWheel(){
     // сектор
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, r-4, a0, a1);
-    ctx.closePath();
-
-    ctx.fillStyle = prize.color || '#fbbf24';
-    ctx.fill();
-
+  
     // разделители
     ctx.strokeStyle = 'rgba(255,255,255,.85)';
     ctx.lineWidth = 2;
