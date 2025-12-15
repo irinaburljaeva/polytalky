@@ -1122,7 +1122,16 @@ function shuffle(arr){
 function initWheelOrder(){
   wheelOrder = shuffle([...WHEEL_PRIZES]); // монеты перемешаются с остальным
 }
-      
+      function pickWeightedIndex(list){
+  const total = list.reduce((s,p)=> s + (Number(p.weight)||1), 0);
+  let r = Math.random() * total;
+
+  for (let i=0; i<list.length; i++){
+    r -= (Number(list[i].weight)||1);
+    if (r <= 0) return i;
+  }
+  return list.length - 1;
+}
       let coinsState = {
         balance: 0,
         streak: 0,
@@ -1230,61 +1239,54 @@ const ix = cx + Math.cos(mid) * iconRadius;
 }
         
      function spinWheel() {
-        if (isSpinning) return;
-        
-        isSpinning = true;
-       const list = wheelOrder;
-const prizeIndex = Math.floor(Math.random() * list.length);
-const prize = list[prizeIndex];
-currentWheelPrize = prize;
-       const sliceAngle = 360 / list.length;
-const prizeAngle = prizeIndex * sliceAngle + sliceAngle / 2;
+  if (isSpinning) return;
 
-const spins = 5 + Math.random() * 2;
-const targetRotation = 360 * spins + (360 - prizeAngle);
+  isSpinning = true;
 
-        // Находим индекс приза
-        const list = (wheelOrder && wheelOrder.length) ? wheelOrder : WHEEL_PRIZES;
-const prizeIndex = list.findIndex(p => p.id === prize.id);
-        const sliceAngle = 360 / list.length;
-        
-        // Вычисляем угол так, чтобы центр сектора был наверху
-        const prizeAngle = prizeIndex * sliceAngle + sliceAngle / 2;
-        
-        // Добавляем 5-7 полных оборотов + нужный угол
-        const spins = 5 + Math.random() * 2;
-        const targetRotation = 360 * spins + (360 - prizeAngle);
-        
-        const duration = 5000; // 5 секунд
-        const startTime = Date.now();
-        const startRotation = wheelRotation;
+  // список секторов (визуальный порядок), НЕ меняем длину => сектора одинаковые
+  const list = (wheelOrder && wheelOrder.length) ? wheelOrder : WHEEL_PRIZES;
 
-        wheelSpinBtn.classList.add('spinning');
-        wheelSpinBtn.textContent = '...';
+  // выбираем выпадающий сектор по весам (weight)
+  const prizeIndex = pickWeightedIndex(list);
+  const prize = list[prizeIndex];
+  currentWheelPrize = prize;
 
-        function animate() {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / duration, 1);
+  // математика вращения: ставим центр выбранного сектора наверх
+  const sliceAngle = 360 / list.length;
+  const prizeAngle = prizeIndex * sliceAngle + sliceAngle / 2;
 
-          // Easing: сначала быстро, потом медленно
-          const easeOut = 1 - Math.pow(1 - progress, 4);
-          wheelRotation = startRotation + targetRotation * easeOut;
+  const spins = 5 + Math.random() * 2; // 5–7 оборотов
+  const targetRotation = 360 * spins + (360 - prizeAngle);
 
-          wheelCanvas.style.transform = `rotate(${wheelRotation}deg)`;
+  const duration = 5000;
+  const startTime = Date.now();
+  const startRotation = wheelRotation;
 
-          if (progress < 1) {
-            requestAnimationFrame(animate);
-          } else {
-            isSpinning = false;
-            showWheelResult(prize);
-            createConfetti();
-            wheelSpinBtn.classList.remove('spinning');
-            wheelSpinBtn.textContent = 'КРУТИТЬ';
-          }
-        }
+  wheelSpinBtn.classList.add('spinning');
+  wheelSpinBtn.textContent = '...';
 
-        animate();
-      }
+  function animate() {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+
+    const easeOut = 1 - Math.pow(1 - progress, 4);
+    wheelRotation = startRotation + targetRotation * easeOut;
+
+    wheelCanvas.style.transform = rotate(${wheelRotation}deg);
+
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      isSpinning = false;
+      showWheelResult(prize);
+      // createConfetti(); // если хотите оставить — можно, если нет — закомментируйте
+      wheelSpinBtn.classList.remove('spinning');
+      wheelSpinBtn.textContent = 'КРУТИТЬ';
+    }
+  }
+
+  animate();
+}
       function showWheelResult(prize) {
         wheelResultIcon.innerHTML = `<img src="${prize.image}" alt="" class="mx-auto w-16 h-16 object-contain">`;
         wheelResultTitle.textContent = `Вы выиграли: ${prize.label}!`;
@@ -1397,9 +1399,8 @@ const prizeIndex = list.findIndex(p => p.id === prize.id);
       // События для колеса
       if (wheelSpinBtn) {
         wheelSpinBtn.addEventListener('click', () => {
-          if (!wheelCanvas.classList.contains('wheel-spinning')) {
-            spinWheel();
-          }
+          if (!isSpinning) spinWheel();
+          
         });
       }
 
@@ -1516,15 +1517,19 @@ const prizeIndex = list.findIndex(p => p.id === prize.id);
           }
 
           if (coinsState.mode === 'wheel') {
-            wheelModal.classList.remove('hidden');
-            wheelModal.classList.add('flex');
-            wheelResult.classList.add('hidden');
-            wheelSpinBtn.style.pointerEvents = 'auto';
-            wheelCanvas.style.transform = 'rotate(0deg)';
-            currentWheelPrize = null;
-            initWheelOrder();
-            loadWheelImagesOnce(wheelOrder).then(drawWheel);
-                       return;
+           wheelModal.classList.remove('hidden');
+wheelModal.classList.add('flex');
+wheelResult.classList.add('hidden');
+
+isSpinning = false;
+currentWheelPrize = null;
+
+wheelRotation = 0;
+wheelCanvas.style.transform = 'rotate(0deg)';
+
+initWheelOrder();
+loadWheelImagesOnce(wheelOrder).then(drawWheel);
+return;
           }
 
           const docRef = db.collection('users').doc(email);
