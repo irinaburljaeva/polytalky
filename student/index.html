@@ -743,7 +743,7 @@
             <div class="wheel-pointer"></div>
             <canvas id="wheel-canvas" class="wheel-canvas" width="360" height="360"></canvas>
             <button id="wheel-spin-btn" class="wheel-center-button">
-              КРУТИТЬ
+              GO!
             </button>
           </div>
 
@@ -1272,7 +1272,7 @@ const ix = cx + Math.cos(mid) * iconRadius;
     const easeOut = 1 - Math.pow(1 - progress, 4);
     wheelRotation = startRotation + targetRotation * easeOut;
 
-    wheelCanvas.style.transform = rotate(${wheelRotation}deg);
+    wheelCanvas.style.transform = `rotate(${wheelRotation}deg)`;
 
     if (progress < 1) {
       requestAnimationFrame(animate);
@@ -1281,7 +1281,7 @@ const ix = cx + Math.cos(mid) * iconRadius;
       showWheelResult(prize);
       // createConfetti(); // если хотите оставить — можно, если нет — закомментируйте
       wheelSpinBtn.classList.remove('spinning');
-      wheelSpinBtn.textContent = 'КРУТИТЬ';
+      wheelSpinBtn.textContent = 'GO!';
     }
   }
 
