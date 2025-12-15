@@ -1311,7 +1311,7 @@ const btnResetPassword = document.getElementById('btn-reset-password');
         animate();
       }
       function showWheelResult(prize) {
-        wheelResultIcon.textContent = prize.image;
+        wheelResultIcon.innerHTML = `<img src="${prize.image}" alt="" class="mx-auto w-16 h-16 object-contain">`;
         wheelResultTitle.textContent = `Вы выиграли: ${prize.label}!`;
 
         let description = '';
