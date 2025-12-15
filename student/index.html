@@ -1210,23 +1210,16 @@ function drawWheel(){
   const mid = a0 + slice / 2;
   const iconRadius = r * 0.74;
 
-  const ix = cx + Math.cos(mid) * iconRadius;
-  const iy = cy + Math.sin(mid) * iconRadius;
-
-  const img = prize.image ? wheelImgCache.get(prize.image) : null;
+    const img = prize.image ? wheelImgCache.get(prize.image) : null;
 
   const ICON = 68; // можно 72 если хочется ещё больше
   const HALF = ICON / 2;
-
+const ix = cx + Math.cos(mid) * iconRadius;
+  const iy = cy + Math.sin(mid) * iconRadius;
+     
   ctx.save();
   ctx.translate(ix, iy);
   ctx.rotate(mid + Math.PI / 2);
-
-  // “стикер”-подложка (опционально, но красиво)
-  ctx.beginPath();
-  ctx.arc(0, 0, ICON * 0.42, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(255,255,255,.85)';
-  ctx.fill();
 
   if (img) {
     ctx.drawImage(img, -HALF, -HALF, ICON, ICON);
