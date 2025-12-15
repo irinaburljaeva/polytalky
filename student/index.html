@@ -1195,7 +1195,9 @@ function drawWheel(){
     ctx.moveTo(cx, cy);
      ctx.arc(cx, cy, r-4, a0, a1);
      ctx.closePath();
-     ctx.fillStyle = prize.color || '#fbbf24';
+     const DARK  = '#f59e0b';
+const LIGHT = '#fbbf24';
+ctx.fillStyle = (i % 2 === 0) ? DARK : LIGHT;
      ctx.fill();
 
      
@@ -1206,7 +1208,14 @@ function drawWheel(){
 
     // иконка ближе к краю + больше
     const mid = a0 + slice/2;
-    const iconRadius = r * 0.78;   // ближе к краю
+    const iconRadius = r * 0.74; // чуть ближе к центру, чтобы крупная иконка не резалась
+
+const ICON = 68;            // размер иконки
+const HALF = ICON / 2;
+
+if (img) {
+  ctx.drawImage(img, -HALF, -HALF, ICON, ICON);
+}
     const ix = cx + Math.cos(mid) * iconRadius;
     const iy = cy + Math.sin(mid) * iconRadius;
 
