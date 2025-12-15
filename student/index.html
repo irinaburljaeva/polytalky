@@ -171,6 +171,20 @@
       to   { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(16,185,129,.28); }
     }
 
+    #wheel-modal .card{
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* чуть компактнее на мобилках */
+@media (max-width:640px){
+  #wheel-modal .card{
+    max-height: calc(100vh - 16px);
+    padding-bottom: 16px;
+  }
+  #wheel-result { padding-bottom: 8px; }
+}
 /* КОЛЕСО УДАЧИ */
 .wheel-container{
   position:relative;
