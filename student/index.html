@@ -2044,88 +2044,7 @@ const btnResetPassword = document.getElementById('btn-reset-password');
 
       authLogout?.addEventListener('click', async () => {
         await auth.signOut();
-        if (btnResetPassword) {
-  btnResetPassword.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    if (!user || !user.email) {
-      alert('Сначала войдите в аккаунт.');
-      return;
-    }
-    try {
-      await auth.sendPasswordResetEmail(user.email);
-      if (pwMsg) {
-        pwMsg.textContent = 'Мы отправили письмо для сброса пароля. Проверьте почту и папку «Спам».';
-        pwMsg.classList.remove('text-red-500');
-        pwMsg.classList.add('text-emerald-600');
-      }
-    } catch (e) {
-      console.error(e);
-      if (pwMsg) {
-        pwMsg.textContent = 'Не удалось отправить письмо. Попробуйте ещё раз.';
-        pwMsg.classList.remove('text-emerald-600');
-        pwMsg.classList.add('text-red-500');
-      }
-    }
-  });
-}
-        if (btnChangePassword) {
-  btnChangePassword.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    if (!user || !user.email) {
-      alert('Сначала войдите в аккаунт.');
-      return;
-    }
-
-    const current = (pwCurrent?.value || '').trim();
-    const next = (pwNew?.value || '').trim();
-
-    if (!current || !next) {
-      if (pwMsg) {
-        pwMsg.textContent = 'Введите текущий и новый пароль.';
-        pwMsg.classList.add('text-red-500');
-      }
-      return;
-    }
-    if (next.length < 6) {
-      if (pwMsg) {
-        pwMsg.textContent = 'Новый пароль должен быть минимум 6 символов.';
-        pwMsg.classList.add('text-red-500');
-      }
-      return;
-    }
-
-    btnChangePassword.disabled = true;
-
-    try {
-      const cred = firebase.auth.EmailAuthProvider.credential(user.email, current);
-      await user.reauthenticateWithCredential(cred);
-      await user.updatePassword(next);
-
-      if (pwMsg) {
-        pwMsg.textContent = 'Пароль успешно изменён ✔️';
-        pwMsg.classList.remove('text-red-500');
-        pwMsg.classList.add('text-emerald-600');
-      }
-      if (pwCurrent) pwCurrent.value = '';
-      if (pwNew) pwNew.value = '';
-    } catch (e) {
-      console.error(e);
-      let msg = 'Не удалось сменить пароль. Попробуйте ещё раз.';
-      if (e.code === 'auth/wrong-password') msg = 'Текущий пароль неверный.';
-      if (e.code === 'auth/too-many-requests') msg = 'Слишком много попыток. Попробуйте позже.';
-      if (e.code === 'auth/requires-recent-login') msg = 'Нужно перелогиниться и повторить попытку.';
-
-      if (pwMsg) {
-        pwMsg.textContent = msg;
-        pwMsg.classList.remove('text-emerald-600');
-        pwMsg.classList.add('text-red-500');
-      }
-    } finally {
-      btnChangePassword.disabled = false;
-    }
-  });
-}
-      });
+             });
 
       // ============================================
       // МЕДАЛИ
@@ -2811,7 +2730,87 @@ const btnResetPassword = document.getElementById('btn-reset-password');
           coursesList.appendChild(card);
         });
       }
+ if (btnResetPassword) {
+  btnResetPassword.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+      alert('Сначала войдите в аккаунт.');
+      return;
+    }
+    try {
+      await auth.sendPasswordResetEmail(user.email);
+      if (pwMsg) {
+        pwMsg.textContent = 'Мы отправили письмо для сброса пароля. Проверьте почту и папку «Спам».';
+        pwMsg.classList.remove('text-red-500');
+        pwMsg.classList.add('text-emerald-600');
+      }
+    } catch (e) {
+      console.error(e);
+      if (pwMsg) {
+        pwMsg.textContent = 'Не удалось отправить письмо. Попробуйте ещё раз.';
+        pwMsg.classList.remove('text-emerald-600');
+        pwMsg.classList.add('text-red-500');
+      }
+    }
+  });
+}
+        if (btnChangePassword) {
+  btnChangePassword.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+      alert('Сначала войдите в аккаунт.');
+      return;
+    }
 
+    const current = (pwCurrent?.value || '').trim();
+    const next = (pwNew?.value || '').trim();
+
+    if (!current || !next) {
+      if (pwMsg) {
+        pwMsg.textContent = 'Введите текущий и новый пароль.';
+        pwMsg.classList.add('text-red-500');
+      }
+      return;
+    }
+    if (next.length < 6) {
+      if (pwMsg) {
+        pwMsg.textContent = 'Новый пароль должен быть минимум 6 символов.';
+        pwMsg.classList.add('text-red-500');
+      }
+      return;
+    }
+
+    btnChangePassword.disabled = true;
+
+    try {
+      const cred = firebase.auth.EmailAuthProvider.credential(user.email, current);
+      await user.reauthenticateWithCredential(cred);
+      await user.updatePassword(next);
+
+      if (pwMsg) {
+        pwMsg.textContent = 'Пароль успешно изменён ✔️';
+        pwMsg.classList.remove('text-red-500');
+        pwMsg.classList.add('text-emerald-600');
+      }
+      if (pwCurrent) pwCurrent.value = '';
+      if (pwNew) pwNew.value = '';
+    } catch (e) {
+      console.error(e);
+      let msg = 'Не удалось сменить пароль. Попробуйте ещё раз.';
+      if (e.code === 'auth/wrong-password') msg = 'Текущий пароль неверный.';
+      if (e.code === 'auth/too-many-requests') msg = 'Слишком много попыток. Попробуйте позже.';
+      if (e.code === 'auth/requires-recent-login') msg = 'Нужно перелогиниться и повторить попытку.';
+
+      if (pwMsg) {
+        pwMsg.textContent = msg;
+        pwMsg.classList.remove('text-emerald-600');
+        pwMsg.classList.add('text-red-500');
+      }
+    } finally {
+      btnChangePassword.disabled = false;
+    }
+  });
+              }
       auth.onAuthStateChanged((user) => {
         setAuthState(user || null);
         loadProStatus(user || null);
