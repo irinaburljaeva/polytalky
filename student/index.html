@@ -1475,14 +1475,20 @@ const targetRotation = 360 * fullSpins + align + jitter;
         } catch (err) {
           console.error('Ошибка при получении приза:', err);
           alert('Не удалось получить приз. Попробуйте ещё раз.');
-        }
-        if (wheelClaimBtn) {
-          wheelClaimBtn.onclick = null;
+            if (wheelClaimBtn) {
   wheelClaimBtn.disabled = false;
   wheelClaimBtn.textContent = 'Закрыть';
   wheelClaimBtn.classList.remove('opacity-60','cursor-default');
+        }
+return;
+        }
 
-  // закрываем модалку ТОЛЬКО по клику
+      if (wheelClaimBtn) {
+          wheelClaimBtn.onclick = null;
+         wheelClaimBtn.disabled = false;
+  wheelClaimBtn.textContent = 'Закрыть';
+  wheelClaimBtn.classList.remove('opacity-60','cursor-default');
+  
   wheelClaimBtn.onclick = () => {
     wheelModal.classList.add('hidden');
     wheelModal.classList.remove('flex');
