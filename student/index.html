@@ -1037,7 +1037,7 @@
       { id: 'coins-15', label: '15 коинов', color: '#fbbf24', image: '/assets/all/coin15.png', coins: 15, weight: 22 },
       { id: 'coins-25', label: '25 коинов', color: '#f59e0b', image: '/assets/all/coin25.png', coins: 25, weight: 14 },
       { id: 'coins-50', label: '50 коинов', color: '#fbbf24', image: '/assets/all/coin50.png', coins: 50, weight: 10 },
-      { id: 'secret-badge', label: 'Секретный бейдж', color: '#f59e0b', image: '/assets/badges/badgewheel.png', badge: 'wheel-secret', weight: 6 },
+      { id: 'secret-badge', label: 'Секретный бейдж', color: '#f59e0b', image: '/assets/badges/badgewheel.png', badge: 'badgewheel', weight: 6 },
       { id: 'winter-avatar', label: 'Секретный аватар', color: '#fbbf24', image: '/assets/all/avatarwheel.PNG', avatarId: 'wheel-2025-winter', weight: 6 },
       { id: 'pro-month', label: 'Месяц PRO', color: '#f59e0b', image: '/assets/all/pro.png', proMonth: true, weight: 1 },
       { id: 'polyglotpack-mchny', label: 'Курс MCHNY', color: '#fbbf24', image: '/assets/all/mchny.png', course: 'polyglotpack-mchny', weight: 1 }
@@ -2128,7 +2128,7 @@ function renderAvatarChoices(unlockedIds){
           : '???';
 
         const imgSrc = badge.earned
-          ? (badge.id === 'wheel-secret' ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`)
+       ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`
           : '/assets/badges/medalunknown.png';
 
         badgesModalDetail.innerHTML = `
@@ -2174,7 +2174,7 @@ function renderAvatarChoices(unlockedIds){
             (badge.earned ? '' : 'opacity-70');
 
          const imgSrc = badge.earned
-            ? (badge.id === 'wheel-secret' ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`)
+            ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`
             : '/assets/badges/medalunknown.png';
 
           btn.innerHTML = `
@@ -2249,7 +2249,7 @@ function renderAvatarChoices(unlockedIds){
               'relative h-12 w-12 sm:h-14 sm:w-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center hover:shadow-md transition';
 
             btn.innerHTML = `
-            <img src="${badge.id === 'wheel-secret' ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`}" alt="${badge.title}" class="h-full w-full object-contain" />
+            <img src="${? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`}" alt="${badge.title}" class="h-full w-full object-contain" />
             `;
 
             btn.addEventListener('click', () => openBadgesModal(badge.id));
