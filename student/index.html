@@ -1322,8 +1322,7 @@ const targetRotation = 360 * fullSpins + align + jitter;
       wheelSpinBtn.textContent = '...';
       wheelSpinBtn.disabled = true;
 
-      // на всякий случай: кнопка "Забрать" становится индикатором процесса
-      if (wheelClaimBtn) {
+          if (wheelClaimBtn) {
         wheelClaimBtn.disabled = true;
         wheelClaimBtn.textContent = 'Начисляем...';
         wheelClaimBtn.classList.add('opacity-60','cursor-default');
@@ -1478,6 +1477,7 @@ const targetRotation = 360 * fullSpins + align + jitter;
           alert('Не удалось получить приз. Попробуйте ещё раз.');
         }
         if (wheelClaimBtn) {
+          wheelClaimBtn.onclick = null;
   wheelClaimBtn.disabled = false;
   wheelClaimBtn.textContent = 'Закрыть';
   wheelClaimBtn.classList.remove('opacity-60','cursor-default');
@@ -1498,11 +1498,7 @@ const targetRotation = 360 * fullSpins + align + jitter;
         });
       }
 
-      if (wheelClaimBtn) {
-        wheelClaimBtn.addEventListener('click', claimWheelPrize);
-      }
 
-      // Рисуем колесо при загрузке
       if (wheelCanvas) {
         initWheelOrder();
   loadWheelImagesOnce(wheelOrder).then(drawWheel);
@@ -1614,7 +1610,13 @@ const targetRotation = 360 * fullSpins + align + jitter;
            wheelModal.classList.remove('hidden');
 wheelModal.classList.add('flex');
 wheelResult.classList.add('hidden');
-
+if (wheelClaimBtn) {
+  wheelClaimBtn.disabled = true;
+  wheelClaimBtn.textContent = 'Начисляем...';
+  wheelClaimBtn.classList.add('opacity-60','cursor-default');
+  wheelClaimBtn.onclick = null;
+}
+            
 isSpinning = false;
 currentWheelPrize = null;
 
