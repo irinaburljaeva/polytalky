@@ -1308,12 +1308,36 @@ const targetRotation = 360 * fullSpins + align + jitter;
 
     if (progress < 1) {
       requestAnimationFrame(animate);
-    } else {
-      isSpinning = false;
+   } else {
+      // показываем результат
       wheelModal.classList.remove('spinning');
       showWheelResult(prize);
+
+      // блокируем повторные спины, пока не начислим приз
       wheelSpinBtn.classList.remove('spinning');
-      wheelSpinBtn.textContent = 'GO!';
+      wheelSpinBtn.textContent = '...';
+      wheelSpinBtn.disabled = true;
+
+      // на всякий случай: кнопка "Забрать" становится индикатором процесса
+      if (wheelClaimBtn) {
+        wheelClaimBtn.disabled = true;
+        wheelClaimBtn.textContent = 'Начисляем...';
+        wheelClaimBtn.classList.add('opacity-60','cursor-default');
+      }
+
+      // ВАЖНО: приз начисляется автоматически по остановке колеса
+      claimWheelPrize()
+        .catch(() => {
+          // если начисление не удалось — дадим забрать вручную, но НЕ дадим крутить заново
+          if (wheelClaimBtn) {
+            wheelClaimBtn.disabled = false;
+            wheelClaimBtn.textContent = 'Забрать приз';
+            wheelClaimBtn.classList.remove('opacity-60','cursor-default');
+          }
+        })
+        .finally(() => {
+          isSpinning = false;
+        });
     }
   }
 
@@ -1412,7 +1436,7 @@ const targetRotation = 360 * fullSpins + align + jitter;
             lastCoinDate: today
           });
 
-          // Закрываем модалку
+          currentWheelPrize = null;
           wheelModal.classList.add('hidden');
           wheelModal.classList.remove('flex');
 
