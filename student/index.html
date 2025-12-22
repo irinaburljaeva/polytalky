@@ -2128,7 +2128,7 @@ function renderAvatarChoices(unlockedIds){
           : '???';
 
         const imgSrc = badge.earned
-       ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`
+       ? `/assets/badges/${badge.id}.png`
           : '/assets/badges/medalunknown.png';
 
         badgesModalDetail.innerHTML = `
@@ -2174,7 +2174,7 @@ function renderAvatarChoices(unlockedIds){
             (badge.earned ? '' : 'opacity-70');
 
          const imgSrc = badge.earned
-            ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`
+            ? `/assets/badges/${badge.id}.png`
             : '/assets/badges/medalunknown.png';
 
           btn.innerHTML = `
@@ -2249,7 +2249,7 @@ function renderAvatarChoices(unlockedIds){
               'relative h-12 w-12 sm:h-14 sm:w-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center hover:shadow-md transition';
 
             btn.innerHTML = `
-            <img src="${? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`}" alt="${badge.title}" class="h-full w-full object-contain" />
+            <img src="/assets/badges/${badge.id}.png}" alt="${badge.title}" class="h-full w-full object-contain" />
             `;
 
             btn.addEventListener('click', () => openBadgesModal(badge.id));
