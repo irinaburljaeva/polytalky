@@ -1037,7 +1037,7 @@
       { id: 'coins-25', label: '25 коинов', color: '#f59e0b', image: '/assets/all/coin25.png', coins: 25, weight: 14 },
       { id: 'coins-50', label: '50 коинов', color: '#fbbf24', image: '/assets/all/coin50.png', coins: 50, weight: 10 },
       { id: 'secret-badge', label: 'Секретный бейдж', color: '#f59e0b', image: '/assets/badges/badgewheel.png', badge: 'wheel-secret', weight: 6 },
-      { id: 'secret-avatar', label: 'Секретный аватар', color: '#fbbf24', image: '/assets/all/avatarwheel.PNG', avatar: 'secret', weight: 6 },
+      { id: 'winter-avatar', label: 'Секретный аватар', color: '#fbbf24', image: '/assets/all/avatarwheel.PNG', avatar: 'wheel-2025-winter', weight: 6 },
       { id: 'pro-month', label: 'Месяц PRO', color: '#f59e0b', image: '/assets/all/pro.png', proMonth: true, weight: 1 },
       { id: 'course-mchny', label: 'Курс MCHNY', color: '#fbbf24', image: '/assets/all/mchny.png', course: 'mchny-course', weight: 1 }
     ];
@@ -1383,8 +1383,8 @@ const targetRotation = 360 * fullSpins + align + jitter;
             updates.badges = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.badge);
           }
 
-          if (currentWheelPrize.avatar) {
-            updates.secretAvatars = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.avatar);
+          if (currentWheelPrize.avatarId) {
+            updates.unlockedAvatars = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.avatarId);
           }
 
           if (currentWheelPrize.proMonth) {
@@ -1806,79 +1806,69 @@ return;
         if (e.target === profileSettings) closeProfileModal();
       });
 
+ // ============================================
+// АВАТАРЫ: КАТАЛОГ 
       // ============================================
-      // ВЫБОР АВАТАРА
-      // ============================================
+const AVATAR_CATALOG = {
+  girl:   { id:'girl',   title:'Аватар девочка', src:'/assets/avatarf.png', isBase:true },
+  boy:    { id:'boy',    title:'Аватар мальчик', src:'/assets/avatar.png',  isBase:true },
 
-      const SECRET_AVATAR_TYPE = 'secret';
-const SECRET_AVATAR_SRC  = '/assets/all/avatarwheel.PNG';
-      
-      function setAvatarChoice(type) {
-        if (!profileAvatarType) return;
-        const t = type || 'girl';
-        profileAvatarType.value = t;
+  // сезонные/секретные (добавляешь новые без переписывания логики)
+  'wheel-2025-winter': { id:'wheel-2025-winter', title:'Зимний секретный аватар', src:'/assets/all/avatarwheel.PNG' }
+};
 
-        avatarChoiceButtons.forEach((btn) => {
-          const bt = btn.getAttribute('data-avatar-type');
-          if (bt === t) {
-            btn.classList.add('ring-2','ring-amber-400');
-          } else {
-            btn.classList.remove('ring-2','ring-amber-400');
-          }
-        });
-
-        if (profileAvatarImg) {
-  if (t === 'girl') profileAvatarImg.src = '/assets/avatarf.png';
-  else if (t === 'boy') profileAvatarImg.src = '/assets/avatar.png';
-  else if (t === 'secret') profileAvatarImg.src = SECRET_AVATAR_SRC;
-  else profileAvatarImg.src = '/assets/avatarf.png';
+function getAvatarSrc(avatarId){
+  return (AVATAR_CATALOG[avatarId] && AVATAR_CATALOG[avatarId].src) || AVATAR_CATALOG.girl.src;
 }
+      function renderAvatarChoices(unlockedIds){
+  const row = document.querySelector('#profile-form .avatar-choice')?.parentElement;
+  if (!row) return;
+
+  const unlockedSet = new Set(Array.isArray(unlockedIds) ? unlockedIds : []);
+
+  // какие показываем: базовые + разблокированные
+  const list = Object.values(AVATAR_CATALOG)
+    .filter(a => a.isBase || unlockedSet.has(a.id));
+
+  row.innerHTML = '';
+
+  list.forEach(a => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1';
+    btn.setAttribute('data-avatar-type', a.id);
+    btn.innerHTML = <img src="${a.src}" alt="${a.title}" class="h-10 w-10 object-cover rounded-lg">;
+
+    btn.addEventListener('click', () => {
+      setAvatarChoice(a.id);
+      if (avatarPreviewModal && avatarPreviewImg) {
+        avatarPreviewImg.src = a.src;
+        avatarPreviewModal.classList.remove('hidden');
+        avatarPreviewModal.classList.add('flex');
       }
+    });
 
-      avatarChoiceButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const t = btn.getAttribute('data-avatar-type') || 'girl';
-          setAvatarChoice(t);
+    row.appendChild(btn);
+  });
+}
+      
+     function setAvatarChoice(type) {
+  if (!profileAvatarType) return;
 
-          const src = t === 'girl'
-            ? '/assets/avatarf.png'
-            : '/assets/avatar.png';
+  const t = type || 'girl';
+  profileAvatarType.value = t;
 
-          if (avatarPreviewModal && avatarPreviewImg) {
-            avatarPreviewImg.src = src;
-            avatarPreviewModal.classList.remove('hidden');
-            avatarPreviewModal.classList.add('flex');
-          }
-        });
-      });
+  // ВАЖНО: брать кнопки каждый раз, потому что мы их перерисовываем
+  document.querySelectorAll('.avatar-choice').forEach((btn) => {
+    const bt = btn.getAttribute('data-avatar-type');
+    if (bt === t) btn.classList.add('ring-2','ring-amber-400');
+    else btn.classList.remove('ring-2','ring-amber-400');
+  });
 
-      if (profileAvatarWrapper && avatarPreviewModal && avatarPreviewImg) {
-        profileAvatarWrapper.addEventListener('click', () => {
-          const t = profileAvatarType ? (profileAvatarType.value || 'girl') : 'girl';
-          const src = t === 'girl'
-            ? '/assets/avatarf.png'
-            : '/assets/avatar.png';
-          avatarPreviewImg.src = src;
-          avatarPreviewModal.classList.remove('hidden');
-          avatarPreviewModal.classList.add('flex');
-        });
-      }
-
-      if (avatarPreviewModal) {
-        avatarPreviewModal.addEventListener('click', (e) => {
-          if (e.target === avatarPreviewModal) {
-            avatarPreviewModal.classList.add('hidden');
-            avatarPreviewModal.classList.remove('flex');
-          }
-        });
-      }
-      if (avatarPreviewClose && avatarPreviewModal) {
-        avatarPreviewClose.addEventListener('click', () => {
-          avatarPreviewModal.classList.add('hidden');
-          avatarPreviewModal.classList.remove('flex');
-        });
-      }
-
+  if (profileAvatarImg) {
+    profileAvatarImg.src = getAvatarSrc(t);
+  }
+}
 
 function ensureSecretAvatarOption(unlocked) {
   // контейнер с кнопками выбора аватара (там где 2 кнопки girl/boy)
@@ -2522,8 +2512,8 @@ function ensureSecretAvatarOption(unlocked) {
           const last  = data.lastName || '';
                   
           const displayEmail = data.email || email || '';
-          const secretAvatars = Array.isArray(data.secretAvatars) ? data.secretAvatars : [];
-ensureSecretAvatarOption(secretAvatars.includes('secret'));
+         const unlockedAvatars = Array.isArray(data.unlockedAvatars) ? data.unlockedAvatars : [];
+renderAvatarChoices(unlockedAvatars);
 
            const avatarType = data.avatarType || 'girl';
            let safeAvatarType = avatarType;
