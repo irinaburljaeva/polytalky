@@ -1800,13 +1800,15 @@ return;
       // COOKIE
       // ============================================
 
-      if (!localStorage.getItem('cookieConsent')) {
-        cookieBanner.classList.remove('hidden');
-      }
-      cookieAccept.addEventListener('click', () => {
-        localStorage.setItem('cookieConsent', 'true');
-        cookieBanner.classList.add('hidden');
-      });
+     if (cookieBanner && cookieAccept) {
+  if (!localStorage.getItem('cookieConsent')) {
+    cookieBanner.classList.remove('hidden');
+  }
+  cookieAccept.addEventListener('click', () => {
+    localStorage.setItem('cookieConsent', 'true');
+    cookieBanner.classList.add('hidden');
+  });
+}
 
       // ============================================
       // МОДАЛКА ПРОФИЛЯ
@@ -2173,7 +2175,7 @@ function renderAvatarChoices(unlockedIds){
 
          const imgSrc = badge.earned
             ? (badge.id === 'wheel-secret' ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`)
-            : /assets/badges/medalunknown.png;
+            : '/assets/badges/medalunknown.png';
 
           btn.innerHTML = `
             <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center">
