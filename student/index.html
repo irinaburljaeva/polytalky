@@ -1130,12 +1130,16 @@ const btnResetPassword = document.getElementById('btn-reset-password');
       let wheelOrder = []; // визуальный порядок секторов (перемешанный)
 
       if (wheelModal) {
-  wheelModal.addEventListener('click', (e) => {
-    if (e.target === wheelModal) {
-      wheelModal.classList.add('hidden');
-      wheelModal.classList.remove('flex');
-    }
-  });
+ wheelModal.addEventListener('click', (e) => {
+  if (
+    e.target === wheelModal &&
+    !isSpinning &&
+    !currentWheelPrize
+  ) {
+    wheelModal.classList.add('hidden');
+    wheelModal.classList.remove('flex');
+  }
+});
 }
       
 function shuffle(arr){
@@ -1325,8 +1329,7 @@ const targetRotation = 360 * fullSpins + align + jitter;
         wheelClaimBtn.classList.add('opacity-60','cursor-default');
       }
 
-      // ВАЖНО: приз начисляется автоматически по остановке колеса
-      claimWheelPrize()
+          claimWheelPrize()
         .catch(() => {
           // если начисление не удалось — дадим забрать вручную, но НЕ дадим крутить заново
           if (wheelClaimBtn) {
@@ -1462,8 +1465,7 @@ const targetRotation = 360 * fullSpins + align + jitter;
           });
 
           currentWheelPrize = null;
-          wheelModal.classList.add('hidden');
-          wheelModal.classList.remove('flex');
+         
 
           // Перезагружаем профиль для обновления бейджей/курсов/PRO
           if (user) {
@@ -1475,6 +1477,17 @@ const targetRotation = 360 * fullSpins + align + jitter;
           console.error('Ошибка при получении приза:', err);
           alert('Не удалось получить приз. Попробуйте ещё раз.');
         }
+        if (wheelClaimBtn) {
+  wheelClaimBtn.disabled = false;
+  wheelClaimBtn.textContent = 'Закрыть';
+  wheelClaimBtn.classList.remove('opacity-60','cursor-default');
+
+  // закрываем модалку ТОЛЬКО по клику
+  wheelClaimBtn.onclick = () => {
+    wheelModal.classList.add('hidden');
+    wheelModal.classList.remove('flex');
+  };
+}
       }
 
       // События для колеса
