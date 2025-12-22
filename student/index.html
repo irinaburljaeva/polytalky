@@ -2126,7 +2126,7 @@ function renderAvatarChoices(unlockedIds){
           : '???';
 
         const imgSrc = badge.earned
-          ? `/assets/badges/${badge.id}.png`
+          ? (badge.id === 'wheel-secret' ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`)
           : '/assets/badges/medalunknown.png';
 
         badgesModalDetail.innerHTML = `
@@ -2171,9 +2171,9 @@ function renderAvatarChoices(unlockedIds){
             'flex items-center justify-center p-1 rounded-lg bg-white/80 hover:shadow-sm transition ' +
             (badge.earned ? '' : 'opacity-70');
 
-          const imgSrc = badge.earned
-            ? `/assets/badges/${badge.id}.png`
-            : `/assets/badges/medalunknown.png`;
+         const imgSrc = badge.earned
+            ? (badge.id === 'wheel-secret' ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`)
+            : /assets/badges/medalunknown.png;
 
           btn.innerHTML = `
             <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center">
@@ -2247,7 +2247,7 @@ function renderAvatarChoices(unlockedIds){
               'relative h-12 w-12 sm:h-14 sm:w-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center hover:shadow-md transition';
 
             btn.innerHTML = `
-              <img src="/assets/badges/${badge.id}.png" alt="${badge.title}" class="h-full w-full object-contain" />
+            <img src="${badge.id === 'wheel-secret' ? '/assets/badges/badgewheel.png' : `/assets/badges/${badge.id}.png`}" alt="${badge.title}" class="h-full w-full object-contain" />
             `;
 
             btn.addEventListener('click', () => openBadgesModal(badge.id));
@@ -2409,6 +2409,7 @@ function renderAvatarChoices(unlockedIds){
           const earnedIds = Array.isArray(userBadgeIds) ? userBadgeIds : [];
 
           const snap = await db.collection('badges').get();
+          
           const badges = [];
           snap.forEach(doc => {
             const data = doc.data() || {};
