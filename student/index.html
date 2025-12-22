@@ -1037,7 +1037,7 @@
       { id: 'coins-25', label: '25 коинов', color: '#f59e0b', image: '/assets/all/coin25.png', coins: 25, weight: 14 },
       { id: 'coins-50', label: '50 коинов', color: '#fbbf24', image: '/assets/all/coin50.png', coins: 50, weight: 10 },
       { id: 'secret-badge', label: 'Секретный бейдж', color: '#f59e0b', image: '/assets/badges/badgewheel.png', badge: 'wheel-secret', weight: 6 },
-      { id: 'winter-avatar', label: 'Секретный аватар', color: '#fbbf24', image: '/assets/all/avatarwheel.PNG', avatar: 'wheel-2025-winter', weight: 6 },
+      { id: 'winter-avatar', label: 'Секретный аватар', color: '#fbbf24', image: '/assets/all/avatarwheel.PNG', avatarId: 'wheel-2025-winter', weight: 6 },
       { id: 'pro-month', label: 'Месяц PRO', color: '#f59e0b', image: '/assets/all/pro.png', proMonth: true, weight: 1 },
       { id: 'course-mchny', label: 'Курс MCHNY', color: '#fbbf24', image: '/assets/all/mchny.png', course: 'mchny-course', weight: 1 }
     ];
@@ -1328,7 +1328,7 @@ const targetRotation = 360 * fullSpins + align + jitter;
           description = `${prize.coins} ${pluralizeCoin(prize.coins)} уже добавлены на ваш счёт.`;
         } else if (prize.badge) {
           description = 'Секретный бейдж добавлен в вашу коллекцию!';
-        } else if (prize.avatar) {
+        } else if (prize.avatarId) {
           description = 'Секретный аватар разблокирован в настройках профиля!';
         } else if (prize.proMonth) {
           description = 'Месяц подписки PRO активирован!';
@@ -1820,15 +1820,16 @@ const AVATAR_CATALOG = {
 function getAvatarSrc(avatarId){
   return (AVATAR_CATALOG[avatarId] && AVATAR_CATALOG[avatarId].src) || AVATAR_CATALOG.girl.src;
 }
-      function renderAvatarChoices(unlockedIds){
+function renderAvatarChoices(unlockedIds){
   const row = document.querySelector('#profile-form .avatar-choice')?.parentElement;
   if (!row) return;
 
   const unlockedSet = new Set(Array.isArray(unlockedIds) ? unlockedIds : []);
 
-  // какие показываем: базовые + разблокированные
-  const list = Object.values(AVATAR_CATALOG)
-    .filter(a => a.isBase || unlockedSet.has(a.id));
+  const list = Object.values(AVATAR_CATALOG).filter(a => {
+    if (a.isBase) return true;
+    return unlockedSet.has(a.id);
+  });
 
   row.innerHTML = '';
 
@@ -1837,7 +1838,7 @@ function getAvatarSrc(avatarId){
     btn.type = 'button';
     btn.className = 'avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1';
     btn.setAttribute('data-avatar-type', a.id);
-    btn.innerHTML = <img src="${a.src}" alt="${a.title}" class="h-10 w-10 object-cover rounded-lg">;
+    btn.innerHTML = `<img src="${a.src}" alt="${a.title}" class="h-10 w-10 object-cover rounded-lg">`;
 
     btn.addEventListener('click', () => {
       setAvatarChoice(a.id);
@@ -1870,39 +1871,7 @@ function getAvatarSrc(avatarId){
   }
 }
 
-function ensureSecretAvatarOption(unlocked) {
-  // контейнер с кнопками выбора аватара (там где 2 кнопки girl/boy)
-  const firstBtn = document.querySelector('#profile-form .avatar-choice');
-  const row = firstBtn ? firstBtn.parentElement : null;
-  if (!row) return;
 
-  const existing = row.querySelector('.avatar-choice[data-avatar-type="secret"]');
-
-  if (!unlocked) {
-    if (existing) existing.remove();
-    return;
-  }
-
-  if (existing) return;
-
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1';
-  btn.setAttribute('data-avatar-type', SECRET_AVATAR_TYPE);
-  btn.innerHTML = `<img src="${SECRET_AVATAR_SRC}" alt="Секретный аватар" class="h-10 w-10 object-cover rounded-lg">`;
-
-  btn.addEventListener('click', () => {
-    setAvatarChoice(SECRET_AVATAR_TYPE);
-
-    if (avatarPreviewModal && avatarPreviewImg) {
-      avatarPreviewImg.src = SECRET_AVATAR_SRC;
-      avatarPreviewModal.classList.remove('hidden');
-      avatarPreviewModal.classList.add('flex');
-    }
-  });
-
-  row.appendChild(btn);
-}
       // ============================================
       // АВТОРИЗАЦИЯ
       // ============================================
@@ -2516,13 +2485,22 @@ function ensureSecretAvatarOption(unlocked) {
 renderAvatarChoices(unlockedAvatars);
 
            const avatarType = data.avatarType || 'girl';
-           let safeAvatarType = avatarType;
-if (safeAvatarType === 'secret' && !secretAvatars.includes('secret')) {
-  safeAvatarType = 'girl';
-}
+         
           setAvatarChoice(safeAvatarType)
           const displayName = (first || last)
-            ? (first + ' ' + (last || '')).trim()
+            ? (first + ' ' + (last || '')).trim()const unlockedAvatars = Array.isArray(data.unlockedAvatars) ? data.unlockedAvatars : [];
+renderAvatarChoices(unlockedAvatars);
+
+const avatarType = data.avatarType || 'girl';
+
+// Разрешённые: базовые всегда + разблокированные, но только если они есть в каталоге
+const allowed = new Set(['girl', 'boy']);
+unlockedAvatars.forEach(id => {
+  if (AVATAR_CATALOG[id]) allowed.add(id);
+});
+
+const safeAvatarType = allowed.has(avatarType) ? avatarType : 'girl';
+setAvatarChoice(safeAvatarType);
             : displayEmail || 'Без имени';
 
           profileName.textContent = displayName;
@@ -2575,9 +2553,7 @@ if (safeAvatarType === 'secret' && !secretAvatars.includes('secret')) {
             avatarType: avatarType
           };
 
-          profileAvatarImg.src = avatarType === 'girl'
-            ? '/assets/avatarf.png'
-            : '/assets/avatar.png';
+          profileAvatarImg.src = getAvatarSrc(avatarType);
 
           await db.collection('users').doc(email).set(payload, { merge: true });
 
