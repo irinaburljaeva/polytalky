@@ -1810,6 +1810,9 @@ return;
       // ВЫБОР АВАТАРА
       // ============================================
 
+      const SECRET_AVATAR_TYPE = 'secret';
+const SECRET_AVATAR_SRC  = '/assets/all/avatarwheel.PNG';
+      
       function setAvatarChoice(type) {
         if (!profileAvatarType) return;
         const t = type || 'girl';
@@ -1875,8 +1878,7 @@ return;
           avatarPreviewModal.classList.remove('flex');
         });
       }
-const SECRET_AVATAR_TYPE = 'secret';
-const SECRET_AVATAR_SRC  = '/assets/all/avatarwheel.PNG';
+
 
 function ensureSecretAvatarOption(unlocked) {
   // контейнер с кнопками выбора аватара (там где 2 кнопки girl/boy)
@@ -1897,7 +1899,7 @@ function ensureSecretAvatarOption(unlocked) {
   btn.type = 'button';
   btn.className = 'avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1';
   btn.setAttribute('data-avatar-type', SECRET_AVATAR_TYPE);
-  btn.innerHTML = <img src="${SECRET_AVATAR_SRC}" alt="Секретный аватар" class="h-10 w-10 object-cover rounded-lg">;
+  btn.innerHTML = `<img src="${SECRET_AVATAR_SRC}" alt="Секретный аватар" class="h-10 w-10 object-cover rounded-lg">`;
 
   btn.addEventListener('click', () => {
     setAvatarChoice(SECRET_AVATAR_TYPE);
@@ -2518,15 +2520,17 @@ function ensureSecretAvatarOption(unlocked) {
 
           const first = data.firstName || '';
           const last  = data.lastName || '';
-          const avatarType = data.avatarType || 'girl';
-          let safeAvatarType = avatarType;
-if (safeAvatarType === 'secret' && !secretAvatars.includes('secret')) {
-  safeAvatarType = 'girl';
-}
+                  
           const displayEmail = data.email || email || '';
           const secretAvatars = Array.isArray(data.secretAvatars) ? data.secretAvatars : [];
 ensureSecretAvatarOption(secretAvatars.includes('secret'));
 
+           const avatarType = data.avatarType || 'girl';
+           let safeAvatarType = avatarType;
+if (safeAvatarType === 'secret' && !secretAvatars.includes('secret')) {
+  safeAvatarType = 'girl';
+}
+          setAvatarChoice(safeAvatarType)
           const displayName = (first || last)
             ? (first + ' ' + (last || '')).trim()
             : displayEmail || 'Без имени';
