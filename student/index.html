@@ -177,8 +177,8 @@
       scrollbar-gutter: stable;
   -webkit-overflow-scrolling: touch;
 }
-    #wheel-modal.spinning.card{
-      overflow-y:hidden;
+    #wheel-modal.spinning. card{
+      overflow-y: hidden;
     }
 
 @media (max-width:640px){
@@ -1268,6 +1268,8 @@ const ix = cx + Math.cos(mid) * iconRadius;
   if (isSpinning) return;
 
   isSpinning = true;
+       wheelModal.classList.add('spinning');
+       
 
   // список секторов (визуальный порядок), НЕ меняем длину => сектора одинаковые
   const list = (wheelOrder && wheelOrder.length) ? wheelOrder : WHEEL_PRIZES;
@@ -1310,8 +1312,8 @@ const targetRotation = 360 * fullSpins + align + jitter;
       requestAnimationFrame(animate);
     } else {
       isSpinning = false;
+      wheelModal.classList.remove('spinning');
       showWheelResult(prize);
-      // createConfetti(); // если хотите оставить — можно, если нет — закомментируйте
       wheelSpinBtn.classList.remove('spinning');
       wheelSpinBtn.textContent = 'GO!';
     }
@@ -2457,79 +2459,65 @@ function renderAvatarChoices(unlockedIds){
         }
       }
 
-      async function loadUserProfile(user) {
-        try {
-          const email = user.email || null;
-          if (!email) return;
+async function loadUserProfile(user) {
+  try {
+    const email = user.email || null;
+    if (!email) return;
 
-          const usersCol = db.collection('users');
-          const emailRef = email ? usersCol.doc(email) : null;
-          
-          const [emailSnap] = await Promise.all([
-            emailRef ? emailRef.get() : Promise.resolve(null),
-                     ]);
+    const usersCol = db.collection('users');
+    const emailRef = usersCol.doc(email);
 
-          const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
-         
-          let data = {
-            ...(emailData || {}),
-          };
+    const emailSnap = await emailRef.get();
+    const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : {};
 
-          if (email) data.email = data.email || email;
+    const data = { ...emailData };
+    data.email = data.email || email;
 
-          const first = data.firstName || '';
-          const last  = data.lastName || '';
-                  
-          const displayEmail = data.email || email || '';
-         const unlockedAvatars = Array.isArray(data.unlockedAvatars) ? data.unlockedAvatars : [];
-renderAvatarChoices(unlockedAvatars);
+    const first = data.firstName || '';
+    const last  = data.lastName || '';
+    const displayEmail = data.email  email  '';
 
-           const avatarType = data.avatarType || 'girl';
-         
-          setAvatarChoice(safeAvatarType)
-          const displayName = (first || last)
-            ? (first + ' ' + (last || '')).trim()const unlockedAvatars = Array.isArray(data.unlockedAvatars) ? data.unlockedAvatars : [];
-renderAvatarChoices(unlockedAvatars);
+    // 1) аватары: показываем базовые + разблокированные
+    const unlockedAvatars = Array.isArray(data.unlockedAvatars) ? data.unlockedAvatars : [];
+    renderAvatarChoices(unlockedAvatars);
 
-const avatarType = data.avatarType || 'girl';
+    // 2) безопасный выбор avatarType (только из разрешённых)
+    const avatarType = data.avatarType || 'girl';
+    const allowed = new Set(['girl', 'boy']);
+    unlockedAvatars.forEach(id => {
+      if (AVATAR_CATALOG[id]) allowed.add(id);
+    });
+    const safeAvatarType = allowed.has(avatarType) ? avatarType : 'girl';
+    setAvatarChoice(safeAvatarType);
 
-// Разрешённые: базовые всегда + разблокированные, но только если они есть в каталоге
-const allowed = new Set(['girl', 'boy']);
-unlockedAvatars.forEach(id => {
-  if (AVATAR_CATALOG[id]) allowed.add(id);
-});
+    // 3) имя
+    const displayName = (first || last)
+      ? (first + ' ' + (last || '')).trim()
+      : (displayEmail || 'Без имени');
 
-const safeAvatarType = allowed.has(avatarType) ? avatarType : 'girl';
-setAvatarChoice(safeAvatarType);
-            : displayEmail || 'Без имени';
+    profileName.textContent = displayName;
+    authUserEmail.textContent = displayEmail;
 
-          profileName.textContent = displayName;
-          authUserEmail.textContent = displayEmail;
-          if (profileEmail) profileEmail.value = displayEmail || '';
+    if (profileEmail) profileEmail.value = displayEmail;
 
-          profileFirst.value = first;
-          profileLast.value  = last;
+    profileFirst.value = first;
+    profileLast.value  = last;
 
-          setAvatarChoice(avatarType);
+    profileMsg.textContent = '';
 
-          profileMsg.textContent = '';
+    // 4) коины
+    updateCoinsUI(data);
 
-          updateCoinsUI(data);
+    try {
+      await emailRef.set({ email: displayEmail }, { merge: true });
+    } catch (e) {
+      console.warn('Не удалось обновить email в профиле:', e);
+    }
 
-          if (emailRef) {
-            try {
-              await emailRef.set(
-                { ...data, email: displayEmail },
-                { merge: true }
-              );
-            } catch (e) {
-              console.warn('Не удалось мигрировать профиль uid→email:', e);
-            }
-          }
-        } catch (err) {
-          console.error('Ошибка профиля:', err);
-        }
-      }
+  } catch (err) {
+    console.error('Ошибка профиля:', err);
+  }
+}
 
       profileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
