@@ -1411,13 +1411,38 @@ const targetRotation = 360 * fullSpins + align + jitter;
             updates.unlockedAvatars = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.avatarId);
           }
 
-          if (currentWheelPrize.proMonth) {
-            // Активируем месяц PRO
-            const validUntil = new Date();
-            validUntil.setMonth(validUntil.getMonth() + 1);
-            updates.proGlobal = true;
-            updates.proValidUntil = firebase.firestore.Timestamp.fromDate(validUntil);
-          }
+        if (currentWheelPrize.proMonth) {
+  // Месяц PRO: если уже есть активный срок — продлеваем от конца, иначе от сегодня
+  function addMonthsSafe(baseDate, months) {
+    const d = new Date(baseDate.getTime());
+    const day = d.getDate();
+    d.setMonth(d.getMonth() + months);
+    // защита от "перепрыгивания" на следующий месяц (например, 31 → 3)
+    if (d.getDate() < day) d.setDate(0);
+    return d;
+  }
+
+  let base = new Date(); // по умолчанию: от сегодня
+
+  try {
+    const snap = await docRef.get();
+    const prev = snap.exists ? (snap.data() || {}) : {};
+
+    const prevUntil = prev.proValidUntil;
+    if (prevUntil && typeof prevUntil.toDate === 'function') {
+      const prevEnd = prevUntil.toDate();
+      // если текущий срок ещё не закончился — продлеваем от него
+      if (prevEnd > base) base = prevEnd;
+    }
+  } catch (e) {
+    console.warn('Не удалось прочитать текущий срок PRO, ставим от сегодня:', e);
+  }
+
+  const newUntil = addMonthsSafe(base, 1);
+
+  updates.proGlobal = true;
+  updates.proValidUntil = firebase.firestore.Timestamp.fromDate(newUntil);
+}
 
           if (currentWheelPrize.course) {
             updates.courses = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.course);
