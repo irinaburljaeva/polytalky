@@ -53,7 +53,22 @@ function getUserKey() {
   if (currentUser.email) return currentUser.email.toLowerCase(); 
   return currentUser.uid;
 }
+function pickAudioMimeType() {
+  const types = [
+    "audio/mp4",
+    "audio/webm;codecs=opus",
+    "audio/webm"
+  ];
+  for (const t of types) {
+    if (window.MediaRecorder && MediaRecorder.isTypeSupported(t)) return t;
+  }
+  return "";
+}
 
+function buildDataUrlFromBase64(base64, mime) {
+  const safeMime = (mime && typeof mime === "string") ? mime : "audio/webm";
+  return `data:${safeMime};base64,${base64 || ""}`;
+}
 //
 // ====== ЗАГРУЗКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ (PRO) ======
 //
@@ -369,22 +384,7 @@ function blobToBase64(blob) {
     reader.readAsDataURL(blob);
   });
 }
-function pickAudioMimeType() {
-  const types = [
-    "audio/mp4",
-    "audio/webm;codecs=opus",
-    "audio/webm"
-  ];
-  for (const t of types) {
-    if (window.MediaRecorder && MediaRecorder.isTypeSupported(t)) return t;
-  }
-  return "";
-}
 
-function buildDataUrlFromBase64(base64, mime) {
-  const safeMime = (mime && typeof mime === "string") ? mime : "audio/webm";
-  return `data:${safeMime};base64,${base64 || ""}`;
-}
     
 function showAudioError(msg) {
   if (audioFeedback) {
@@ -399,6 +399,7 @@ if (retryBtn)
 
     if (audioPlay) {
       audioPlay.removeAttribute("src");
+      audioPlay.load();
       audioPlay.style.display = "none";
     }
     if (audioFeedback) audioFeedback.classList.add("hidden");
@@ -424,6 +425,7 @@ const mimeType = pickAudioMimeType();
 mediaRecorder = mimeType
   ? new MediaRecorder(audioStream, { mimeType })
   : new MediaRecorder(audioStream);
+    
 
     mediaRecorder.addEventListener("dataavailable", e => {
       if (e.data && e.data.size > 0) audioChunks.push(e.data);
