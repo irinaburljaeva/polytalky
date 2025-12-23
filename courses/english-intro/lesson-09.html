@@ -119,6 +119,9 @@
       text-align: center;
       margin: 20px 0;
     }
+    .word-tip { cursor: pointer; }
+
+    .word-tip:hover { text-decoration: underline; }
 
     .sound-options {
       display: flex;
@@ -385,16 +388,26 @@
       <p class="font-bold text-lg mb-2">1. Глухой звук [θ]</p>
       <p class="text-gray-700 mb-2">Язык между зубами, воздух проходит без голоса</p>
       <p class="text-sm text-gray-600">
-        Примеры: <b>think, thank, thing, three, thought</b>
-      </p>
+  Примеры:
+  <b>
+    <span class="word-tip">think</span>, <span class="word-tip">thank</span>,
+    <span class="word-tip">thing</span>, <span class="word-tip">three</span>,
+    <span class="word-tip">thought</span>
+  </b>
+</p>
     </div>
 
     <div class="bg-white rounded-xl p-4">
       <p class="font-bold text-lg mb-2">2. Звонкий звук [ð]</p>
       <p class="text-gray-700 mb-2">Язык между зубами, воздух проходит с голосом</p>
-      <p class="text-sm text-gray-600">
-        Примеры: <b>this, that, they, there, the</b>
-      </p>
+     <p class="text-sm text-gray-600">
+  Примеры:
+  <b>
+    <span class="word-tip">this</span>, <span class="word-tip">that</span>,
+    <span class="word-tip">they</span>, <span class="word-tip">there</span>,
+    <span class="word-tip">the</span>
+  </b>
+</p>
     </div>
   </div>
 </div>
@@ -518,7 +531,7 @@
  
   <!-- ================ ШАГ 4. АУДИОЗАПИСЬ ================ -->
 
-  <section id="step-5" class="step-panel">
+  <section id="step-4" class="step-panel">
     <div class="step-panel-header">
       <span class="step-pill">Шаг 4 · Аудиозапись</span>
       <button class="step-icon" type="button" data-open-qa>❓</button>
@@ -554,6 +567,7 @@
   <div class="mt-2 flex gap-3">
     <button class="btn-main" id="record-btn">⏺️ Записать</button>
     <button class="btn-ghost" id="stop-btn" disabled>⏹️ Стоп</button>
+    <button class="btn-ghost hidden" id="retry-btn" type="button">🔁 Перезаписать</button>
   </div>
 
   <div class="recording-bar-wrapper hidden" id="recording-wrapper">
