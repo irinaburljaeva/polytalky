@@ -174,11 +174,11 @@ async function loadProAnswers() {
     // 3) Аудио — подставляем первую запись
     //
     const audioDoc = docs.find(d => d.answerAudioBase64);
-    if (audioDoc && audioDoc.answerAudioBase64 && audioPlay) {
-      audioPlay.src =
-        "data:audio/webm;base64," + audioDoc.answerAudioBase64;
-      audioPlay.style.display = "block";
-    }
+if (audioDoc && audioDoc.answerAudioBase64 && audioPlay) {
+  const mime = audioDoc.answerAudioMime || "audio/webm";
+  audioPlay.src = buildDataUrlFromBase64(audioDoc.answerAudioBase64, mime);
+  audioPlay.style.display = "block";
+}
 
   } catch (e) {
     console.error("Ошибка подгрузки PRO-ответов:", e);
@@ -369,7 +369,23 @@ function blobToBase64(blob) {
     reader.readAsDataURL(blob);
   });
 }
+function pickAudioMimeType() {
+  const types = [
+    "audio/mp4",
+    "audio/webm;codecs=opus",
+    "audio/webm"
+  ];
+  for (const t of types) {
+    if (window.MediaRecorder && MediaRecorder.isTypeSupported(t)) return t;
+  }
+  return "";
+}
 
+function buildDataUrlFromBase64(base64, mime) {
+  const safeMime = (mime && typeof mime === "string") ? mime : "audio/webm";
+  return `data:${safeMime};base64,${base64 || ""}`;
+}
+    
 function showAudioError(msg) {
   if (audioFeedback) {
     audioFeedback.textContent = msg;
@@ -403,7 +419,11 @@ recordBtn.addEventListener("click", async () => {
     if (audioStream) audioStream.getTracks().forEach(t => t.stop());
 
     audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(audioStream);
+
+const mimeType = pickAudioMimeType();
+mediaRecorder = mimeType
+  ? new MediaRecorder(audioStream, { mimeType })
+  : new MediaRecorder(audioStream);
 
     mediaRecorder.addEventListener("dataavailable", e => {
       if (e.data && e.data.size > 0) audioChunks.push(e.data);
@@ -424,10 +444,13 @@ recordBtn.addEventListener("click", async () => {
         return;
       }
 
-      const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-      audioPlay.src = URL.createObjectURL(audioBlob);
-      audioPlay.style.display = "block";
+     const recordedMime = (mediaRecorder && mediaRecorder.mimeType)
+  ? mediaRecorder.mimeType
+  : "audio/webm";
 
+const audioBlob = new Blob(audioChunks, { type: recordedMime });
+audioPlay.src = URL.createObjectURL(audioBlob);
+audioPlay.style.display = "block";
       // ✅ по вашему требованию: после записи показываем "Перезаписать"
       if (retryBtn) retryBtn.classList.remove("hidden");
 
@@ -448,7 +471,8 @@ recordBtn.addEventListener("click", async () => {
             lessonTitle: LESSON_TITLE,
             taskId: "audio",
             step: AUDIO_NEXT_STEP || currentStep,
-            answerAudioBase64: base64
+            answerAudioBase64: base64,
+            answerAudioMime: recordedMime
           });
         }
 
