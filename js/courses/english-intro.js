@@ -422,6 +422,7 @@ if (recordBtn && stopBtn && audioPlay) {
 
           // сохранить PRO-аудио
       const retryBtn = document.getElementById("retry-btn");
+          if (retryBtn) retryBtn.classList.add("hidden");
 
 function showAudioError(msg) {
   if (audioFeedback) {
@@ -440,7 +441,7 @@ function blobToBase64(blob) {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error("FileReader error"));
     reader.onloadend = () => {
-      const base64 = (reader.result  "").toString().split(",")[1]  "";
+      const base64 = (reader.result || "").toString().split(",")[1] || "";
       resolve(base64);
     };
     reader.readAsDataURL(blob);
