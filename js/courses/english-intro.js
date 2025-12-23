@@ -355,86 +355,9 @@ if (recordBtn && stopBtn && audioPlay) {
         if (recordingWrapper) recordingWrapper.classList.add("hidden");
   }
 
-  else {
-    recordBtn.addEventListener("click", async () => {
-      try {
-        audioChunks = [];
-
-        if (audioStream) {
-          audioStream.getTracks().forEach(t => t.stop());
-        }
-
-        audioStream   = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(audioStream);
-
-        mediaRecorder.addEventListener("dataavailable", e => {
-          if (e.data && e.data.size > 0) {
-            audioChunks.push(e.data);
-          }
-
-        });
-
-        mediaRecorder.addEventListener("stop", () => {
-          if (audioStream) {
-            audioStream.getTracks().forEach(t => t.stop());
-            audioStream = null;
-          }
-
-          if (recordingInterval) {
-            clearInterval(recordingInterval);
-            recordingInterval = null;
-          }
-
-               if (!audioChunks.length) {
-            if (recordingWrapper) recordingWrapper.classList.add("hidden");
-            if (recordingStatus) {
-              recordingStatus.classList.add("hidden");
-              recordingStatus.textContent = "● Идёт запись…";
-            }
-            if (recordingBar) recordingBar.style.width = "0%";
-
-            if (audioFeedback) {
-              audioFeedback.textContent = "Кажется, запись не сохранилась. Попробуйте ещё раз 😊";
-              audioFeedback.classList.remove("hidden");
-              setTimeout(() => audioFeedback.classList.add("hidden"), 2500);
-            }
-            return;
-          }
-
-          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-          const url       = URL.createObjectURL(audioBlob);
-          audioPlay.src   = url;
-          audioPlay.style.display = "block";
-
-          if (recordingWrapper) recordingWrapper.classList.add("hidden");
-          if (recordingStatus) {
-            recordingStatus.textContent = "✓ Запись завершена";
-            setTimeout(() => {
-              recordingStatus.classList.add("hidden");
-              recordingStatus.textContent = "● Идёт запись…";
-            }, 1500);
-          }
-          if (recordingBar) recordingBar.style.width = "100%";
-
-          const nextStepAfterAudio = AUDIO_NEXT_STEP || stepDots.length;
-
-
-
-          // сохранить PRO-аудио
-      const retryBtn = document.getElementById("retry-btn");
-          if (retryBtn) retryBtn.classList.add("hidden");
-
-function showAudioError(msg) {
-  if (audioFeedback) {
-    audioFeedback.textContent = msg;
-    audioFeedback.classList.remove("hidden");
-  }
-  if (retryBtn) retryBtn.classList.remove("hidden");
-}
-
-function hideRetry() {
-  if (retryBtn) retryBtn.classList.add("hidden");
-}
+  Irinita😍😍😍*Hace Cri-cri*, [23.12.2025 21:03]
+const retryBtn = document.getElementById("retry-btn");
+if (retryBtn) retryBtn.classList.add("hidden");
 
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
@@ -448,116 +371,152 @@ function blobToBase64(blob) {
   });
 }
 
-
-// Спрячем "перезаписать" на успешном сценарии
-hideRetry();
-
-// сохранить PRO-аудио (и только потом переходить дальше)
-(async () => {
-  try {
-    if (currentUser && isProUser) {
-      const base64 = await blobToBase64(audioBlob);
-      if (!base64) {
-        throw new Error("Empty base64 audio");
-      }
-
-      await saveProAnswer({
-        db,
-        user: currentUser,
-        submissionsRoot: SUBMISSIONS_ROOT,
-
-        courseId: COURSE_ID,
-        courseTitle: COURSE_TITLE,
-
-        lessonId: LESSON_ID,
-        lessonTitle: LESSON_TITLE,
-
-        taskId: "audio",
-        step: AUDIO_NEXT_STEP || currentStep,
-        answerAudioBase64: base64
-      });
-    }
-
-    // ✅ успех
-    if (audioFeedback) {
-      audioFeedback.textContent = "⭐️ Отлично получилось! Вы молодец.";
-      audioFeedback.classList.remove("hidden");
-    }
-
-    setTimeout(() => {
-      if (audioFeedback) audioFeedback.classList.add("hidden");
-      showStep(nextStepAfterAudio);
-    }, 1800);
-
-  } catch (e) {
-    console.error("Ошибка сохранения аудио:", e);
-
-    // ❌ ошибка — остаёмся на шаге, даём перезаписать
-    showAudioError("Не удалось сохранить запись 😔 Нажмите «Перезаписать» и попробуйте ещё раз.");
-  
+function showAudioError(msg) {
+  if (audioFeedback) {
+    audioFeedback.textContent = msg;
+    audioFeedback.classList.remove("hidden");
   }
-})();
-
-        //
-        // Старт записи
-        //
-                mediaRecorder.start();
-        recordBtn.disabled = true;
-        stopBtn.disabled   = false;
-        if (audioFeedback) audioFeedback.classList.add("hidden");
-
-        if (recordingWrapper && recordingBar && recordingStatus) {
-          recordingWrapper.classList.remove("hidden");
-          recordingStatus.classList.remove("hidden");
-          recordingStatus.textContent = "● Идёт запись…";
-          recordingProgress = 0;
-          recordingBar.style.width = "0%";
-
-          if (recordingInterval) {
-            clearInterval(recordingInterval);
-          }
-          recordingInterval = setInterval(() => {
-            recordingProgress += 3;
-            if (recordingProgress > 100) recordingProgress = 100;
-            recordingBar.style.width = recordingProgress + "%";
-          }, 200);
-        }
-      } catch (err) {
-        console.error("Ошибка при записи:", err);
-        alert("Не удалось получить доступ к микрофону. Проверьте разрешения в браузере и попробуйте ещё раз.");
-        if (recordingWrapper) recordingWrapper.classList.add("hidden");
-        if (recordingStatus)  recordingStatus.classList.add("hidden");
-      }
-    });
-
-    //
-    // Остановка записи
-    //
-      stopBtn.addEventListener("click", () => {
-      if (!mediaRecorder) {
-        console.warn("mediaRecorder не инициализирован");
-        return;
-      }
-      if (mediaRecorder.state !== "recording") {
-        console.warn("Запись не активна");
-        return;
-      }
-
-      try {
-        mediaRecorder.stop();
-        recordBtn.disabled = false;
-        stopBtn.disabled   = true;
-      } catch (err) {
-        console.error("Ошибка при остановке записи:", err);
-        recordBtn.disabled = false;
-        stopBtn.disabled   = true;
-      }
-    });
-  }
+  if (retryBtn) retryBtn.classList.remove("hidden");
 }
 
+if (retryBtn) 
+  retryBtn.addEventListener("click", () => {
 
-//
+    if (audioPlay) {
+      audioPlay.removeAttribute("src");
+      audioPlay.style.display = "none";
+    }
+    if (audioFeedback) audioFeedback.classList.add("hidden");
+    retryBtn.classList.add("hidden");
+
+    recordBtn.disabled = false;
+    stopBtn.disabled = true;
+  });
+}
+
+recordBtn.addEventListener("click", async () => {
+  try {
+    // при старте записи retry должен быть скрыт
+    if (retryBtn) retryBtn.classList.add("hidden");
+    if (audioFeedback) audioFeedback.classList.add("hidden");
+    audioChunks = [];
+
+    if (audioStream) audioStream.getTracks().forEach(t => t.stop());
+
+    audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(audioStream);
+
+    mediaRecorder.addEventListener("dataavailable", e => {
+      if (e.data && e.data.size > 0) audioChunks.push(e.data);
+    });
+
+    mediaRecorder.addEventListener("stop", async () => {
+      if (audioStream) {
+        audioStream.getTracks().forEach(t => t.stop());
+        audioStream = null;
+      }
+      if (recordingInterval) {
+        clearInterval(recordingInterval);
+        recordingInterval = null;
+      }
+
+      if (!audioChunks.length) {
+        showAudioError("Кажется, запись не сохранилась. Нажмите «Перезаписать» и попробуйте ещё раз 😊");
+        return;
+      }
+
+      const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+      audioPlay.src = URL.createObjectURL(audioBlob);
+      audioPlay.style.display = "block";
+
+      // ✅ по вашему требованию: после записи показываем "Перезаписать"
+      if (retryBtn) retryBtn.classList.remove("hidden");
+
+      const nextStepAfterAudio = AUDIO_NEXT_STEP || stepDots.length;
+
+      try {
+        if (currentUser && isProUser) {
+          const base64 = await blobToBase64(audioBlob);
+          if (!base64) throw new Error("Empty base64 audio");
+
+          await saveProAnswer({
+            db,
+            user: currentUser,
+            submissionsRoot: SUBMISSIONS_ROOT,
+            courseId: COURSE_ID,
+            courseTitle: COURSE_TITLE,
+            lessonId: LESSON_ID,
+            lessonTitle: LESSON_TITLE,
+            taskId: "audio",
+            step: AUDIO_NEXT_STEP || currentStep,
+            answerAudioBase64: base64
+          });
+        }
+
+        if (audioFeedback) {
+          audioFeedback.textContent = "⭐️ Отлично получилось! Вы молодец.";
+          audioFeedback.classList.remove("hidden");
+        }
+
+        setTimeout(() => {
+          if (audioFeedback) audioFeedback.classList.add("hidden");
+          showStep(nextStepAfterAudio);
+        }, 1800);
+
+      } catch (e) {
+        console.error("Ошибка сохранения аудио:", e);
+        showAudioError("Не удалось сохранить запись 😔 Нажмите «Перезаписать» и попробуйте ещё раз.");
+        // ❌ важно: НЕ переходим дальше
+      }
+    });
+
+    // старт UI
+    mediaRecorder.start();
+    recordBtn.disabled = true;
+    stopBtn.disabled = false;
+
+    if (recordingWrapper && recordingBar && recordingStatus) {
+      recordingWrapper.classList.remove("hidden");
+      recordingStatus.classList.remove("hidden");
+      recordingStatus.textContent = "● Идёт запись…";
+      recordingProgress = 0;
+      recordingBar.style.width = "0%";
+
+      if (recordingInterval) clearInterval(recordingInterval);
+      recordingInterval = setInterval(() => {
+        recordingProgress += 3;
+
+Irinita😍😍😍*Hace Cri-cri*, [23.12.2025 21:03]
+if (recordingProgress > 100) recordingProgress = 100;
+        recordingBar.style.width = recordingProgress + "%";
+      }, 200);
+    }
+
+  } catch (err) {
+    console.error("Ошибка при записи:", err);
+    alert("Не удалось получить доступ к микрофону. Проверьте разрешения в браузере и попробуйте ещё раз.");
+    if (recordingWrapper) recordingWrapper.classList.add("hidden");
+    if (recordingStatus) recordingStatus.classList.add("hidden");
+    recordBtn.disabled = false;
+    stopBtn.disabled = true;
+  }
+});
+
+stopBtn.addEventListener("click", () => {
+  if (!mediaRecorder) return;
+  if (mediaRecorder.state !== "recording") return;
+
+  try {
+    mediaRecorder.stop();
+    recordBtn.disabled = false;
+    stopBtn.disabled = true;
+  } catch (err) {
+    console.error("Ошибка при остановке записи:", err);
+    recordBtn.disabled = false;
+    stopBtn.disabled = true;
+  }
+});
+
 // ====== Q&A ======
 const qaModal      = document.getElementById("qa-modal");
 const qaCloseBtn   = document.getElementById("qa-close");
