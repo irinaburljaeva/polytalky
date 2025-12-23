@@ -448,8 +448,6 @@ function blobToBase64(blob) {
   });
 }
 
-// ... внутри mediaRecorder.addEventListener("stop", () => { ... })
-const nextStepAfterAudio = AUDIO_NEXT_STEP || stepDots.length;
 
 // Спрячем "перезаписать" на успешном сценарии
 hideRetry();
