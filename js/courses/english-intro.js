@@ -355,7 +355,7 @@ if (recordBtn && stopBtn && audioPlay) {
         if (recordingWrapper) recordingWrapper.classList.add("hidden");
   }
 
-  Irinita😍😍😍*Hace Cri-cri*, [23.12.2025 21:03]
+ 
 const retryBtn = document.getElementById("retry-btn");
 if (retryBtn) retryBtn.classList.add("hidden");
 
@@ -486,7 +486,7 @@ recordBtn.addEventListener("click", async () => {
       recordingInterval = setInterval(() => {
         recordingProgress += 3;
 
-Irinita😍😍😍*Hace Cri-cri*, [23.12.2025 21:03]
+
 if (recordingProgress > 100) recordingProgress = 100;
         recordingBar.style.width = recordingProgress + "%";
       }, 200);
