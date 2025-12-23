@@ -392,7 +392,7 @@ if (retryBtn)
     recordBtn.disabled = false;
     stopBtn.disabled = true;
   });
-}
+
 
 recordBtn.addEventListener("click", async () => {
   try {
