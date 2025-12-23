@@ -421,42 +421,83 @@ if (recordBtn && stopBtn && audioPlay) {
 
 
           // сохранить PRO-аудио
-          if (currentUser && isProUser) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              const base64 = (reader.result || "").split(",")[1] || "";
-              if (base64) {
-                saveProAnswer({
-                  db,
-                  user: currentUser,
-                  submissionsRoot: SUBMISSIONS_ROOT,
+      const retryBtn = document.getElementById("retry-btn");
 
-                  courseId: COURSE_ID,
-                  courseTitle: COURSE_TITLE,
+function showAudioError(msg) {
+  if (audioFeedback) {
+    audioFeedback.textContent = msg;
+    audioFeedback.classList.remove("hidden");
+  }
+  if (retryBtn) retryBtn.classList.remove("hidden");
+}
 
-                  lessonId: LESSON_ID,
-                  lessonTitle: LESSON_TITLE,
+function hideRetry() {
+  if (retryBtn) retryBtn.classList.add("hidden");
+}
 
-                  taskId: "audio",
-                  step: AUDIO_NEXT_STEP || currentStep,
-                  answerAudioBase64: base64
-                }).catch(console.error);
-              }
-            };
-            reader.readAsDataURL(audioBlob);
-          }
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("FileReader error"));
+    reader.onloadend = () => {
+      const base64 = (reader.result  "").toString().split(",")[1]  "";
+      resolve(base64);
+    };
+    reader.readAsDataURL(blob);
+  });
+}
 
-            if (audioFeedback) {
-            audioFeedback.textContent = "⭐️ Отлично получилось! Вы молодец.";
-            audioFeedback.classList.remove("hidden");
-          }
+// ... внутри mediaRecorder.addEventListener("stop", () => { ... })
+const nextStepAfterAudio = AUDIO_NEXT_STEP || stepDots.length;
 
+// Спрячем "перезаписать" на успешном сценарии
+hideRetry();
 
-                 setTimeout(() => {
-            if (audioFeedback) audioFeedback.classList.add("hidden");
-            showStep(nextStepAfterAudio);
-          }, 1800);
-        });
+// сохранить PRO-аудио (и только потом переходить дальше)
+(async () => {
+  try {
+    if (currentUser && isProUser) {
+      const base64 = await blobToBase64(audioBlob);
+      if (!base64) {
+        throw new Error("Empty base64 audio");
+      }
+
+      await saveProAnswer({
+        db,
+        user: currentUser,
+        submissionsRoot: SUBMISSIONS_ROOT,
+
+        courseId: COURSE_ID,
+        courseTitle: COURSE_TITLE,
+
+        lessonId: LESSON_ID,
+        lessonTitle: LESSON_TITLE,
+
+        taskId: "audio",
+        step: AUDIO_NEXT_STEP || currentStep,
+        answerAudioBase64: base64
+      });
+    }
+
+    // ✅ успех
+    if (audioFeedback) {
+      audioFeedback.textContent = "⭐️ Отлично получилось! Вы молодец.";
+      audioFeedback.classList.remove("hidden");
+    }
+
+    setTimeout(() => {
+      if (audioFeedback) audioFeedback.classList.add("hidden");
+      showStep(nextStepAfterAudio);
+    }, 1800);
+
+  } catch (e) {
+    console.error("Ошибка сохранения аудио:", e);
+
+    // ❌ ошибка — остаёмся на шаге, даём перезаписать
+    showAudioError("Не удалось сохранить запись 😔 Нажмите «Перезаписать» и попробуйте ещё раз.");
+  
+  }
+})();
 
         //
         // Старт записи
