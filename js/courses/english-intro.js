@@ -352,9 +352,8 @@ if (recordBtn && stopBtn && audioPlay) {
     recordBtn.disabled = true;
     stopBtn.disabled   = true;
     recordBtn.textContent = "Запись недоступна в этом браузере";
-        if (recordingWrapper) recordingWrapper.classList.add("hidden");
-  }
-
+  if (recordingWrapper) recordingWrapper.classList.add("hidden");
+  } else {
  
 const retryBtn = document.getElementById("retry-btn");
 if (retryBtn) retryBtn.classList.add("hidden");
@@ -485,9 +484,7 @@ recordBtn.addEventListener("click", async () => {
       if (recordingInterval) clearInterval(recordingInterval);
       recordingInterval = setInterval(() => {
         recordingProgress += 3;
-
-
-if (recordingProgress > 100) recordingProgress = 100;
+        if (recordingProgress > 100) recordingProgress = 100;
         recordingBar.style.width = recordingProgress + "%";
       }, 200);
     }
@@ -516,6 +513,8 @@ stopBtn.addEventListener("click", () => {
     stopBtn.disabled = true;
   }
 });
+  }
+}
 
 // ====== Q&A ======
 const qaModal      = document.getElementById("qa-modal");
