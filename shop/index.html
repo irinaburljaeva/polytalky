@@ -1618,67 +1618,6 @@
   </script>
 
 
-<script type="module">
-  // Stripe уже подключён выше через <script src="https://js.stripe.com/v3/"></script>
-  const stripe = Stripe("pk_live_51HqHTmBDwT3uzr4q884SspcgqeyUSp4esf81Z6tHnTkf66WJG1Z6b90PDtyXSdiEommSFnBpHEHswX2ks5Geq9G0004uLMLbKu");
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const btnInt = document.getElementById('cartPayINT');
-    if (!btnInt) return;
-
-    btnInt.addEventListener('click', async () => {
-      const cart = window.getCart ? window.getCart() : [];
-      if (!cart.length) {
-        alert("Корзина пуста");
-        return;
-      }
-
-      const emailInput = document.getElementById('cartEmail');
-      const email = (emailInput?.value || "").trim();
-      if (!email) {
-        alert("Введите email");
-        return;
-      }
-
-      const promo = (window.promoInput?.value || "").trim().toUpperCase();
-      const totals = window.calcTotals ? window.calcTotals(cart) : { finalEur: 0 };
-      const totalEur = totals.finalEur;
-
-      try {
-        const res = await fetch("https://polytalky-backend.onrender.com/api/create-checkout-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email,
-            items: cart,
-            promoCode: promo,
-            totalEur
-          })
-        });
-
-        const data = await res.json();
-
-        if (!data.id) {
-          console.error(data);
-          alert("Ошибка при создании платежа");
-          return;
-        }
-
-        const result = await stripe.redirectToCheckout({
-          sessionId: data.id
-        });
-
-        if (result.error) {
-          console.error(result.error);
-          alert(result.error.message);
-        }
-
-      } catch (err) {
-        console.error(err);
-        alert("Ошибка соединения с сервером");
-      }
-    });
-  });
-</script>
 </body>
 </html>              
