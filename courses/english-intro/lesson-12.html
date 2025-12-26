@@ -665,7 +665,7 @@
 <!-- ============================= -->
 
 <script type="module">
-  import { saveProAnswer } from "/js/pro-submissions.js";
+    import { saveProAnswer } from "/js/pro-submissions.js";
   
   const db = window.firebaseDb;
   const auth = window.firebaseAuth;
@@ -678,4 +678,142 @@
     currentUser = user;
     // Проверка PRO статуса (упрощенная версия)
     if (user) {
-      // В реальном коде здесь была бы проверка PRO​​​​​​​​​​​​​​​​
+      // В реальном коде здесь была бы проверка PRO статуса
+      // isProUser = проверка из базы данных
+    }
+  });
+
+  // ===============================
+  // 🔸 ШАГ 4 — СОХРАНЕНИЕ ПРЕДЛОЖЕНИЙ
+  // ===============================
+
+  const saveSentencesBtn = document.getElementById("save-sentences-btn");
+  const nextBtnStep4 = document.getElementById("next-btn-step4");
+
+  if (saveSentencesBtn) {
+    saveSentencesBtn.addEventListener("click", async () => {
+      // Собираем все предложения
+      const sentences = [];
+      let allFilled = true;
+
+      for (let i = 1; i <= 5; i++) {
+        const input = document.querySelector(`[data-task-id="negative-sentence-${i}"]`);
+        const value = input ? input.value.trim() : "";
+        
+        if (!value) {
+          allFilled = false;
+        }
+        
+        sentences.push(value);
+      }
+
+      if (!allFilled) {
+        alert("Пожалуйста, заполните все 5 предложений 🙂");
+        return;
+      }
+
+      // Проверяем наличие did not или didn't хотя бы в одном предложении
+      const hasNegative = sentences.some(s => 
+        s.toLowerCase().includes("did not") || 
+        s.toLowerCase().includes("didn't")
+      );
+
+      if (!hasNegative) {
+        alert("Убедитесь, что вы используете did not или didn't для отрицания 😊");
+        return;
+      }
+
+      saveSentencesBtn.disabled = true;
+      saveSentencesBtn.textContent = "Сохраняем...";
+
+      // Сохраняем для PRO пользователей
+      if (currentUser && isProUser) {
+        try {
+          const combinedText = sentences
+            .map((s, i) => `${i + 1}. ${s}`)
+            .join("\n");
+
+          await saveProAnswer({
+            db,
+            user: currentUser,
+            submissionsRoot: "lessonSubmissions",
+            courseId: "english-intro",
+            courseTitle: "Интенсив английского",
+            lessonId: "english-intro-lesson-12",
+            lessonTitle: "Урок 12 - Past Simple (Отрицание)",
+            taskId: "negative-sentences",
+            step: 4,
+            answerText: combinedText
+          });
+
+          saveSentencesBtn.textContent = "✓ Сохранено!";
+        } catch (e) {
+          console.error("Ошибка сохранения:", e);
+          saveSentencesBtn.textContent = "Ошибка сохранения";
+        }
+      } else {
+        // Для не-PRO пользователей просто подтверждаем
+        saveSentencesBtn.textContent = "✓ Готово!";
+      }
+
+      // Показываем кнопку перехода
+      setTimeout(() => {
+        nextBtnStep4.classList.remove("hidden");
+        saveSentencesBtn.disabled = false;
+      }, 800);
+    });
+  }
+
+  // Автоматическая подстановка сохраненных ответов для PRO
+  async function loadSavedSentences() {
+    if (!currentUser || !isProUser) return;
+
+    try {
+      const { collection, query, where, getDocs } = await import(
+        "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+      );
+
+      const answersCol = collection(db, "lessonSubmissions", "english-intro-lesson-12", "answers");
+      const q = query(
+        answersCol,
+        where("userUid", "==", currentUser.uid),
+        where("taskId", "==", "negative-sentences")
+      );
+
+      const snapshot = await getDocs(q);
+      
+      if (!snapshot.empty) {
+        const data = snapshot.docs[0].data();
+        if (data.answerText) {
+          const lines = data.answerText.split("\n");
+          
+          lines.forEach((line, index) => {
+            const match = line.match(/^\d+\.\s*(.+)$/);
+            if (match && index < 5) {
+              const input = document.querySelector(`[data-task-id="negative-sentence-${index + 1}"]`);
+              if (input) {
+                input.value = match[1];
+              }
+            }
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Ошибка загрузки сохраненных предложений:", e);
+    }
+  }
+
+  // Загружаем сохраненные предложения при загрузке страницы
+  if (currentUser && isProUser) {
+    loadSavedSentences();
+  }
+</script>
+
+<!-- ============================= -->
+<!-- ОБЩИЙ СКРИПТ КУРСА (ВАЖНО!) -->
+<!-- ============================= -->
+
+<script type="module" src="/js/courses/english-intro.js"></script>
+
+</body>
+</html>
