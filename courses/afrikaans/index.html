@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Африкаанс с нуля — Платный курс | PolyTalky</title>
+  <meta name="description" content="Платный курс «Африкаанс с нуля» — базовые фразы, произношение и словарь для старта. Старт 1 февраля." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/png" href="/assets/favicon.jpg">
+
+  <style>
+    :root{
+      --brand-1:#FFBA08;
+      --brand-2:#F97316;
+      --ink-1:#0F172A;
+      --ink-2:#4B5563;
+      --bg-soft:#F9FAFB;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui, sans-serif;
+      background: radial-gradient(circle at top left,#FEF9C3 0,#FEFCE8 40%,#F9FAFB 100%);
+      color:var(--ink-1);
+    }
+
+    .wrap{max-width:1040px;margin:0 auto;}
+    .card{
+      border-radius:1.25rem;
+      border:1px solid rgba(0,0,0,.05);
+      background:rgba(255,255,255,.98);
+      box-shadow:0 18px 45px rgba(0,0,0,.08);
+    }
+    .soft-card{
+      border-radius:1rem;
+      border:1px solid rgba(148,163,184,.18);
+      background:rgba(255,255,255,.96);
+    }
+
+    .btn{
+      border-radius:999px;
+      padding:.65rem 1.4rem;
+      font-size:.9rem;
+      font-weight:600;
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .btn-main{
+      background:linear-gradient(135deg,var(--brand-2),var(--brand-1));
+      color:#111;
+      box-shadow:0 12px 25px rgba(234,179,8,.45);
+    }
+
+    .timer-box{
+      min-width:65px;
+      text-align:center;
+      padding:.6rem .5rem;
+      border-radius:.9rem;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.1);
+    }
+    .timer-number{font-size:1.4rem;font-weight:700;}
+    .timer-label{font-size:.7rem;color:var(--ink-2);}
+
+    .hero-snow{position:relative;}
+    .hero-snow::after{
+      content:"✶ ✧ ✶";
+      position:absolute;
+      right:1rem;
+      bottom:1rem;
+      font-size:.8rem;
+      color:rgba(148,163,184,.7);
+    }
+
+    @media(max-width:640px){
+      .hero-grid{flex-direction:column;}
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+<!-- HEADER -->
+<header class="sticky top-0 z-30 backdrop-blur bg-white/80 border-b border-slate-200/60">
+  <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <div class="h-9 w-9 rounded-2xl overflow-hidden shadow">
+        <img src="/assets/logo.png" class="object-cover h-full w-full" alt="PolyTalky">
+      </div>
+      <span class="font-semibold text-slate-900 text-lg">PolyTalky</span>
+    </a>
+
+    <nav class="hidden sm:flex items-center gap-6 text-sm">
+      <a href="/courses/" class="font-semibold text-slate-900">Курсы</a>
+      <a href="/shop/" class="hover:text-slate-900">Магазин</a>
+      <a href="/student/" class="hover:text-slate-900">Личный кабинет</a>
+    </nav>
+  </div>
+</header>
+
+<main class="flex-1">
+  <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6">
+
+    <!-- HERO -->
+    <section class="card hero-snow p-5 sm:p-7 space-y-5">
+      <div class="flex hero-grid items-start justify-between gap-6">
+
+        <div class="space-y-3 max-w-xl">
+          <p class="text-xs font-semibold tracking-[.2em] uppercase text-amber-700">
+            Платный курс
+          </p>
+
+          <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900">
+            Африкаанс с нуля <span class="text-amber-600">(A0)</span>
+          </h1>
+
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 text-xs rounded-full border border-amber-400 bg-amber-50 text-amber-700 font-semibold">
+              PREMIUM
+            </span>
+
+            <span class="text-xs text-slate-600">
+              Старт: <strong>1 февраля</strong>
+            </span>
+          </div>
+
+          <p class="text-sm sm:text-base text-slate-700">
+            Мягкий старт в африкаанс: произношение, базовые фразы, мини-диалоги и словарь для уверенного «нулевого» уровня.
+            Подходит, если вы хотите начать с понятной структуры и без перегруза.
+          </p>
+
+          <p class="text-xs sm:text-sm text-amber-700 font-semibold">
+            🎖 Участники, которые пройдут курс до конца, получат лимитированный бейдж в коллекцию достижений PolyTalky.
+          </p>
+        </div>
+
+        <!-- Таймер -->
+        <div class="soft-card p-4 w-full max-w-xs space-y-3">
+          <p class="text-xs font-semibold tracking-[.16em] uppercase text-amber-700">
+            До старта курса
+          </p>
+
+          <div id="timer-grid" class="flex gap-2 flex-wrap">
+            <div class="timer-box">
+              <div id="days" class="timer-number">00</div>
+              <div class="timer-label">дней</div>
+            </div>
+            <div class="timer-box">
+              <div id="hours" class="timer-number">00</div>
+              <div class="timer-label">часов</div>
+            </div>
+            <div class="timer-box">
+              <div id="minutes" class="timer-number">00</div>
+              <div class="timer-label">минут</div>
+            </div>
+            <div class="timer-box">
+              <div id="seconds" class="timer-number">00</div>
+              <div class="timer-label">секунд</div>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-slate-500">
+            Курс можно оплатить уже сейчас — доступ откроется автоматически 1 февраля.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Описание курса + Покупка -->
+    <section class="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start">
+
+      <!-- Описание с встроенным изображением -->
+      <div class="space-y-4">
+        <div class="soft-card p-5">
+          <div class="flex flex-col md:flex-row gap-4 md:items-start">
+            <div class="md:w-2/5 flex justify-center md:justify-start">
+              <img
+                src="/assets/courses/afrikaans.jpg"
+                alt="Африкаанс с нуля"
+                class="rounded-xl shadow w-full max-w-sm object-cover"
+                onerror="this.onerror=null; this.src='/assets/courses/placeholder.jpg';"
+              />
+            </div>
+
+            <div class="space-y-3 md:w-3/5">
+              <h2 class="text-lg font-semibold text-slate-900">
+                Что вас ждёт в курсе «Африкаанс с нуля»
+              </h2>
+
+              <p class="text-sm text-slate-700">
+                Вы начнёте с самых важных основ: как звучит африкаанс, как строятся простые фразы,
+                какие слова нужны для общения в поездке и в быту. Всё — короткими уроками и с практикой.
+              </p>
+
+              <ul class="text-sm text-slate-700 list-disc pl-4 space-y-2">
+                <li>🗣 Произношение и чтение: базовые правила</li>
+                <li>👋 Приветствие, знакомство, вежливые фразы</li>
+                <li>🧩 Простые конструкции: «я/ты/мы», вопросы и отрицания</li>
+                <li>🧠 Словарь A0: самые полезные темы</li>
+                <li>🎧 Короткие аудио/озвучка для закрепления</li>
+              </ul>
+
+              <p class="text-xs text-slate-500">
+                Африкаанс — германский язык, близкий к нидерландскому. Если вы учили английский или немецкий,
+                вам будет легче ловить закономерности.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Блок про бейдж -->
+        <div class="soft-card p-5 flex flex-col sm:flex-row items-center gap-4">
+          <div class="flex-shrink-0">
+            <div class="h-24 w-24 rounded-full overflow-hidden border border-amber-300 shadow bg-white flex items-center justify-center">
+              <img src="/assets/badges/afrikaans.png" alt="Afrikaans Badge" class="object-contain p-1"
+                   onerror="this.onerror=null; this.src='/assets/badges/placeholder.png';">
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
+              Лимитированный бейдж
+            </p>
+
+            <h2 class="text-lg font-semibold text-slate-900">
+              Бейдж за прохождение курса
+            </h2>
+
+            <p class="text-sm text-slate-700">
+              Завершите курс — и получите бейдж в личном кабинете PolyTalky.
+            </p>
+
+            <p class="text-xs text-slate-500">
+              Бейдж выдаётся только участникам этого запуска.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Оплата -->
+      <aside class="soft-card p-5 space-y-4">
+        <p class="text-xs font-semibold uppercase tracking-[.2em] text-amber-700">
+          Доступ к курсу
+        </p>
+
+        <h3 class="text-lg font-semibold text-slate-900">
+          Как получить доступ
+        </h3>
+
+        <ul class="text-sm text-slate-700 space-y-2 list-disc pl-4">
+          <li>✔ Оплата сейчас — доступ откроется 1 февраля</li>
+          <li>✔ Материалы остаются у вас навсегда</li>
+          <li>✔ Все уроки появятся в личном кабинете</li>
+        </ul>
+
+        <p class="text-sm text-slate-900 font-semibold">
+          Стоимость: <span class="text-amber-700">1490 ₽</span>
+        </p>
+
+        <!-- TODO: замените ссылку на вашу страницу покупки/checkout -->
+        <a href="/shop/" class="btn btn-main w-full mt-2">
+          Купить доступ 🎁
+        </a>
+
+        <p class="text-[11px] text-slate-500">
+          После оплаты курс автоматически привяжется к вашему email.
+        </p>
+      </aside>
+    </section>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-slate-200/70 bg-white/80 mt-6">
+  <div class="wrap px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+    <p>© PolyTalky, 2025. Все права защищены.</p>
+    <p class="flex items-center gap-3">
+      <a href="/contact.html" class="hover:text-slate-700">Контакты</a>
+      <span class="hidden sm:inline">•</span>
+      <a href="/legal/" class="hover:text-slate-700">Юридическая информация</a>
+    </p>
+  </div>
+</footer>
+
+<!-- Таймер (старт 1 февраля) -->
+<script>
+  // Ставит старт на ближайшее 1 февраля (если уже прошло в этом году — на следующий)
+  function getNextFeb1(){
+    const now = new Date();
+    let y = now.getFullYear();
+    let dt = new Date(y, 1, 1, 0, 0, 0); // month=1 => февраль
+    if (dt.getTime() <= now.getTime()) dt = new Date(y + 1, 1, 1, 0, 0, 0);
+    return dt;
+  }
+
+  const targetDate = getNextFeb1();
+
+  function updateTimer(){
+    const now = new Date();
+    const diff = targetDate.getTime() - now.getTime();
+    const grid = document.getElementById('timer-grid');
+
+    if(diff <= 0){
+      grid.innerHTML = '<p class="text-sm text-slate-700">Курс открыт! 🎉</p>';
+      return;
+    }
+
+    const d = Math.floor(diff/(1000*60*60*24));
+    const h = Math.floor((diff/(1000*60*60))%24);
+    const m = Math.floor((diff/(1000*60))%60);
+    const s = Math.floor((diff/1000)%60);
+
+    document.getElementById('days').textContent = String(d).padStart(2,'0');
+    document.getElementById('hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(m).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(s).padStart(2,'0');
+  }
+
+  updateTimer();
+  setInterval(updateTimer,1000);
+</script>
+
+</body>
+</html>
