@@ -1612,7 +1612,66 @@ const MatchMode = () => {
         </div>
       );
     };
+// ---------- ТАБЛИЦА НЕПРАВИЛЬНЫХ ГЛАГОЛОВ ----------
+const IRREGULARS = [
+  { base: 'be', past: 'was / were', part: 'been', ru: 'быть' },
+  { base: 'do', past: 'did', part: 'done', ru: 'делать' },
+  { base: 'go', past: 'went', part: 'gone', ru: 'идти' },
+  { base: 'have', past: 'had', part: 'had', ru: 'иметь' },
+  { base: 'make', past: 'made', part: 'made', ru: 'делать' },
+  { base: 'take', past: 'took', part: 'taken', ru: 'брать' },
+  { base: 'get', past: 'got', part: 'got / gotten', ru: 'получать' },
+  { base: 'see', past: 'saw', part: 'seen', ru: 'видеть' },
+  { base: 'eat', past: 'ate', part: 'eaten', ru: 'есть' },
+  { base: 'drink', past: 'drank', part: 'drunk', ru: 'пить' }
+];
 
+const IrregularsMode = () => {
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold text-gray-800">
+        Неправильные глаголы
+      </h2>
+
+      <div className="max-h-[420px] overflow-auto border rounded-2xl bg-white">
+        <table className="w-full text-sm">
+          <thead className="sticky top-0 bg-emerald-50">
+            <tr>
+              <th className="px-3 py-2 text-left">Infinitive</th>
+              <th className="px-3 py-2 text-left">Past</th>
+              <th className="px-3 py-2 text-left">Participle</th>
+              <th className="px-3 py-2 text-left">Перевод</th>
+            </tr>
+          </thead>
+          <tbody>
+            {IRREGULARS.map(v => (
+              <tr key={v.base} className="border-t">
+                <td className="px-3 py-2 font-semibold">
+                  <button
+                    onClick={() => speakWord(v.base)}
+                    className="underline decoration-dotted"
+                  >
+                    {v.base}
+                  </button>
+                </td>
+                <td className="px-3 py-2">{v.past}</td>
+                <td className="px-3 py-2">{v.part}</td>
+                <td className="px-3 py-2 text-gray-600">{v.ru}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <button
+        onClick={() => setMode('menu')}
+        className="w-full py-3 rounded-2xl bg-gray-100 hover:bg-gray-200 font-semibold"
+      >
+        ← Назад к режимам
+      </button>
+    </div>
+  );
+};
     // ---------- ЭКРАН РЕЗУЛЬТАТОВ ----------
     const ResultsScreen = () => {
       const maxPerWord = 15; // грубая оценка
@@ -1759,6 +1818,7 @@ const MatchMode = () => {
         {mode === 'flashcards'&& <FlashcardsMode />}
         {mode === 'match'     && <MatchMode />}
         {mode === 'typing'    && <TypingMode />}
+        {mode === 'irregulars' && <IrregularsMode />}
         {mode === 'results'   && <ResultsScreen />}
       </div>
     );
