@@ -1197,7 +1197,96 @@ if (auth && db) {
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+ <script>
+  // Глобальная озвучка (чтобы работала и вне React)
+  window.speakWord = window.speakWord || function(word) {
+    if (!word) return;
+    if ("speechSynthesis" in window) {
+      const u = new SpeechSynthesisUtterance(word);
+      u.lang = "en-US";
+      u.rate = 0.85;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    }
+  };
+
+  // Мини-таблица (можно расширять)
+  const IRREGULAR_VERBS = [
+    { base:"be",   past:"was/were", part:"been",  ru:"быть" },
+    { base:"do",   past:"did",      part:"done",  ru:"делать" },
+    { base:"go",   past:"went",     part:"gone",  ru:"идти" },
+    { base:"have", past:"had",      part:"had",   ru:"иметь" },
+    { base:"take", past:"took",     part:"taken", ru:"брать" },
+    { base:"get",  past:"got",      part:"got/gotten", ru:"получать" },
+    { base:"make", past:"made",     part:"made",  ru:"делать/создавать" },
+    { base:"come", past:"came",     part:"come",  ru:"приходить" },
+    { base:"see",  past:"saw",      part:"seen",  ru:"видеть" },
+    { base:"say",  past:"said",     part:"said",  ru:"говорить/сказать" },
+    { base:"speak",past:"spoke",    part:"spoken",ru:"говорить" },
+    { base:"eat",  past:"ate",      part:"eaten", ru:"есть" },
+    { base:"drink",past:"drank",    part:"drunk", ru:"пить" },
+    { base:"write",past:"wrote",    part:"written",ru:"писать" },
+    { base:"read", past:"read",     part:"read",  ru:"читать" },
+    { base:"buy",  past:"bought",   part:"bought",ru:"покупать" },
+    { base:"think",past:"thought",  part:"thought",ru:"думать" },
+    { base:"know", past:"knew",     part:"known", ru:"знать" },
+    { base:"find", past:"found",    part:"found", ru:"находить" },
+    { base:"give", past:"gave",     part:"given", ru:"давать" }
+  ];
+
+  function renderIrregularTable(list) {
+    const tbody = document.getElementById("iv-tbody");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+    list.forEach(v => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="px-3 py-2">
+          <button class="underline decoration-dotted text-[#111827] font-semibold hover:opacity-80"
+                  title="Нажмите, чтобы услышать"
+                  type="button"
+                  data-say="${v.base}">
+            ${v.base}
+          </button>
+        </td>
+        <td class="px-3 py-2">${v.past}</td>
+        <td class="px-3 py-2">${v.part}</td>
+        <td class="px-3 py-2 text-[var(--ink-2)]">${v.ru}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // озвучка по клику
+    tbody.querySelectorAll("button[data-say]").forEach(btn => {
+      btn.addEventListener("click", () => window.speakWord(btn.dataset.say));
+    });
+  }
+
+  function setupIrregularTable() {
+    const input = document.getElementById("iv-search");
+    renderIrregularTable(IRREGULAR_VERBS);
+
+    if (!input) return;
+    input.addEventListener("input", () => {
+      const q = input.value.trim().toLowerCase();
+      if (!q) return renderIrregularTable(IRREGULAR_VERBS);
+
+      const filtered = IRREGULAR_VERBS.filter(v =>
+        (v.base || "").toLowerCase().includes(q) ||
+        (v.past || "").toLowerCase().includes(q) ||
+        (v.part || "").toLowerCase().includes(q) ||
+        (v.ru || "").toLowerCase().includes(q)
+      );
+      renderIrregularTable(filtered);
+    });
+  }
+
+  // Запуск после загрузки DOM
+  document.addEventListener("DOMContentLoaded", setupIrregularTable);
+</script> 
 <script type="text/babel">
+  
   const { useState, useEffect } = React;
  
   // Примерные слова для демо (если нет слов из курса)
