@@ -501,12 +501,20 @@
   border-bottom: none;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: none) and (pointer: fine) {
   .option-btn:hover:not(:disabled) {
     border-color: #FF8A5C;
     background: #FFF8E5;
     transform: translateX(5px);
     box-shadow: 0 8px 18px rgba(249, 115, 22, 0.25);
+  }
+}
+  @media (hover: none) and (pointer: coarse) {
+  .option-btn:hover:not(:disabled) {
+    border-color: #e5e7eb;
+    background: #ffffff;
+    transform: none;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
   }
 }
     /* tooltip + озвучка */
