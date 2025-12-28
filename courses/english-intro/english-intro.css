@@ -500,6 +500,15 @@
 .summary-box li:last-child {
   border-bottom: none;
 }
+
+@media (hover: hover) and (pointer: fine) {
+  .option-btn:hover:not(:disabled) {
+    border-color: #FF8A5C;
+    background: #FFF8E5;
+    transform: translateX(5px);
+    box-shadow: 0 8px 18px rgba(249, 115, 22, 0.25);
+  }
+}
     /* tooltip + озвучка */
     .word-tip{
       position:relative;
