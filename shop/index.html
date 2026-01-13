@@ -1144,22 +1144,7 @@
       const PROMO_KEY = 'pt_promo';
   
 
-      // ссылка Stripe для теста 0,50 €
-      const STRIPE_PROMO_LINK = 'https://buy.stripe.com/6oU3cueCi0AB6PEaMOb3q0B';
-
-      // Промокоды в JS
-      const promoCodes = {
-        'SUPER90': {
-          type: 'percent',
-          value: 90,
-          label: 'Cкидка 90%'
-        },
-        'STRIPE99': {
-          type: 'stripe99',
-          value: 99,
-          label: ''
-        }
-      };
+   
       let appliedPromo = null;
 
       const stripeByEur = {
