@@ -6,1620 +6,641 @@
   <title>PolyTalky — Магазин курсов</title>
   <meta name="description" content="Магазин языковых курсов PolyTalky: спецпрограммы, челленджи и курсы для продолжающих. Оплата для РФ и из-за рубежа." />
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- фавикон -->
   <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
   <link rel="apple-touch-icon" href="/favicon.jpg">
   <style>
-    :root{
-      --brand:#FFBA08; --ink:#0f172a; --ink-2:#334155; --paper:#fff; --bg:#F9FAFB;
-      --pastel-1:#FFF4CC; --pastel-2:#F3F4F6;
-    }
-    body{
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:var(--bg);
-      color:var(--ink);
-    }
+    :root{--brand:#FFBA08;--ink:#0f172a;--ink-2:#334155;--paper:#fff;--bg:#F9FAFB;--pastel-2:#F3F4F6}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--ink)}
     .wrap{max-width:1280px;margin:0 auto}
-    .btn{
-      padding:.6rem 1rem;
-      border-radius:1rem;
-      font-weight:800;
-      transition:.2s;
-      font-size:.9rem;
-    }
-    .btn-brand{background:var(--brand);color:#111}
-    .btn-brand:hover{filter:brightness(.95)}
-    .btn-ghost{
-      background:#fff;
-      border:1px solid rgba(0,0,0,.06);
-      color:var(--ink);
-      box-shadow:0 1px 0 rgba(0,0,0,.03);
-    }
-    .btn-ghost:hover{
-      background:#fff;
-      box-shadow:0 6px 16px rgba(0,0,0,.06);
-    }
-    .card{
-      background:var(--paper);
-      border:1px solid rgba(0,0,0,.06);
-      border-radius:1.25rem;
-      overflow:hidden;
-      box-shadow:0 8px 24px rgba(0,0,0,.04);
-      transition:transform .2s, box-shadow .2s;
-    }
-    .card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 14px 34px rgba(0,0,0,.08);
-    }
-    .chip{
-      display:inline-block;
-      background:var(--pastel-2);
-      padding:2px 8px;
-      border-radius:999px;
-      font-size:12px;
-      color:var(--ink-2);
-      font-weight:600;
-    }
+    .btn{padding:.6rem 1rem;border-radius:1rem;font-weight:800;transition:.2s;font-size:.9rem;cursor:pointer;border:none}
+    .btn-brand{background:var(--brand);color:#111}.btn-brand:hover{filter:brightness(.95)}
+    .btn-ghost{background:#fff;border:1px solid rgba(0,0,0,.1);color:var(--ink);box-shadow:0 1px 0 rgba(0,0,0,.03)}.btn-ghost:hover{box-shadow:0 6px 16px rgba(0,0,0,.06)}
+    .card{background:var(--paper);border:1px solid rgba(0,0,0,.06);border-radius:1.25rem;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.04);transition:transform .2s,box-shadow .2s}.card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.08)}
+    .chip{display:inline-block;background:var(--pastel-2);padding:2px 8px;border-radius:999px;font-size:12px;color:var(--ink-2);font-weight:600}
     .price{font-weight:900}
-    header.nav{
-      backdrop-filter:saturate(140%) blur(6px);
-      background:rgba(255,255,255,.7);
-      border-bottom:1px solid rgba(0,0,0,.06);
-    }
-    .badge{
-      background:var(--brand);
-      color:#111;
-      border-radius:.6rem;
-      padding:.25rem .5rem;
-      font-weight:800;
-      font-size:.75rem;
-    }
-    .soft{
-      background:linear-gradient(180deg, rgba(255,186,8,.18), transparent 40%);
-    }
-    #toast{
-      position:fixed;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:20px;
-      background:#111;
-      color:#fff;
-      padding:12px 16px;
-      border-radius:12px;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .2s, transform .2s;
-      z-index:70;
-      font-size:.85rem;
-    }
+    header.nav{backdrop-filter:saturate(140%) blur(6px);background:rgba(255,255,255,.7);border-bottom:1px solid rgba(0,0,0,.06)}
+    .badge{background:var(--brand);color:#111;border-radius:.6rem;padding:.25rem .5rem;font-weight:800;font-size:.75rem}
+    .soft{background:linear-gradient(180deg,rgba(255,186,8,.18),transparent 40%)}
+    #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:#111;color:#fff;padding:12px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;font-size:.85rem;white-space:nowrap}
     #toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
-    .drawer{
-      background:var(--paper);
-      border-left:1px solid rgba(0,0,0,.06);
-      box-shadow:-12px 0 32px rgba(0,0,0,.08);
-    }
-    .modal{
-      background:var(--paper);
-      border:1px solid rgba(0,0,0,.06);
-      box-shadow:0 18px 40px rgba(0,0,0,.18);
-    }
+    .modal{background:var(--paper);border:1px solid rgba(0,0,0,.06);box-shadow:0 18px 40px rgba(0,0,0,.18)}
     .divider{height:1px;background:rgba(0,0,0,.08);margin:.9rem 0}
-    .list-dot li{position:relative;padding-left:1rem}
-    .list-dot li:before{
-      content:'•';
-      position:absolute;
-      left:0;
-      color:var(--brand);
-    }
-    @keyframes bump{
-      0%{transform:scale(1)}
-      30%{transform:scale(1.18)}
-      60%{transform:scale(1)}
-      100%{transform:scale(1)}
-    }
-    .bump{animation:bump .4s ease}
+    .list-dot li{position:relative;padding-left:1rem}.list-dot li:before{content:'•';position:absolute;left:0;color:var(--brand)}
+    @keyframes bump{0%,60%,100%{transform:scale(1)}30%{transform:scale(1.18)}}.bump{animation:bump .4s ease}
+    /* close × button */
+    .close-x{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.07);font-size:17px;cursor:pointer;transition:.15s;border:none;color:var(--ink);flex-shrink:0;line-height:1}.close-x:hover{background:rgba(0,0,0,.13)}
+    /* slider */
+    .slider-wrap{position:relative;overflow:hidden;border-radius:.75rem;border:1px solid rgba(0,0,0,.1);aspect-ratio:4/3;background:#f1f5f9}
+    .slider-track{display:flex;height:100%;transition:transform .35s ease}
+    .slider-track img{width:100%;height:100%;object-fit:cover;flex-shrink:0}
+    .slider-btn{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.1);box-shadow:0 2px 8px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;z-index:2;transition:.15s}.slider-btn:hover{box-shadow:0 4px 14px rgba(0,0,0,.18)}
+    .slider-btn.prev{left:8px}.slider-btn.next{right:8px}
+    .slider-dots{display:flex;gap:5px;justify-content:center;margin-top:7px}
+    .slider-dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.2);cursor:pointer;transition:.2s}.slider-dot.active{background:var(--brand);transform:scale(1.3)}
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
-  <!-- ШАПКА -->
-  <header class="nav sticky top-0 z-30">
-    <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-      <a href="/" class="flex items-center justify-center">
-        <img src="/assets/logo.png" class="w-8 mr-2" alt="PolyTalky">
-        <span class="font-bold">PolyTalky</span>
-      </a>
-      <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a href="/courses/" class="opacity-80 hover:opacity-100 text-[var(--ink-2)]">Курсы</a>
-        <a href="/shop/" class="opacity-100 font-semibold text-[var(--ink)]">Магазин</a>
-        <a href="/student/" class="opacity-80 hover:opacity-100 text-[var(--ink-2)]">Личный кабинет</a>
-      </nav>
-      <button id="cartBtn" class="relative btn btn-ghost">
-        🛒 Корзина
-        <span id="cartCount" class="absolute -right-2 -top-2 bg-[var(--brand)] text-black rounded-full text-xs font-extrabold px-2 py-0.5">0</span>
-      </button>
+
+<!-- ШАПКА -->
+<header class="nav sticky top-0 z-30">
+  <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center"><img src="/assets/logo.png" class="w-8 mr-2" alt="PolyTalky"><span class="font-bold">PolyTalky</span></a>
+    <nav class="hidden md:flex items-center gap-6 text-sm">
+      <a href="/courses/" class="opacity-80 hover:opacity-100 text-[var(--ink-2)]">Курсы</a>
+      <a href="/shop/" class="font-semibold text-[var(--ink)]">Магазин</a>
+      <a href="/student/" class="opacity-80 hover:opacity-100 text-[var(--ink-2)]">Личный кабинет</a>
+    </nav>
+    <button id="cartBtn" class="relative btn btn-ghost">
+      🛒 Корзина
+      <span id="cartCount" class="absolute -right-2 -top-2 bg-[var(--brand)] text-black rounded-full text-xs font-extrabold px-2 py-0.5">0</span>
+    </button>
+  </div>
+</header>
+
+<main class="flex-grow">
+  <section class="soft">
+    <div class="wrap px-4 sm:px-6 lg:px-8 py-10">
+      <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight">Магазин курсов PolyTalky</h1>
+      <p class="text-[var(--ink-2)] mt-2">Спецкурсы, челленджи и программы для продолжающих. Оплата для РФ и из-за рубежа, чеки — на email.</p>
     </div>
-  </header>
+  </section>
 
-  <!-- ГЕРО-БЛОК -->
-  <main class="flex-grow">
-    <section class="soft">
-      <div class="wrap px-4 sm:px-6 lg:px-8 py-10">
-        <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight text-[var(--ink)]">
-          Магазин курсов PolyTalky
-        </h1>
-        <p class="text-[var(--ink-2)] mt-2">
-          Спецкурсы, челленджи и программы для продолжающих. Оплата для РФ и из-за рубежа, чеки — на email.
-        </p>
-      </div>
-    </section>
+  <section class="wrap px-4 sm:px-6 lg:px-8 py-10 space-y-10">
 
-    <section class="wrap px-4 sm:px-6 lg:px-8 py-10 space-y-10">
-          <!-- БЛОК: ЯЗЫКОВЫЕ КУРСЫ -->
-      <div>
-        <h2 class="text-2xl font-bold mb-4 text-[var(--ink)]">🎓 Курсы по языкам</h2>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
- <!-- Afrikaans -->
-          <div
-            class="card product"
-            data-id="afrikaans-a0"
-            data-title="Африкаанс с нуля"
-            data-img="/assets/courses/afrikaans.jpg"
-            data-price-rub="990"
-            data-price-eur="12"
-            data-level="A0"
-            data-lessons="12"
-            data-desc="Редкий язык с простой грамматикой: мягкий вход для любителей необычного."
-            data-includes='["12 уроков","PDF-шпаргалки","Карточки и аудио"]'
-            data-outcomes='["Освоите базовые фразы","Сможете поддержать простой диалог"]'
-          >
-             <div class="relative">
-              <img src="/assets/courses/afrikaans.jpg" alt="Африкаанс" class="w-full aspect-[4/3] object-cover">
-              <span class="badge absolute top-3 right-3">Старт 1 февраля</span>
-            </div>
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">AF</span>
-                <span class="chip">A0</span>
-              </div>
-              <h3 class="font-extrabold">Африкаанс с нуля</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Для тех, кто любит редкие языки, но при этом хочет мягкий вход.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  990 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- English with Harry -->
-          <div
-            class="card product"
-            data-id="english-with-harry"
-            data-title="English with Harry"
-            data-img="/assets/courses/englishwithharry.jpg"
-            data-price-rub="1490"
-            data-price-eur="19"
-            data-soon="1"
-            data-level="A0–A2"
-            data-lessons="28"
-            data-desc="Игровой курс по мотивам любимой книги и фильма. Английский через историю, а не скучные диалоги."
-            data-includes='["28 уроков","Карточки и аудио","PDF-шпаргалки","Мини-квизы"]'
-            data-outcomes='["Понимать базовые реплики и диалоги","Не бояться живого английского из фильмов","Получать удовольствие от процесса"]'
-          >
-            <img src="/assets/courses/englishwithharry.jpg" alt="English with Harry" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">EN</span>
-                <span class="chip">A1–A2</span>
-              </div>
-              <h3 class="font-extrabold">English with Harry</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Для истинных фанатов Гарри Поттера - твой билет на Хогвартс Экспресс уже ждет тебя!
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 490 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- ЯЗЫКОВЫЕ КУРСЫ -->
+    <div>
+      <h2 class="text-2xl font-bold mb-4">🎓 Курсы по языкам</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          <!-- Visual Spanish -->
-          <div
-            class="card product"
-            data-id="visual-spanish"
-            data-title="Визуальный испанский"
-            data-img="/assets/courses/visualspanish.jpg"
-            data-price-rub="1290"
-            data-price-eur="15"
-            data-level="A1–A2"
-            data-lessons="24"
-            data-soon="1"
-            data-desc="Испанский через визуальные прогулки по Испании — никаких скучных уроков!"
-            data-includes='["24 урока","Визуальные сцены","Карточки и аудио"]'
-            data-outcomes='["Расширите словарный запас","Прокачаете понимание на слух","Запомните слова через картинки"]'
-          >
-            <img src="/assets/courses/visualspanish.jpg" alt="Визуальный испанский" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">ES</span>
-                <span class="chip">A1–A2</span>
-              </div>
-              <h3 class="font-extrabold">Визуальный испанский</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Отправтесь в виртуальную прогулку по Испании! Идеально, если вы «визуал» и любите, когда всё можно увидеть глазами.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 290 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Italian songs -->
-          <div
-            class="card product"
-            data-id="italian-songs"
-            data-title="Итальянский по песням"
-            data-img="/assets/courses/italiansongs.jpg"
-            data-price-rub="1290"
-            data-price-eur="15"
-            data-level="A0–A2"
-            data-soon="1"
-            data-lessons="18"
-            data-desc="Популярные песни, разбор фраз, грамматики и произношения — для тех, кто любит учиться с музыкой."
-            data-includes='["Разборы песен","PDF-тексты с подсветкой","Аудио и карточки","Задания на понимание"]'
-            data-outcomes='["Лучше понимать итальянские песни","Подхватывать живые выражения","Прокачать произношение"]'
-          >
-            <img src="/assets/courses/italiansongs.jpg" alt="Итальянский по песням" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">IT</span>
-                <span class="chip">A0–A2</span>
-              </div>
-              <h3 class="font-extrabold">Итальянский по песням</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Курс для тех, кто любит Италию, музыку и лёгкий формат обучения.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 290 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Pro Español -->
-          <div
-            class="card product"
-            data-id="pro-espanol"
-            data-title="Pro Español (от носителя)"
-            data-img="/assets/courses/proespanol.jpg"
-            data-price-rub="1990"
-            data-price-eur="24"
-            data-level="B1–B2"
-            data-soon="1"
-            data-lessons="20"
-            data-desc="Продвинутый курс от носителя языка, чтобы выйти на живой разговорный испанский."
-            data-includes='["20 уроков","Аудио от носителя","Практические задания","Курс полностью на испанском!"]'
-            data-outcomes='["Более естественная речь","Настоящие разговорные конструкции","Уверенность в общении с носителями"]'
-          >
-            <img src="/assets/courses/proespanol.jpg" alt="Pro Español" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">ES</span>
-                <span class="chip">B2–С2</span>
-              </div>
-              <h3 class="font-extrabold">Pro Español (от носителя)</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Для тех, кто уже «что-то умеет», но хочет звучать по-настоящему по-испански.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 990 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Finnish travel -->
-          <div
-            class="card product"
-            data-id="finnish-travel"
-            data-title="Финский для путешествий"
-            data-img="/assets/courses/finishtravel.jpg"
-            data-price-rub="1290"
-            data-price-eur="15"
-            data-soon="1"
-            data-level="A0-А2"
-            data-lessons="16"
-            data-desc="Финский для поездок: транспорт, кафе, магазин, жильё."
-            data-includes='["16 уроков","Карточки и аудио","PDF-минифразы"]'
-            data-outcomes='["Спросить и уточнить в поездке","Чувствовать себя увереннее в Финляндии"]'
-          >
-            <img src="/assets/courses/finishtravel.jpg" alt="Финский для путешествий" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">FI</span>
-                <span class="chip">A1</span>
-              </div>
-              <h3 class="font-extrabold">Финский для путешествий</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Чтобы не молчать в поездке и понимать, что говорят в ответ.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 290 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Finnish A2 -->
-          <div
-            class="card product"
-            data-id="finnish-a2"
-            data-title="Финский для продолжающих"
-            data-img="/assets/courses/finisha2.jpg"
-            data-price-rub="1490"
-            data-price-eur="19"
-            data-soon="1"
-            data-level="A2–B1"
-            data-lessons="18"
-            data-desc="Финский, если база уже есть и хочется говорить больше и свободнее."
-            data-includes='["18 уроков","Грамматика и разговорные темы","Карточки и аудио"]'
-            data-outcomes='["Строить более сложные предложения","Расширить активный словарь"]'
-          >
-            <img src="/assets/courses/finisha2.jpg" alt="Финский для продолжающих" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">FI</span>
-                <span class="chip">A2–B1</span>
-              </div>
-              <h3 class="font-extrabold">Финский для продолжающих</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Логичное продолжение курса с нуля с упором на речь.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 490 ₽
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- German A2 -->
-          <div
-            class="card product"
-            data-id="german-a2"
-            data-title="Немецкий для продолжающих"
-            data-img="/assets/courses/germana2.jpg"
-            data-price-rub="1490"
-            data-price-eur="19"
-            data-soon="1"
-            data-level="A2–B1"
-            data-lessons="18"
-            data-desc="Падежи, порядок слов и разговорные ситуации для тех, кто уже прошёл базу."
-            data-includes='["18 уроков","Практика порядка слов","Диалоги и задания"]'
-            data-outcomes='["Более уверенный немецкий","Меньше ошибок в падежах"]'
-          >
-            <img src="/assets/courses/germana2.jpg" alt="Немецкий для продолжающих" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">DE</span>
-                <span class="chip">A2–B1</span>
-              </div>
-              <h3 class="font-extrabold">Немецкий для продолжающих</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Для этапа, когда хочется наконец-то говорить, а не только делать упражнения.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 490 ₽
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Italian A2 -->
-          <div
-            class="card product"
-            data-id="italian-a2"
-            data-title="Итальянский для продолжающих"
-            data-img="/assets/courses/italiana2.jpg"
-            data-price-rub="1490"
-            data-soon="1"
-            data-price-eur="19"
-            data-level="A2–B1"
-            data-lessons="18"
-            data-desc="Продолжение для тех, кто уже прошёл курс с нуля и хочет говорить больше."
-            data-includes='["18 уроков","Разговорные темы","Карточки и аудио"]'
-            data-outcomes='["Больше свободы в разговоре","Наработка живых фраз"]'
-          >
-            <img src="/assets/courses/italiana2.jpg" alt="Итальянский для продолжающих" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">IT</span>
-                <span class="chip">A2–B1</span>
-              </div>
-              <h3 class="font-extrabold">Итальянский для продолжающих</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Чтобы итальянский перестал быть только «хобби по учебнику».
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 490 ₽
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-                   <!-- Dutch A2 -->
-          <div
-            class="card product"
-            data-id="dutch-a2"
-            data-title="Нидерландский для продолжающих"
-            data-img="/assets/courses/nederlandsa2.jpg"
-            data-price-rub="1490"
-            data-price-eur="19"
-            data-soon="1"
-            data-level="A2–B1"
-            data-lessons="16"
-            data-desc="Продолжение нидерландского: больше разговорных тем и уверенность в структуре."
-            data-includes='["16 уроков","Разговорные темы","Карточки и аудио"]'
-            data-outcomes='["Более свободная речь","Уверенность в типичных диалогах"]'
-          >
-            <img src="/assets/courses/nederlandsa2.jpg" alt="Нидерландский для продолжающих" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">NL</span>
-                <span class="chip">A2–B1</span>
-              </div>
-              <h3 class="font-extrabold">Нидерландский для продолжающих</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Для тех, кто уже начал нидерландский и не хочет останавливаться.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 490 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Swedish A0 -->
-          <div
-            class="card product"
-            data-id="swedish-a0"
-            data-title="Шведский с нуля"
-            data-img="/assets/courses/swedish.jpg"
-            data-price-rub="990"
-            data-price-eur="12"
-            data-level="A0"
-            data-soon="1"
-            data-lessons="12"
-            data-desc="Базовый курс шведского: звуки, фонетика и самые важные фразы."
-            data-includes='["12 уроков","PDF и карточки","Аудио для тренировки произношения"]'
-            data-outcomes='["Понимать и произносить базовые фразы","Сделать первые шаги в шведском"]'
-          >
-            <img src="/assets/courses/swedish.jpg" alt="Шведский с нуля" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">SV</span>
-                <span class="chip">A0</span>
-              </div>
-              <h3 class="font-extrabold">Шведский с нуля</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Мягкий старт для тех, кто мечтает о Скандинавии.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  990 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Lithuanian -->
-          <div
-            class="card product"
-            data-id="lithuanian-a0"
-            data-title="Литовский с нуля"
-            data-img="/assets/courses/lithuanian.jpg"
-            data-price-rub="990"
-            data-price-eur="12"
-            data-soon="1"
-            data-level="A0"
-            data-lessons="12"
-            data-desc="Базовый курс литовского: алфавит, произношение и бытовые фразы."
-            data-includes='["12 уроков","Карточки и шпаргалки","Аудио"]'
-            data-outcomes='["Сможете представиться и сказать о себе","Понять простые фразы в быту"]'
-          >
-            <img src="/assets/courses/lithuanian.jpg" alt="Литовский с нуля" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">LT</span>
-                <span class="chip">A0</span>
-              </div>
-              <h3 class="font-extrabold">Литовский с нуля</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Для тех, кому важна Литва — семья, корни, работа или просто любовь к языку.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  990 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Romanian -->
-          <div
-            class="card product"
-            data-id="romanian-a0"
-            data-title="Румынский с нуля"
-            data-img="/assets/courses/romanian.jpg"
-            data-price-rub="990"
-            data-price-eur="12"
-            data-level="A0"
-            data-soon="1"
-            data-lessons="12"
-            data-desc="Романский язык с понятной фонетикой и знакомой логикой."
-            data-includes='["12 уроков","PDF и карточки","Аудио"]'
-            data-outcomes='["Освоите базовые фразы","Сможете поддержать простой диалог"]'
-          >
-            <img src="/assets/courses/romanian.jpg" alt="Румынский с нуля" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">RO</span>
-                <span class="chip">A0</span>
-              </div>
-              <h3 class="font-extrabолд">Румынский с нуля</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Для тех, кто любит романские языки и хочет «что-то необычное».
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  990 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          
+        <div class="card product" data-id="afrikaans-a0" data-title="Африкаанс с нуля" data-img="/assets/courses/afrikaans.jpg" data-price-rub="990" data-price-eur="12" data-level="A0" data-lessons="12" data-desc="Редкий язык с простой грамматикой: мягкий вход для любителей необычного." data-includes='["12 уроков","PDF-шпаргалки","Карточки и аудио"]' data-outcomes='["Освоите базовые фразы","Сможете поддержать простой диалог"]'>
+          <div class="relative"><img src="/assets/courses/afrikaans.jpg" alt="Африкаанс" class="w-full aspect-[4/3] object-cover"><span class="badge absolute top-3 right-3">Старт 1 февраля</span></div>
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">AF</span><span class="chip">A0</span></div><h3 class="font-extrabold">Африкаанс с нуля</h3><p class="text-[var(--ink-2)] text-sm mt-1">Для тех, кто любит редкие языки, но при этом хочет мягкий вход.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">990 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
         </div>
-      </div>
 
-        <!-- БЛОК: СПЕЦПРОГРАММЫ -->
-      <div>
-        <h2 class="text-2xl font-bold mb-4 text-[var(--ink)]">💫 Спецпрограммы и челленджи</h2>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- PolyglotPack MCHNY -->
-          <div
-            class="card product"
-            data-id="polyglotpack-mchny"
-            data-title="PolyglotPack MCHNY"
-            data-img="/assets/courses/mchny.jpg"
-            data-price-rub="1490"
-            data-price-eur="19"
-            data-level="A1–B1"
-            data-lessons="18"
-            data-desc="Лучший курс для любителей иностранных языков, чтобы обрести новогоднее настроение и узнать что-то новое! Новогодний разговорный набор: фразы для праздников, открыток, тостов и планов на год."
-            data-includes='["18 мини-уроков","PDF-фразы и карточки","Аудио для произношения","Мини-квизы"]'
-            data-outcomes='["Говорить о планах и желаниях","Поздравлять и отвечать естественно","Общаться на празднике без ступора"]'
-          >
-            <div class="relative">
-              <img src="/assets/courses/mchny.jpg" alt="PolyglotPack MCHNY" class="w-full aspect-[4/3] object-cover">
-              <span class="badge absolute top-3 right-3">Старт 25 декабря</span>
-            </div>
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">SEASONAL</span>
-                <span class="chip">A1–B1</span>
-              </div>
-              <h3 class="font-extrabold">PolyglotPack MCHNY</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Найди свое новогоднее настроение вместе с нами и познакомься с 10 языками сразу!
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 490 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Polyglot Pack Starter -->
-          <div
-            class="card product"
-            data-id="polyglotpack-starter"
-            data-title="Polyglot Pack. Starter"
-            data-img="/assets/courses/polyglotpack.jpg"
-            data-price-rub="1290"
-            data-price-eur="15"
-            data-level="A0–A1"
-            data-lessons="20"
-              data-soon="1"
-            data-desc="Стартовый набор: самые частые фразы и сценарии, чтобы не тонуть в чужом языке."
-            data-includes='["20 мини-уроков","Карточки и аудио","PDF-шпаргалки","Мини-квизы"]'
-            data-outcomes='["Понимать бытовые диалоги","Не теряться в типичных ситуациях","Заложить базу для дальнейшего обучения"]'
-          >
-            <img src="/assets/courses/polyglotpack.jpg" alt="Polyglot Pack Starter" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">PACK</span>
-                <span class="chip">A0–A1</span>
-              </div>
-              <h3 class="font-extrabold">Polyglot Pack. Starter</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Лучший курс для тех, кто хочет влюбиться в несколько языков одновременно
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 290 ₽
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Cook it -->
-          <div
-            class="card product"
-            data-id="cook-it"
-            data-title="Polyglot Pack. Cook it!"
-            data-img="/assets/courses/cookit.jpg"
-            data-price-rub="1290"
-            data-price-eur="15"
-            data-soon="1"
-            data-level="A1"
-            data-lessons="16"
-            data-desc="Курс для тех, кто любит готовить и учить язык одновременно."
-            data-includes='["16 видео-уроков","Вкусные рецепты","Карточки и аудио","Мини-квизы"]'
-            data-outcomes='["Лексика кухни и продуктов","Просьбы и инструкции","Уверенность в диалогах «еда и покупки»"]'
-          >
-            <img src="/assets/courses/cookit.jpg" alt="Cook it" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">PACK</span>
-                <span class="chip">A1</span>
-              </div>
-              <h3 class="font-extrabold">Polyglot Pack. Cook it!</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Учите язык через рецепты, походы в магазин и разговоры о любимой еде.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 290 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 30 Days of English -->
-          <div
-            class="card product"
-            data-id="30days-english"
-            data-title="30 Days of English (Challenge)"
-            data-img="/assets/courses/30daysofenglish.jpg"
-            data-price-rub="990"
-            data-price-eur="12"
-            data-level="Любой"
-            data-soon="1"
-            data-lessons="30"
-            data-desc="30-дневный челлендж по английскому: короткие задания, чтобы вы наконец дошли до конца."
-            data-includes='["30 ежедневных заданий","Карточки и аудио","Мини-квизы","Трекер прогресса (внутри курса)"]'
-            data-outcomes='["Увлекательная практика каждый день","Автоматизация базовых фраз","Уверенность в простых диалогах"]'
-          >
-            <img src="/assets/courses/30daysofenglish.jpg" alt="30 Days of English" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">EN</span>
-                <span class="chip">Challenge</span>
-              </div>
-              <h3 class="font-extrabold">30 Days of English</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Челлендж для тех, кто «вечно бросает» — 30 маленьких шагов к уверенной речи на английском по 15 минут в день. Для любого уровня!
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  990 ₽
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Irregular Verbs -->
-          <div
-            class="card product"
-            data-id="irregular-verbs"
-            data-title="Irregular Verbs (Challenge)"
-            data-img="/assets/courses/irregularverbs.jpg"
-            data-price-rub="790"
-            data-price-eur="10"
-            data-level="A2"
-            data-soon="1"
-            data-lessons="12"
-            data-desc="Челлендж по неправильным глаголам: группировки, ассоциации и тренажёры."
-            data-includes='["12 модулей по группам глаголов","PDF-таблицы и шпаргалки","Онлайн-тренажёры форм","Карточки для повторения"]'
-            data-outcomes='["Запомните формы неправильных глаголов","Перестанете путаться при разговоре и письме"]'
-          >
-            <img src="/assets/courses/irregularverbs.jpg" alt="Irregular Verbs" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">EN</span>
-                <span class="chip">A2</span>
-              </div>
-              <h3 class="font-extrabold">Irregular Verbs (Challenge)</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Наконец выучить неправильные глаголы и не возвращаться к ним каждые полгода.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  790 ₽ 
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- English for translators -->
-          <div
-            class="card product"
-            data-id="english-translators"
-            data-title="Английский для переводчиков"
-            data-img="/assets/courses/englishtranslate.jpg"
-            data-price-rub="1490"
-            data-price-eur="19"
-            data-soon="1"
-            data-level="B1–B2"
-            data-lessons="14"
-            data-desc="Практикум для тех, кто хочет начать переводить: стилистика, «ложные друзья» и чек-листы качества."
-            data-includes='["14 тематических модулей","Чек-листы для самопроверки","Разборы текстов и типичных ошибок"]'
-            data-outcomes='["Чище и точнее переводы","Тонкости письменного и устного перевода","Больше уверенности при сдаче работы заказчикам"]'
-          >
-            <img src="/assets/courses/englishtranslate.jpg" alt="Английский для переводчиков" class="w-full aspect-[4/3] object-cover">
-            <div class="p-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="chip">EN</span>
-                <span class="chip">B2–С2</span>
-              </div>
-              <h3 class="font-extrabold">Английский для переводчиков</h3>
-              <p class="text-[var(--ink-2)] text-sm mt-1">
-                Курс, который погрузит вас во все тонкости работы переводчика.
-              </p>
-            </div>
-            <div class="px-4 pb-4 -mt-2">
-              <div class="flex items-center justify-between">
-                <div class="price">
-                  1 490 ₽
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost js-more">Подробнее</button>
-                  <button class="btn btn-brand js-add">В корзину</button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="card product" data-id="english-with-harry" data-title="English with Harry" data-img="/assets/courses/englishwithharry.jpg" data-price-rub="1490" data-price-eur="19" data-soon="1" data-level="A0–A2" data-lessons="28" data-desc="Игровой курс по мотивам любимой книги и фильма. Английский через историю, а не скучные диалоги." data-includes='["28 уроков","Карточки и аудио","PDF-шпаргалки","Мини-квизы"]' data-outcomes='["Понимать базовые реплики и диалоги","Не бояться живого английского из фильмов","Получать удовольствие от процесса"]'>
+          <img src="/assets/courses/englishwithharry.jpg" alt="English with Harry" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">EN</span><span class="chip">A1–A2</span></div><h3 class="font-extrabold">English with Harry</h3><p class="text-[var(--ink-2)] text-sm mt-1">Для истинных фанатов Гарри Поттера — твой билет на Хогвартс Экспресс!</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 490 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
         </div>
-      </div>
 
-      <div class="text-xs text-[var(--ink-2)] max-w-2xl">
-        После оплаты вы получите доступ к курсам в личном кабинете PolyTalky. Если что-то не сработает, напишите на
-        <span class="font-semibold">iraburljaeva@gmail.com</span> — всё проверим и активируем вручную.
-      </div>
-    </section>
-  </main>
+        <div class="card product" data-id="visual-spanish" data-title="Визуальный испанский" data-img="/assets/courses/visualspanish.jpg" data-price-rub="1290" data-price-eur="15" data-level="A1–A2" data-lessons="24" data-soon="1" data-desc="Испанский через визуальные прогулки по Испании — никаких скучных уроков!" data-includes='["24 урока","Визуальные сцены","Карточки и аудио"]' data-outcomes='["Расширите словарный запас","Прокачаете понимание на слух","Запомните слова через картинки"]'>
+          <img src="/assets/courses/visualspanish.jpg" alt="Визуальный испанский" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">ES</span><span class="chip">A1–A2</span></div><h3 class="font-extrabold">Визуальный испанский</h3><p class="text-[var(--ink-2)] text-sm mt-1">Идеально, если вы «визуал» и любите, когда всё можно увидеть глазами.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 290 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
 
-  <!-- ФУТЕР -->
-  <footer class="border-t border-black/5 py-8 text-sm text-[var(--ink-2)] bg-white">
-    <div class="wrap px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-      <p>© 2025 PolyTalky. Все права защищены.</p>
-      <div class="flex flex-wrap gap-4">
-        <a href="/contact.html" class="opacity-80 hover:opacity-100">Контакты</a>
-        <a href="/legal/privacy.html" class="opacity-80 hover:opacity-100">Политика конфиденциальности</a>
-        <a href="/legal/offer.html" class="opacity-80 hover:opacity-100">Публичная оферта</a>
-        <a href="/legal/cookies.html" class="opacity-80 hover:opacity-100">Cookies</a>
-        <a href="/legal/consent.html" class="opacity-80 hover:opacity-100">Согласие</a>
+        <div class="card product" data-id="italian-songs" data-title="Итальянский по песням" data-img="/assets/courses/italiansongs.jpg" data-price-rub="1290" data-price-eur="15" data-level="A0–A2" data-soon="1" data-lessons="18" data-desc="Популярные песни, разбор фраз, грамматики и произношения — для тех, кто любит учиться с музыкой." data-includes='["Разборы песен","PDF-тексты с подсветкой","Аудио и карточки","Задания на понимание"]' data-outcomes='["Лучше понимать итальянские песни","Подхватывать живые выражения","Прокачать произношение"]'>
+          <img src="/assets/courses/italiansongs.jpg" alt="Итальянский по песням" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">IT</span><span class="chip">A0–A2</span></div><h3 class="font-extrabold">Итальянский по песням</h3><p class="text-[var(--ink-2)] text-sm mt-1">Курс для тех, кто любит Италию, музыку и лёгкий формат обучения.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 290 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="pro-espanol" data-title="Pro Español (от носителя)" data-img="/assets/courses/proespanol.jpg" data-price-rub="1990" data-price-eur="24" data-level="B1–B2" data-soon="1" data-lessons="20" data-desc="Продвинутый курс от носителя языка, чтобы выйти на живой разговорный испанский." data-includes='["20 уроков","Аудио от носителя","Практические задания","Курс полностью на испанском!"]' data-outcomes='["Более естественная речь","Настоящие разговорные конструкции","Уверенность в общении с носителями"]'>
+          <img src="/assets/courses/proespanol.jpg" alt="Pro Español" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">ES</span><span class="chip">B2–С2</span></div><h3 class="font-extrabold">Pro Español (от носителя)</h3><p class="text-[var(--ink-2)] text-sm mt-1">Для тех, кто уже «что-то умеет», но хочет звучать по-настоящему по-испански.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 990 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="finnish-travel" data-title="Финский для путешествий" data-img="/assets/courses/finishtravel.jpg" data-price-rub="1290" data-price-eur="15" data-soon="1" data-level="A0–A2" data-lessons="16" data-desc="Финский для поездок: транспорт, кафе, магазин, жильё." data-includes='["16 уроков","Карточки и аудио","PDF-минифразы"]' data-outcomes='["Спросить и уточнить в поездке","Чувствовать себя увереннее в Финляндии"]'>
+          <img src="/assets/courses/finishtravel.jpg" alt="Финский для путешествий" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">FI</span><span class="chip">A1</span></div><h3 class="font-extrabold">Финский для путешествий</h3><p class="text-[var(--ink-2)] text-sm mt-1">Чтобы не молчать в поездке и понимать, что говорят в ответ.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 290 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="finnish-a2" data-title="Финский для продолжающих" data-img="/assets/courses/finisha2.jpg" data-price-rub="1490" data-price-eur="19" data-soon="1" data-level="A2–B1" data-lessons="18" data-desc="Финский, если база уже есть и хочется говорить больше и свободнее." data-includes='["18 уроков","Грамматика и разговорные темы","Карточки и аудио"]' data-outcomes='["Строить более сложные предложения","Расширить активный словарь"]'>
+          <img src="/assets/courses/finisha2.jpg" alt="Финский для продолжающих" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">FI</span><span class="chip">A2–B1</span></div><h3 class="font-extrabold">Финский для продолжающих</h3><p class="text-[var(--ink-2)] text-sm mt-1">Логичное продолжение курса с нуля с упором на речь.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 490 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="german-a2" data-title="Немецкий для продолжающих" data-img="/assets/courses/germana2.jpg" data-price-rub="1490" data-price-eur="19" data-soon="1" data-level="A2–B1" data-lessons="18" data-desc="Падежи, порядок слов и разговорные ситуации для тех, кто уже прошёл базу." data-includes='["18 уроков","Практика порядка слов","Диалоги и задания"]' data-outcomes='["Более уверенный немецкий","Меньше ошибок в падежах"]'>
+          <img src="/assets/courses/germana2.jpg" alt="Немецкий для продолжающих" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">DE</span><span class="chip">A2–B1</span></div><h3 class="font-extrabold">Немецкий для продолжающих</h3><p class="text-[var(--ink-2)] text-sm mt-1">Для этапа, когда хочется наконец-то говорить, а не только делать упражнения.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 490 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="italian-a2" data-title="Итальянский для продолжающих" data-img="/assets/courses/italiana2.jpg" data-price-rub="1490" data-soon="1" data-price-eur="19" data-level="A2–B1" data-lessons="18" data-desc="Продолжение для тех, кто уже прошёл курс с нуля и хочет говорить больше." data-includes='["18 уроков","Разговорные темы","Карточки и аудио"]' data-outcomes='["Больше свободы в разговоре","Наработка живых фраз"]'>
+          <img src="/assets/courses/italiana2.jpg" alt="Итальянский для продолжающих" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">IT</span><span class="chip">A2–B1</span></div><h3 class="font-extrabold">Итальянский для продолжающих</h3><p class="text-[var(--ink-2)] text-sm mt-1">Чтобы итальянский перестал быть только «хобби по учебнику».</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 490 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="dutch-a2" data-title="Нидерландский для продолжающих" data-img="/assets/courses/nederlandsa2.jpg" data-price-rub="1490" data-price-eur="19" data-soon="1" data-level="A2–B1" data-lessons="16" data-desc="Продолжение нидерландского: больше разговорных тем и уверенность в структуре." data-includes='["16 уроков","Разговорные темы","Карточки и аудио"]' data-outcomes='["Более свободная речь","Уверенность в типичных диалогах"]'>
+          <img src="/assets/courses/nederlandsa2.jpg" alt="Нидерландский для продолжающих" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">NL</span><span class="chip">A2–B1</span></div><h3 class="font-extrabold">Нидерландский для продолжающих</h3><p class="text-[var(--ink-2)] text-sm mt-1">Для тех, кто уже начал нидерландский и не хочет останавливаться.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 490 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="swedish-a0" data-title="Шведский с нуля" data-img="/assets/courses/swedish.jpg" data-price-rub="990" data-price-eur="12" data-level="A0" data-soon="1" data-lessons="12" data-desc="Базовый курс шведского: звуки, фонетика и самые важные фразы." data-includes='["12 уроков","PDF и карточки","Аудио для тренировки произношения"]' data-outcomes='["Понимать и произносить базовые фразы","Сделать первые шаги в шведском"]'>
+          <img src="/assets/courses/swedish.jpg" alt="Шведский с нуля" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">SV</span><span class="chip">A0</span></div><h3 class="font-extrabold">Шведский с нуля</h3><p class="text-[var(--ink-2)] text-sm mt-1">Мягкий старт для тех, кто мечтает о Скандинавии.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">990 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="lithuanian-a0" data-title="Литовский с нуля" data-img="/assets/courses/lithuanian.jpg" data-price-rub="990" data-price-eur="12" data-soon="1" data-level="A0" data-lessons="12" data-desc="Базовый курс литовского: алфавит, произношение и бытовые фразы." data-includes='["12 уроков","Карточки и шпаргалки","Аудио"]' data-outcomes='["Сможете представиться и сказать о себе","Понять простые фразы в быту"]'>
+          <img src="/assets/courses/lithuanian.jpg" alt="Литовский с нуля" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">LT</span><span class="chip">A0</span></div><h3 class="font-extrabold">Литовский с нуля</h3><p class="text-[var(--ink-2)] text-sm mt-1">Для тех, кому важна Литва — семья, корни, работа или просто любовь к языку.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">990 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="romanian-a0" data-title="Румынский с нуля" data-img="/assets/courses/romanian.jpg" data-price-rub="990" data-price-eur="12" data-level="A0" data-soon="1" data-lessons="12" data-desc="Романский язык с понятной фонетикой и знакомой логикой." data-includes='["12 уроков","PDF и карточки","Аудио"]' data-outcomes='["Освоите базовые фразы","Сможете поддержать простой диалог"]'>
+          <img src="/assets/courses/romanian.jpg" alt="Румынский с нуля" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">RO</span><span class="chip">A0</span></div><h3 class="font-extrabold">Румынский с нуля</h3><p class="text-[var(--ink-2)] text-sm mt-1">Для тех, кто любит романские языки и хочет «что-то необычное».</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">990 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
       </div>
     </div>
-  </footer>
 
-  <!-- Toast -->
-  <div id="toast">Добавлено в корзину</div>
+    <!-- СПЕЦПРОГРАММЫ -->
+    <div>
+      <h2 class="text-2xl font-bold mb-4">💫 Спецпрограммы и челленджи</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-<!-- DETAIL MODAL -->
-<div id="detailModal" class="hidden fixed inset-0 bg-black/40 z-50">
-  <div class="w-full h-full flex items-center justify-center p-3">
-    <div class="modal rounded-2xl max-w-3xl w-full overflow-hidden max-h-[92vh] flex flex-col">
-      <!-- ШАПКА (всегда видна) -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-black/5 bg-white shrink-0">
-        <h3 id="dm-title" class="text-xl font-extrabold text-[var(--ink)]">Курс</h3>
-        <button class="text-sm underline" id="dm-close" type="button">Закрыть</button>
+        <div class="card product" data-id="polyglotpack-mchny" data-title="PolyglotPack MCHNY" data-img="/assets/courses/mchny.jpg" data-price-rub="1490" data-price-eur="19" data-level="A1–B1" data-lessons="18" data-desc="Лучший курс для любителей иностранных языков! Новогодний разговорный набор: фразы для праздников, открыток, тостов и планов на год." data-includes='["18 мини-уроков","PDF-фразы и карточки","Аудио для произношения","Мини-квизы"]' data-outcomes='["Говорить о планах и желаниях","Поздравлять и отвечать естественно","Общаться на празднике без ступора"]'>
+          <div class="relative"><img src="/assets/courses/mchny.jpg" alt="PolyglotPack MCHNY" class="w-full aspect-[4/3] object-cover"><span class="badge absolute top-3 right-3">Старт 25 декабря</span></div>
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">SEASONAL</span><span class="chip">A1–B1</span></div><h3 class="font-extrabold">PolyglotPack MCHNY</h3><p class="text-[var(--ink-2)] text-sm mt-1">Найди своё новогоднее настроение и познакомься с 10 языками сразу!</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 490 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="polyglotpack-starter" data-title="Polyglot Pack. Starter" data-img="/assets/courses/polyglotpack.jpg" data-price-rub="1290" data-price-eur="15" data-level="A0–A1" data-lessons="20" data-soon="1" data-desc="Стартовый набор: самые частые фразы и сценарии, чтобы не тонуть в чужом языке." data-includes='["20 мини-уроков","Карточки и аудио","PDF-шпаргалки","Мини-квизы"]' data-outcomes='["Понимать бытовые диалоги","Не теряться в типичных ситуациях","Заложить базу для дальнейшего обучения"]'>
+          <img src="/assets/courses/polyglotpack.jpg" alt="Polyglot Pack Starter" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">PACK</span><span class="chip">A0–A1</span></div><h3 class="font-extrabold">Polyglot Pack. Starter</h3><p class="text-[var(--ink-2)] text-sm mt-1">Лучший курс для тех, кто хочет влюбиться в несколько языков одновременно.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 290 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="cook-it" data-title="Polyglot Pack. Cook it!" data-img="/assets/courses/cookit.jpg" data-price-rub="1290" data-price-eur="15" data-soon="1" data-level="A1" data-lessons="16" data-desc="Курс для тех, кто любит готовить и учить язык одновременно." data-includes='["16 видео-уроков","Вкусные рецепты","Карточки и аудио","Мини-квизы"]' data-outcomes='["Лексика кухни и продуктов","Просьбы и инструкции","Уверенность в диалогах «еда и покупки»"]'>
+          <img src="/assets/courses/cookit.jpg" alt="Cook it" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">PACK</span><span class="chip">A1</span></div><h3 class="font-extrabold">Polyglot Pack. Cook it!</h3><p class="text-[var(--ink-2)] text-sm mt-1">Учите язык через рецепты, походы в магазин и разговоры о любимой еде.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 290 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="30days-english" data-title="30 Days of English (Challenge)" data-img="/assets/courses/30daysofenglish.jpg" data-price-rub="990" data-price-eur="12" data-level="Любой" data-soon="1" data-lessons="30" data-desc="30-дневный челлендж по английскому: короткие задания, чтобы вы наконец дошли до конца." data-includes='["30 ежедневных заданий","Карточки и аудио","Мини-квизы","Трекер прогресса (внутри курса)"]' data-outcomes='["Увлекательная практика каждый день","Автоматизация базовых фраз","Уверенность в простых диалогах"]'>
+          <img src="/assets/courses/30daysofenglish.jpg" alt="30 Days of English" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">EN</span><span class="chip">Challenge</span></div><h3 class="font-extrabold">30 Days of English</h3><p class="text-[var(--ink-2)] text-sm mt-1">30 маленьких шагов к уверенной речи — по 15 минут в день, для любого уровня.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">990 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="irregular-verbs" data-title="Irregular Verbs (Challenge)" data-img="/assets/courses/irregularverbs.jpg" data-price-rub="790" data-price-eur="10" data-level="A2" data-soon="1" data-lessons="12" data-desc="Челлендж по неправильным глаголам: группировки, ассоциации и тренажёры." data-includes='["12 модулей по группам глаголов","PDF-таблицы и шпаргалки","Онлайн-тренажёры форм","Карточки для повторения"]' data-outcomes='["Запомните формы неправильных глаголов","Перестанете путаться при разговоре и письме"]'>
+          <img src="/assets/courses/irregularverbs.jpg" alt="Irregular Verbs" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">EN</span><span class="chip">A2</span></div><h3 class="font-extrabold">Irregular Verbs (Challenge)</h3><p class="text-[var(--ink-2)] text-sm mt-1">Наконец выучить неправильные глаголы и не возвращаться к ним каждые полгода.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">790 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
+        <div class="card product" data-id="english-translators" data-title="Английский для переводчиков" data-img="/assets/courses/englishtranslate.jpg" data-price-rub="1490" data-price-eur="19" data-soon="1" data-level="B1–B2" data-lessons="14" data-desc="Практикум для тех, кто хочет начать переводить: стилистика, «ложные друзья» и чек-листы качества." data-includes='["14 тематических модулей","Чек-листы для самопроверки","Разборы текстов и типичных ошибок"]' data-outcomes='["Чище и точнее переводы","Тонкости письменного и устного перевода","Больше уверенности при сдаче работы заказчикам"]'>
+          <img src="/assets/courses/englishtranslate.jpg" alt="Английский для переводчиков" class="w-full aspect-[4/3] object-cover">
+          <div class="p-4"><div class="flex items-center gap-2 mb-1"><span class="chip">EN</span><span class="chip">B2–С2</span></div><h3 class="font-extrabold">Английский для переводчиков</h3><p class="text-[var(--ink-2)] text-sm mt-1">Курс, который погрузит вас во все тонкости работы переводчика.</p></div>
+          <div class="px-4 pb-4 -mt-2"><div class="flex items-center justify-between"><div class="price">1 490 ₽</div><div class="flex gap-2"><button class="btn btn-ghost js-more">Подробнее</button><button class="btn btn-brand js-add">В корзину</button></div></div></div>
+        </div>
+
       </div>
+    </div>
 
-      <!-- ТЕЛО (скролл внутри модалки) -->
-      <div class="flex-1 min-h-0 overflow-y-auto">
-        <div class="grid md:grid-cols-2 gap-0">
-          <div class="p-6">
-            <img id="dm-img" src="" alt="" class="w-full rounded-xl border border-black/10">
-            <div id="dm-badge" class="mt-3 badge hidden"></div>
+    <div class="text-xs text-[var(--ink-2)] max-w-2xl">
+      После оплаты вы получите доступ к курсам в личном кабинете PolyTalky. Если что-то не сработает, напишите на <span class="font-semibold">iraburljaeva@gmail.com</span> — всё проверим и активируем вручную.
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-black/5 py-8 text-sm text-[var(--ink-2)] bg-white">
+  <div class="wrap px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+    <p>© 2025 PolyTalky. Все права защищены.</p>
+    <div class="flex flex-wrap gap-4">
+      <a href="/contact.html" class="opacity-80 hover:opacity-100">Контакты</a>
+      <a href="/legal/privacy.html" class="opacity-80 hover:opacity-100">Политика конфиденциальности</a>
+      <a href="/legal/offer.html" class="opacity-80 hover:opacity-100">Публичная оферта</a>
+      <a href="/legal/cookies.html" class="opacity-80 hover:opacity-100">Cookies</a>
+      <a href="/legal/consent.html" class="opacity-80 hover:opacity-100">Согласие</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<!-- ═══════════ DETAIL MODAL ═══════════ -->
+<div id="detailModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3">
+  <div class="modal rounded-2xl w-full overflow-hidden" style="max-width:760px;max-height:92vh;display:flex;flex-direction:column">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-black/5 bg-white shrink-0">
+      <h3 id="dm-title" class="text-lg font-extrabold pr-4 leading-tight"></h3>
+      <button id="dm-close" class="close-x" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="flex-1 min-h-0 overflow-y-auto">
+      <div class="grid md:grid-cols-2">
+        <div class="p-5">
+          <div class="slider-wrap">
+            <div id="dm-slider-track" class="slider-track"></div>
+            <button class="slider-btn prev" id="dm-prev">‹</button>
+            <button class="slider-btn next" id="dm-next">›</button>
           </div>
-
-          <div class="p-6">
-            <p id="dm-desc" class="text-[var(--ink-2)] text-sm"></p>
-            <div class="divider"></div>
-
-            <div class="grid grid-cols-2 gap-3 text-sm">
-              <div><span class="text-[var(--ink-2)]">Уроков:</span> <b id="dm-lessons">—</b></div>
-              <div><span class="text-[var(--ink-2)]">Уровень:</span> <b id="dm-level">—</b></div>
-            </div>
-
-            <div class="mt-4">
-              <h4 class="font-semibold mb-2">Что внутри</h4>
-              <ul id="dm-includes" class="list-dot space-y-1 text-sm"></ul>
-            </div>
-
-            <div class="mt-4">
-              <h4 class="font-semibold mb-2">Чему научитесь</h4>
-              <ul id="dm-outcomes" class="list-dot space-y-1 text-sm"></ul>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="flex items-center justify-between">
-              <div class="price text-lg">
-                <span id="dm-price-rub"></span>
-                <span class="text-[var(--ink-2)] text-xs"> / <span id="dm-price-eur"></span></span>
-              </div>
-              <div class="flex gap-2">
-                <button class="btn btn-ghost" id="dm-add" type="button">В корзину</button>
-                <button class="btn btn-brand" id="dm-buy" type="button">Купить</button>
-              </div>
-            </div>
-
-            
-            <p class="text-xs text-[var(--ink-2)] mt-2">
-              После оплаты доступ откроется в личном кабинете PolyTalky.
-            </p>
+          <div id="dm-dots" class="slider-dots"></div>
+          <div id="dm-badge" class="mt-3 badge hidden"></div>
+        </div>
+        <div class="p-5">
+          <p id="dm-desc" class="text-[var(--ink-2)] text-sm leading-relaxed"></p>
+          <div class="divider"></div>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div><span class="text-[var(--ink-2)]">Уроков:</span> <b id="dm-lessons">—</b></div>
+            <div><span class="text-[var(--ink-2)]">Уровень:</span> <b id="dm-level">—</b></div>
           </div>
+          <div class="mt-4"><h4 class="font-semibold mb-2 text-sm">Что внутри</h4><ul id="dm-includes" class="list-dot space-y-1 text-sm text-[var(--ink-2)]"></ul></div>
+          <div class="mt-4"><h4 class="font-semibold mb-2 text-sm">Чему научитесь</h4><ul id="dm-outcomes" class="list-dot space-y-1 text-sm text-[var(--ink-2)]"></ul></div>
+          <div class="divider"></div>
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="price text-lg"><span id="dm-price-rub"></span><span class="text-[var(--ink-2)] text-xs font-normal"> / <span id="dm-price-eur"></span></span></div>
+            <div class="flex gap-2">
+              <button class="btn btn-ghost" id="dm-add">В корзину</button>
+              <button class="btn btn-brand" id="dm-buy">Купить</button>
+            </div>
+          </div>
+          <p class="text-xs text-[var(--ink-2)] mt-2">После оплаты доступ откроется в личном кабинете.</p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-  <!-- КОРЗИНА  -->
-  <div
-    id="cartDrawer"
-    class="fixed top-0 right-0 h-full max-h-screen w-[360px] max-w-[92vw] bg-white shadow-xl z-50 transform translate-x-full transition-transform flex flex-col"
-  >
-    <!-- ШАПКА -->
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="text-lg font-extrabold">Корзина</h3>
-      <button class="text-sm underline" id="cartClose">Закрыть</button>
-    </div>
-
-    <!-- СКРОЛЛИРУЕМЫЙ СПИСОК ТОВАРОВ -->
-    <div id="cartList" class="p-4 space-y-3 text-sm flex-1 min-h-0 overflow-y-auto">
-      <!-- сюда JS рендерит товары; если корзина пустая, сюда же можешь оставить div с текстом -->
-    </div>
-
-    <!-- ФУТЕР: EMAIL + ПРОМОКОД + ИТОГО + КНОПКИ -->
-    <div class="p-4 border-t border-black/5 text-sm space-y-3">
-      <div>
-        <label for="cartEmail" class="block text-xs text-[var(--ink-2)] mb-1">
-          Email для доступа и чека
-        </label>
-        <input
-          id="cartEmail"
-          type="email"
-          class="w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
-          placeholder="you@example.com"
-        />
-      </div>
-
-      <div class="flex gap-2 items-center">
-        <input
-          id="cartPromo"
-          type="text"
-          class="flex-1 rounded-xl border border-black/10 px-3 py-2 text-sm"
-          placeholder="Промокод"
-        />
-        <button
-          id="cartPromoBtn"
-          class="text-xs underline whitespace-nowrap"
-        >
-          Применить
-        </button>
-      </div>
-      <div id="cartPromoMsg" class="text-xs text-[var(--ink-2)] min-h-[1.25rem]"></div>
-
-      <div class="flex justify-between text-sm">
-        <span class="font-semibold">Итого:</span>
-        <span id="cartTotalRub">0 ₽</span>
-      </div>
-      <div id="cartDiscountLine" class="text-xs text-[var(--ink-2)] min-h-[1.25rem]"></div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <button id="cartPayRU" class="btn btn-brand w-full">
-          Оплата РФ
-        </button>
-        <button id="cartPayINT" class="btn btn-ghost w-full">
-          Оплата из-за рубежа
-        </button>
-      </div>
-
-      <div class="pt-1 text-[11px] text-[var(--ink-2)]">
-        После успешной оплаты вы автоматически получите доступ к приобретенному курсу.
-      </div>
-    </div>
+<!-- ═══════════ КОРЗИНА ═══════════ -->
+<div id="cartDrawer" class="fixed top-0 right-0 h-full w-[360px] max-w-[92vw] bg-white shadow-xl z-50 transform translate-x-full transition-transform flex flex-col">
+  <div class="p-4 border-b border-black/5 flex items-center justify-between shrink-0">
+    <h3 class="text-lg font-extrabold">Корзина</h3>
+    <button class="close-x" id="cartClose">✕</button>
   </div>
+  <div id="cartList" class="p-4 space-y-3 text-sm flex-1 min-h-0 overflow-y-auto"></div>
+  <div class="p-4 border-t border-black/5 text-sm space-y-3 shrink-0">
+    <div>
+      <label for="cartEmail" class="block text-xs text-[var(--ink-2)] mb-1">Email для доступа и чека</label>
+      <input id="cartEmail" type="email" class="w-full rounded-xl border border-black/10 px-3 py-2 text-sm" placeholder="you@example.com"/>
+    </div>
+    <div class="flex gap-2 items-center">
+      <input id="cartPromo" type="text" class="flex-1 rounded-xl border border-black/10 px-3 py-2 text-sm" placeholder="Промокод"/>
+      <button id="cartPromoBtn" class="text-xs underline whitespace-nowrap">Применить</button>
+    </div>
+    <div id="cartPromoMsg" class="text-xs text-[var(--ink-2)] min-h-[1.1rem]"></div>
+    <div class="flex justify-between font-semibold text-sm"><span>Итого:</span><span id="cartTotalRub">0 ₽</span></div>
+    <div id="cartDiscountLine" class="text-xs text-green-700 hidden"></div>
+    <div class="grid grid-cols-2 gap-2">
+      <button id="cartPayRU" class="btn btn-brand w-full">Оплата РФ</button>
+      <button id="cartPayINT" class="btn btn-ghost w-full">Из-за рубежа</button>
+    </div>
+    <p class="text-[11px] text-[var(--ink-2)]">После успешной оплаты вы автоматически получите доступ к курсу.</p>
+  </div>
+</div>
 
-  <!-- PAY MODAL -->
-  <div id="payModal" class="hidden fixed inset-0 bg-black/40 items-center justify-center z-50">
-    <div class="modal rounded-2xl p-6 max-w-2xl w-full text-sm">
-      <div class="flex items-center justify-between">
-        <h3 class="text-xl font-extrabold">Оплата</h3>
-        <button class="text-sm underline" id="payClose">Закрыть</button>
+<!-- ═══════════ PAY MODAL (зарубеж) ═══════════ -->
+<div id="payModal" class="hidden fixed inset-0 bg-black/50 items-center justify-center z-50 p-3">
+  <div class="modal rounded-2xl p-6 max-w-2xl w-full text-sm max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="text-xl font-extrabold">Оплата из-за рубежа</h3>
+      <button class="close-x" id="payClose">✕</button>
+    </div>
+    <p class="text-[var(--ink-2)] mb-4">После оплаты доступ к курсу откроется автоматически.</p>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div class="p-4 border border-black/10 rounded-xl bg-white">
+        <div class="font-semibold mb-2">PayPal</div>
+        <img src="/assets/pay/paypal.jpg" alt="PayPal" class="w-full rounded-lg mb-2 border border-black/10">
+        <p>Email: <b>iraburljaeva@gmail.com</b></p>
+        <p class="text-xs text-[var(--ink-2)] mt-1">Введите сумму заказа вручную.</p>
       </div>
-      <p class="text-[var(--ink-2)] mt-1">
-        После успешной оплаты доступ к курсу откроется автоматически.
-      </p>
-
-      <div id="tabRU" class="mt-4 hidden">
-        <h4 class="font-semibold mb-2">Россия</h4>
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div class="p-3 border border-black/10 rounded-xl bg-white">
-            <div class="font-semibold mb-2">ЮMoney</div>
-            <img src="/assets/pay/yoomoney.jpg" alt="ЮMoney" class="w-full rounded-lg mb-2 border border-black/10">
-            <a id="ymLink" href="https://yoomoney.ru/to/410013183449005/0" target="_blank" rel="noopener" class="btn btn-brand inline-block">Открыть ЮMoney</a>
-            <p class="text-xs text-[var(--ink-2)] mt-2">
-              Если сумма не подставилась автоматически — введите её вручную.
-            </p>
-          </div>
-          <div class="p-3 border border-black/10 rounded-xl bg-white">
-            <div class="font-semibold mb-2">Любой картой (СБП)</div>
-            <img src="/assets/pay/sberbank.jpg" alt="СБП QR" class="w-full rounded-lg mb-2 border border-black/10 bg-white">
-            <p class="text-xs text-[var(--ink-2)]">
-              Откройте приложение банка → отсканируйте QR → введите сумму заказа.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div id="tabINT" class="mt-4 hidden">
-        <h4 class="font-semibold mb-2">Другие страны</h4>
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div class="p-3 border border-black/10 rounded-xl bg-white">
-            <div class="font-semibold mb-2">PayPal</div>
-            <img src="/assets/pay/paypal.jpg" alt="PayPal" class="w-full rounded-lg mb-2 border border-black/10">
-            <p>Email для оплаты: <b>iraburljaeva@gmail.com</b></p>
-            <p class="text-xs text-[var(--ink-2)] mt-1">
-              Введите сумму заказа.
-            </p>
-          </div>
-          <div class="p-3 border border-black/10 rounded-xl bg-white">
-            <div class="font-semibold mb-2">Любая карта</div>
-            <div id="stripeLinks" class="space-y-2"></div>
-            <div id="stripeQrs" class="grid grid-cols-3 gap-2 mt-3"></div>
-            <p class="text-xs text-[var(--ink-2)] mt-2"></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-4 text-right">
-        <button class="btn btn-ghost" id="payDone">Готово</button>
+      <div class="p-4 border border-black/10 rounded-xl bg-white">
+        <div class="font-semibold mb-2">Любая карта (Stripe)</div>
+        <div id="stripeLinks" class="space-y-2 mb-2"></div>
+        <div id="stripeQrs" class="grid grid-cols-3 gap-2"></div>
       </div>
     </div>
+    <div class="mt-4 text-right"><button class="btn btn-ghost" id="payDone">Закрыть</button></div>
   </div>
+</div>
 
- 
-  <script src="https://js.stripe.com/v3/"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<!-- ═══════════ SCRIPTS ═══════════ -->
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey:"AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+    authDomain:"polytalky-70999.firebaseapp.com",
+    projectId:"polytalky-70999",
+    storageBucket:"polytalky-70999.firebasestorage.app",
+    messagingSenderId:"62407152289",
+    appId:"1:62407152289:web:b0c0efdb2472f12b10d6e0"
+  });
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
-      authDomain: "polytalky-70999.firebaseapp.com",
-      projectId: "polytalky-70999",
-      storageBucket: "polytalky-70999.firebasestorage.app",
-      messagingSenderId: "62407152289",
-      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // ── промокоды (добавляй сюда) ──────────────────
+    const promoCodes = {
+      // 'WELCOME10': { type:'percent', value:10, label:'Скидка 10% ✓' },
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db   = firebase.firestore();
+    const CART_KEY = 'pt_cart';
+    let appliedPromo = null;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const CART_KEY = 'pt_cart';
-      const ENROLL_KEY = 'pt_enrollments';
-      const PROMO_KEY = 'pt_promo';
-  
+    const stripeByEur = {
+      19:'https://buy.stripe.com/00w4gybq66YZ1vkcUWb3q0w',
+      15:'https://buy.stripe.com/28E9AS1PwabbfmadZ0b3q0x',
+      12:'https://buy.stripe.com/28E00ifGmabb0rg5sub3q0y',
+      10:'https://buy.stripe.com/fZu6oGbq64QR0rg9IKb3q0z',
+      24:'https://buy.stripe.com/8x214mbq65UVb5UcUWb3q0A',
+    };
+    const stripeQrByEur = {
+      10:'/assets/pay/qr10.jpg', 12:'/assets/pay/qr12.jpg',
+      15:'/assets/pay/qr15.jpg', 19:'/assets/pay/qr19.jpg',
+      24:'/assets/pay/qr24.jpg',
+    };
 
-   
-      let appliedPromo = null;
+    // ── helpers ────────────────────────────────────
+    const fmtRub = n => new Intl.NumberFormat('ru-RU').format(n) + ' ₽';
+    const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+    const setCart = items => { localStorage.setItem(CART_KEY, JSON.stringify(items)); renderCart(); };
 
-      const stripeByEur = {
-        19:'https://buy.stripe.com/00w4gybq66YZ1vkcUWb3q0w',
-        15:'https://buy.stripe.com/28E9AS1PwabbfmadZ0b3q0x',
-        12:'https://buy.stripe.com/28E00ifGmabb0rg5sub3q0y',
-        10:'https://buy.stripe.com/fZu6oGbq64QR0rg9IKb3q0z',
-        24:'https://buy.stripe.com/8x214mbq65UVb5UcUWb3q0A',
-             };
+    const toastEl = document.getElementById('toast');
+    const showToast = text => {
+      toastEl.textContent = text;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 1800);
+    };
 
-      const stripeQrByEur = {
-        10:'/assets/pay/qr10.jpg',
-        12:'/assets/pay/qr12.jpg',
-        15:'/assets/pay/qr15.jpg',
-        19:'/assets/pay/qr19.jpg',
-        24:'/assets/pay/qr24.jpg',
-        0:'/assets/pay/qr0.jpg'
-      };
+    const cartCountEl = document.getElementById('cartCount');
+    const bumpCart = () => { cartCountEl.classList.remove('bump'); void cartCountEl.offsetWidth; cartCountEl.classList.add('bump'); };
 
-      const toastEl = document.getElementById('toast');
-      const showToast = (text) => {
-        toastEl.textContent = text;
-        toastEl.classList.add('show');
-        setTimeout(() => toastEl.classList.remove('show'), 1400);
-      };
-
-      const fmtRub = (n) => new Intl.NumberFormat('ru-RU').format(n) + ' ₽';
-
-      const getCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-      const setCart = (items) => {
-        localStorage.setItem(CART_KEY, JSON.stringify(items));
-        renderCart();
-      };
-
-      window.getCart = getCart;
-      
-      const cartCount = document.getElementById('cartCount');
-      const bumpCart = () => {
-        cartCount.classList.remove('bump');
-        void cartCount.offsetWidth;
-        cartCount.classList.add('bump');
-      };
-
-      function collectProductData(card) {
-        return {
-          id: card.dataset.id,
-          title: card.dataset.title,
-          img: card.dataset.img,
-          priceRub: Number(card.dataset.priceRub || 0),
-          priceEur: Number(card.dataset.priceEur || 0),
-          level: card.dataset.level || '',
-          lessons: card.dataset.lessons || '',
-          desc: card.dataset.desc || '',
-          includes: JSON.parse(card.dataset.includes || '[]'),
-          outcomes: JSON.parse(card.dataset.outcomes || '[]'),
-          seasonal: card.querySelector('.badge') ? true : false,
-          soon: card.dataset.soon === '1' || card.dataset.soon === 'true'
-        };
+    function calcTotals(items) {
+      const list = items || [];
+      const baseRub = list.reduce((s,c) => s+c.priceRub, 0);
+      const baseEur = list.reduce((s,c) => s+c.priceEur, 0);
+      let finalRub = baseRub, finalEur = baseEur;
+      if (appliedPromo?.type === 'percent') {
+        finalRub = Math.round(baseRub*(100-appliedPromo.value)/100);
+        finalEur = Math.round(baseEur*(100-appliedPromo.value)/100);
       }
+      return {baseRub,baseEur,finalRub,finalEur,discountRub:baseRub-finalRub,discountEur:baseEur-finalEur};
+    }
 
-      // Подсчёт сумм с учётом промокода
-      function calcTotals(items) {
-        const list = items || [];
-        const baseRub = list.reduce((s, c) => s + c.priceRub, 0);
-        const baseEur = list.reduce((s, c) => s + c.priceEur, 0);
-        let finalRub = baseRub;
-        let finalEur = baseEur;
-        let discountRub = 0;
-        let discountEur = 0;
+    function collectProductData(card) {
+      return {
+        id:card.dataset.id, title:card.dataset.title, img:card.dataset.img,
+        priceRub:Number(card.dataset.priceRub||0), priceEur:Number(card.dataset.priceEur||0),
+        level:card.dataset.level||'', lessons:card.dataset.lessons||'',
+        desc:card.dataset.desc||'',
+        includes:JSON.parse(card.dataset.includes||'[]'),
+        outcomes:JSON.parse(card.dataset.outcomes||'[]'),
+        seasonal:!!card.querySelector('.badge'),
+        soon:card.dataset.soon==='1',
+      };
+    }
 
-        if (appliedPromo) {
-          if (appliedPromo.type === 'percent') {
-            finalRub = Math.round(baseRub * (100 - appliedPromo.value) / 100);
-            finalEur = Math.round(baseEur * (100 - appliedPromo.value) / 100);
-          } else if (appliedPromo.type === 'stripe99') {
-            // Тест Stripe: итоговая сумма заказа 0,50 € (рубли = 0)
-            finalRub = 0;
-            finalEur = list.length ? 0.5 : 0;
-          }
-          discountRub = baseRub - finalRub;
-          discountEur = baseEur - finalEur;
-        }
+    // ── СЛАЙДЕР ────────────────────────────────────
+    let sliderImages=[], sliderIdx=0;
 
-        return { baseRub, baseEur, finalRub, finalEur, discountRub, discountEur };
-      }
- 
-      window.calcTotals = calcTotals;
-      
-      // ----- DETAIL -----
-      let currentProduct = null;
-      const detailModal = document.getElementById('detailModal');
-      const dmTitle = document.getElementById('dm-title');
-      const dmImg = document.getElementById('dm-img');
-      const dmBadge = document.getElementById('dm-badge');
-      const dmDesc = document.getElementById('dm-desc');
-      const dmLessons = document.getElementById('dm-lessons');
-      const dmLevel = document.getElementById('dm-level');
-      const dmIncludes = document.getElementById('dm-includes');
-      const dmOutcomes = document.getElementById('dm-outcomes');
-      const dmPriceRub = document.getElementById('dm-price-rub');
-      const dmPriceEur = document.getElementById('dm-price-eur');
+    function initSlider(prod) {
+      sliderImages = [prod.img]; // Расширь массив если у курса несколько картинок
+      sliderIdx = 0;
+      const track = document.getElementById('dm-slider-track');
+      const dots  = document.getElementById('dm-dots');
+      track.style.transform = 'translateX(0)';
+      track.innerHTML = sliderImages.map(src =>
+        `<img src="${src}" alt="${prod.title}" style="width:100%;height:100%;object-fit:cover;flex-shrink:0">`
+      ).join('');
+      dots.innerHTML = sliderImages.length > 1
+        ? sliderImages.map((_,i) => `<div class="slider-dot${i===0?' active':''}" data-i="${i}"></div>`).join('')
+        : '';
+      const showNav = sliderImages.length > 1;
+      document.getElementById('dm-prev').style.display = showNav ? '' : 'none';
+      document.getElementById('dm-next').style.display = showNav ? '' : 'none';
+    }
 
-      const openDetail = (prod) => {
-        currentProduct = prod;
-        dmTitle.textContent = prod.title;
-        dmImg.src = prod.img;
-        dmImg.alt = prod.title;
-        dmDesc.textContent = prod.desc || '';
-        dmLessons.textContent = prod.lessons || '—';
-        dmLevel.textContent = prod.level || '—';
-        dmPriceRub.textContent = fmtRub(prod.priceRub);
-        dmPriceEur.textContent = '€' + prod.priceEur;
-        dmIncludes.innerHTML = (prod.includes || []).map(i => `<li>${i}</li>`).join('') || '<li>Материалы курса</li>';
-        dmOutcomes.innerHTML = (prod.outcomes || []).map(i => `<li>${i}</li>`).join('') || '<li>Практический результат</li>';
+    function updateSlider() {
+      document.getElementById('dm-slider-track').style.transform = `translateX(-${sliderIdx*100}%)`;
+      document.querySelectorAll('#dm-dots .slider-dot').forEach((d,i) => d.classList.toggle('active', i===sliderIdx));
+    }
 
-        if (prod.seasonal) {
-          dmBadge.textContent = 'Сезонный курс';
-          dmBadge.classList.remove('hidden');
+    document.getElementById('dm-prev').addEventListener('click', () => {
+      sliderIdx = (sliderIdx-1+sliderImages.length) % sliderImages.length; updateSlider();
+    });
+    document.getElementById('dm-next').addEventListener('click', () => {
+      sliderIdx = (sliderIdx+1) % sliderImages.length; updateSlider();
+    });
+    document.getElementById('dm-dots').addEventListener('click', e => {
+      const dot = e.target.closest('.slider-dot');
+      if (dot) { sliderIdx = Number(dot.dataset.i); updateSlider(); }
+    });
+
+    // ── DETAIL MODAL ───────────────────────────────
+    let currentProduct = null;
+    const detailModal = document.getElementById('detailModal');
+
+    const openDetail = prod => {
+      currentProduct = prod;
+      document.getElementById('dm-title').textContent    = prod.title;
+      document.getElementById('dm-desc').textContent     = prod.desc||'';
+      document.getElementById('dm-lessons').textContent  = prod.lessons||'—';
+      document.getElementById('dm-level').textContent    = prod.level||'—';
+      document.getElementById('dm-price-rub').textContent = fmtRub(prod.priceRub);
+      document.getElementById('dm-price-eur').textContent = '€'+prod.priceEur;
+      document.getElementById('dm-includes').innerHTML =
+        (prod.includes||[]).map(i=>`<li>${i}</li>`).join('')||'<li>Материалы курса</li>';
+      document.getElementById('dm-outcomes').innerHTML =
+        (prod.outcomes||[]).map(i=>`<li>${i}</li>`).join('')||'<li>Практический результат</li>';
+
+      const badge = document.getElementById('dm-badge');
+      if (prod.seasonal) { badge.textContent='Сезонный курс'; badge.classList.remove('hidden'); }
+      else badge.classList.add('hidden');
+
+      // кнопки soon/active
+      ['dm-add','dm-buy'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (prod.soon) {
+          btn.textContent='Скоро'; btn.disabled=true; btn.classList.add('opacity-60','cursor-not-allowed');
         } else {
-          dmBadge.classList.add('hidden');
+          btn.textContent = id==='dm-add' ? 'В корзину' : 'Купить';
+          btn.disabled=false; btn.classList.remove('opacity-60','cursor-not-allowed');
         }
-
-        detailModal.classList.remove('hidden');
-        detailModal.classList.add('flex');
-      };
-
-      const closeDetail = () => {
-        detailModal.classList.add('hidden');
-        detailModal.classList.remove('flex');
-      };
-      document.getElementById('dm-close').addEventListener('click', closeDetail);
-
-      // ----- CART -----
-      const cartDrawer = document.getElementById('cartDrawer');
-      const toggleCart = (forceOpen) => {
-        const hide = typeof forceOpen === 'boolean'
-          ? !forceOpen
-          : cartDrawer.classList.contains('translate-x-0');
-        cartDrawer.classList.toggle('translate-x-0', !hide);
-      };
-      document.getElementById('cartBtn').addEventListener('click', () => toggleCart(true));
-      document.getElementById('cartClose').addEventListener('click', () => toggleCart(false));
-
-      const cartList = document.getElementById('cartList');
-      const cartTotalRub = document.getElementById('cartTotalRub');
-      const cartDiscountLine = document.getElementById('cartDiscountLine');
-
-      const promoInput = document.getElementById('cartPromo');
-      window.promoInput = promoInput;
-      const promoBtn = document.getElementById('cartPromoBtn');
-      const promoMsg = document.getElementById('cartPromoMsg');
-
-      // экспорт в window для второго скрипта
-      window.getCart = getCart;
-      window.calcTotals = calcTotals;
-      window.promoInput = promoInput;
-
-      function renderCart() {
-        const cart = getCart();
-        cartCount.textContent = cart.length;
-        if (!cart.length) {
-          cartList.innerHTML = '<p class="text-[var(--ink-2)]">Корзина пуста. Добавьте курсы, чтобы оформить заказ.</p>';
-        } else {
-          cartList.innerHTML = cart.map(c => `
-            <div class="border border-black/10 rounded-xl p-3 bg-white flex gap-3">
-              <img src="${c.img}" alt="${c.title}" class="w-16 h-16 object-cover rounded-lg border border-black/10">
-              <div class="grow">
-                <div class="font-semibold">${c.title}</div>
-                <div class="text-xs text-[var(--ink-2)]">${fmtRub(c.priceRub)}</div>
-                <button class="text-xs underline mt-1 js-remove" data-id="${c.id}">Удалить</button>
-              </div>
-            </div>
-          `).join('');
-        }
-
-        const totals = calcTotals(cart);
-        cartTotalRub.textContent = fmtRub(totals.finalRub);
-
-        if (appliedPromo && totals.discountRub > 0) {
-          cartDiscountLine.classList.remove('hidden');
-          cartDiscountLine.textContent =
-            `Скидка по промокоду ${appliedPromo.code}: -${fmtRub(totals.discountRub)}`;
-          if (promoMsg && promoInput) {
-            promoMsg.textContent = appliedPromo.label || 'Промокод применён';
-          }
-        } else {
-          cartDiscountLine.classList.add('hidden');
-          cartDiscountLine.textContent = '';
-          if (promoMsg && promoInput && !promoInput.value.trim()) {
-            promoMsg.textContent = '';
-          }
-        }
-
-        cartList.querySelectorAll('.js-remove').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const id = btn.dataset.id;
-            const next = getCart().filter(c => c.id !== id);
-            setCart(next);
-          });
-        });
-      }
-      renderCart();
-
-      // применение промокода
-      if (promoBtn) {
-        promoBtn.addEventListener('click', () => {
-          const code = (promoInput.value || '').trim().toUpperCase();
-          if (!code) {
-            appliedPromo = null;
-            if (promoMsg) promoMsg.textContent = 'Промокод очищен.';
-            renderCart();
-            return;
-          }
-          const data = promoCodes[code];
-          if (!data) {
-            appliedPromo = null;
-            if (promoMsg) promoMsg.textContent = 'Промокод не найден или уже не действует.';
-            renderCart();
-            return;
-          }
-          appliedPromo = { code, ...data };
-          if (promoMsg) {
-            promoMsg.textContent = data.label || 'Промокод применён.';
-          }
-          renderCart();
-          showToast('Промокод применён');
-        });
-      }
-
-      const addToCart = (prod) => {
-        const cart = getCart();
-        if (!cart.find(c => c.id === prod.id)) {
-          cart.push(prod);
-          setCart(cart);
-          bumpCart();
-          showToast('Курс добавлен в корзину');
-        } else {
-          showToast('Этот курс уже в корзине');
-        }
-      };
-
-      const dmAddBtn = document.getElementById('dm-add');
-      const dmBuyBtn = document.getElementById('dm-buy');
-
-      if (dmAddBtn) {
-        dmAddBtn.addEventListener('click', () => {
-          if (!currentProduct) return;
-          addToCart(currentProduct);
-        });
-      }
-
-      if (dmBuyBtn) {
-        dmBuyBtn.addEventListener('click', () => {
-          if (!currentProduct) return;
-          // добавляем в корзину (если вдруг ещё не там)
-          const cart = getCart();
-          if (!cart.find(c => c.id === currentProduct.id)) {
-            cart.push(currentProduct);
-            setCart(cart);
-          }
-          // открываем боковую корзину
-          toggleCart(true);
-        });
-      }
-      // ----- ПРОХОД ПО КАРТОЧКАМ -----
-      document.querySelectorAll('.product').forEach(card => {
-        const data = collectProductData(card);
-
-        card.querySelectorAll('.js-more').forEach(btn => {
-          btn.addEventListener('click', () => openDetail(data));
-        });
-
-        card.querySelectorAll('.js-add').forEach(btn => {
-          if (data.soon) {
-            // Режим "Скоро": не даём добавить в корзину
-            btn.textContent = 'Скоро';
-            btn.disabled = true;
-            btn.classList.add('opacity-60', 'cursor-not-allowed');
-          } else {
-            // Обычный товар: можно купить
-            btn.addEventListener('click', () => addToCart(data));
-          }
-        });
       });
 
-      // ----- BUY + PAY -----
-      const payModal = document.getElementById('payModal');
-      const tabRU = document.getElementById('tabRU');
-      const tabINT = document.getElementById('tabINT');
-      const ymLink = document.getElementById('ymLink');
-      const stripeLinks = document.getElementById('stripeLinks');
-      const stripeQrs = document.getElementById('stripeQrs');
+      initSlider(prod);
+      detailModal.classList.remove('hidden');
+      document.body.style.overflow='hidden';
+    };
 
-      let lastRegion = 'ru';
-      let lastItems = [];
+    const closeDetail = () => {
+      detailModal.classList.add('hidden');
+      document.body.style.overflow='';
+    };
 
-      const openPay = (region, items, totals) => {
-        lastRegion = region;
-        lastItems = items;
-        const t = totals || calcTotals(items);
+    document.getElementById('dm-close').addEventListener('click', closeDetail);
+    detailModal.addEventListener('click', e => { if(e.target===detailModal) closeDetail(); });
 
-        // Итоговая сумма с учётом промокода
-        const payRub = t.finalRub;
-        ymLink.href = 'https://yoomoney.ru/to/410013183449005/' + encodeURIComponent(Math.max(payRub, 0));
+    document.getElementById('dm-add').addEventListener('click', () => {
+      if (currentProduct && !currentProduct.soon) addToCart(currentProduct);
+    });
+    document.getElementById('dm-buy').addEventListener('click', () => {
+      if (!currentProduct || currentProduct.soon) return;
+      const cart = getCart();
+      if (!cart.find(c=>c.id===currentProduct.id)) { cart.push(currentProduct); setCart(cart); }
+      closeDetail();
+      toggleCart(true);
+    });
 
-        const isStripePromo = appliedPromo && appliedPromo.code === 'STRIPE99';
+    // ── КОРЗИНА ────────────────────────────────────
+    const cartDrawer = document.getElementById('cartDrawer');
+    const toggleCart = open => {
+      const show = typeof open==='boolean' ? open : !cartDrawer.classList.contains('translate-x-0');
+      cartDrawer.classList.toggle('translate-x-0', show);
+    };
+    document.getElementById('cartBtn').addEventListener('click', () => toggleCart(true));
+    document.getElementById('cartClose').addEventListener('click', () => toggleCart(false));
 
-        if (isStripePromo) {
-          // Один линк и один QR на 0,50 €
-          stripeLinks.innerHTML = `
-            <div>
-              <a href="${STRIPE_PROMO_LINK}" target="_blank" rel="noopener" class="btn btn-brand inline-block">
-                Оплатить заказ — €0.50
-              </a>
+    const addToCart = prod => {
+      const cart = getCart();
+      if (!cart.find(c=>c.id===prod.id)) {
+        cart.push(prod); setCart(cart); bumpCart(); showToast('Добавлено в корзину ✓');
+      } else { showToast('Этот курс уже в корзине'); }
+    };
+
+    function renderCart() {
+      const cart = getCart();
+      cartCountEl.textContent = cart.length;
+      const listEl = document.getElementById('cartList');
+      if (!cart.length) {
+        listEl.innerHTML = '<p class="text-[var(--ink-2)]">Корзина пуста.</p>';
+      } else {
+        listEl.innerHTML = cart.map(c => `
+          <div class="border border-black/10 rounded-xl p-3 bg-white flex gap-3">
+            <img src="${c.img}" alt="${c.title}" class="w-14 h-14 object-cover rounded-lg border border-black/10 flex-shrink-0">
+            <div class="grow min-w-0">
+              <div class="font-semibold text-sm truncate">${c.title}</div>
+              <div class="text-xs text-[var(--ink-2)]">${fmtRub(c.priceRub)}</div>
+              <button class="text-xs underline mt-1 js-remove" data-id="${c.id}">Удалить</button>
             </div>
-          `;
-          stripeQrs.innerHTML = `
-            <div class="text-center">
-              <img src="/assets/pay/qr0.jpg" alt="QR для €0.50" class="w-full rounded-lg border border-black/10">
-              <div class="text-xs mt-1">€0.50</div>
-            </div>
-          `;
-        } else { 
-          stripeLinks.innerHTML = '';
-          stripeQrs.innerHTML = '';
-        }
-        tabRU.classList.toggle('hidden', region !== 'ru');
-        tabINT.classList.toggle('hidden', region !== 'int');
-    
-        payModal.classList.remove('hidden');
-        payModal.classList.add('flex');
-      };
-
-      const closePay = () => {
-        payModal.classList.add('hidden');
-        payModal.classList.remove('flex');
-      };
-
-      document.getElementById('payClose').addEventListener('click', closePay);
-      document.getElementById('payDone').addEventListener('click', closePay);
-
-      const bmEmailFromCartOrSession = () => {
-        return (
-          document.getElementById('cartEmail')?.value ||
-          sessionStorage.getItem('pt_last_email') ||
-          ''
+          </div>`).join('');
+        listEl.querySelectorAll('.js-remove').forEach(btn =>
+          btn.addEventListener('click', () => setCart(getCart().filter(c=>c.id!==btn.dataset.id)))
         );
-      };
-
-      // при загрузке — подставить последний email, если он есть
-      const cartEmailInput = document.getElementById('cartEmail');
-      const lastEmail = sessionStorage.getItem('pt_last_email');
-      if (cartEmailInput && lastEmail && !cartEmailInput.value) {
-        cartEmailInput.value = lastEmail;
       }
+      const totals = calcTotals(cart);
+      document.getElementById('cartTotalRub').textContent = fmtRub(totals.finalRub);
+      const discLine = document.getElementById('cartDiscountLine');
+      if (appliedPromo && totals.discountRub > 0) {
+        discLine.textContent = `Скидка «${appliedPromo.code}»: −${fmtRub(totals.discountRub)}`;
+        discLine.classList.remove('hidden');
+      } else discLine.classList.add('hidden');
+    }
+    renderCart();
 
-      // Кнопки оплаты в корзине (РФ)
-      document.getElementById('cartPayRU').addEventListener('click', async () => {
-        const emailInput = document.getElementById('cartEmail');
-        const email = (emailInput?.value || '').trim();
+    // подставить сохранённый email
+    const savedEmail = sessionStorage.getItem('pt_last_email');
+    if (savedEmail) document.getElementById('cartEmail').value = savedEmail;
 
-        if (!email) {
-          alert('Введите email для доступа и чека');
-          return;
+    // промокод
+    document.getElementById('cartPromoBtn').addEventListener('click', () => {
+      const code = (document.getElementById('cartPromo').value||'').trim().toUpperCase();
+      const msg = document.getElementById('cartPromoMsg');
+      if (!code) { appliedPromo=null; msg.textContent='Промокод очищен.'; renderCart(); return; }
+      const data = promoCodes[code];
+      if (!data) { appliedPromo=null; msg.textContent='Промокод не найден.'; renderCart(); return; }
+      appliedPromo = { code, ...data };
+      msg.textContent = data.label||'Промокод применён ✓';
+      renderCart(); showToast('Промокод применён');
+    });
+
+    // ── ОПЛАТА РФ → YooKassa → success.html ───────
+    document.getElementById('cartPayRU').addEventListener('click', async () => {
+      const email = (document.getElementById('cartEmail').value||'').trim();
+      if (!email) { alert('Введите email для доступа и чека'); return; }
+      const cart = getCart();
+      if (!cart.length) { alert('Корзина пуста'); return; }
+      const totals = calcTotals(cart);
+      if (!totals.finalRub || totals.finalRub <= 0) { alert('Сумма заказа должна быть больше 0 ₽'); return; }
+
+      // ✅ Сохраняем данные ПЕРЕД редиректом — success.html их прочитает
+      sessionStorage.setItem('pt_last_email', email);
+      sessionStorage.setItem('pt_pending_items', JSON.stringify(
+        cart.map(c => ({ id:c.id, title:c.title, priceRub:c.priceRub }))
+      ));
+
+      try {
+        const res = await fetch('https://polytalky-backend.onrender.com/api/yookassa/create-payment', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            email,
+            amountRub: totals.finalRub,
+            promoCode: (document.getElementById('cartPromo').value||'').trim() || null,
+            items: cart.map(c => ({ id:c.id, title:c.title, priceRub:c.priceRub, quantity:1 })),
+          }),
+        });
+        if (!res.ok) { alert('Не удалось создать платёж. Попробуйте ещё раз.'); return; }
+        const data = await res.json();
+        if (data?.confirmationUrl) {
+          window.location.href = data.confirmationUrl; // → YooKassa → /shop/success.html
+        } else {
+          alert('Сервер не вернул ссылку на оплату.');
         }
+      } catch(err) {
+        console.error(err);
+        alert('Ошибка соединения с сервером. Попробуйте ещё раз.');
+      }
+    });
 
-        const cart = getCart();
-        if (!cart.length) {
-          alert('Корзина пуста');
-          return;
-        }
+    // ── ОПЛАТА ИЗ-ЗА РУБЕЖА (Stripe) ──────────────
+    const payModal = document.getElementById('payModal');
+    const openPay  = () => { payModal.classList.remove('hidden'); payModal.classList.add('flex'); document.body.style.overflow='hidden'; };
+    const closePay = () => { payModal.classList.add('hidden'); payModal.classList.remove('flex'); document.body.style.overflow=''; };
 
-        // сохраняем email, как и раньше
-        sessionStorage.setItem('pt_last_email', email);
+    document.getElementById('cartPayINT').addEventListener('click', () => {
+      const email = (document.getElementById('cartEmail').value||'').trim();
+      if (!email) { alert('Введите email для доступа и чека'); return; }
+      const cart = getCart();
+      if (!cart.length) { alert('Корзина пуста'); return; }
 
-        // считаем сумму в рублях с учётом промокода
-        const totals = calcTotals(cart);
-        const amountRub = totals.finalRub;
-
-        if (!amountRub || amountRub <= 0) {
-          alert('Сумма заказа должна быть больше 0 ₽');
-          return;
-        }
-
-        try {
-          const res = await fetch('https://polytalky-backend.onrender.com/api/yookassa/create-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email,
-              amountRub,
-              promoCode: (window.promoInput?.value || '').trim() || null,
-              items: cart.map(c => ({
-                id: c.id,
-                title: c.title,
-                priceRub: c.priceRub,
-                quantity: 1,
-              })),
-            }),
-          });
-
-          if (!res.ok) {
-            console.error('YooKassa HTTP error', res.status);
-            alert('Не удалось создать платёж. Попробуйте ещё раз.');
-            return;
-          }
-
-          const data = await res.json();
-
-          if (data && data.confirmationUrl) {
-            // переходим на страницу оплаты Юкассы
-            window.location.href = data.confirmationUrl;
-          } else {
-            console.error('Unexpected response from backend', data);
-            alert('Сервер не вернул ссылку на оплату. Проверь настройки backend.');
-          }
-        } catch (err) {
-          console.error('Ошибка соединения с backend для YooKassa', err);
-          alert('Ошибка соединения с сервером. Попробуйте ещё раз.');
+      // Строим ссылки Stripe по уникальным суммам в евро
+      const eurAmounts = [...new Set(cart.map(c=>c.priceEur))];
+      const linksEl = document.getElementById('stripeLinks');
+      const qrsEl   = document.getElementById('stripeQrs');
+      linksEl.innerHTML = '';
+      qrsEl.innerHTML   = '';
+      eurAmounts.forEach(eur => {
+        const link = stripeByEur[eur];
+        if (link) {
+          linksEl.innerHTML += `<a href="${link}" target="_blank" rel="noopener" class="btn btn-brand inline-block mb-1">Оплатить €${eur}</a>`;
+          const qr = stripeQrByEur[eur];
+          if (qr) qrsEl.innerHTML += `<div class="text-center"><img src="${qr}" alt="QR €${eur}" class="w-full rounded border border-black/10"><div class="text-xs mt-1">€${eur}</div></div>`;
         }
       });
 
-      // ----- CONFIRM -----
-      const confirmModal = document.getElementById('confirmModal');
-      const cfEmail = document.getElementById('cf-email');
-      const cfItems = document.getElementById('cf-items');
-      const cfChannel = document.getElementById('cf-channel');
-      const cfNote = document.getElementById('cf-note');
+      // ✅ Тоже сохраняем на случай если Stripe тоже ведёт на success.html
+      sessionStorage.setItem('pt_last_email', email);
+      sessionStorage.setItem('pt_pending_items', JSON.stringify(
+        cart.map(c => ({ id:c.id, title:c.title, priceRub:c.priceRub }))
+      ));
 
-      const openConfirm = (items) => {
-        const list = items && items.length ? items : getCart();
-        cfEmail.value = bmEmailFromCartOrSession();
+      openPay();
+    });
 
-        cfItems.value = list
-          .map((c) =>
-            lastRegion === 'int'
-              ? `${c.title} — €${c.priceEur}`
-              : `${c.title} — ${fmtRub(c.priceRub)}`
-          )
-          .join('\n');
+    document.getElementById('payClose').addEventListener('click', closePay);
+    document.getElementById('payDone').addEventListener('click', closePay);
+    payModal.addEventListener('click', e => { if(e.target===payModal) closePay(); });
 
-        const totals = calcTotals(list);
-
-        if (
-          appliedPromo &&
-          appliedPromo.code === 'TEST100' &&
-          totals.finalRub <= 0 &&
-          totals.finalEur <= 0
-        ) {
-          cfChannel.value = 'test-promo';
-          cfNote.value = 'Тестовая покупка по промокоду TEST100';
+    // ── КАРТОЧКИ: вешаем обработчики ──────────────
+    document.querySelectorAll('.product').forEach(card => {
+      const data = collectProductData(card);
+      card.querySelectorAll('.js-more').forEach(btn => btn.addEventListener('click', () => openDetail(data)));
+      card.querySelectorAll('.js-add').forEach(btn => {
+        if (data.soon) {
+          btn.textContent='Скоро'; btn.disabled=true; btn.classList.add('opacity-60','cursor-not-allowed');
         } else {
-          cfChannel.value = lastRegion === 'ru' ? 'ru-yoomoney' : 'int-card';
-          cfNote.value = '';
+          btn.addEventListener('click', () => addToCart(data));
         }
+      });
+    });
 
-        confirmModal.classList.remove('hidden');
-        confirmModal.classList.add('flex');
-      };
+    // ── ESC ────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.key==='Escape') { closeDetail(); closePay(); }
+    });
 
-      const closeConfirm = () => {
-        confirmModal.classList.add('hidden');
-        confirmModal.classList.remove('flex');
-      };
-
-      document.getElementById('cf-close').addEventListener('click', closeConfirm);
-    });  
-  </script>
-
-
-
+  });
+</script>
 </body>
-</html>              
+</html>            
