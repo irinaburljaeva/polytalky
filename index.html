@@ -7,9 +7,10 @@
   <meta name="description" content="Короткие уроки, понятные объяснения и практические задания. Испанский, английский, немецкий, китайский и другие языки с нуля до уверенного общения." />
   <base href="/">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- фавикон -->
-<link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
-<link rel="apple-touch-icon" href="/assets/favicon.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <link rel="apple-touch-icon" href="/assets/favicon.jpg">
 
   <style>
     :root{
@@ -21,68 +22,158 @@
       --card:#FFFFFF;
       --bg:#FFF8D6;
     }
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--ink)}
-    .shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.08)}
-    .card{transition:transform .25s ease, box-shadow .25s ease}
-    .card:hover{transform:translateY(-6px)}
-    .wow-bg{position:relative;overflow:hidden}
-    .wow-bg:before,.wow-bg:after{content:"";position:absolute;filter:blur(70px);opacity:.75;animation:float 12s ease-in-out infinite}
-    .wow-bg:before{width:560px;height:560px;left:-140px;top:-140px;background:radial-gradient(closest-side,rgba(255,222,89,.9),transparent)}
-    .wow-bg:after{width:520px;height:520px;right:-120px;top:-60px;background:radial-gradient(closest-side,rgba(232,93,4,.35),transparent);animation-delay:2.2s}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(14px)}}
-    .badge{background:#fff;border:1px solid rgba(0,0,0,.06);padding:.45rem .75rem;border-radius:999px;font-size:.8rem;color:var(--ink-2)}
-    .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease}
-    .reveal.reveal--visible{opacity:1;transform:translateY(0)}
-    .badge-free{background:#e8ffe3;border:1px solid #a7f3d0;color:#065f46}
-    .badge-pro{background:#fff0f0;border:1px solid #fecaca;color:#7f1d1d}
 
-    /* Мобильные улучшения */
-    @media (max-width: 640px){
-      .hero-grid{display:grid;grid-template-columns:1fr;gap:16px}
-      .hero-cta{display:grid;gap:8px}
-      .card{transform:none}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Manrope',system-ui,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      overflow-x:hidden;
+    }
+    h1,h2,h3,.font-display{font-family:'Syne',sans-serif}
+
+    .shadow-soft{box-shadow:0 10px 30px rgba(0,0,0,.08)}
+
+    /* ===== HERO ===== */
+    .hero{
+      position:relative;
+      min-height:92vh;
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+      background:#FFFADF;
     }
 
-    /* Десктоп-усиление */
-    @media (min-width: 1024px){
-      h1{ font-size:3.25rem; line-height:1.1; }
-      .card:hover{ transform:translateY(-8px); box-shadow:0 16px 40px rgba(0,0,0,.10); }
+    /* фоновая сетка */
+    .hero-grid-bg{
+      position:absolute;inset:0;
+      background-image:
+        linear-gradient(rgba(255,186,8,.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,186,8,.15) 1px, transparent 1px);
+      background-size:60px 60px;
+      mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+    }
+
+    /* плавающие флаги */
+    .flag-bubble{
+      position:absolute;
+      display:flex;align-items:center;gap:8px;
+      background:white;
+      border:1.5px solid rgba(0,0,0,.07);
+      border-radius:999px;
+      padding:8px 16px 8px 10px;
+      font-size:.8rem;font-weight:600;
+      box-shadow:0 8px 24px rgba(0,0,0,.09);
+      white-space:nowrap;
+      animation:floatBubble 6s ease-in-out infinite;
+    }
+    .flag-bubble span.emoji{font-size:1.3rem}
+    .b1{top:12%;left:5%;animation-delay:0s}
+    .b2{top:20%;right:6%;animation-delay:1.1s}
+    .b3{bottom:22%;left:4%;animation-delay:2.2s}
+    .b4{bottom:14%;right:5%;animation-delay:0.7s}
+    .b5{top:48%;left:2%;animation-delay:3s}
+    @keyframes floatBubble{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+
+    /* прогресс-полосы в герое */
+    .prog-bar{height:6px;border-radius:999px;background:#F1F5F9;overflow:hidden;margin-top:4px}
+    .prog-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#FFBA08,#E85D04)}
+
+    /* счётчики */
+    .stat-pill{
+      display:flex;flex-direction:column;align-items:center;
+      background:white;border-radius:20px;
+      padding:18px 24px;
+      border:1.5px solid rgba(0,0,0,.06);
+      box-shadow:0 8px 24px rgba(0,0,0,.07);
+    }
+    .stat-pill .num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--brand-orange)}
+    .stat-pill .lbl{font-size:.72rem;color:var(--ink-2);text-align:center;margin-top:2px;max-width:80px}
+
+    /* ===== МЕТОДИКА ===== */
+    .method-card{
+      background:white;border-radius:24px;
+      padding:28px 24px;
+      border:1.5px solid rgba(0,0,0,.06);
+      box-shadow:0 8px 32px rgba(0,0,0,.06);
+      transition:transform .3s ease, box-shadow .3s ease;
+    }
+    .method-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,.1)}
+
+    /* ===== REVEAL ===== */
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease, transform .65s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* ===== BADGE ===== */
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;
+      background:white;border:1.5px solid rgba(0,0,0,.07);
+      padding:5px 14px;border-radius:999px;
+      font-size:.78rem;font-weight:600;color:var(--ink-2);
+      letter-spacing:.02em;
+    }
+    .badge-dot{width:7px;height:7px;border-radius:50%;background:var(--brand-orange);display:inline-block}
+    .badge-free{background:#e8ffe3;border:1px solid #a7f3d0;color:#065f46;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:999px}
+    .badge-pro{background:#fff0f0;border:1px solid #fecaca;color:#7f1d1d;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:999px}
+
+    /* ===== COURSE CARD ===== */
+    .course-card{
+      display:flex;flex-direction:column;gap:10px;
+      background:white;border-radius:20px;
+      padding:20px;
+      border:1.5px solid rgba(0,0,0,.06);
+      box-shadow:0 6px 20px rgba(0,0,0,.06);
+      transition:transform .25s, box-shadow .25s;
+    }
+    .course-card:hover{transform:translateY(-5px);box-shadow:0 14px 36px rgba(0,0,0,.1)}
+
+    /* ===== ОТЗЫВЫ ===== */
+    .review-card{
+      background:white;border-radius:24px;
+      padding:28px;
+      border:1.5px solid rgba(0,0,0,.06);
+      box-shadow:0 8px 28px rgba(0,0,0,.06);
+      transition:transform .3s;
+    }
+    .review-card:hover{transform:translateY(-4px)}
+
+    /* ===== МОБИЛЬНИК ===== */
+    @media(max-width:768px){
+      .hero{min-height:auto;padding:80px 0 60px}
+      .b1,.b3,.b5{display:none}
+      .b2{top:8%;right:2%}
+      .b4{bottom:5%;right:2%}
+      .stat-pill .num{font-size:1.4rem}
     }
   </style>
 </head>
 <body>
 
 <script>
-  // Плавное появление блоков
   const onReady=()=>{
-    const obs=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting)e.target.classList.add('reveal--visible');});},{threshold:.12});
+    const obs=new IntersectionObserver(ents=>{ents.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});
     document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
   };
   if(document.readyState!=='loading') onReady(); else document.addEventListener('DOMContentLoaded', onReady);
 </script>
 
-<!-- ==================== HEADER (desktop + mobile) ==================== -->
+<!-- ==================== HEADER ==================== -->
 <header class="sticky top-0 z-50 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
     <a href="./" class="flex items-center gap-3 font-semibold text-lg">
       <img src="assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl"> PolyTalky
     </a>
-
-    <!-- Desktop nav -->
     <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
       <a href="courses/" class="hover:opacity-80">Курсы</a>
       <a href="shop/" class="hover:opacity-80">Магазин</a>
       <a href="student/" class="hover:opacity-80">Личный кабинет</a>
       <a href="courses/" class="inline-flex items-center gap-2 bg-[var(--brand-yellow)] hover:bg-[var(--brand-yellow-deep)] px-4 py-2 rounded-xl text-sm font-semibold text-[#1a1a1a] shadow-soft">Начать бесплатно</a>
     </nav>
-
-    <!-- Mobile burger -->
-    <button id="burger" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft" aria-label="Меню">
-      ☰
-    </button>
+    <button id="burger" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl bg-white border border-black/10 shadow-soft" aria-label="Меню">☰</button>
   </div>
-
-  <!-- Mobile menu -->
   <div id="mnav" class="md:hidden hidden border-t border-black/10 bg-[#fffef7]">
     <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-[var(--ink-2)]">
       <a class="px-3 py-3 rounded-xl bg-white border border-black/10 shadow-soft" href="courses/">Курсы</a>
@@ -92,174 +183,260 @@
     </div>
   </div>
 </header>
-
-  
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105611174', 'ym');
-
-    ym(105611174, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/105611174" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
-
 <script>
-  // Тоггл мобильного меню
-  const b=document.getElementById('burger'), m=document.getElementById('mnav');
+  const b=document.getElementById('burger'),m=document.getElementById('mnav');
   if(b) b.addEventListener('click',()=>m.classList.toggle('hidden'));
 </script>
 
-<!-- ==================== HERO ==================== -->
-<section class="wow-bg">
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-24 grid lg:grid-cols-[1.05fr,0.95fr] gap-12 items-center hero-grid">
-    <div class="reveal">
-      <span class="badge"> СЛОВА + ГРАММАТИКА + ПРАКТИКА</span>
-      <h1 class="mt-4 text-4xl sm:text-5xl lg: text-6xl font-extrabold leading-[1.05] tracking-tight">
-        Изучайте языки <span class="text-[var(--brand-orange)]">для жизни</span>, а не только для тестов
-      </h1>
-      <p class="mt-4 text-lg text-[var(--ink-2)] max-w-xl">
-        Короткие уроки, понятные объяснения и веселые задания. Испанский, английский, немецкий, китайский и другие языки с нуля до уверенного общения.
-      </p>
-      <div class="mt-6 flex flex-wrap gap-3 hero-cta">
-        <a href="courses/" class="px-5 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">Посмотреть все курсы</a>
-        <a href="student/" class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft">Зарегистрироваться</a>
-      </div>
-      <ul class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-[#333]">
-        <li class="p-3 rounded-lg bg-white border border-black/10 shadow-soft card">⚡ Уроки от 5 до 15 минут</li>
-        <li class="p-3 rounded-lg bg-white border border-black/10 shadow-soft card">🎧 Аудио, видео, карточки</li>
-        <li class="p-3 rounded-lg bg-white border border-black/10 shadow-soft card">🧭 Практика для реальной жизни</li>
-      </ul>
+<!-- ==================== HERO (новый) ==================== -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+
+  <!-- плавающие флаги -->
+  <div class="flag-bubble b1"><span class="emoji">🇪🇸</span> Español</div>
+  <div class="flag-bubble b2"><span class="emoji">🇬🇧</span> English</div>
+  <div class="flag-bubble b3"><span class="emoji">🇮🇹</span> Italiano</div>
+  <div class="flag-bubble b4"><span class="emoji">🇯🇵</span> 日本語</div>
+  <div class="flag-bubble b5"><span class="emoji">🇩🇪</span> Deutsch</div>
+
+  <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+
+    <!-- бейдж -->
+    <div class="inline-flex justify-center mb-6" style="animation:floatBubble 5s ease-in-out infinite">
+      <span class="badge"><span class="badge-dot"></span>Уроки от 5 минут в день</span>
     </div>
-    <div class="relative reveal">
-      <div class="absolute -inset-6 rounded-3xl bg-[var(--brand-yellow)]/40 blur-2xl"></div>
-      <div class="relative rounded-3xl border border-black/10 bg-white p-5 shadow-soft">
-        <img src="assets/intro.jpg" alt="3D-иллюстрация PolyTalky" class="rounded-2xl w-full aspect-video object-cover"/>
-        <p class="mt-3 text-sm text-[var(--ink-2)]">Мы не заучиваем слова, мы учимся пользоваться языком свободно!</p>
+
+    <!-- заголовок -->
+    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight">
+      Заговори<br>
+      <span style="
+        background:linear-gradient(135deg, #E85D04 0%, #FFBA08 60%);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+        background-clip:text;
+      ">на новом языке</span>
+    </h1>
+
+    <!-- подзаголовок -->
+    <p class="mt-5 text-lg sm:text-xl text-[var(--ink-2)] max-w-2xl mx-auto leading-relaxed">
+      Короткие уроки, живые задания и настоящий язык — такой, которым пользуются люди, а не только в учебниках.
+    </p>
+
+    <!-- CTA кнопки -->
+    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center items-center">
+      <a href="courses/" class="w-full sm:w-auto px-7 py-4 rounded-2xl bg-[var(--brand-orange)] text-white font-bold text-base hover:opacity-90 shadow-soft transition-all hover:-translate-y-0.5">
+        Начать бесплатно →
+      </a>
+      <a href="courses/" class="w-full sm:w-auto px-7 py-4 rounded-2xl bg-white border border-black/10 text-[var(--ink)] font-semibold text-base hover:bg-[#fff3c6] shadow-soft transition-all hover:-translate-y-0.5">
+        Посмотреть курсы
+      </a>
+    </div>
+
+    <!-- статистика -->
+    <div class="mt-12 flex flex-wrap gap-4 justify-center">
+      <div class="stat-pill">
+        <span class="num">5+</span>
+        <span class="lbl">языков доступно</span>
+      </div>
+      <div class="stat-pill">
+        <span class="num">5–15</span>
+        <span class="lbl">минут на урок</span>
+      </div>
+      <div class="stat-pill">
+        <span class="num">0 ₽</span>
+        <span class="lbl">бесплатные курсы</span>
+      </div>
+      <div class="stat-pill">
+        <span class="num">📱</span>
+        <span class="lbl">работает с телефона</span>
+      </div>
+    </div>
+
+    <!-- мини-прогресс "как это выглядит" -->
+    <div class="mt-12 max-w-md mx-auto bg-white border border-black/08 rounded-3xl p-6 shadow-soft text-left" style="border-color:rgba(0,0,0,.07)">
+      <div class="text-xs font-semibold text-[var(--ink-2)] mb-4 uppercase tracking-widest">Ваш прогресс</div>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span>🇪🇸 Испанский</span><span class="font-semibold">Урок 7 из 20</span></div>
+          <div class="prog-bar"><div class="prog-bar-fill" style="width:35%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span>🇬🇧 Английский</span><span class="font-semibold">Урок 12 из 20</span></div>
+          <div class="prog-bar"><div class="prog-bar-fill" style="width:60%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span>🇩🇪 Немецкий</span><span class="font-semibold">Урок 2 из 20</span></div>
+          <div class="prog-bar"><div class="prog-bar-fill" style="width:10%"></div></div>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-black/06 flex items-center gap-2 text-sm text-[var(--ink-2)]">
+        <span>🔥</span> <span>3 дня подряд — так держать!</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== КАК МЫ УЧИМ ==================== -->
+<section class="py-16 sm:py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10 reveal">
+      <span class="badge"><span class="badge-dot"></span>Наш подход</span>
+      <h2 class="mt-3 text-3xl sm:text-4xl font-display font-extrabold">Почему это работает</h2>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="method-card reveal">
+        <div class="text-3xl mb-3">⚡</div>
+        <div class="font-display font-bold text-lg">Быстро</div>
+        <p class="text-sm text-[var(--ink-2)] mt-2 leading-relaxed">Урок занимает 5–15 минут. Можно заниматься даже в очереди или в транспорте.</p>
+      </div>
+      <div class="method-card reveal" style="transition-delay:.1s">
+        <div class="text-3xl mb-3">🎧</div>
+        <div class="font-display font-bold text-lg">Разнообразно</div>
+        <p class="text-sm text-[var(--ink-2)] mt-2 leading-relaxed">Аудио, видео, карточки и практические задания — не только читать и зубрить.</p>
+      </div>
+      <div class="method-card reveal" style="transition-delay:.2s">
+        <div class="text-3xl mb-3">🌍</div>
+        <div class="font-display font-bold text-lg">Для жизни</div>
+        <p class="text-sm text-[var(--ink-2)] mt-2 leading-relaxed">Учим язык таким, какой он есть на улице, в кафе, в путешествии — не для теста.</p>
+      </div>
+      <div class="method-card reveal" style="transition-delay:.3s">
+        <div class="text-3xl mb-3">✍️</div>
+        <div class="font-display font-bold text-lg">С обратной связью</div>
+        <p class="text-sm text-[var(--ink-2)] mt-2 leading-relaxed">В PRO-подписке куратор проверяет задания и даёт развёрнутый комментарий.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== FREE (витрина 4 курса) ==================== -->
+<!-- ==================== БЕСПЛАТНЫЕ КУРСЫ ==================== -->
 <section class="py-12 sm:py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-end justify-between gap-4 flex-wrap">
-      <h2 class="text-2xl sm:text-3xl font-extrabold reveal">Попробуйте бесплатно</h2>
-      <a href="courses/" class="text-sm underline text-[var(--ink-2)] reveal">Посмотреть все курсы →</a>
+    <div class="flex items-end justify-between gap-4 flex-wrap mb-6 reveal">
+      <div>
+        <span class="badge"><span class="badge-dot"></span>Без оплаты</span>
+        <h2 class="mt-2 text-2xl sm:text-3xl font-display font-extrabold">Попробуйте бесплатно</h2>
+      </div>
+      <a href="courses/" class="text-sm underline text-[var(--ink-2)]">Все курсы →</a>
     </div>
-    <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <a href="courses/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🇪🇸</span>
-          <div class="grow">
-            <div class="font-semibold">Испанский с нуля</div>
-            <div class="text-xs text-[var(--ink-2)]">A0 → A1</div>
-          </div>
-          <span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <a href="courses/" class="course-card reveal">
+        <div class="text-3xl">🇪🇸</div>
+        <div>
+          <div class="font-semibold text-base">Испанский с нуля</div>
+          <div class="text-xs text-[var(--ink-2)] mt-0.5">A0 → A1</div>
         </div>
+        <span class="badge-free self-start">БЕСПЛАТНО</span>
       </a>
-      <a href="courses/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🇮🇹</span>
-          <div class="grow">
-            <div class="font-semibold">Итальянский с нуля</div>
-            <div class="text-xs text-[var(--ink-2)]">A0 → A1</div>
-          </div>
-          <span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>
+      <a href="courses/" class="course-card reveal" style="transition-delay:.08s">
+        <div class="text-3xl">🇮🇹</div>
+        <div>
+          <div class="font-semibold text-base">Итальянский с нуля</div>
+          <div class="text-xs text-[var(--ink-2)] mt-0.5">A0 → A1</div>
         </div>
+        <span class="badge-free self-start">БЕСПЛАТНО</span>
       </a>
-      <a href="courses/english-intro/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🇬🇧</span>
-          <div class="grow">
-            <div class="font-semibold">Интенсив по английскому</div>
-            <div class="text-xs text-[var(--ink-2)]">Starter</div>
-          </div>
-          <span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>
+      <a href="courses/english-intro/" class="course-card reveal" style="transition-delay:.16s">
+        <div class="text-3xl">🇬🇧</div>
+        <div>
+          <div class="font-semibold text-base">Интенсив по английскому</div>
+          <div class="text-xs text-[var(--ink-2)] mt-0.5">Starter</div>
         </div>
+        <span class="badge-free self-start">БЕСПЛАТНО</span>
       </a>
-      <a href="courses/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🇯🇵</span>
-          <div class="grow">
-            <div class="font-semibold">Японский с нуля</div>
-            <div class="text-xs text-[var(--ink-2)]">A0</div>
-          </div>
-          <span class="px-2 py-1 text-[11px] rounded-lg badge-free">БЕСПЛАТНО</span>
+      <a href="courses/" class="course-card reveal" style="transition-delay:.24s">
+        <div class="text-3xl">🇯🇵</div>
+        <div>
+          <div class="font-semibold text-base">Японский с нуля</div>
+          <div class="text-xs text-[var(--ink-2)] mt-0.5">A0</div>
         </div>
+        <span class="badge-free self-start">БЕСПЛАТНО</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- ==================== PRO (витрина 3 курса) ==================== -->
+<!-- ==================== PREMIUM ==================== -->
 <section class="py-12 sm:py-16 bg-[#fff3bf] border-y border-black/10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-end justify-between gap-4 flex-wrap">
-      <h2 class="text-2xl sm:text-3xl font-extrabold reveal">Premium</h2>
-      <a href="shop/" class="text-sm underline text-[var(--ink-2)] reveal">Открыть все Premium курсы →</a>
+    <div class="flex items-end justify-between gap-4 flex-wrap mb-6 reveal">
+      <div>
+        <span class="badge" style="background:#fff0d4;border-color:#fde68a;color:#92400e"><span style="background:#E85D04" class="badge-dot"></span>Для тех, кто хочет большего</span>
+        <h2 class="mt-2 text-2xl sm:text-3xl font-display font-extrabold">Premium</h2>
+      </div>
+      <a href="shop/" class="text-sm underline text-[var(--ink-2)]">Все Premium курсы →</a>
     </div>
-    <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <a href="courses/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🪄</span>
-          <div class="grow">
-            <div class="font-semibold">English with Harry</div>
-            <div class="text-xs text-[var(--ink-2)]">по мотивам фильма «Гарри Поттер и Философский камень»</div>
-          </div>
-          <span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PRO</span>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <a href="courses/" class="course-card reveal">
+        <div class="text-3xl">🪄</div>
+        <div>
+          <div class="font-semibold text-base">English with Harry</div>
+          <div class="text-xs text-[var(--ink-2)] mt-0.5">по мотивам «Гарри Поттера»</div>
         </div>
+        <span class="badge-pro self-start">PRO</span>
       </a>
-      <a href="courses/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🖼️</span>
-          <div class="grow">
-            <div class="font-semibold">Визуальный испанский</div>
-            <div class="text-xs text-[var(--ink-2)]">образы, ассоциации</div>
-          </div>
-          <span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PRO</span>
+      <a href="courses/" class="course-card reveal" style="transition-delay:.08s">
+        <div class="text-3xl">🖼️</div>
+        <div>
+          <div class="font-semibold text-base">Визуальный испанский</div>
+          <div class="text-xs text-[var(--ink-2)] mt-0.5">образы, ассоциации</div>
         </div>
+        <span class="badge-pro self-start">PRO</span>
       </a>
-      <a href="courses/" class="p-5 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🎵</span>
-          <div class="grow">
-            <div class="font-semibold">Итальянский по песням</div>
-          </div>
-          <span class="px-2 py-1 text-[11px] rounded-lg badge-pro">PRO</span>
+      <a href="courses/" class="course-card reveal" style="transition-delay:.16s">
+        <div class="text-3xl">🎵</div>
+        <div>
+          <div class="font-semibold text-base">Итальянский по песням</div>
         </div>
+        <span class="badge-pro self-start">PRO</span>
       </a>
     </div>
-    <div class="mt-6">
-      <a href="shop/" class="px-5 py-3 rounded-xl bg-white border border-black/10 hover:bg-[#fff3c6] shadow-soft text-sm">К тарифам и оплате</a>
+    <div class="mt-6 reveal">
+      <a href="shop/" class="px-5 py-3 rounded-xl bg-white border border-black/10 hover:bg-[#fff3c6] shadow-soft text-sm inline-block">К тарифам и оплате</a>
     </div>
   </div>
 </section>
 
 <!-- ==================== ОТЗЫВЫ ==================== -->
-<section class="py-12 sm:py-16">
+<section class="py-16 sm:py-20">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 class="text-2xl sm:text-3xl font-extrabold mb-6 reveal">Что говорят студенты</h2>
-    <div class="grid md:grid-cols-3 gap-4">
-      <figure class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <img src="assets/av1.JPG" alt="Олеся" class="h-10 w-10 rounded-full object-cover">
-        <blockquote class="text-sm mt-3">«Спасибо большое! За такие интересные и развивающие ежедневные задания! Очень много нового открыла для себя! Действительно узнавая новый язык, лучше узнаешь свой...и себя)»</blockquote>
-        <figcaption class="mt-2 text-xs text-[var(--ink-2)]">Олеся</figcaption>
+    <div class="text-center mb-10 reveal">
+      <span class="badge"><span class="badge-dot"></span>Реальные истории</span>
+      <h2 class="mt-3 text-2xl sm:text-3xl font-display font-extrabold">Что говорят студенты</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5">
+      <figure class="review-card reveal">
+        <div class="flex items-center gap-3 mb-4">
+          <img src="assets/av1.JPG" alt="Олеся" class="h-11 w-11 rounded-full object-cover">
+          <div>
+            <div class="font-semibold text-sm">Олеся</div>
+            <div class="text-xs text-[var(--ink-2)]">студентка курса</div>
+          </div>
+          <div class="ml-auto text-[var(--brand-yellow-deep)] text-lg">★★★★★</div>
+        </div>
+        <blockquote class="text-sm leading-relaxed text-[var(--ink-2)]">«Спасибо большое! За такие интересные и развивающие ежедневные задания! Очень много нового открыла для себя! Действительно узнавая новый язык, лучше узнаешь свой...и себя)»</blockquote>
       </figure>
-      <figure class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <img src="assets/av2.jpg" alt="Олеся" class="h-10 w-10 rounded-full object-cover">
-        <blockquote class="text-sm mt-3">«Спасибо за чудесный курс!!! Не всегда было легко, но оооочень интересно!»</blockquote>
-        <figcaption class="mt-2 text-xs text-[var(--ink-2)]">Анонимно</figcaption>
+      <figure class="review-card reveal" style="transition-delay:.1s">
+        <div class="flex items-center gap-3 mb-4">
+          <img src="assets/av2.jpg" alt="Студентка" class="h-11 w-11 rounded-full object-cover">
+          <div>
+            <div class="font-semibold text-sm">Анонимно</div>
+            <div class="text-xs text-[var(--ink-2)]">студентка курса</div>
+          </div>
+          <div class="ml-auto text-[var(--brand-yellow-deep)] text-lg">★★★★★</div>
+        </div>
+        <blockquote class="text-sm leading-relaxed text-[var(--ink-2)]">«Спасибо за чудесный курс!!! Не всегда было легко, но оооочень интересно!»</blockquote>
       </figure>
-      <figure class="p-6 rounded-2xl bg-white border border-black/10 shadow-soft card reveal">
-        <img src="assets/av3.jpg" alt="Марьяна" class="h-10 w-10 rounded-full object-cover">
-        <blockquote class="text-sm mt-3">«Очень нравится Ваша методика - это лучше всего, что я пыталась начинать! Danke schön!»</blockquote>
-        <figcaption class="mt-2 text-xs text-[var(--ink-2)]">Марьяна</figcaption>
+      <figure class="review-card reveal" style="transition-delay:.2s">
+        <div class="flex items-center gap-3 mb-4">
+          <img src="assets/av3.jpg" alt="Марьяна" class="h-11 w-11 rounded-full object-cover">
+          <div>
+            <div class="font-semibold text-sm">Марьяна</div>
+            <div class="text-xs text-[var(--ink-2)]">студентка курса</div>
+          </div>
+          <div class="ml-auto text-[var(--brand-yellow-deep)] text-lg">★★★★★</div>
+        </div>
+        <blockquote class="text-sm leading-relaxed text-[var(--ink-2)]">«Очень нравится Ваша методика — это лучше всего, что я пыталась начинать! Danke schön!»</blockquote>
       </figure>
     </div>
   </div>
@@ -267,51 +444,51 @@
 
 <!-- ==================== FAQ ==================== -->
 <section class="py-12 sm:py-16">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 class="text-2xl sm:text-3xl font-extrabold mb-6 reveal">Частые вопросы</h2>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl sm:text-3xl font-display font-extrabold mb-6 reveal text-center">Частые вопросы</h2>
     <div class="space-y-3">
-      <details class="p-4 bg-white rounded-2xl border border-black/10 shadow-soft reveal">
+      <details class="p-5 bg-white rounded-2xl border border-black/10 shadow-soft reveal" style="border-color:rgba(0,0,0,.07)">
         <summary class="font-semibold cursor-pointer">Можно ли заниматься с нами бесплатно?</summary>
-        <p class="text-sm text-[var(--ink-2)] mt-2">Да. У нас есть бесплатные курсы с полноценными уроками и упражнениями.</p>
+        <p class="text-sm text-[var(--ink-2)] mt-3 leading-relaxed">Да. У нас есть бесплатные курсы с полноценными уроками и упражнениями.</p>
       </details>
-      <details class="p-4 bg-white rounded-2xl border border-black/10 shadow-soft reveal">
+      <details class="p-5 bg-white rounded-2xl border border-black/10 shadow-soft reveal" style="border-color:rgba(0,0,0,.07)">
         <summary class="font-semibold cursor-pointer">Какие языки доступны?</summary>
-        <p class="text-sm text-[var(--ink-2)] mt-2">Пока что сайт в beta-версии. Впереди вас ждут много новых языков - испанский, английский, итальянский, немецкий, японский и многие другие. Полный список — на странице «Курсы».</p>
+        <p class="text-sm text-[var(--ink-2)] mt-3 leading-relaxed">Пока что сайт в beta-версии. Впереди вас ждут много новых языков — испанский, английский, итальянский, немецкий, японский и многие другие. Полный список — на странице «Курсы».</p>
       </details>
-      <details class="p-4 bg-white rounded-2xl border border-black/10 shadow-soft reveal">
+      <details class="p-5 bg-white rounded-2xl border border-black/10 shadow-soft reveal" style="border-color:rgba(0,0,0,.07)">
         <summary class="font-semibold cursor-pointer">Я хочу, чтобы мои задания проверял кто-то. Так можно?</summary>
-        <p class="text-sm text-[var(--ink-2)] mt-2">Да! У нас есть подписка PRO, которую вы можете оформить. С этой подпиской ваши задания будут отправляться на проверку куратору, а вы будете получать развернутую обратную связь.</p>
+        <p class="text-sm text-[var(--ink-2)] mt-3 leading-relaxed">Да! У нас есть подписка PRO — с ней ваши задания отправляются куратору, а вы получаете развёрнутую обратную связь.</p>
       </details>
-      <details class="p-4 bg-white rounded-2xl border border-black/10 shadow-soft reveal">
+      <details class="p-5 bg-white rounded-2xl border border-black/10 shadow-soft reveal" style="border-color:rgba(0,0,0,.07)">
         <summary class="font-semibold cursor-pointer">Можно ли заниматься с телефона?</summary>
-        <p class="text-sm text-[var(--ink-2)] mt-2">Да. Сайт и уроки оптимизированы под мобильные устройства.</p>
+        <p class="text-sm text-[var(--ink-2)] mt-3 leading-relaxed">Да. Сайт и уроки оптимизированы под мобильные устройства.</p>
       </details>
     </div>
   </div>
 </section>
 
 <!-- ==================== CTA ==================== -->
-<section class="py-16 bg-gradient-to-b from-[#fff0b4] to-[#ffe27a] border-y border-black/10 text-center">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
-    <h2 class="text-3xl sm:text-4xl font-extrabold">Выучи свой язык мечты</h2>
-    <p class="mt-2 text-[var(--ink-2)]">Начните с бесплатного курса или купите участие в нашем уникальном новогоднем курсе Polyglot Pack.MCHNY!</p>
-    <div class="mt-6 flex justify-center gap-3 flex-col sm:flex-row">
-      <a href="courses/" class="px-6 py-3 rounded-xl bg-[var(--brand-yellow)] text-[#1a1a1a] font-semibold hover:bg-[var(--brand-yellow-deep)] shadow-soft">Начать бесплатно</a>
-      <a href="shop/" class="px-6 py-3 rounded-xl border border-black/10 bg-white hover:bg-[#fff3c6] shadow-soft">Купить PRO-доступ</a>
+<section class="py-16 sm:py-20 relative overflow-hidden" style="background:linear-gradient(135deg,#fff0b4 0%,#ffe27a 100%);border-top:1.5px solid rgba(0,0,0,.08)">
+  <div class="absolute inset-0 opacity-30"
+    style="background-image:radial-gradient(circle at 20% 50%,rgba(232,93,4,.3) 0%,transparent 50%), radial-gradient(circle at 80% 50%, rgba(255,186,8,.5) 0%, transparent 50%)">
+  </div>
+  <div class="relative max-w-3xl mx-auto px-4 sm:px-6 text-center reveal">
+    <h2 class="text-3xl sm:text-4xl font-display font-extrabold">Выучи свой язык мечты</h2>
+    <p class="mt-3 text-[var(--ink-2)] text-lg">Начните прямо сейчас — первый урок бесплатно, регистрация за минуту.</p>
+    <div class="mt-8 flex justify-center gap-3 flex-col sm:flex-row">
+      <a href="courses/" class="px-7 py-4 rounded-2xl bg-[var(--brand-orange)] text-white font-bold hover:opacity-90 shadow-soft transition-all hover:-translate-y-0.5">Начать бесплатно →</a>
+      <a href="shop/" class="px-7 py-4 rounded-2xl border border-black/10 bg-white hover:bg-white/80 shadow-soft font-semibold transition-all hover:-translate-y-0.5">Купить PRO-доступ</a>
     </div>
   </div>
 </section>
 
+<!-- ==================== FOOTER ==================== -->
 <footer class="border-t border-gray-200 bg-white/70 backdrop-blur py-10 text-sm text-gray-700">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-    <!-- Бренд -->
     <div>
-    
       <p class="mt-3 text-gray-500">Изучайте языки для жизни, а не только для тестов.</p>
       <p class="mt-4 text-gray-400">© 2025 PolyTalky. Все права защищены.</p>
     </div>
-
-    <!-- Навигация -->
     <div>
       <h3 class="font-semibold text-gray-900 mb-3">Навигация</h3>
       <ul class="space-y-2">
@@ -321,8 +498,6 @@
         <li><a href="/contact.html" class="hover:underline">Контакты</a></li>
       </ul>
     </div>
-
-    <!-- Юридическая информация -->
     <div>
       <h3 class="font-semibold text-gray-900 mb-3">Юридическая информация</h3>
       <ul class="space-y-2">
@@ -338,13 +513,13 @@
 <!-- Cookie баннер -->
 <div id="cookie-banner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white text-gray-900 shadow-md rounded-xl px-4 py-3 text-sm flex items-center gap-3 hidden z-50">
   <span>Мы используем cookies для улучшения работы сайта.</span>
-  <button id="cookie-accept" class="bg-[var(--brand-1)] text-gray-900 px-3 py-1 rounded-lg text-sm">Понятно</button>
+  <button id="cookie-accept" class="bg-[var(--brand-yellow)] text-gray-900 px-3 py-1 rounded-lg text-sm">Понятно</button>
 </div>
 <script>
-  const banner = document.getElementById('cookie-banner');
-  if (!localStorage.getItem('cookieConsent')) banner.classList.remove('hidden');
-  document.getElementById('cookie-accept').onclick = () => {
-    localStorage.setItem('cookieConsent', 'true');
+  const banner=document.getElementById('cookie-banner');
+  if(!localStorage.getItem('cookieConsent')) banner.classList.remove('hidden');
+  document.getElementById('cookie-accept').onclick=()=>{
+    localStorage.setItem('cookieConsent','true');
     banner.classList.add('hidden');
   };
 </script>
