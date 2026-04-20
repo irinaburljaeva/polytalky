@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Оплата прошла успешно — PolyTalky</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
+  <style>
+    :root{
+      --brand:#FFBA08;
+      --brand-deep:#E85D04;
+      --ink:#0F172A;
+      --ink-2:#334155;
+      --bg:#FFF8D6;
+    }
+    body{
+      font-family:'Manrope',system-ui,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+    }
+    h1,h2,.syne{font-family:'Syne',sans-serif}
+
+    /* Конфетти */
+    @keyframes fall {
+      0%  { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+      100%{ transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    .confetti-piece{
+      position:fixed;
+      top:-10px;
+      width:10px; height:14px;
+      border-radius:2px;
+      opacity:0;
+      animation: fall linear forwards;
+      pointer-events:none;
+    }
+
+    /* Чекмарк */
+    @keyframes pop{
+      0%  {transform:scale(0); opacity:0}
+      70% {transform:scale(1.15)}
+      100%{transform:scale(1);  opacity:1}
+    }
+    .check-circle{
+      width:80px; height:80px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#FFBA08,#E85D04);
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 20px;
+      animation:pop .5s .2s cubic-bezier(.34,1.56,.64,1) both;
+      box-shadow:0 12px 32px rgba(232,93,4,.3);
+    }
+
+    /* Карточки шагов */
+    .step-card{
+      background:#fff;
+      border:1.5px solid rgba(0,0,0,.07);
+      border-radius:20px;
+      padding:20px 22px;
+      box-shadow:0 6px 20px rgba(0,0,0,.06);
+    }
+    .step-num{
+      width:32px; height:32px;
+      border-radius:50%;
+      background:var(--brand);
+      font-family:'Syne',sans-serif;
+      font-weight:800; font-size:.9rem;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+    }
+
+    /* Fade-in */
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(14px)}
+      to  {opacity:1;transform:translateY(0)}
+    }
+    .fade-up{opacity:0;animation:fadeUp .5s ease forwards}
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- HEADER -->
+<header class="sticky top-0 z-30 bg-[#fffef7]/80 backdrop-blur border-b border-black/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 font-semibold text-lg">
+      <img src="/assets/logo.png" alt="PolyTalky" class="h-8 w-8 rounded-xl"> PolyTalky
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--ink-2)]">
+      <a href="/courses/" class="hover:opacity-80">Курсы</a>
+      <a href="/shop/" class="hover:opacity-80">Магазин</a>
+      <a href="/student/" class="hover:opacity-80">Личный кабинет</a>
+    </nav>
+  </div>
+</header>
+
+<main class="flex-grow">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 py-16 text-center">
+
+    <!-- Иконка успеха -->
+    <div class="check-circle">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+
+    <!-- Заголовок -->
+    <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight fade-up" style="animation-delay:.3s">
+      Оплата прошла!<br>Добро пожаловать 🎉
+    </h1>
+
+    <p class="mt-3 text-[var(--ink-2)] fade-up" style="animation-delay:.45s">
+      Твой курс уже ждёт тебя в личном кабинете PolyTalky. Ниже — всё, что нужно знать для старта.
+    </p>
+
+    <!-- Купленные курсы (если передан payment_id — покажем плейсхолдер, JS подтянет из Firebase) -->
+    <div id="purchasedCourses" class="mt-6 fade-up" style="animation-delay:.55s">
+      <!-- заполняется JS -->
+    </div>
+
+    <!-- Шаги -->
+    <div class="mt-10 text-left space-y-4 fade-up" style="animation-delay:.6s">
+      <h2 class="text-xl font-extrabold mb-5 syne text-center">Как начать учиться?</h2>
+
+      <div class="step-card flex gap-4 items-start">
+        <div class="step-num">1</div>
+        <div>
+          <div class="font-semibold">Войди в личный кабинет</div>
+          <p class="text-sm text-[var(--ink-2)] mt-1">
+            Перейди в <a href="/student/" class="underline font-semibold">личный кабинет</a> и войди с тем email, который использовала при оплате. Твой курс уже там.
+          </p>
+        </div>
+      </div>
+
+      <div class="step-card flex gap-4 items-start">
+        <div class="step-num">2</div>
+        <div>
+          <div class="font-semibold">Открой свой курс</div>
+          <p class="text-sm text-[var(--ink-2)] mt-1">
+            В разделе «Мои курсы» нажми на купленный курс — и первый урок доступен прямо сейчас.
+          </p>
+        </div>
+      </div>
+
+      <div class="step-card flex gap-4 items-start">
+        <div class="step-num">3</div>
+        <div>
+          <div class="font-semibold">Занимайся в удобном темпе</div>
+          <p class="text-sm text-[var(--ink-2)] mt-1">
+            Уроки сохраняются, прогресс фиксируется. Возвращайся когда удобно — с телефона или компьютера.
+          </p>
+        </div>
+      </div>
+
+      <div class="step-card flex gap-4 items-start">
+        <div class="step-num" style="background:#e8ffe3;color:#065f46">✉</div>
+        <div>
+          <div class="font-semibold">Чек придёт на email</div>
+          <p class="text-sm text-[var(--ink-2)] mt-1">
+            YooKassa автоматически отправит чек на твой email. Если письмо не пришло в течение 10 минут — проверь папку «Спам».
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Блок «Нужна помощь» -->
+    <div class="mt-8 p-5 rounded-2xl border border-black/07 bg-white text-left fade-up" style="animation-delay:.75s;border-color:rgba(0,0,0,.07)">
+      <div class="font-semibold mb-1">Что-то пошло не так?</div>
+      <p class="text-sm text-[var(--ink-2)]">
+        Если курс не открылся или есть другой вопрос — напиши нам:
+        <a href="mailto:iraburljaeva@gmail.com" class="font-semibold underline">iraburljaeva@gmail.com</a>.
+        Укажи email, который использовала при оплате, и мы всё проверим вручную.
+      </p>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-10 flex flex-col sm:flex-row gap-3 justify-center fade-up" style="animation-delay:.85s">
+      <a href="/student/"
+         class="px-6 py-3 rounded-2xl font-bold text-[#111] shadow-soft transition-all hover:-translate-y-0.5"
+         style="background:var(--brand)">
+        Перейти в личный кабинет →
+      </a>
+      <a href="/courses/"
+         class="px-6 py-3 rounded-2xl font-semibold bg-white border border-black/10 shadow-soft transition-all hover:-translate-y-0.5">
+        Посмотреть другие курсы
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-gray-200 bg-white/70 backdrop-blur py-8 text-sm text-gray-700">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+    <p>© 2025 PolyTalky. Все права защищены.</p>
+    <div class="flex flex-wrap gap-4">
+      <a href="/contact.html" class="opacity-80 hover:opacity-100">Контакты</a>
+      <a href="/legal/privacy.html" class="opacity-80 hover:opacity-100">Политика конфиденциальности</a>
+      <a href="/legal/offer.html" class="opacity-80 hover:opacity-100">Публичная оферта</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Firebase + логика -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+  // ── Firebase ─────────────────────────────────────
+  const firebaseConfig = {
+    apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+    authDomain: "polytalky-70999.firebaseapp.com",
+    projectId: "polytalky-70999",
+    storageBucket: "polytalky-70999.firebasestorage.app",
+    messagingSenderId: "62407152289",
+    appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // ── Конфетти ─────────────────────────────────────
+  const colors = ['#FFBA08','#E85D04','#10b981','#3b82f6','#f472b6','#a78bfa'];
+  function spawnConfetti(){
+    for(let i=0;i<60;i++){
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left:${Math.random()*100}vw;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        width:${6+Math.random()*8}px;
+        height:${10+Math.random()*8}px;
+        animation-duration:${2+Math.random()*2}s;
+        animation-delay:${Math.random()*.8}s;
+        border-radius:${Math.random()>0.5?'50%':'3px'};
+      `;
+      document.body.appendChild(el);
+      el.addEventListener('animationend',()=>el.remove());
+    }
+  }
+  window.addEventListener('load', spawnConfetti);
+
+  // ── Очистить корзину в localStorage ──────────────
+  localStorage.removeItem('pt_cart');
+
+  // ── Показать купленные курсы (из sessionStorage) ──
+  // Магазин сохраняет items перед редиректом на YooKassa
+  // Формат: JSON-массив [{id, title, priceRub}, ...]
+  const savedItems = sessionStorage.getItem('pt_pending_items');
+  const el = document.getElementById('purchasedCourses');
+
+  if(savedItems){
+    try{
+      const items = JSON.parse(savedItems);
+      if(items && items.length){
+        el.innerHTML = `
+          <div style="background:#fff;border:1.5px solid rgba(0,0,0,.07);border-radius:20px;padding:18px 20px;box-shadow:0 6px 20px rgba(0,0,0,.06)">
+            <div style="font-weight:700;margin-bottom:10px">Твой заказ:</div>
+            ${items.map(c=>`
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:.9rem">
+                <span>${c.title}</span>
+                <span style="font-weight:700;white-space:nowrap">${c.priceRub ? new Intl.NumberFormat('ru-RU').format(c.priceRub)+' ₽' : ''}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        sessionStorage.removeItem('pt_pending_items');
+      }
+    } catch(e){ /* ignore */ }
+  }
+</script>
+
+</body>
+</html>
