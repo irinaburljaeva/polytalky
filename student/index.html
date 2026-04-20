@@ -6,7 +6,6 @@
   <title>PolyTalky — Личный кабинет</title>
   <meta name="description" content="Личный кабинет PolyTalky: ваши курсы, достижения и прогресс" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- фавикон -->
   <link rel="icon" type="image/jpg" href="/assets/favicon.jpg">
   <link rel="apple-touch-icon" href="/favicon.png">
   <style>
@@ -14,7 +13,6 @@
       --brand-1:#FFBA08;
       --brand-2:#F97316;
       --brand-3:#10B981;
-
       --ink-1:#0F172A;
       --ink-2:#4B5563;
       --ink-soft:#9CA3AF;
@@ -24,2883 +22,1452 @@
     body{
       margin:0;
       min-height:100vh;
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      background:
-        radial-gradient(circle at top left,#FEF9C3 0,#FEFCE8 40%,#F9FAFB 100%);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background:radial-gradient(circle at top left,#FEF9C3 0,#FEFCE8 40%,#F9FAFB 100%);
       color:#0f172a;
     }
-    .wrap{max-width:1040px;margin:0 auto;}
-    .card{
-      border-radius:1.25rem;
-      border:1px solid rgba(15,23,42,.08);
-      background-color:rgba(255,255,255,.96);
-      box-shadow:0 18px 45px rgba(15,23,42,.08);
-    }
-    .soft-card{
-      border-radius:1rem;
-      border:1px solid rgba(148,163,184,.18);
-      background:rgba(255,255,255,.9);
-    }
-    .badge{
-      border-radius:.6rem;
-      padding:.25rem .45rem;
-      font-size:.7rem;
-      border: none !important;
-      background:rgba(248,250,252,.7);
-    }
-    .btn{
-      border-radius:999px;
-      padding:.55rem 1.2rem;
-      font-size:.88rem;
-      font-weight:600;
-      border:1px solid transparent;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:.4rem;
-      white-space:nowrap;
-    }
-    .btn-main{
-      background:linear-gradient(135deg,var(--brand-2),var(--brand-1));
-      color:#111827;
-      box-shadow:0 12px 30px rgba(234,179,8,.45);
-    }
-    .btn-main:hover{filter:brightness(1.03);}
-    .btn-ghost{
-      background:rgba(255,255,255,.7);
-      border-color:rgba(148,163,184,.5);
-      color:#374151;
-    }
-    .btn-ghost:hover{background:white;}
-    .pill-label{
-      border-radius:999px;
-      padding:.18rem .6rem;
-      font-size:.7rem;
-      text-transform:uppercase;
-      letter-spacing:.06em;
-      border:1px solid rgba(148,163,184,.5);
-      background:rgba(249,250,251,.9);
-      color:#4b5563;
-    }
-    .hp-field{
-      position:absolute;
-      left:-9999px;
-      opacity:0;
-      pointer-events:none;
-      height:0;width:0;
-    }
+    .wrap{max-width:1040px;margin:0 auto}
+    .card{border-radius:1.25rem;border:1px solid rgba(15,23,42,.08);background-color:rgba(255,255,255,.96);box-shadow:0 18px 45px rgba(15,23,42,.08)}
+    .soft-card{border-radius:1rem;border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.9)}
+    .badge{border-radius:.6rem;padding:.25rem .45rem;font-size:.7rem;border:none!important;background:rgba(248,250,252,.7)}
+    .btn{border-radius:999px;padding:.55rem 1.2rem;font-size:.88rem;font-weight:600;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;white-space:nowrap}
+    .btn-main{background:linear-gradient(135deg,var(--brand-2),var(--brand-1));color:#111827;box-shadow:0 12px 30px rgba(234,179,8,.45)}
+    .btn-main:hover{filter:brightness(1.03)}
+    .btn-ghost{background:rgba(255,255,255,.7);border-color:rgba(148,163,184,.5);color:#374151}
+    .btn-ghost:hover{background:white}
+    .pill-label{border-radius:999px;padding:.18rem .6rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;border:1px solid rgba(148,163,184,.5);background:rgba(249,250,251,.9);color:#4b5563}
 
     /* PRO-banners */
-    .pro-banner{
-      max-width:1040px;
-      margin:0 auto 0;
-      padding:10px 14px;
-      border-radius:14px;
-      display:none;
-      align-items:flex-start;
-      gap:10px;
-      font-size:13px;
-    }
-    .pro-banner__icon{
-      flex:0 0 28px;
-      height:28px;
-      border-radius:999px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:16px;
-      font-weight:600;
-    }
-    .pro-banner__body h2{
-      margin:0 0 2px;
-      font-size:14px;
-      font-weight:600;
-    }
-    .pro-banner__body p{
-      margin:0;
-      font-size:13px;
-    }
-    .pro-banner--success{
-      background:linear-gradient(135deg,#ecfdf5,#f0fdf4,#ffffff);
-      color:#065f46;
-    }
-    .pro-banner--success .pro-banner__icon{
-      background:#22c55e;
-      color:#ecfdf5;
-      box-shadow:0 0 0 2px #bbf7d0;
-    }
-    .pro-banner--error{
-      background:linear-gradient(135deg,#fef2f2,#fee2e2,#ffffff);
-      color:#b91c1c;
-    }
-    .pro-banner--error .pro-banner__icon{
-      background:#ef4444;
-      color:#fef2f2;
-      box-shadow:0 0 0 2px #fecaca;
-    }
-    .pro-banner--cancel{
-      background:linear-gradient(135deg,#f9fafb,#e5e7eb,#ffffff);
-      color:#374151;
-    }
-    .pro-banner--cancel .pro-banner__icon{
-      background:#6b7280;
-      color:#f9fafb;
-      box-shadow:0 0 0 2px #e5e7eb;
-    }
-    .pro-banner__btn{
-      margin-left:auto;
-      border-radius:999px;
-      padding:6px 14px;
-      border:none;
-      font-size:12px;
-      font-weight:600;
-      cursor:pointer;
-      background:#0f172a;
-      color:#f9fafb;
-      white-space:nowrap;
-    }
-    .pro-banner__btn:hover{background:#111827;}
+    .pro-banner{max-width:1040px;margin:0 auto 0;padding:10px 14px;border-radius:14px;display:none;align-items:flex-start;gap:10px;font-size:13px}
+    .pro-banner__icon{flex:0 0 28px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600}
+    .pro-banner__body h2{margin:0 0 2px;font-size:14px;font-weight:600}
+    .pro-banner__body p{margin:0;font-size:13px}
+    .pro-banner--success{background:linear-gradient(135deg,#ecfdf5,#f0fdf4,#ffffff);color:#065f46}
+    .pro-banner--success .pro-banner__icon{background:#22c55e;color:#ecfdf5;box-shadow:0 0 0 2px #bbf7d0}
+    .pro-banner--error{background:linear-gradient(135deg,#fef2f2,#fee2e2,#ffffff);color:#b91c1c}
+    .pro-banner--error .pro-banner__icon{background:#ef4444;color:#fef2f2;box-shadow:0 0 0 2px #fecaca}
+    .pro-banner--cancel{background:linear-gradient(135deg,#f9fafb,#e5e7eb,#ffffff);color:#374151}
+    .pro-banner--cancel .pro-banner__icon{background:#6b7280;color:#f9fafb;box-shadow:0 0 0 2px #e5e7eb}
+    .pro-banner__btn{margin-left:auto;border-radius:999px;padding:6px 14px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:#0f172a;color:#f9fafb;white-space:nowrap}
+    .pro-banner__btn:hover{background:#111827}
 
-    #pro-chip {
-      animation: pro-chip-pulse 1.6s ease-in-out infinite alternate;
+    #pro-chip{animation:pro-chip-pulse 1.6s ease-in-out infinite alternate}
+    @keyframes pro-chip-pulse{
+      from{transform:translateY(0);box-shadow:0 0 0 1px rgba(16,185,129,.15)}
+      to{transform:translateY(-1px);box-shadow:0 4px 10px rgba(16,185,129,.28)}
     }
 
-    @keyframes pro-chip-pulse {
-      from { transform: translateY(0); box-shadow: 0 0 0 1px rgba(16,185,129,.15); }
-      to   { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(16,185,129,.28); }
+    /* КОЛЕСО */
+    #wheel-modal .card{max-height:calc(100vh - 32px);overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable both-edges;-webkit-overflow-scrolling:touch}
+    #wheel-modal.spinning .card{overflow-y:hidden}
+    @media(max-width:640px){
+      #wheel-modal .card{max-height:calc(100vh - 16px);padding-bottom:16px}
+      #wheel-result{padding-bottom:8px}
     }
+    .wheel-container{position:relative;width:360px;height:360px;margin:0 auto}
+    .wheel-canvas{width:100%;height:100%;border-radius:50%;display:block;box-shadow:0 18px 45px rgba(15,23,42,.14),0 0 0 10px rgba(255,255,255,.92),0 0 0 14px rgba(255,186,8,.55);transform-origin:50% 50%}
+    .wheel-pointer{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:42px solid rgba(255,255,255,.98);filter:drop-shadow(0 6px 10px rgba(15,23,42,.22));z-index:10}
+    .wheel-pointer::after{content:"";position:absolute;left:-18px;top:-42px;width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:42px solid rgba(255,186,8,.65);transform:translateY(4px) scale(.92);z-index:-1}
+    .wheel-center-button{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#fff7d6,#ffffff);border:8px solid rgba(255,186,8,.75);box-shadow:0 18px 45px rgba(15,23,42,.18);display:flex;align-items:center;justify-content:center;font-weight:900;letter-spacing:.08em;color:#0F172A;text-transform:uppercase;cursor:pointer;z-index:20;padding:10px 12px;line-height:1.05;text-align:center;overflow:hidden;white-space:normal;font-size:14px}
 
-    #wheel-modal .card{
-  max-height: calc(100vh - 32px);
-  overflow-y: auto;
-      overflow-x:hidden; 
-      scrollbar-gutter: stable both-edges;
-  -webkit-overflow-scrolling: touch;
-}
-    #wheel-modal.spinning .card{
-      overflow-y: hidden;
+    @media(max-width:640px){
+      .pro-banner{margin:0 1rem;flex-direction:column;align-items:flex-start}
+      .pro-banner__btn{margin-left:0;margin-top:6px}
+      .wheel-pointer{border-left:16px solid transparent;border-right:16px solid transparent;border-top:32px solid #ef4444}
+      .card{border-radius:1rem;box-shadow:0 10px 24px rgba(15,23,42,.14)}
+      .page-stack-mobile{padding-top:1rem;padding-bottom:2.5rem;row-gap:1.25rem}
+      .mobile-desc{display:none}
+      .wheel-container{width:280px;height:280px}
+      .wheel-center-button{width:72px;height:72px;font-size:14px}
     }
-
-@media (max-width:640px){
-  #wheel-modal .card{
-    max-height: calc(100vh - 16px);
-    padding-bottom: 16px;
-  }
-  #wheel-result { padding-bottom: 8px; }
-}
-/* КОЛЕСО УДАЧИ */
-.wheel-container{
-  position:relative;
-  width:360px;
-  height:360px;
-  margin:0 auto;
-}
-
-/* мягкий “премиум”-вид под ваш UI */
-.wheel-canvas{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  display:block;
-
-  /* вместо “чёрной ямы” — мягкая тень как у card */
-  box-shadow:
-    0 18px 45px rgba(15,23,42,.14),
-    0 0 0 10px rgba(255,255,255,.92),
-    0 0 0 14px rgba(255,186,8,.55);
-
-  /* чтобы вращение было приятным */
-  transform-origin:50% 50%;
-}
-
-/* указатель в фирменном стиле: белый + жёлтая окантовка */
-.wheel-pointer{
-  position:absolute;
-  top:-18px;
-  left:50%;
-  transform:translateX(-50%);
-  width:0;height:0;
-  border-left:18px solid transparent;
-  border-right:18px solid transparent;
-  border-top:42px solid rgba(255,255,255,.98);
-  filter:drop-shadow(0 6px 10px rgba(15,23,42,.22));
-  z-index:10;
-}
-.wheel-pointer::after{
-  content:"";
-  position:absolute;
-  left:-18px; top:-42px;
-  width:0;height:0;
-  border-left:18px solid transparent;
-  border-right:18px solid transparent;
-  border-top:42px solid rgba(255,186,8,.65);
-  transform:translateY(4px) scale(.92);
-  z-index:-1;
-}
-
-.wheel-center-button{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:96px;
-  height:96px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#fff7d6,#ffffff);
-  border:8px solid rgba(255,186,8,.75);
-  box-shadow:0 18px 45px rgba(15,23,42,.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-weight:900;
-  letter-spacing:.08em;
-  color:#0F172A;
-  text-transform:uppercase;
-  cursor:pointer;
-  z-index:20;
-
-  padding:10px 12px;
-  line-height:1.05;
-  text-align:center;
-
-   overflow:hidden;
-  white-space:normal;
-  font-size:14px;
-}
-
-@media (max-width:640px){
-  .pro-banner{
-    margin:0 1rem;
-    flex-direction:column;
-    align-items:flex-start;
-  }
-  .pro-banner__btn{
-    margin-left:0;
-    margin-top:6px;
-  }
-
-  /* если хотите именно красный указатель на мобиле — добавьте так: */
-  .wheel-pointer{
-    border-left:16px solid transparent;
-    border-right:16px solid transparent;
-    border-top:32px solid #ef4444;
-  }
-
-      .card{
-        border-radius: 1rem;
-        box-shadow: 0 10px 24px rgba(15,23,42,0.14);
-      }
-
-      .page-stack-mobile{
-        padding-top: 1rem;
-        padding-bottom: 2.5rem;
-        row-gap: 1.25rem;
-      }
-      .mobile-desc{
-        display: none;
-      }
-
-      .wheel-container {
-        width: 280px;
-        height: 280px;
-      }
-
-      .wheel-center-button {
-        width: 72px;
-        height: 72px;
-        font-size: 14px;
-      }
-}
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
-  <!-- HEADER -->
-  <header class="sticky top-0 z-30 backdrop-blur bg-white/80 border-b border-slate-200/60">
-    <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-      <a href="/" class="flex items-center gap-2">
-        <div class="h-9 w-9 rounded-2xl overflow-hidden bg-white shadow-md flex items-center justify-center">
-          <img src="/assets/logo.png" alt="PolyTalky" class="h-full w-full object-cover">
-        </div>
-        <span class="font-semibold text-slate-900 text-lg">PolyTalky</span>
-      </a>
-      <nav class="hidden sm:flex items-center gap-5 text-sm text-slate-700">
-        <a href="/courses/" class="hover:text-slate-900">Курсы</a>
-        <a href="/shop/" class="hover:text-slate-900">Магазин</a>
-        <span class="font-semibold text-slate-900">Личный кабинет</span>
-      </nav>
-    </div>
-  </header>
 
-  <main class="flex-1">
-    <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 page-stack-mobile">
-
-      <!-- PRO STATUS BANNERS -->
-      <section id="pro-banner-success" class="pro-banner pro-banner--success">
-        <div class="pro-banner__icon">★</div>
-        <div class="pro-banner__body">
-          <h2>У вас активна подписка PRO</h2>
-          <p id="pro-status-text">
-            Теперь ваши задания будут проверяться куратором, а вы получите приоритет в ответах и особое внимание к прогрессу.
-          </p>
-        </div>
-
-        <button type="button" id="pro-cancel-button" class="pro-banner__btn">
-          Отменить автопродление
-        </button>
-
-        <button type="button" id="pro-renew-button" class="pro-banner__btn hidden">
-          Продлить подписку
-        </button>
-      </section>
-
-      <section id="pro-banner-error" class="pro-banner pro-banner--error">
-        <div class="pro-banner__icon">!</div>
-        <div class="pro-banner__body">
-          <h2>Оплата не прошла</h2>
-          <p>Что-то пошло не так при оформлении подписки PRO. Попробуйте ещё раз или выберите другой способ оплаты.</p>
-        </div>
-      </section>
-
-      <section id="pro-banner-cancel" class="pro-banner pro-banner--cancel">
-        <div class="pro-banner__icon">⏹</div>
-        <div class="pro-banner__body">
-          <h2>Оформление подписки отменено</h2>
-          <p>Если у вас уже есть активная подписка и вы хотите её завершить, вы можете запросить отмену.</p>
-        </div>
-        <button type="button" id="pro-cancel-button-2" class="pro-banner__btn">
-          Отменить подписку
-        </button>
-      </section>
-
-      <!-- HERO / AUTH CARD -->
-      <section class="card p-5 sm:p-7 space-y-5">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-          <div class="space-y-2 max-w-xl">
-            <p class="text-xs font-semibold tracking-[.2em] uppercase text-amber-700">
-              Ваш уголок в PolyTalky
-            </p>
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
-              Личный кабинет <span class="text-amber-600">языкового героя</span>
-            </h1>
-            <p class="text-sm sm:text-base text-slate-600 mobile-desc">
-              Здесь появляются все ваши курсы, прогресс и достижения. Авторизуйтесь, чтобы увидеть свою личную карту маршрутов в мире языков.
-            </p>
-          </div>
-          <div class="w-full max-w-sm mx-auto">
-            <div id="auth-when-logged-out" class="space-y-4">
-              <div class="soft-card p-4 space-y-3">
-                <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">
-                  Войти в кабинет
-                </p>
-                <p class="text-sm text-slate-600">
-                  Используйте тот же email, который вы указывали при покупке курсов или регистрации на сайте PolyTalky.
-                </p>
-                <p class="text-xs text-slate-500">
-                  После входа мы покажем все ваши активированные курсы и достижения.
-                </p>
-              </div>
-              <form id="auth-form" class="space-y-3">
-                <div>
-                  <label for="auth-email" class="block text-xs font-medium text-slate-600 mb-1">
-                    Email
-                  </label>
-                  <input
-                    id="auth-email"
-                    type="email"
-                    autocomplete="email"
-                    required
-                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                    placeholder="you@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label for="auth-pass" class="block text-xs font-medium text-slate-600 mb-1">
-                    Пароль
-                  </label>
-                  <input
-                    id="auth-pass"
-                    type="password"
-                    autocomplete="current-password"
-                    required
-                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                    placeholder="Пароль"
-                  />
-                </div>
-
-                <div id="auth-forgot-row" class="flex justify-end">
-                  <button
-                    type="button"
-                    id="auth-forgot"
-                    class="text-xs text-slate-500 hover:text-amber-600 underline underline-offset-2"
-                  >
-                    Забыли пароль?
-                  </button>
-                </div>
-
-                <div class="hidden">
-                  <label for="auth-website" class="block text-xs font-medium text-slate-600 mb-1">
-                    Сайт
-                  </label>
-                  <input
-                    id="auth-website"
-                    name="website"
-                    type="text"
-                    autocomplete="off"
-                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm"
-                  />
-                </div>
-
-                <div id="auth-names-block" class="space-y-3 hidden">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label for="auth-first" class="block text-xs font-medium text-slate-600 mb-1">
-                        Имя
-                      </label>
-                      <input
-                        id="auth-first"
-                        type="text"
-                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                        placeholder="Имя"
-                      />
-                    </div>
-                    <div>
-                      <label for="auth-last" class="block text-xs font-medium text-slate-600 mb-1">
-                        Фамилия
-                      </label>
-                      <input
-                        id="auth-last"
-                        type="text"
-                        class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                        placeholder="Фамилия (или ник)"
-                      />
-                    </div>
-                  </div>
-                  <p class="text-[11px] text-slate-500">
-                    Заполните, чтобы мы знали, как к вам обращаться
-                  </p>
-                </div>
-
-                <div id="auth-terms-block" class="space-y-2 text-[11px] text-slate-500 hidden">
-                  <label class="flex items-start gap-2">
-                    <input
-                      id="auth-accept-terms"
-                      type="checkbox"
-                      class="mt-0.5 h-3 w-3 flex-shrink-0"
-                    >
-                    <span>
-                      Создавая аккаунт, вы подтверждаете, что ознакомились и
-                      соглашаетесь с
-                      <a href="/legal/terms.html" class="underline">Условиями использования</a>,
-                      <a href="/legal/privacy.html" class="underline">Политикой конфиденциальности</a>,
-                      <a href="/legal/cookies.html" class="underline">Политикой использования cookies</a>
-                      и
-                      <a href="/legal/consent.html" class="underline">Согласием на обработку персональных данных</a>.
-                    </span>
-                  </label>
-                  <p>
-                    Чтобы зарегистрироваться, подтвердите галочкой, что вы согласны с условиями и политиками.
-                  </p>
-                </div>
-
-                <p id="auth-error" class="text-xs text-red-500 min-h-[1rem]"></p>
-
-                <div class="flex flex-col sm:flex-row gap-2 pt-1">
-                  <button id="btn-login" type="button" class="btn btn-main flex-1 justify-center text-sm">
-                    Войти
-                  </button>
-                  <button id="auth-register" type="button" class="btn btn-ghost flex-1 justify-center text-sm">
-                    Регистрация
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <div id="auth-when-logged-in" class="hidden space-y-4">
-              <div class="soft-card p-4 space-y-3">
-                <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">
-                  Вы авторизованы
-                </p>
-                <div class="flex items-center gap-3">
-                  <div class="h-10 w-10 rounded-full overflow-hidden bg-slate-200 flex-shrink-0 cursor-pointer" id="profile-avatar-wrapper">
-                    <img id="profile-avatar-img" src="/assets/avatarf.png" alt="Avatar" class="h-full w-full object-cover">
-                  </div>
-                  <div class="min-w-0">
-                    <div class="flex items-center gap-2">
-                      <p id="profile-name" class="text-sm font-semibold text-slate-900 truncate">
-                        ЗАГРУЗКА
-                      </p>
-
-                      <button
-                        type="button"
-                        id="pro-chip"
-                        class="inline-flex items-center px-2 py-[2px] rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-semibold uppercase tracking-[.16em] border border-emerald-200 shadow-[0_0_0_1px_rgba(16,185,129,.2)] transform transition hover:-translate-y-0.5 hover:shadow-md hidden"
-                      >
-                        PRO
-                      </button>
-                    </div>
-
-                    <p id="auth-user-email" class="text-xs text-slate-500 truncate">
-                      ...
-                    </p>
-                  </div>
-                </div>
-                <p class="text-xs text-slate-500">
-                  Это ваш личный кабинет PolyTalky. Здесь вы можете управлять курсами, видеть прогресс и собирать достижения.
-                </p>
-              </div>
-
-              <div class="flex flex-col sm:flex-row gap-2">
-                <button id="btn-open-profile" class="btn btn-ghost flex-1 text-xs sm:text-sm">
-                  Настройки профиля
-                </button>
-                <button id="auth-logout" class="btn btn-main flex-1 text-xs sm:text-sm">
-                  Выйти
-                </button>
-              </div>
-
-              <!-- КОИНЫ -->
-              <div id="coins-card" class="soft-card p-3 sm:p-4 space-y-2 hidden">
-                <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-2">
-                    <div class="h-7 w-7 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center overflow-hidden">
-                      <img
-                        src="/assets/coin.png"
-                        alt="Коин PolyTalky"
-                        class="h-6 w-6 object-contain"
-                      />
-                    </div>
-                    <div>
-                      <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">
-                        Ваши коины
-                      </p>
-                      <p class="text-sm text-slate-900">
-                        Баланс: <span id="coins-balance">0</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <p id="coins-text" class="text-[11px] text-slate-600">
-                  Заходите каждый день, чтобы получать больше коинов и менять их на бонусы.
-                </p>
-                <button id="coins-claim-btn" class="btn btn-main w-full text-xs sm:text-sm">
-                  Забрать ежедневный бонус
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- КУРСЫ + ДОСТИЖЕНИЯ -->
-      <section class="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start">
-        <!-- КУРСЫ -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between gap-3">
-            <div class="space-y-1">
-              <p class="pill-label">Ваши курсы</p>
-              <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
-                Все активированные программы и курсы
-              </h2>
-              <p class="text-xs sm:text-sm text-slate-600 mobile-desc">
-                Здесь собраны курсы, купленные в <a href="/shop/" class="underline">магазине</a>, а также бесплатные программы, в которых вы прошли хотя бы первый урок.
-              </p>
-            </div>
-          </div>
-
-          <div id="courses-need-auth" class="soft-card p-4 text-xs sm:text-sm text-slate-600">
-            Войдите в аккаунт, чтобы увидеть список ваших курсов и прогресс.
-          </div>
-
-          <div id="courses-empty" class="soft-card p-4 text-xs sm:text-sm text-slate-600 hidden">
-            Пока здесь пусто. Загляните в
-            <a href="/shop/" class="underline">магазин</a>, чтобы выбрать курс, или начните один из бесплатных
-            <a href="/courses/" class="underline">мини-курсов</a>.
-          </div>
-
-          <div id="courses-list" class="grid gap-3 sm:gap-4 md:grid-cols-2">
-            <!-- карточки курсов -->
-          </div>
-        </div>
-
-        <!-- ДОСТИЖЕНИЯ -->
-        <div class="space-y-3">
-          <div class="space-y-1">
-            <p class="pill-label">Достижения</p>
-            <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
-              Бейджи, медали и маленькие победы
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-600 mobile-desc">
-              Здесь будут появляться ваши награды за пройденные уроки, выполненные задания и особые активности. Сможете собрать все?
-            </p>
-          </div>
-          <div id="achievements-list" class="grid gap-3 sm:gap-4">
-            <!-- медали -->
-          </div>
-        </div>
-      </section>
-
-      <!-- МОДАЛКА КОЛЛЕКЦИИ МЕДАЛЕЙ -->
-      <div
-        id="badges-modal"
-        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40"
-      >
-        <div class="card max-w-2xl w-full mx-4 p-4 sm:p-6 space-y-4">
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
-                Коллекция медалей
-              </p>
-              <p class="text-xs sm:text-sm text-slate-600">
-                Все ваши достижения в PolyTalky
-              </p>
-            </div>
-            <button
-              id="badges-modal-close"
-              class="text-slate-400 hover:text-slate-600 text-xl leading-none"
-            >
-              ×
-            </button>
-          </div>
-
-          <div class="grid gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1.6fr)] items-start">
-            <div
-              id="badges-modal-grid"
-              class="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 text-center text-[10px] sm:text-xs"
-            >
-              <!-- все медали -->
-            </div>
-            <div
-              id="badges-modal-detail"
-              class="soft-card p-3 sm:p-4 text-xs sm:text-sm text-slate-700"
-            >
-              <p class="font-semibold mb-1">Выберите медаль</p>
-              <p>
-                Нажмите или наведите курсор на любую медаль в коллекции, чтобы увидеть, за что она даётся.
-              </p>
-            </div>
-          </div>
-        </div>
+<!-- HEADER -->
+<header class="sticky top-0 z-30 backdrop-blur bg-white/80 border-b border-slate-200/60">
+  <div class="wrap px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2">
+      <div class="h-9 w-9 rounded-2xl overflow-hidden bg-white shadow-md flex items-center justify-center">
+        <img src="/assets/logo.png" alt="PolyTalky" class="h-full w-full object-cover">
       </div>
-
-      <!-- МОДАЛКА ОТМЕНЫ ПОДПИСКИ PRO -->
-      <div
-        id="pro-cancel-modal"
-        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40"
-      >
-        <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
-                Подписка PRO
-              </p>
-              <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">
-                Отменить автопродление?
-              </h2>
-            </div>
-            <button
-              type="button"
-              id="pro-cancel-modal-close"
-              class="text-slate-400 hover:text-slate-600 text-xl leading-none"
-            >
-              ×
-            </button>
-          </div>
-
-          <p class="text-sm text-slate-600" id="pro-cancel-modal-text">
-            Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.
-          </p>
-
-          <div class="text-xs text-slate-500" id="pro-cancel-modal-subtext">
-            После окончания этого периода платежи списываться не будут, и вы больше не сможете отправлять задания на проверку куратору.
-          </div>
-
-          <div class="flex flex-col sm:flex-row sm:justify-end gap-2 pt-2">
-            <button
-              type="button"
-              id="pro-cancel-modal-cancel"
-              class="btn btn-ghost w-full sm:w-auto"
-            >
-              Оставить как есть
-            </button>
-            <button
-              type="button"
-              id="pro-cancel-modal-confirm"
-              class="btn w-full sm:w-auto"
-            >
-              Отключить автопродление
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- МОДАЛКА КОЛЕСА УДАЧИ -->
-      <div
-        id="wheel-modal"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4"
-      >
-        <div class="card max-w-md w-full p-5 sm:p-6 space-y-4">
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
-                🎉 День 7 — Колесо Удачи
-              </p>
-              <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">
-                Крутите колесо и получите приз!
-              </h2>
-            </div>
-          </div>
-
-          <p class="text-sm text-slate-600">
-            Поздравляем! Вы заходили в личный кабинет 7 дней подряд. Теперь вы можете прокрутить колесо удачи и получить особенный приз 🎁
-          </p>
-
-          <div class="wheel-container">
-            <div class="wheel-pointer"></div>
-            <canvas id="wheel-canvas" class="wheel-canvas" width="360" height="360"></canvas>
-            <button id="wheel-spin-btn" class="wheel-center-button">
-              GO!
-            </button>
-          </div>
-
-          <div id="wheel-result" class="hidden">
-            <div class="soft-card p-4 text-center space-y-2">
-              <div class="text-5xl mb-2" id="wheel-result-icon">🎉</div>
-              <p class="text-lg font-bold text-slate-900" id="wheel-result-title">
-                Поздравляем!
-              </p>
-              <p class="text-sm text-slate-600" id="wheel-result-description">
-                Вы выиграли приз!
-              </p>
-              <button id="wheel-claim-btn" class="btn btn-main w-full mt-3">
-                Забрать приз
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- НАСТРОЙКИ ПРОФИЛЯ -->
-      <div id="profile-settings" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40">
-        <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">
-                Профиль
-              </p>
-              <h2 class="text-lg sm:text-xl font-semibold text-slate-900">
-                Настройки аккаунта
-              </h2>
-              <p class="text-xs sm:text-sm text-slate-600">
-                Эти данные помогают нам персонализировать ваш опыт и, в будущем, показывать прогресс более наглядно.
-              </p>
-            </div>
-            <button id="btn-close-profile" class="text-slate-400 hover:text-slate-600 text-xl leading-none">
-              ×
-            </button>
-          </div>
-
-          <form id="profile-form" class="space-y-3">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label for="profile-first" class="block text-xs font-medium text-slate-600 mb-1">
-                  Имя
-                </label>
-                <input
-                  id="profile-first"
-                  name="firstName"
-                  type="text"
-                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                  placeholder="Например, Анна"
-                />
-              </div>
-              <div>
-                <label for="profile-last" class="block text-xs font-medium text-slate-600 mb-1">
-                  Фамилия
-                </label>
-                <input
-                  id="profile-last"
-                  name="lastName"
-                  type="text"
-                  class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-                  placeholder="Фамилия (или никнейм)"
-                />
-              </div>
-              <!-- EMAIL (только для чтения) -->
-<div>
-  <label for="profile-email" class="block text-xs font-medium text-slate-600 mb-1">
-    Email
-  </label>
-  <input
-    id="profile-email"
-    type="email"
-    readonly
-    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-slate-50 text-slate-500"
-    placeholder="you@example.com"
-  />
-  <p class="text-[11px] text-slate-500 mt-1">
-    Email берётся из аккаунта и редактируется только через поддержку.
-  </p>
-</div>
-
-<!-- СМЕНА ПАРОЛЯ -->
-<div class="pt-2 border-t border-slate-200/70">
-  <p class="text-xs font-semibold tracking-[.18em] uppercase text-slate-600 mb-2">
-    Сменить пароль
-  </p>
-
-  <div class="space-y-2">
-    <input
-      id="pw-current"
-      type="password"
-      autocomplete="current-password"
-      class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-      placeholder="Текущий пароль"
-    />
-    <input
-      id="pw-new"
-      type="password"
-      autocomplete="new-password"
-      class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-      placeholder="Новый пароль (минимум 6 символов)"
-    />
+      <span class="font-semibold text-slate-900 text-lg">PolyTalky</span>
+    </a>
+    <nav class="hidden sm:flex items-center gap-5 text-sm text-slate-700">
+      <a href="/courses/" class="hover:text-slate-900">Курсы</a>
+      <a href="/shop/" class="hover:text-slate-900">Магазин</a>
+      <span class="font-semibold text-slate-900">Личный кабинет</span>
+    </nav>
   </div>
+</header>
 
-  <div class="flex flex-col gap-2 mt-2">
-  <button type="button" id="btn-change-password" class="btn btn-ghost w-full">
-    Сменить пароль
-  </button>
-  <button type="button" id="btn-reset-password" class="btn btn-ghost w-full">
-    Не помню пароль
-  </button>
-</div>
+<main class="flex-1">
+  <div class="wrap px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 page-stack-mobile">
 
-  <p id="pw-msg" class="text-xs text-slate-500 min-h-[1rem] mt-2"></p>
-</div>
+    <!-- PRO BANNERS -->
+    <section id="pro-banner-success" class="pro-banner pro-banner--success">
+      <div class="pro-banner__icon">★</div>
+      <div class="pro-banner__body">
+        <h2>У вас активна подписка PRO</h2>
+        <p id="pro-status-text">Теперь ваши задания будут проверяться куратором, а вы получите приоритет в ответах и особое внимание к прогрессу.</p>
+      </div>
+      <button type="button" id="pro-cancel-button" class="pro-banner__btn">Отменить автопродление</button>
+      <button type="button" id="pro-renew-button" class="pro-banner__btn hidden">Продлить подписку</button>
+    </section>
+
+    <section id="pro-banner-error" class="pro-banner pro-banner--error">
+      <div class="pro-banner__icon">!</div>
+      <div class="pro-banner__body">
+        <h2>Оплата не прошла</h2>
+        <p>Что-то пошло не так при оформлении подписки PRO. Попробуйте ещё раз или выберите другой способ оплаты.</p>
+      </div>
+    </section>
+
+    <section id="pro-banner-cancel" class="pro-banner pro-banner--cancel">
+      <div class="pro-banner__icon">⏹</div>
+      <div class="pro-banner__body">
+        <h2>Оформление подписки отменено</h2>
+        <p>Если у вас уже есть активная подписка и вы хотите её завершить, вы можете запросить отмену.</p>
+      </div>
+      <!-- ✅ ИСПРАВЛЕНО: был мёртвый id="pro-cancel-button-2", теперь подключён -->
+      <button type="button" id="pro-cancel-button-2" class="pro-banner__btn">Отменить подписку</button>
+    </section>
+
+    <!-- HERO / AUTH CARD -->
+    <section class="card p-5 sm:p-7 space-y-5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+        <div class="space-y-2 max-w-xl">
+          <p class="text-xs font-semibold tracking-[.2em] uppercase text-amber-700">Ваш уголок в PolyTalky</p>
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+            Личный кабинет <span class="text-amber-600">языкового героя</span>
+          </h1>
+          <p class="text-sm sm:text-base text-slate-600 mobile-desc">
+            Здесь появляются все ваши курсы, прогресс и достижения. Авторизуйтесь, чтобы увидеть свою личную карту маршрутов в мире языков.
+          </p>
+        </div>
+
+        <div class="w-full max-w-sm mx-auto">
+          <!-- NOT LOGGED IN -->
+          <div id="auth-when-logged-out" class="space-y-4">
+            <div class="soft-card p-4 space-y-3">
+              <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">Войти в кабинет</p>
+              <p class="text-sm text-slate-600">Используйте тот же email, который вы указывали при покупке курсов или регистрации на сайте PolyTalky.</p>
+              <p class="text-xs text-slate-500">После входа мы покажем все ваши активированные курсы и достижения.</p>
             </div>
-
-            <div>
-              <label class="block text-xs font-medium text-slate-600 mb-1">
-                Аватар профиля
-              </label>
-              <p class="text-[11px] text-slate-500 mb-2">
-                Выберите один из стандартных аватаров PolyTalky.
-              </p>
-              <div class="flex gap-2">
-                <button
-                  type="button"
-                  class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1 ring-2 ring-amber-400"
-                  data-avatar-type="girl"
-                >
-                  <img src="/assets/avatarf.png" alt="Аватар девочка" class="h-10 w-10 object-cover rounded-lg">
-                </button>
-                <button
-                  type="button"
-                  class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1"
-                  data-avatar-type="boy"
-                >
-                  <img src="/assets/avatar.png" alt="Аватар мальчик" class="h-10 w-10 object-cover rounded-lg">
-                </button>
+            <form id="auth-form" class="space-y-3">
+              <div>
+                <label for="auth-email" class="block text-xs font-medium text-slate-600 mb-1">Email</label>
+                <input id="auth-email" type="email" autocomplete="email" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="you@example.com"/>
               </div>
-              <input type="hidden" id="profile-avatar-type" value="girl">
-            </div>
-
-            <p id="profile-msg" class="text-xs text-slate-500 min-h-[1rem]"></p>
-
-            <div class="flex items-center justify-end gap-2 pt-2">
-              <button type="button" id="btn-cancel-profile" class="btn btn-ghost text-xs sm:text-sm">
-                Отмена
-              </button>
-              <button type="submit" class="btn btn-main text-xs sm:text-sm">
-                Сохранить изменения
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Модалка предпросмотра аватаров -->
-      <div
-        id="avatar-preview-modal"
-        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50"
-      >
-        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 max-w-xs w-full mx-4 text-center">
-          <img
-            id="avatar-preview-img"
-            src="/assets/avatarf.png"
-            alt="Предпросмотр аватара"
-            class="mx-auto h-32 w-32 sm:h-40 sm:w-40 rounded-2xl object-contain mb-3"
-          />
-          <button
-            type="button"
-            id="avatar-preview-close"
-            class="btn btn-ghost text-xs sm:text-sm"
-          >
-            Закрыть
-          </button>
-        </div>
-      </div>
-
-      <!-- COIN MODAL -->
-      <div id="coin-modal" class="hidden fixed inset-0 bg-black/40 items-center justify-center z-40">
-        <div class="card max-w-xs w-full mx-6 p-6 text-center space-y-3">
-          <img
-            src="/assets/coin.png"
-            alt="PolyTalky-коин"
-            class="mx-auto mb-2 w-24 h-24"
-          >
-          <h3 class="text-lg font-extrabold mb-1">PolyTalky-коины</h3>
-          <p class="text-sm text-[var(--ink-2)]">
-            За ежедневные заходы в личный кабинет вы получаете внутренние коины. Скоро их можно будет обменять на платные курсы, дополнительные аватары и секретные упражнения.
-          </p>
-          <p class="text-xs text-slate-500 mt-1">
-            Текущий баланс: <span id="coin-modal-balance">0</span> коинов.
-          </p>
-          <button
-            id="coin-modal-close"
-            type="button"
-            class="btn btn-ghost px-4 py-2 mt-2"
-          >
-            Понятно
-          </button>
-        </div>
-      </div>
-
-      <!-- COOKIE-BANNER -->
-      <div id="cookie-banner" class="fixed bottom-3 inset-x-0 flex justify-center z-50 hidden">
-        <div class="soft-card px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-2 text-xs sm:text-sm text-slate-700 max-w-xl mx-4">
-          <p class="flex-1">
-            Мы используем куки, чтобы ваши логины и прогресс по курсам сохранялся. Продолжая пользоваться сайтом, вы соглашаетесь с
-            <a href="/privacy/" class="underline">политикой конфиденциальности</a>.
-          </p>
-          <button id="cookie-accept" class="btn btn-main text-xs sm:text-sm">
-            Хорошо
-          </button>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer class="border-t border-slate-200/70 bg-white/80">
-    <div class="wrap px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] sm:text-xs text-slate-500">
-      <p>© PolyTalky. Курсы для начинающих и продвинутых полиглотов.</p>
-      <p class="flex items-center gap-3">
-        <a href="/contacts/" class="hover:text-slate-700">Контакты</a>
-        <span class="hidden sm:inline text-slate-400">•</span>
-        <a href="/legal/" class="hover:text-slate-700">Юридические документы</a>
-      </p>
-    </div>
-  </footer>
-
-  <!-- Firebase + логика кабинета -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
-      authDomain: "polytalky-70999.firebaseapp.com",
-      projectId: "polytalky-70999",
-      storageBucket: "polytalky-70999.firebasestorage.app",
-      messagingSenderId: "62407152289",
-      appId: "1:62407152289:web:b0c0efdb2472f12b10d6e0"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db   = firebase.firestore();
-
-    const COURSE_META = {
-      'polyglotpack-mchny': {
-        title: 'PolyglotPack MCNHY',
-        href: '/courses/mchny/',
-        cover: '/assets/courses/mchny.jpg',
-        comingSoon: true
-      },
-     
-      'english-intro': {
-        title: 'Интенсив по английскому',
-        href: '/courses/english-intro/',
-        cover: '/assets/courses/english.jpg'
-      }
-    };
-
-    const FIRST_STEP_BADGE_ID = 'first-step';
-
-    // ПРИЗЫ ДЛЯ КОЛЕСА УДАЧИ
-    const WHEEL_PRIZES = [
-      { id: 'coins-5', label: '5 коинов', color: '#fbbf24', image: '/assets/coin.png', coins: 5, weight: 40 },
-      { id: 'coins-10', label: '10 коинов', color: '#f59e0b', image: '/assets/all/coin10.png', coins: 10, weight: 30 },
-      { id: 'coins-15', label: '15 коинов', color: '#fbbf24', image: '/assets/all/coin15.png', coins: 15, weight: 22 },
-      { id: 'coins-25', label: '25 коинов', color: '#f59e0b', image: '/assets/all/coin25.png', coins: 25, weight: 14 },
-      { id: 'coins-50', label: '50 коинов', color: '#fbbf24', image: '/assets/all/coin50.png', coins: 50, weight: 10 },
-      { id: 'secret-badge', label: 'Секретный бейдж', color: '#f59e0b', image: '/assets/badges/badgewheel.png', badge: 'badgewheel', weight: 6 },
-      { id: 'winter-avatar', label: 'Секретный аватар', color: '#fbbf24', image: '/assets/all/avatarwheel.PNG', avatarId: 'wheel-2025-winter', weight: 6 },
-      { id: 'pro-month', label: 'Месяц PRO', color: '#f59e0b', image: '/assets/all/pro.png', proMonth: true, weight: 1 },
-      { id: 'polyglotpack-mchny', label: 'Курс MCHNY', color: '#fbbf24', image: '/assets/all/mchny.png', course: 'polyglotpack-mchny', weight: 1 }
-    ];
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const authBoxOut      = document.getElementById('auth-when-logged-out');
-      const authBoxIn       = document.getElementById('auth-when-logged-in');
-      const authEmailEl     = document.getElementById('auth-email');
-      const authPassEl      = document.getElementById('auth-pass');
-      const authFirstEl     = document.getElementById('auth-first');
-      const authLastEl      = document.getElementById('auth-last');
-      const honeypotEl      = document.getElementById('auth-website');
-      const authForm        = document.getElementById('auth-form');
-      const authRegister    = document.getElementById('auth-register');
-      const btnLogin        = document.getElementById('btn-login');
-      const authError       = document.getElementById('auth-error');
-      const authForgot      = document.getElementById('auth-forgot');
-      const authLogout      = document.getElementById('auth-logout');
-      const authUserEmail   = document.getElementById('auth-user-email');
-      const authAcceptTerms = document.getElementById('auth-accept-terms');
-      const authForgotRow   = document.getElementById('auth-forgot-row');
-      const authNamesBlock  = document.getElementById('auth-names-block');
-      const authTermsBlock  = document.getElementById('auth-terms-block');
-
-      const profileAvatarWrapper = document.getElementById('profile-avatar-wrapper');
-      const profileAvatarImg= document.getElementById('profile-avatar-img');
-      const profileName     = document.getElementById('profile-name');
-      const profileSettings = document.getElementById('profile-settings');
-      const profileForm     = document.getElementById('profile-form');
-      const profileFirst    = document.getElementById('profile-first');
-      const profileLast     = document.getElementById('profile-last');
-      const profileMsg      = document.getElementById('profile-msg');
-      const profileAvatarType = document.getElementById('profile-avatar-type');
-      const avatarChoiceButtons = document.querySelectorAll('.avatar-choice');
-      const proChip          = document.getElementById('pro-chip');
-      const profileEmail = document.getElementById('profile-email');
-
-const pwCurrent = document.getElementById('pw-current');
-const pwNew = document.getElementById('pw-new');
-const pwMsg = document.getElementById('pw-msg');
-const btnChangePassword = document.getElementById('btn-change-password');
-const btnResetPassword = document.getElementById('btn-reset-password');
-
-      const avatarPreviewModal = document.getElementById('avatar-preview-modal');
-      const avatarPreviewImg   = document.getElementById('avatar-preview-img');
-      const avatarPreviewClose = document.getElementById('avatar-preview-close');
-      
-      const coursesNeedAuth = document.getElementById('courses-need-auth');
-      const coursesList     = document.getElementById('courses-list');
-      const coursesEmpty    = document.getElementById('courses-empty');
-      const achievementsList= document.getElementById('achievements-list');
-
-      const badgesModal       = document.getElementById('badges-modal');
-      const badgesModalClose  = document.getElementById('badges-modal-close');
-      const badgesModalGrid   = document.getElementById('badges-modal-grid');
-      const badgesModalDetail = document.getElementById('badges-modal-detail');
-
-      const cookieBanner    = document.getElementById('cookie-banner');
-      const cookieAccept    = document.getElementById('cookie-accept');
-
-      const proBannerSuccess = document.getElementById('pro-banner-success');
-      const proBannerError   = document.getElementById('pro-banner-error');
-      const proBannerCancel  = document.getElementById('pro-banner-cancel');
-      const proCancelButton  = document.getElementById('pro-cancel-button');
-      const proStatusText   = document.getElementById('pro-status-text');
-      const proRenewButton  = document.getElementById('pro-renew-button');
-
-      const coinsCard       = document.getElementById('coins-card');
-      const coinsBalanceEl  = document.getElementById('coins-balance');
-      const coinsTextEl     = document.getElementById('coins-text');
-      const coinsClaimBtn   = document.getElementById('coins-claim-btn');
-
-      const coinModal       = document.getElementById('coin-modal');
-      const coinModalClose  = document.getElementById('coin-modal-close');
-      const coinModalBalance= document.getElementById('coin-modal-balance');
-
-      // КОЛЕСО УДАЧИ
-      const wheelModal      = document.getElementById('wheel-modal');
-      const wheelCanvas     = document.getElementById('wheel-canvas');
-      const wheelSpinBtn    = document.getElementById('wheel-spin-btn');
-      const wheelResult     = document.getElementById('wheel-result');
-      const wheelResultIcon = document.getElementById('wheel-result-icon');
-      const wheelResultTitle= document.getElementById('wheel-result-title');
-      const wheelResultDesc = document.getElementById('wheel-result-description');
-      const wheelClaimBtn   = document.getElementById('wheel-claim-btn');
-
-      let wheelOrder = []; // визуальный порядок секторов (перемешанный)
-
-      if (wheelModal) {
- wheelModal.addEventListener('click', (e) => {
-  if (
-    e.target === wheelModal &&
-    !isSpinning &&
-    !currentWheelPrize
-  ) {
-    wheelModal.classList.add('hidden');
-    wheelModal.classList.remove('flex');
-  }
-});
-}
-      
-function shuffle(arr){
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function initWheelOrder(){
-  wheelOrder = shuffle([...WHEEL_PRIZES]); // монеты перемешаются с остальным
-}
-      function pickWeightedIndex(list){
-  const total = list.reduce((s,p)=> s + (Number(p.weight)||1), 0);
-  let r = Math.random() * total;
-
-  for (let i=0; i<list.length; i++){
-    r -= (Number(list[i].weight)||1);
-    if (r <= 0) return i;
-  }
-  return list.length - 1;
-}
-      let coinsState = {
-        balance: 0,
-        streak: 0,
-        lastDate: null,
-        alreadyClaimedToday: false,
-        mode: null,
-        nextReward: 0
-      };
-
-      let allBadgesCache = [];
-      let currentWheelPrize = null;
-      let wheelRotation = 0;
-      let isSpinning = false;
-
-      function todayStr() {
-        const d = new Date();
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${y}-${m}-${day}`;
-      }
-
-      function pluralizeCoin(n) {
-        n = Math.abs(n) % 100;
-        const n1 = n % 10;
-        if (n > 10 && n < 20) return "коинов";
-        if (n1 === 1) return "коин";
-        if (n1 >= 2 && n1 <= 4) return "коина";
-        return "коинов";
-      }
-
-      // ============================================
-      // КОЛЕСО УДАЧИ: ЛОГИКА И АНИМАЦИЯ
-      // ============================================
-
-const wheelImgCache = new Map();
-
-function loadWheelImagesOnce(list) {
-  const tasks = list.map(p => new Promise((resolve) => {
-    if (!p.image) return resolve();
-    if (wheelImgCache.has(p.image)) return resolve();
-    const img = new Image();
-    img.onload = () => { wheelImgCache.set(p.image, img); resolve(); };
-    img.onerror = () => resolve();
-    img.src = p.image;
-  }));
-  return Promise.all(tasks);
-}
-
-function drawWheel(){
-  if (!wheelCanvas) return;
-
-  const ctx = wheelCanvas.getContext('2d');
-  const w = wheelCanvas.width;
-  const h = wheelCanvas.height;
-  const cx = w/2, cy = h/2;
-  const r = w/2;
-
-  ctx.clearRect(0,0,w,h);
-
-  const list = (wheelOrder && wheelOrder.length) ? wheelOrder : WHEEL_PRIZES;
-  const slice = (2*Math.PI)/list.length;
-
-   list.forEach((prize, i) => {
-  const a0 = i * slice;
-  const a1 = a0 + slice;
-
-  // сектор
-  ctx.beginPath();
-  ctx.moveTo(cx, cy);
-  ctx.arc(cx, cy, r - 4, a0, a1);
-  ctx.closePath();
-
-  const DARK  = '#f59e0b';
-  const LIGHT = '#fbbf24';
-  ctx.fillStyle = (i % 2 === 0) ? DARK : LIGHT;
-  ctx.fill();
-
-  // разделители
-  ctx.strokeStyle = 'rgba(255,255,255,.85)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // иконка
-  const mid = a0 + slice / 2;
-  const iconRadius = r * 0.74;
-
-    const img = prize.image ? wheelImgCache.get(prize.image) : null;
-
-  const ICON = 68; // можно 72 если хочется ещё больше
-  const HALF = ICON / 2;
-const ix = cx + Math.cos(mid) * iconRadius;
-  const iy = cy + Math.sin(mid) * iconRadius;
-     
-  ctx.save();
-  ctx.translate(ix, iy);
-  ctx.rotate(mid + Math.PI / 2);
-
-  if (img) {
-    ctx.drawImage(img, -HALF, -HALF, ICON, ICON);
-  }
-
-  ctx.restore();
-});
-}
-        
-     function spinWheel() {
-  if (isSpinning) return;
-
-  isSpinning = true;
-       wheelModal.classList.add('spinning');
-       
-  const list = (wheelOrder && wheelOrder.length) ? wheelOrder : WHEEL_PRIZES;
-
-  // выбираем выпадающий сектор по весам (weight)
-  const prizeIndex = pickWeightedIndex(list);
-  const prize = list[prizeIndex];
-  currentWheelPrize = prize;
-       const sliceAngle = 360 / list.length;
-const prizeAngle = prizeIndex * sliceAngle + sliceAngle / 2;
-
-const POINTER_ANGLE = 270;
-
-// на сколько нужно докрутить, чтобы центр нужного сектора попал под стрелку
-let align = POINTER_ANGLE - prizeAngle;
-align = (align % 360 + 360) % 360; // нормализация 0..359
-
-const fullSpins = 5 + Math.floor(Math.random() * 3); // 5, 6 или 7 полных оборотов (целое!)
-const jitter = (Math.random() - 0.5) * (sliceAngle * 0.25); // небольшой разброс внутри сектора
-const targetRotation = 360 * fullSpins + align + jitter;
-
-  const duration = 5000;
-  const startTime = Date.now();
-  const startRotation = wheelRotation;
-
-  wheelSpinBtn.classList.add('spinning');
-  wheelSpinBtn.textContent = '...';
-
-  function animate() {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-
-    const easeOut = 1 - Math.pow(1 - progress, 4);
-    wheelRotation = startRotation + targetRotation * easeOut;
-
-    wheelCanvas.style.transform = `rotate(${wheelRotation}deg)`;
-
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-   } else {
-      // показываем результат
-      wheelModal.classList.remove('spinning');
-      showWheelResult(prize);
-
-      // блокируем повторные спины, пока не начислим приз
-      wheelSpinBtn.classList.remove('spinning');
-      wheelSpinBtn.textContent = '...';
-      wheelSpinBtn.disabled = true;
-
-          if (wheelClaimBtn) {
-        wheelClaimBtn.disabled = true;
-        wheelClaimBtn.textContent = 'Начисляем...';
-        wheelClaimBtn.classList.add('opacity-60','cursor-default');
-      }
-
-          claimWheelPrize()
-        .catch(() => {
-          // если начисление не удалось — дадим забрать вручную, но НЕ дадим крутить заново
-          if (wheelClaimBtn) {
-            wheelClaimBtn.disabled = false;
-            wheelClaimBtn.textContent = 'Забрать приз';
-            wheelClaimBtn.classList.remove('opacity-60','cursor-default');
-          }
-        })
-        .finally(() => {
-          isSpinning = false;
-        });
-    }
-  }
-
-  animate();
-}
-      function showWheelResult(prize) {
-        wheelResultIcon.innerHTML = `<img src="${prize.image}" alt="" class="mx-auto w-16 h-16 object-contain">`;
-        wheelResultTitle.textContent = `Вы выиграли: ${prize.label}!`;
-
-        let description = '';
-        if (prize.coins) {
-          description = `${prize.coins} ${pluralizeCoin(prize.coins)} уже добавлены на ваш счёт.`;
-        } else if (prize.badge) {
-          description = 'Секретный бейдж добавлен в вашу коллекцию!';
-        } else if (prize.avatarId) {
-          description = 'Секретный аватар разблокирован в настройках профиля!';
-        } else if (prize.proMonth) {
-          description = 'Месяц подписки PRO активирован!';
-        } else if (prize.course) {
-          description = 'Курс MCHNY добавлен в ваш аккаунт!';
-        }
-
-        wheelResultDesc.textContent = description;
-        wheelResult.classList.remove('hidden');
-      }
-
-      function createConfetti() {
-        const colors = ['#fbbf24', '#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#8b5cf6'];
-        for (let i = 0; i < 50; i++) {
-          setTimeout(() => {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + 'vw';
-            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-            document.body.appendChild(confetti);
-
-            setTimeout(() => confetti.remove(), 3000);
-          }, i * 30);
-        }
-      }
-
-      async function claimWheelPrize() {
-        const user = auth.currentUser;
-        if (!user || !currentWheelPrize) return;
-
-        const email = user.email;
-        if (!email) return;
-
-        const docRef = db.collection('users').doc(email);
-        const today = todayStr();
-
-        try {
-          const updates = {
-            lastCoinDate: today,
-            coinStreak: 0 // сброс стрика после колеса
-          };
-
-          // Добавляем награду
-          if (currentWheelPrize.coins) {
-            const newBalance = coinsState.balance + currentWheelPrize.coins;
-            updates.coinsBalance = newBalance;
-            coinsState.balance = newBalance;
-          }
-
-          if (currentWheelPrize.badge) {
-            updates.badges = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.badge);
-          }
-
-          if (currentWheelPrize.avatarId) {
-            updates.unlockedAvatars = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.avatarId);
-          }
-
-        if (currentWheelPrize.proMonth) {
-  // Месяц PRO: если уже есть активный срок — продлеваем от конца, иначе от сегодня
-  function addMonthsSafe(baseDate, months) {
-    const d = new Date(baseDate.getTime());
-    const day = d.getDate();
-    d.setMonth(d.getMonth() + months);
-    // защита от "перепрыгивания" на следующий месяц (например, 31 → 3)
-    if (d.getDate() < day) d.setDate(0);
-    return d;
-  }
-
-  let base = new Date(); // по умолчанию: от сегодня
-
-  try {
-    const snap = await docRef.get();
-    const prev = snap.exists ? (snap.data() || {}) : {};
-
-    const prevUntil = prev.proValidUntil;
-    if (prevUntil && typeof prevUntil.toDate === 'function') {
-      const prevEnd = prevUntil.toDate();
-      // если текущий срок ещё не закончился — продлеваем от него
-      if (prevEnd > base) base = prevEnd;
-    }
-  } catch (e) {
-    console.warn('Не удалось прочитать текущий срок PRO, ставим от сегодня:', e);
-  }
-
-  const newUntil = addMonthsSafe(base, 1);
-
-  updates.proGlobal = true;
-  updates.proValidUntil = firebase.firestore.Timestamp.fromDate(newUntil);
-}
-
-          if (currentWheelPrize.course) {
-            updates.courses = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.course);
-          }
-
-          await docRef.set(updates, { merge: true });
-
-          // Обновляем UI
-          coinsState.streak = 0;
-          coinsState.lastDate = today;
-          coinsState.alreadyClaimedToday = true;
-
-          updateCoinsUI({
-            coinsBalance: coinsState.balance,
-            coinStreak: 0,
-            lastCoinDate: today
-          });
-
-          currentWheelPrize = null;
-         
-
-          // Перезагружаем профиль для обновления бейджей/курсов/PRO
-          if (user) {
-            await loadUserProfile(user);
-            await loadUserEnrollments(user);
-            await loadProStatus(user);
-          }
-        } catch (err) {
-          console.error('Ошибка при получении приза:', err);
-          alert('Не удалось получить приз. Попробуйте ещё раз.');
-            if (wheelClaimBtn) {
-  wheelClaimBtn.disabled = false;
-  wheelClaimBtn.textContent = 'Закрыть';
-  wheelClaimBtn.classList.remove('opacity-60','cursor-default');
-        }
-return;
-        }
-
-      if (wheelClaimBtn) {
-          wheelClaimBtn.onclick = null;
-         wheelClaimBtn.disabled = false;
-  wheelClaimBtn.textContent = 'Закрыть';
-  wheelClaimBtn.classList.remove('opacity-60','cursor-default');
-  
-  wheelClaimBtn.onclick = () => {
-    wheelModal.classList.add('hidden');
-    wheelModal.classList.remove('flex');
-  };
-}
-      }
-
-      // События для колеса
-      if (wheelSpinBtn) {
-        wheelSpinBtn.addEventListener('click', () => {
-          if (!isSpinning) spinWheel();
-          
-        });
-      }
-
-
-      if (wheelCanvas) {
-        initWheelOrder();
-  loadWheelImagesOnce(wheelOrder).then(drawWheel);
-}
-
-      // ============================================
-      // КОИНЫ: ОБНОВЛЕНИЕ UI
-      // ============================================
-
-      function updateCoinsUI(userData) {
-        if (!coinsCard || !coinsBalanceEl || !coinsTextEl || !coinsClaimBtn) return;
-
-        const balance = typeof userData.coinsBalance === 'number' ? userData.coinsBalance : 0;
-        let streak    = typeof userData.coinStreak   === 'number' ? userData.coinStreak   : 0;
-        const last    = userData.lastCoinDate || null;
-        const today   = todayStr();
-
-        let already = false;
-
-        if (last) {
-          if (last === today) {
-            already = true;
-          } else {
-            try {
-              const lastDate  = new Date(last  + 'T00:00:00');
-              const todayDate = new Date(today + 'T00:00:00');
-              const diffMs    = todayDate - lastDate;
-              const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-      
-              if (diffDays > 1) {
-                streak = 0;
-              }
-            } catch (e) {
-              console.error('Ошибка разбора lastCoinDate', last, e);
-              streak = 0;
-            }
-          }
-        }
-
-        coinsState.balance = balance;
-        coinsState.streak  = streak;
-        coinsState.lastDate= last;
-        coinsState.alreadyClaimedToday = already;
-        coinsState.mode = null;
-        coinsState.nextReward = 0;
-
-        coinsCard.classList.remove('hidden');
-        coinsBalanceEl.textContent = balance;
-        if (coinModalBalance) {
-          coinModalBalance.textContent = balance;
-        }
-
-        coinsClaimBtn.disabled = false;
-        coinsClaimBtn.classList.remove('opacity-60','cursor-default');
-
-        if (already) {
-          coinsTextEl.textContent = 'Бонус за сегодня уже получен, приходите завтра 💛';
-          coinsClaimBtn.textContent = 'Бонус уже забран';
-          coinsClaimBtn.disabled = true;
-          coinsClaimBtn.classList.add('opacity-60','cursor-default');
-          coinsState.mode = null;
-          return;
-        }
-
-        // Ещё не получали бонус сегодня
-        if (streak >= 6) {
-          // 7-й день: колесо удачи
-          coinsTextEl.textContent = 'Сегодня 7-й день подряд! Раскрутите колесо удачи, чтобы получить особенный приз 🎡';
-          coinsClaimBtn.textContent = 'Крутить колесо';
-          coinsState.mode = 'wheel';
-          coinsState.nextReward = 0;
-        } else {
-          // Обычный день: 1–6 коинов
-          const reward = Math.min(streak + 1, 6);
-          coinsState.mode = 'daily';
-          coinsState.nextReward = reward;
-
-          if (streak === 0 && balance === 0) {
-            coinsTextEl.textContent = 'Сегодня получите 1 коин за вход. Коины — внутренняя валюта PolyTalky. Скоро их можно будет обменять на платные курсы, аватары и секретные упражнения.';
-          } else {
-            coinsTextEl.textContent = `Сегодня вы можете забрать ${reward} ${pluralizeCoin(reward)} за ежедневный вход. Продолжайте заходить каждый день, чтобы дойти до колеса удачи!`;
-          }
-          coinsClaimBtn.textContent = `Забрать ${reward} ${pluralizeCoin(reward)}`;
-        }
-      }
-
-      // КОИНЫ: обработчик клика по кнопке «забрать»
-      if (coinsClaimBtn) {
-        coinsClaimBtn.addEventListener('click', async () => {
-          const user = auth.currentUser;
-          if (!user) {
-            alert('Сначала войдите в аккаунт, чтобы получать коины.');
-            return;
-          }
-          if (coinsState.alreadyClaimedToday) {
-            return;
-          }
-          if (!coinsState.mode) {
-            return;
-          }
-
-          const email = user.email;
-          if (!email) {
-            alert('Не удалось определить email пользователя.');
-            return;
-          }
-
-          if (coinsState.mode === 'wheel') {
-           wheelModal.classList.remove('hidden');
-wheelModal.classList.add('flex');
-wheelResult.classList.add('hidden');
-if (wheelClaimBtn) {
-  wheelClaimBtn.disabled = true;
-  wheelClaimBtn.textContent = 'Начисляем...';
-  wheelClaimBtn.classList.add('opacity-60','cursor-default');
-  wheelClaimBtn.onclick = null;
-}
-            
-isSpinning = false;
-currentWheelPrize = null;
-
-wheelRotation = 0;
-wheelCanvas.style.transform = 'rotate(0deg)';
-
-initWheelOrder();
-loadWheelImagesOnce(wheelOrder).then(drawWheel);
-return;
-          }
-
-          const docRef = db.collection('users').doc(email);
-          const today  = todayStr();
-
-          coinsClaimBtn.disabled = true;
-          coinsClaimBtn.textContent = 'Подождите...';
-          coinsClaimBtn.classList.add('opacity-60','cursor-default');
-
-          try {
-            if (coinsState.mode === 'daily') {
-              const reward = coinsState.nextReward || 1;
-              const newBalance = coinsState.balance + reward;
-              const newStreak  = Math.min(coinsState.streak + 1, 6);
-
-              await docRef.set({
-                coinsBalance: newBalance,
-                coinStreak: newStreak,
-                lastCoinDate: today
-              }, { merge: true });
-
-              coinsState.balance = newBalance;
-              coinsState.streak  = newStreak;
-              coinsState.lastDate= today;
-              coinsState.alreadyClaimedToday = true;
-
-              updateCoinsUI({
-                coinsBalance: newBalance,
-                coinStreak: newStreak,
-                lastCoinDate: today
-              });
-              coinsTextEl.textContent = `Вы получили ${reward} ${pluralizeCoin(reward)} за сегодняшний вход. Спасибо, что заходите! 💛`;
-            }
-          } catch (err) {
-            console.error('coins error', err);
-            coinsTextEl.textContent = 'Не удалось выдать бонус. Проверьте соединение и попробуйте ещё раз.';
-            coinsClaimBtn.disabled = false;
-            coinsClaimBtn.classList.remove('opacity-60','cursor-default');
-            coinsClaimBtn.textContent = 'Повторить';
-          }
-        });
-      }
-
-      // Клик по маленькому коину → модалка с большим
-      (function setupCoinModal() {
-        const coinImgSmall =
-          document.querySelector('#coins-card img[src="/assets/coin.png"]') ||
-          document.querySelector('#coins-card img');
-
-        if (!coinImgSmall || !coinModal || !coinModalClose) return;
-
-        coinImgSmall.classList.add('transition-transform','duration-200','cursor-pointer');
-
-        const openCoinModal = () => {
-          if (coinModalBalance) {
-            coinModalBalance.textContent = coinsBalanceEl ? coinsBalanceEl.textContent : coinsState.balance;
-          }
-          coinModal.classList.remove('hidden');
-          coinModal.classList.add('flex');
-
-          coinImgSmall.classList.add('scale-110');
-          setTimeout(() => {
-            coinImgSmall.classList.remove('scale-110');
-          }, 180);
-        };
-
-        const closeCoinModal = () => {
-          coinModal.classList.add('hidden');
-          coinModal.classList.remove('flex');
-        };
-
-        coinImgSmall.addEventListener('click', openCoinModal);
-        coinModalClose.addEventListener('click', closeCoinModal);
-        coinModal.addEventListener('click', (e) => {
-          if (e.target === coinModal) closeCoinModal();
-        });
-      })();
-
-      // ============================================
-      // PRO ПАРАМЕТР
-      // ============================================
-
-      (function handleProParam() {
-        const params = new URLSearchParams(window.location.search);
-        const pro = params.get('pro');
-        if (!pro) return;
-
-        if (pro === 'success' && proBannerSuccess) {
-          proBannerSuccess.style.display = 'flex';
-        } else if (pro === 'error' && proBannerError) {
-          proBannerError.style.display = 'flex';
-        } else if (pro === 'cancel' && proBannerCancel) {
-          proBannerCancel.style.display = 'flex';
-        }
-
-        if (proRenewButton) {
-          proRenewButton.addEventListener('click', async () => {
-            const user = auth.currentUser;
-            if (!user) {
-              alert('Сначала войдите в личный кабинет.');
-              return;
-            }
-
-            try {
-              const resp = await fetch('/api/yookassa/create-pro-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  email: user.email || '',
-                  userId: user.uid,
-                }),
-              });
-
-              const data = await resp.json();
-
-              if (!resp.ok || !data.confirmationUrl) {
-                console.error('Ошибка при создании PRO-платежа через YooKassa:', data);
-                alert('Не удалось создать платёж. Попробуйте ещё раз или напишите нам на hello@polytalky.ru');
-                return;
-              }
-
-              window.location.href = data.confirmationUrl;
-            } catch (e) {
-              console.error(e);
-              alert('Произошла ошибка при создании платежа. Попробуйте ещё раз или напишите нам на hello@polytalky.ru');
-            }
-          });
-        }
-
-        params.delete('pro');
-        const newSearch = params.toString();
-        const newUrl = window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash;
-        window.history.replaceState({}, '', newUrl);
-      })();
-
-      const proCancelModal      = document.getElementById('pro-cancel-modal');
-      const proCancelModalClose = document.getElementById('pro-cancel-modal-close');
-      const proCancelModalCancel = document.getElementById('pro-cancel-modal-cancel');
-      const proCancelModalConfirm = document.getElementById('pro-cancel-modal-confirm');
-      const proCancelModalText  = document.getElementById('pro-cancel-modal-text');
-
-      function openProCancelModal(validUntilText) {
-        if (validUntilText) {
-          proCancelModalText.textContent =
-            `Мы отключим автопродление подписки PRO. Доступ останется активным до ${validUntilText}.`;
-        } else {
-          proCancelModalText.textContent =
-            `Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.`;
-        }
-        proCancelModal.classList.remove('hidden');
-        proCancelModal.classList.add('flex');
-      }
-
-      function closeProCancelModal() {
-        proCancelModal.classList.add('hidden');
-        proCancelModal.classList.remove('flex');
-      }
-
-      if (proCancelButton) {
-        proCancelButton.addEventListener('click', async () => {
-          openProCancelModal(window.currentProValidUntilText || '');
-        });
-      }
-
-      [proCancelModalClose, proCancelModalCancel].forEach((btn) => {
-        if (btn) btn.addEventListener('click', closeProCancelModal);
-      });
-
-      if (proCancelModalConfirm) {
-        proCancelModalConfirm.addEventListener('click', async () => {
-          proCancelModalConfirm.disabled = true;
-          proCancelModalConfirm.textContent = 'Отменяем...';
-
-          try {
-            const user = auth.currentUser;
-            if (!user) {
-              alert('Сначала войдите в личный кабинет.');
-              return;
-            }
-
-            const token = await user.getIdToken();
-
-            const resp = await fetch('/api/pro/cancel-subscription', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-              },
-              body: JSON.stringify({}),
-            });
-
-            const data = await resp.json();
-
-            if (!resp.ok || !data.ok) {
-              console.error('Ошибка отмены:', data);
-              alert(data.error || 'Не удалось отменить подписку. Напишите нам на hello@polytalky.ru');
-            } else {
-              alert('Автопродление отключено. Доступ к PRO останется до конца оплаченного периода.');
-              closeProCancelModal();
-            }
-          } catch (e) {
-            console.error(e);
-            alert('Произошла ошибка при отмене. Напишите нам на hello@polytalky.ru');
-          } finally {
-            proCancelModalConfirm.disabled = false;
-            proCancelModalConfirm.textContent = 'Отключить автопродление';
-          }
-        });
-      }
-
-      // ============================================
-      // COOKIE
-      // ============================================
-
-     if (cookieBanner && cookieAccept) {
-  if (!localStorage.getItem('cookieConsent')) {
-    cookieBanner.classList.remove('hidden');
-  }
-  cookieAccept.addEventListener('click', () => {
-    localStorage.setItem('cookieConsent', 'true');
-    cookieBanner.classList.add('hidden');
-  });
-}
-
-      // ============================================
-      // МОДАЛКА ПРОФИЛЯ
-      // ============================================
-
-      function openProfileModal(){
-        profileSettings.classList.remove('hidden');
-        profileSettings.classList.add('flex');
-      }
-      function closeProfileModal(){
-        profileSettings.classList.add('hidden');
-        profileSettings.classList.remove('flex');
-      }
-      document.getElementById('btn-open-profile')?.addEventListener('click', openProfileModal);
-      document.getElementById('btn-close-profile')?.addEventListener('click', closeProfileModal);
-      document.getElementById('btn-cancel-profile')?.addEventListener('click', (e)=>{
-        e.preventDefault();
-        closeProfileModal();
-      });
-      profileSettings.addEventListener('click', (e)=>{
-        if (e.target === profileSettings) closeProfileModal();
-      });
-
- // ============================================
-// АВАТАРЫ: КАТАЛОГ 
-      // ============================================
-const AVATAR_CATALOG = {
-  girl:   { id:'girl',   title:'Аватар девочка', src:'/assets/avatarf.png', isBase:true },
-  boy:    { id:'boy',    title:'Аватар мальчик', src:'/assets/avatar.png',  isBase:true },
-
-  // сезонные/секретные (добавляешь новые без переписывания логики)
-  'wheel-2025-winter': { id:'wheel-2025-winter', title:'Зимний секретный аватар', src:'/assets/all/avatarwheel.PNG' }
-};
-
-function getAvatarSrc(avatarId){
-  return (AVATAR_CATALOG[avatarId] && AVATAR_CATALOG[avatarId].src) || AVATAR_CATALOG.girl.src;
-}
-function renderAvatarChoices(unlockedIds){
-  const row = document.querySelector('#profile-form .avatar-choice')?.parentElement;
-  if (!row) return;
-
-  const unlockedSet = new Set(Array.isArray(unlockedIds) ? unlockedIds : []);
-
-  const list = Object.values(AVATAR_CATALOG).filter(a => {
-    if (a.isBase) return true;
-    return unlockedSet.has(a.id);
-  });
-
-  row.innerHTML = '';
-
-  list.forEach(a => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1';
-    btn.setAttribute('data-avatar-type', a.id);
-    btn.innerHTML = `<img src="${a.src}" alt="${a.title}" class="h-10 w-10 object-cover rounded-lg">`;
-
-    btn.addEventListener('click', () => {
-      setAvatarChoice(a.id);
-      if (avatarPreviewModal && avatarPreviewImg) {
-        avatarPreviewImg.src = a.src;
-        avatarPreviewModal.classList.remove('hidden');
-        avatarPreviewModal.classList.add('flex');
-      }
-    });
-
-    row.appendChild(btn);
-  });
-}
-      
-     function setAvatarChoice(type) {
-  if (!profileAvatarType) return;
-
-  const t = type || 'girl';
-  profileAvatarType.value = t;
-
-  // ВАЖНО: брать кнопки каждый раз, потому что мы их перерисовываем
-  document.querySelectorAll('.avatar-choice').forEach((btn) => {
-    const bt = btn.getAttribute('data-avatar-type');
-    if (bt === t) btn.classList.add('ring-2','ring-amber-400');
-    else btn.classList.remove('ring-2','ring-amber-400');
-  });
-
-  if (profileAvatarImg) {
-    profileAvatarImg.src = getAvatarSrc(t);
-  }
-}
-
-
-      // ============================================
-      // АВТОРИЗАЦИЯ
-      // ============================================
-
-      function showAuthError(code){
-        let msg = 'Что-то пошло не так. Попробуйте ещё раз.';
-        if (code === 'auth/user-not-found') {
-          msg = 'Пользователь с таким email не найден. Попробуйте зарегистрироваться.';
-        } else if (code === 'auth/wrong-password') {
-          msg = 'Неверный пароль. Попробуйте ещё раз или воспользуйтесь сбросом пароля.';
-        } else if (code === 'auth/email-already-in-use') {
-          msg = 'Этот email уже зарегистрирован. Попробуйте войти.';
-        } else if (code === 'auth/weak-password') {
-          msg = 'Пароль слишком простой. Добавьте ещё символов.';
-        }
-        authError.textContent = msg;
-      }
-
-      let registerMode = false;
-
-      function setAuthMode(isRegister) {
-        registerMode = isRegister;
-
-        if (isRegister) {
-          authNamesBlock?.classList.remove('hidden');
-          authTermsBlock?.classList.remove('hidden');
-          authForgotRow?.classList.add('hidden');
-
-          if (authPassEl) authPassEl.placeholder = 'Минимум 6 символов';
-          if (authAcceptTerms) authAcceptTerms.required = true;
-
-          btnLogin?.classList.remove('btn-main');
-          btnLogin?.classList.add('btn-ghost');
-          authRegister?.classList.remove('btn-ghost');
-          authRegister?.classList.add('btn-main');
-        } else {
-          authNamesBlock?.classList.add('hidden');
-          authTermsBlock?.classList.add('hidden');
-          authForgotRow?.classList.remove('hidden');
-
-          if (authPassEl) authPassEl.placeholder = 'Пароль';
-          if (authAcceptTerms) {
-            authAcceptTerms.required = false;
-            authAcceptTerms.checked = false;
-          }
-
-          btnLogin?.classList.add('btn-main');
-          btnLogin?.classList.remove('btn-ghost');
-          authRegister?.classList.add('btn-ghost');
-          authRegister?.classList.remove('btn-main');
-        }
-      }
-
-      setAuthMode(false);
-
-      async function handleLogin() {
-        if (honeypotEl.value && honeypotEl.value.trim() !== '') {
-          authError.textContent = 'Произошла ошибка. Обновите страницу и попробуйте ещё раз.';
-          return;
-        }
-
-        try {
-          const email = authEmailEl.value.trim();
-          const pass  = authPassEl.value.trim();
-          await auth.signInWithEmailAndPassword(email, pass);
-        } catch (err) {
-          console.error(err);
-          showAuthError(err.code);
-        }
-      }
-
-      async function handleRegister() {
-        if (honeypotEl.value && honeypotEl.value.trim() !== '') {
-          authError.textContent = 'Произошла ошибка. Обновите страницу и попробуйте ещё раз.';
-          return;
-        }
-
-        if (!authAcceptTerms || !authAcceptTerms.checked) {
-          authError.textContent = 'Чтобы зарегистрироваться, подтвердите согласие с условиями и политиками.';
-          return;
-        }
-
-        try {
-          const email = authEmailEl.value.trim();
-          const pass  = authPassEl.value.trim();
-          const first = authFirstEl.value.trim();
-          const last  = authLastEl.value.trim();
-
-          if (!email || !pass) {
-            authError.textContent = 'Введите email и пароль.';
-            return;
-          }
-
-          const cred = await auth.createUserWithEmailAndPassword(email, pass);
-          const user = cred.user;
-          if (user) {
-            await db.collection('users').doc(email).set({
-              email,
-              firstName:first || null,
-              lastName:last || null,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge:true });
-          }
-        } catch (err) {
-          console.error(err);
-          showAuthError(err.code);
-        }
-      }
-
-      authForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        authError.textContent = '';
-
-        if (registerMode) {
-          await handleRegister();
-        } else {
-          await handleLogin();
-        }
-      });
-
-      if (btnLogin) {
-        btnLogin.addEventListener('click', async () => {
-          authError.textContent = '';
-
-          if (registerMode) {
-            setAuthMode(false);
-            return;
-          }
-
-          await handleLogin();
-        });
-      }
-
-      if (authRegister) {
-        authRegister.addEventListener('click', async () => {
-          authError.textContent = '';
-
-          if (!registerMode) {
-            setAuthMode(true);
-            return;
-          }
-
-          await handleRegister();
-        });
-      }
-
-      if (authForgot) {
-        authForgot.addEventListener('click', async () => {
-          authError.textContent = '';
-
-          const email = (authEmailEl.value || '').trim();
-          if (!email) {
-            authError.textContent =
-              'Введите email в поле выше и нажмите «Забыли пароль?» ещё раз.';
-            return;
-          }
-
-          try {
-            await auth.sendPasswordResetEmail(email);
-            authError.textContent =
-              'Мы отправили письмо для сброса пароля. Проверьте почту и папку «Спам».';
-            authError.classList.remove('text-red-500');
-            authError.classList.add('text-emerald-600');
-          } catch (err) {
-            console.error(err);
-
-            let msg = 'Не удалось отправить письмо для сброса пароля. Попробуйте ещё раз.';
-            if (err.code === 'auth/user-not-found') {
-              msg = 'Пользователь с таким email не найден.';
-            } else if (err.code === 'auth/invalid-email') {
-              msg = 'Некорректный email. Проверьте адрес.';
-            }
-
-            authError.textContent = msg;
-            authError.classList.remove('text-emerald-600');
-            authError.classList.add('text-red-500');
-          }
-        });
-      }
-
-      authLogout?.addEventListener('click', async () => {
-        await auth.signOut();
-             });
-
-      // ============================================
-      // МЕДАЛИ
-      // ============================================
-
-      function openBadgesModal(initialBadgeId) {
-        if (!badgesModal || !badgesModalGrid) return;
-        badgesModal.classList.remove('hidden');
-        badgesModal.classList.add('flex');
-
-        if (initialBadgeId && allBadgesCache.length) {
-          const b = allBadgesCache.find(x => x.id === initialBadgeId);
-          if (b) {
-            showBadgeDetail(b);
-            highlightSelectedBadge(b.id);
-          }
-        }
-      }
-
-      function closeBadgesModal() {
-        if (!badgesModal) return;
-        badgesModal.classList.add('hidden');
-        badgesModal.classList.remove('flex');
-      }
-
-      if (badgesModalClose) {
-        badgesModalClose.addEventListener('click', closeBadgesModal);
-      }
-      if (badgesModal) {
-        badgesModal.addEventListener('click', (e) => {
-          if (e.target === badgesModal) {
-            closeBadgesModal();
-          }
-        });
-      }
-
-      function showBadgeDetail(badge) {
-        if (!badgesModalDetail) return;
-        const earnedText = badge.earned
-          ? `<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[10px] text-emerald-700 font-semibold">Получено</span>`
-          : `<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-50 border border-slate-200 text-[10px] text-slate-500 font-semibold">Ещё не открыто</span>`;
-
-        const desc = badge.earned
-          ? (badge.desc || 'Вы уже получили эту медаль.')
-          : '???';
-
-        const imgSrc = badge.earned
-       ? `/assets/badges/${badge.id}.png`
-          : '/assets/badges/medalunknown.png';
-
-        badgesModalDetail.innerHTML = `
-          <div class="flex items-center gap-3 mb-2">
-            <div class="h-24 w-24 sm:h-28 sm:w-28 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="${imgSrc}" alt="${badge.title}" class="h-full w-full object-contain" />
-            </div>
-            <div class="min-w-0">
-              <p class="text-sm sm:text-base font-semibold text-slate-900 mb-0.5">
-                ${badge.earned ? badge.title : 'Эта медаль ещё не получена'}
-              </p>
-              ${earnedText}
-            </div>
-          </div>
-          <p class="text-xs sm:text-sm text-slate-700">
-            ${desc}
-          </p>
-        `;
-      }
-
-      function highlightSelectedBadge(badgeId) {
-        if (!badgesModalGrid) return;
-        const buttons = badgesModalGrid.querySelectorAll('button[data-badge-id]');
-        buttons.forEach(btn => {
-          if (btn.dataset.badgeId === badgeId) {
-            btn.classList.add('ring-2', 'ring-slate-300');
-          } else {
-            btn.classList.remove('ring-2', 'ring-slate-300');
-          }
-        });
-      }
-
-      function renderBadgesModalGrid(badges) {
-        if (!badgesModalGrid) return;
-        badgesModalGrid.innerHTML = '';
-
-        badges.forEach(badge => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.dataset.badgeId = badge.id;
-          btn.className =
-            'flex items-center justify-center p-1 rounded-lg bg-white/80 hover:shadow-sm transition ' +
-            (badge.earned ? '' : 'opacity-70');
-
-         const imgSrc = badge.earned
-            ? `/assets/badges/${badge.id}.png`
-            : '/assets/badges/medalunknown.png';
-
-          btn.innerHTML = `
-            <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="${imgSrc}" alt="${badge.title}" class="h-full w-full object-contain" />
-            </div>
-          `;
-
-          const select = () => {
-            highlightSelectedBadge(badge.id);
-            showBadgeDetail(badge);
-          };
-
-          btn.addEventListener('click', select);
-          btn.addEventListener('mouseenter', select);
-
-          badgesModalGrid.appendChild(btn);
-        });
-
-        const firstEarned = badges.find(b => b.earned);
-        if (firstEarned) {
-          showBadgeDetail(firstEarned);
-          highlightSelectedBadge(firstEarned.id);
-        }
-      }
-      
-      function renderEarnedBadgesStrip(badges) {
-        if (!achievementsList) return;
-
-        const earned = badges.filter(b => b.earned);
-
-        achievementsList.innerHTML = `
-          <div class="soft-card p-3 sm:p-4 space-y-2">
-            <div class="flex flex-wrap items-center gap-2">
-              <div id="earned-badges-grid" class="flex flex-wrap gap-2 flex-1"></div>
-
-              <button
-                type="button"
-                id="open-badges-modal-desktop"
-                class="hidden sm:inline-flex btn btn-ghost text-[11px] sm:text-xs px-3 py-1 ml-auto"
-              >
-                Открыть коллекцию
-              </button>
-            </div>
-
-            <button
-              type="button"
-              id="open-badges-modal-mobile"
-              class="sm:hidden w-full btn btn-ghost text-xs mt-1"
-            >
-              Открыть полную коллекцию
-            </button>
-          </div>
-        `;
-
-        const grid = document.getElementById('earned-badges-grid');
-        const openDesktop = document.getElementById('open-badges-modal-desktop');
-        const openMobile  = document.getElementById('open-badges-modal-mobile');
-
-        if (!earned.length) {
-          grid.innerHTML = `
-            <p class="text-xs sm:text-sm text-slate-500">
-              У вас пока нет полученных медалей. Проходите уроки и выполняйте задания — первые награды появятся очень скоро.
-            </p>
-          `;
-        } else {
-          earned.forEach(badge => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.dataset.badgeId = badge.id;
-            btn.className =
-              'relative h-12 w-12 sm:h-14 sm:w-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center hover:shadow-md transition';
-
-            btn.innerHTML = `
-            <img src="/assets/badges/${badge.id}.png" alt="${badge.title}" class="h-full w-full object-contain" />
-            `;
-
-            btn.addEventListener('click', () => openBadgesModal(badge.id));
-            grid.appendChild(btn);
-          });
-        }
-
-        if (openDesktop) {
-          openDesktop.addEventListener('click', () => openBadgesModal());
-        }
-        if (openMobile) {
-          openMobile.addEventListener('click', () => openBadgesModal());
-        }
-      }
-
-      async function loadProStatus(user) {
-        if (!user) {
-          if (proBannerSuccess) proBannerSuccess.style.display = 'none';
-          if (proCancelButton)  proCancelButton.classList.add('hidden');
-          if (proRenewButton)   proRenewButton.classList.add('hidden');
-          return;
-        }
-
-        const uid   = user.uid;
-        const email = user.email || null;
-
-        const usersCol = db.collection('users');
-        const emailRef = email ? usersCol.doc(email) : null;
-        const uidRef   = uid   ? usersCol.doc(uid)   : null;
-
-        const [emailSnap, uidSnap] = await Promise.all([
-          emailRef ? emailRef.get() : Promise.resolve(null),
-          uidRef   ? uidRef.get()   : Promise.resolve(null) ]);
-
-        const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
-        const uidData   = uidSnap   && uidSnap.exists   ? (uidSnap.data()   || {}) : null;
-
-        const proGlobal =
-          (emailData && emailData.proGlobal) ||
-          (uidData && uidData.proGlobal) ||
-          false;
-
-        const proValidUntil =
-          (emailData && emailData.proValidUntil) ||
-          (uidData && uidData.proValidUntil) ||
-          null;
-
-        if (!proGlobal) {
-          if (proBannerSuccess) proBannerSuccess.style.display = 'none';
-          if (proCancelButton)  proCancelButton.classList.add('hidden');
-          if (proRenewButton)   proRenewButton.classList.add('hidden');
-          return;
-        }
-
-        let hasStripeSub = false;
-
-        try {
-          const enrollSnap = await db
-            .collection('enrollments')
-            .where('userId', '==', uid)
-            .where('tier', '==', 'pro-global-monthly')
-            .where('status', 'in', ['active', 'cancel_at_period_end'])
-            .limit(1)
-            .get();
-
-          if (!enrollSnap.empty) {
-            const d = enrollSnap.docs[0].data() || {};
-            if (d.subscriptionId) {
-              hasStripeSub = true;
-            }
-          }
-        } catch (e) {
-          console.warn('Не удалось прочитать enrollments для PRO:', e);
-        }
-
-        let daysLeft = null;
-        let validUntilText = '';
-
-        if (proValidUntil && typeof proValidUntil.toDate === 'function') {
-          const end = proValidUntil.toDate();
-          validUntilText = end.toLocaleDateString('ru-RU');
-          const now = new Date();
-          const diffMs = end - now;
-          daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-          window.currentProValidUntilText = validUntilText;
-        }
-
-        updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText });
-      }
-
-      function updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText }) {
-        window.currentProHasStripe = !!hasStripeSub;
-        window.currentProValidUntilText = validUntilText || '';
-
-        if (!proGlobal) {
-          if (proChip)         proChip.classList.add('hidden');
-          if (proCancelButton) proCancelButton.classList.add('hidden');
-          if (proRenewButton)  proRenewButton.classList.add('hidden');
-          if (proStatusText)   proStatusText.textContent = '';
-          return;
-        }
-
-        if (proChip) proChip.classList.remove('hidden');
-
-        let text = 'У вас активна подписка PRO.';
-
-        if (hasStripeSub) {
-          if (daysLeft != null && validUntilText) {
-            text = `Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).`;
-          } else {
-            text = 'Подписка PRO активна. Автопродление включено.';
-          }
-
-          if (proCancelButton) proCancelButton.classList.remove('hidden');
-          if (proRenewButton)  proRenewButton.classList.add('hidden');
-        } else {
-          if (daysLeft != null && validUntilText) {
-            text = `Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет — по окончании срока доступ приостановится.`;
-          } else {
-            text = 'Подписка PRO активна. Автопродления нет — по окончании срока доступ приостановится.';
-          }
-
-          if (proCancelButton) proCancelButton.classList.add('hidden');
-
-          if (proRenewButton) {
-            if (daysLeft != null && daysLeft <= 3 && daysLeft >= 1) {
-              proRenewButton.classList.remove('hidden');
-            } else {
-              proRenewButton.classList.add('hidden');
-            }
-          }
-        }
-
-        if (proStatusText) {
-          proStatusText.textContent = text;
-        }
-      }
-
-      if (proChip) {
-        proChip.addEventListener('click', () => {
-          const hasStripe = !!window.currentProHasStripe;
-          const validText = window.currentProValidUntilText || '';
-
-          if (hasStripe) {
-            openProCancelModal(validText);
-            return;
-          }
-
-          const msg = validText
-            ? `Подписка PRO активна до ${validText}. Автосписания нет — по окончании срока её нужно будет продлить вручную.`
-            : 'Подписка PRO активна. Автосписания нет — по окончании срока её нужно будет продлить вручную.';
-
-          alert(msg);
-        });
-      }
-
-      async function loadAndRenderBadges(userBadgeIds) {
-        try {
-          const earnedIds = Array.isArray(userBadgeIds) ? userBadgeIds : [];
-
-          const snap = await db.collection('badges').get();
-          
-          const badges = [];
-          snap.forEach(doc => {
-            const data = doc.data() || {};
-            const id = doc.id;
-            badges.push({
-              id,
-              title: data.title || data.name || 'Медаль',
-              desc: data.description || data.desc || '',
-              earned: earnedIds.includes(id)
-            });
-          });
-
-          allBadgesCache = badges;
-
-          if (!badges.length) {
-            achievementsList.innerHTML = `
-              <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
-                Как только вы начнёте проходить уроки, здесь появятся первые бейджи и медали за ваши достижения в языках.
+              <div>
+                <label for="auth-pass" class="block text-xs font-medium text-slate-600 mb-1">Пароль</label>
+                <input id="auth-pass" type="password" autocomplete="current-password" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Пароль"/>
               </div>
-            `;
-            return;
-          }
-
-          renderEarnedBadgesStrip(badges);
-          renderBadgesModalGrid(badges);
-        } catch (err) {
-          console.error('Ошибка загрузки коллекции медалей:', err);
-          achievementsList.innerHTML = `
-            <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
-              Не удалось загрузить коллекцию медалей. Проверьте соединение и попробуйте обновить страницу.
-            </div>
-          `;
-        }
-      }
-
-      async function setAuthState(user) {
-        if (user) {
-          localStorage.setItem('pt_uid', user.uid || '');
-          if (user.email) localStorage.setItem('pt_email', user.email);
-
-          authBoxOut.classList.add('hidden');
-          authBoxIn.classList.remove('hidden');
-          coursesNeedAuth.classList.add('hidden');
-          authUserEmail.textContent = user.email || '';
-
-          await loadUserProfile(user);
-          await loadUserEnrollments(user);
-        } else {
-          localStorage.removeItem('pt_uid');
-          localStorage.removeItem('pt_email');
-
-          authBoxOut.classList.remove('hidden');
-          authBoxIn.classList.add('hidden');
-          coursesNeedAuth.classList.remove('hidden');
-          authUserEmail.textContent = '';
-          profileName.textContent = '';
-          profileAvatarImg.src = '/assets/avatarf.png';
-          if (profileAvatarType) profileAvatarType.value = 'girl';
-          setAvatarChoice('girl');
-          coursesList.innerHTML = '';
-          coursesEmpty.classList.add('hidden');
-          achievementsList.innerHTML = `
-            <div class="soft-card p-4 text-xs sm:text-sm text-slate-600">
-              Войдите в аккаунт, чтобы увидеть свои медали и достижения.
-            </div>
-          `;
-          if (coinsCard) {
-            coinsCard.classList.add('hidden');
-          }
-        }
-      }
-
-async function loadUserProfile(user) {
-  try {
-    const email = user.email || null;
-    if (!email) return;
-
-    const usersCol = db.collection('users');
-    const emailRef = usersCol.doc(email);
-
-    const emailSnap = await emailRef.get();
-    const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : {};
-
-    const data = { ...emailData };
-    data.email = data.email || email;
-
-    const first = data.firstName || '';
-    const last  = data.lastName || '';
-    const displayEmail = data.email || email || '';
-
-    // 1) аватары: показываем базовые + разблокированные
-    const unlockedAvatars = Array.isArray(data.unlockedAvatars) ? data.unlockedAvatars : [];
-    renderAvatarChoices(unlockedAvatars);
-
-    // 2) безопасный выбор avatarType (только из разрешённых)
-    const avatarType = data.avatarType || 'girl';
-    const allowed = new Set(['girl', 'boy']);
-    unlockedAvatars.forEach(id => {
-      if (AVATAR_CATALOG[id]) allowed.add(id);
-    });
-    const safeAvatarType = allowed.has(avatarType) ? avatarType : 'girl';
-    setAvatarChoice(safeAvatarType);
-
-    // 3) имя
-    const displayName = (first || last)
-      ? (first + ' ' + (last || '')).trim()
-      : (displayEmail || 'Без имени');
-
-    profileName.textContent = displayName;
-    authUserEmail.textContent = displayEmail;
-
-    if (profileEmail) profileEmail.value = displayEmail;
-
-    profileFirst.value = first;
-    profileLast.value  = last;
-
-    profileMsg.textContent = '';
-
-    // 4) коины
-    updateCoinsUI(data);
-
-    try {
-      await emailRef.set({ email: displayEmail }, { merge: true });
-    } catch (e) {
-      console.warn('Не удалось обновить email в профиле:', e);
-    }
-
-  } catch (err) {
-    console.error('Ошибка профиля:', err);
-  }
-}
-
-      profileForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        profileMsg.textContent = '';
-
-        const user = auth.currentUser;
-        if (!user) {
-          profileMsg.textContent = 'Сначала войдите в аккаунт.';
-          return;
-        }
-
-        try {
-          const email = user.email;
-          const first = profileFirst.value.trim();
-          const last  = profileLast.value.trim();
-          const avatarType = profileAvatarType ? (profileAvatarType.value || 'girl') : 'girl';
-
-          const payload = {
-            firstName: first,
-            lastName:  last,
-            avatarType: avatarType
-          };
-
-          profileAvatarImg.src = getAvatarSrc(avatarType);
-
-          await db.collection('users').doc(email).set(payload, { merge: true });
-
-          profileMsg.textContent = 'Профиль обновлён ✔️';
-
-          const again = auth.currentUser;
-          if (again) {
-            await loadUserProfile(again);
-          }
-
-          closeProfileModal();
-        } catch (err) {
-          console.error('profile save error', err);
-          profileMsg.textContent = 'Не удалось сохранить профиль. Проверьте соединение и попробуйте ещё раз.';
-        }
-      });
-
-      async function loadUserEnrollments(user) {
-        coursesList.innerHTML = '';
-        coursesEmpty.classList.add('hidden');
-
-        try {
-          const email = user.email || null;
-
-          if (!email) {
-            coursesEmpty.classList.remove('hidden');
-            await loadAndRenderBadges([]);
-            return;
-          }
-
-          const usersCol = db.collection('users');
-          const emailRef = email ? usersCol.doc(email) : null;
-         
-
-          const [emailSnap] = await Promise.all([
-            emailRef ? emailRef.get() : Promise.resolve(null),
-             ]);
-
-          const emailData = emailSnap && emailSnap.exists ? (emailSnap.data() || {}) : null;
-        
-          if (!emailData) {
-            coursesEmpty.classList.remove('hidden');
-            await loadAndRenderBadges([]);
-            return;
-          }
-
-          const paidFromEmail = Array.isArray(emailData?.courses)     ? emailData.courses     : [];
-           const freeFromEmail = Array.isArray(emailData?.freeCourses) ? emailData.freeCourses : [];
-            const badgesEmail   = Array.isArray(emailData?.badges)      ? emailData.badges      : [];
-    
-
-          const progressEmail = emailData?.progress || {};
-                  const mergedProgress = {
-            ...(progressEmail || {}),
-
-         
-          };
-
-          const progressCourseIds = Object.keys(mergedProgress || {});
-
-          let mergedPaid = Array.from(new Set([...paidFromEmail]));
-          let mergedFree = Array.from(new Set([
-               ...freeFromEmail,
-            ...progressCourseIds.filter(id => !mergedPaid.includes(id))
-          ]));
-
-          let mergedBadges = Array.from(new Set([...badgesEmail]));
-
-          const hasAnyCourse = mergedPaid.length > 0 || mergedFree.length > 0;
-
-          if (hasAnyCourse && !mergedBadges.includes(FIRST_STEP_BADGE_ID)) {
-            mergedBadges.push(FIRST_STEP_BADGE_ID);
-
-            const badgeUpdate = {
-              badges: firebase.firestore.FieldValue.arrayUnion(FIRST_STEP_BADGE_ID),
-            };
-
-            const updates = [];
-                  if (emailRef) updates.push(emailRef.set(badgeUpdate, { merge: true }));
-
-            try {
-              await Promise.all(updates);
-            } catch (e) {
-              console.warn('Не удалось сохранить бейдж first-step:', e);
-            }
-          }
-
-          const courses = [];
-
-          for (const id of mergedPaid) {
-            courses.push({
-              id,
-              isPaid: true,
-              isFree: false,
-              progress: mergedProgress[id] || null
-            });
-          }
-
-          for (const id of mergedFree) {
-            if (mergedPaid.includes(id)) continue;
-            courses.push({
-              id,
-              isPaid: false,
-              isFree: true,
-              progress: mergedProgress[id] || null
-            });
-          }
-
-          renderCourses(courses);
-          await loadAndRenderBadges(mergedBadges);
-
-          if (emailRef) {
-            try {
-              await emailRef.set(
-                {
-                  email: emailData?.email || email || null,
-                  courses: mergedPaid,
-                  freeCourses: mergedFree,
-                  badges: mergedBadges,
-                  progress: mergedProgress
-                },
-                { merge: true }
-              );
-            } catch (e) {
-              console.warn('Не удалось мигрировать курсы uid→email:', e);
-            }
-          }
-        } catch (err) {
-          console.error('Ошибка загрузки курсов:', err);
-          renderCourses([]);
-          await loadAndRenderBadges([]);
-        }
-      }
-
-      function renderCourses(courses) {
-        coursesList.innerHTML = '';
-
-        if (!courses || !courses.length) {
-          coursesEmpty.classList.remove('hidden');
-          return;
-        }
-
-        coursesEmpty.classList.add('hidden');
-
-        courses.forEach((c) => {
-          const meta = COURSE_META[c.id] || {
-            title: 'Курс PolyTalky',
-            href: '#',
-            cover: '/assets/courses/placeholder.jpg'
-          };
-
-          const progressData = c.progress || {};
-          const percent = typeof progressData.percent === 'number'
-            ? Math.max(0, Math.min(100, progressData.percent))
-            : 0;
-          const lastLessonId = progressData.lastLessonId || null;
-
-          const isFree = !!c.isFree;
-          const isPaid = !!c.isPaid;
-
-          const badgeLabel = isFree ? 'Бесплатный курс' : 'Оплаченный курс';
-          const badgeClass = isFree
-            ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
-            : 'border-amber-300 bg-amber-50 text-amber-700';
-
-          let statusLabel;
-          if (percent > 0 && lastLessonId) {
-            statusLabel = `Прогресс: ${percent}% · последний урок: ${lastLessonId}`;
-          } else if (percent > 0) {
-            statusLabel = `Прогресс: ${percent}%`;
-          } else if (isPaid) {
-            statusLabel = 'Курс оплачен, можно начинать в любой момент.';
-          } else {
-            statusLabel = 'Курс открыт, можно начинать первый урок.';
-          }
-
-          const card = document.createElement('a');
-          card.href = meta.href;
-          card.className = 'soft-card p-3 sm:p-4 flex flex-col gap-2 hover:shadow-md transition-shadow group';
-
-          card.innerHTML = `
-            <div class="flex gap-3 items-center">
-              <div class="h-14 w-14 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0">
-                <img src="${meta.cover}" alt="" class="h-full w-full object-cover group-hover:scale-105 transition-transform" />
+              <div id="auth-forgot-row" class="flex justify-end">
+                <button type="button" id="auth-forgot" class="text-xs text-slate-500 hover:text-amber-600 underline underline-offset-2">Забыли пароль?</button>
               </div>
-              <div class="flex-1 min-w-0 space-y-1">
-                <div class="flex items-center gap-2">
-                  <span class="badge text-[10px] ${badgeClass}">${badgeLabel}</span>
+              <!-- honeypot -->
+              <div class="hidden">
+                <input id="auth-website" name="website" type="text" autocomplete="off" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm"/>
+              </div>
+              <div id="auth-names-block" class="space-y-3 hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label for="auth-first" class="block text-xs font-medium text-slate-600 mb-1">Имя</label>
+                    <input id="auth-first" type="text" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Имя"/>
+                  </div>
+                  <div>
+                    <label for="auth-last" class="block text-xs font-medium text-slate-600 mb-1">Фамилия</label>
+                    <input id="auth-last" type="text" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Фамилия (или ник)"/>
+                  </div>
                 </div>
-                <p class="text-sm font-semibold text-slate-900 truncate">${meta.title}</p>
-                <p class="text-[11px] text-slate-500">${statusLabel}</p>
+                <p class="text-[11px] text-slate-500">Заполните, чтобы мы знали, как к вам обращаться</p>
               </div>
+              <div id="auth-terms-block" class="space-y-2 text-[11px] text-slate-500 hidden">
+                <label class="flex items-start gap-2">
+                  <input id="auth-accept-terms" type="checkbox" class="mt-0.5 h-3 w-3 flex-shrink-0">
+                  <span>Создавая аккаунт, вы подтверждаете, что ознакомились и соглашаетесь с
+                    <a href="/legal/terms.html" class="underline">Условиями использования</a>,
+                    <a href="/legal/privacy.html" class="underline">Политикой конфиденциальности</a>,
+                    <a href="/legal/cookies.html" class="underline">Политикой использования cookies</a>
+                    и <a href="/legal/consent.html" class="underline">Согласием на обработку персональных данных</a>.
+                  </span>
+                </label>
+              </div>
+              <p id="auth-error" class="text-xs text-red-500 min-h-[1rem]"></p>
+              <div class="flex flex-col sm:flex-row gap-2 pt-1">
+                <button id="btn-login" type="button" class="btn btn-main flex-1 justify-center text-sm">Войти</button>
+                <button id="auth-register" type="button" class="btn btn-ghost flex-1 justify-center text-sm">Регистрация</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- LOGGED IN -->
+          <div id="auth-when-logged-in" class="hidden space-y-4">
+            <div class="soft-card p-4 space-y-3">
+              <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">Вы авторизованы</p>
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full overflow-hidden bg-slate-200 flex-shrink-0 cursor-pointer" id="profile-avatar-wrapper">
+                  <img id="profile-avatar-img" src="/assets/avatarf.png" alt="Avatar" class="h-full w-full object-cover">
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <p id="profile-name" class="text-sm font-semibold text-slate-900 truncate">ЗАГРУЗКА</p>
+                    <button type="button" id="pro-chip" class="inline-flex items-center px-2 py-[2px] rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-semibold uppercase tracking-[.16em] border border-emerald-200 shadow-[0_0_0_1px_rgba(16,185,129,.2)] transform transition hover:-translate-y-0.5 hover:shadow-md hidden">PRO</button>
+                  </div>
+                  <p id="auth-user-email" class="text-xs text-slate-500 truncate">...</p>
+                </div>
+              </div>
+              <p class="text-xs text-slate-500">Это ваш личный кабинет PolyTalky. Здесь вы можете управлять курсами, видеть прогресс и собирать достижения.</p>
             </div>
-            <div class="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
-              <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500" style="width:${percent}%;"></div>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <button id="btn-open-profile" class="btn btn-ghost flex-1 text-xs sm:text-sm">Настройки профиля</button>
+              <button id="auth-logout" class="btn btn-main flex-1 text-xs sm:text-sm">Выйти</button>
             </div>
-          `;
 
-          coursesList.appendChild(card);
-        });
-      }
- if (btnResetPassword) {
-  btnResetPassword.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    if (!user || !user.email) {
-      alert('Сначала войдите в аккаунт.');
-      return;
-    }
-    try {
-      await auth.sendPasswordResetEmail(user.email);
-      if (pwMsg) {
-        pwMsg.textContent = 'Мы отправили письмо для сброса пароля. Проверьте почту и папку «Спам».';
-        pwMsg.classList.remove('text-red-500');
-        pwMsg.classList.add('text-emerald-600');
-      }
-    } catch (e) {
-      console.error(e);
-      if (pwMsg) {
-        pwMsg.textContent = 'Не удалось отправить письмо. Попробуйте ещё раз.';
-        pwMsg.classList.remove('text-emerald-600');
-        pwMsg.classList.add('text-red-500');
-      }
-    }
+            <!-- КОИНЫ -->
+            <div id="coins-card" class="soft-card p-3 sm:p-4 space-y-2 hidden">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <div class="h-7 w-7 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center overflow-hidden">
+                    <img src="/assets/coin.png" alt="Коин PolyTalky" class="h-6 w-6 object-contain"/>
+                  </div>
+                  <div>
+                    <p class="text-xs font-semibold text-slate-700 uppercase tracking-[.18em]">Ваши коины</p>
+                    <p class="text-sm text-slate-900">Баланс: <span id="coins-balance">0</span></p>
+                  </div>
+                </div>
+              </div>
+              <p id="coins-text" class="text-[11px] text-slate-600">Заходите каждый день, чтобы получать больше коинов и менять их на бонусы.</p>
+              <button id="coins-claim-btn" class="btn btn-main w-full text-xs sm:text-sm">Забрать ежедневный бонус</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- КУРСЫ + ДОСТИЖЕНИЯ -->
+    <section class="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <div class="space-y-1">
+            <p class="pill-label">Ваши курсы</p>
+            <h2 class="text-lg sm:text-xl font-semibold text-slate-900">Все активированные программы и курсы</h2>
+            <p class="text-xs sm:text-sm text-slate-600 mobile-desc">Здесь собраны курсы, купленные в <a href="/shop/" class="underline">магазине</a>, а также бесплатные программы, в которых вы прошли хотя бы первый урок.</p>
+          </div>
+        </div>
+        <div id="courses-need-auth" class="soft-card p-4 text-xs sm:text-sm text-slate-600">Войдите в аккаунт, чтобы увидеть список ваших курсов и прогресс.</div>
+        <div id="courses-empty" class="soft-card p-4 text-xs sm:text-sm text-slate-600 hidden">Пока здесь пусто. Загляните в <a href="/shop/" class="underline">магазин</a>, чтобы выбрать курс, или начните один из бесплатных <a href="/courses/" class="underline">мини-курсов</a>.</div>
+        <div id="courses-list" class="grid gap-3 sm:gap-4 md:grid-cols-2"></div>
+      </div>
+
+      <div class="space-y-3">
+        <div class="space-y-1">
+          <p class="pill-label">Достижения</p>
+          <h2 class="text-lg sm:text-xl font-semibold text-slate-900">Бейджи, медали и маленькие победы</h2>
+          <p class="text-xs sm:text-sm text-slate-600 mobile-desc">Здесь будут появляться ваши награды за пройденные уроки, выполненные задания и особые активности.</p>
+        </div>
+        <div id="achievements-list" class="grid gap-3 sm:gap-4"></div>
+      </div>
+    </section>
+
+    <!-- МОДАЛКА МЕДАЛЕЙ -->
+    <div id="badges-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40">
+      <div class="card max-w-2xl w-full mx-4 p-4 sm:p-6 space-y-4">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">Коллекция медалей</p>
+            <p class="text-xs sm:text-sm text-slate-600">Все ваши достижения в PolyTalky</p>
+          </div>
+          <button id="badges-modal-close" class="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1.6fr)] items-start">
+          <div id="badges-modal-grid" class="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3 text-center text-[10px] sm:text-xs"></div>
+          <div id="badges-modal-detail" class="soft-card p-3 sm:p-4 text-xs sm:text-sm text-slate-700">
+            <p class="font-semibold mb-1">Выберите медаль</p>
+            <p>Нажмите или наведите курсор на любую медаль в коллекции, чтобы увидеть, за что она даётся.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- МОДАЛКА ОТМЕНЫ PRO -->
+    <div id="pro-cancel-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40">
+      <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">Подписка PRO</p>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">Отменить автопродление?</h2>
+          </div>
+          <button type="button" id="pro-cancel-modal-close" class="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
+        </div>
+        <p class="text-sm text-slate-600" id="pro-cancel-modal-text">Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.</p>
+        <div class="text-xs text-slate-500" id="pro-cancel-modal-subtext">После окончания этого периода платежи списываться не будут, и вы больше не сможете отправлять задания на проверку куратору.</div>
+        <div class="flex flex-col sm:flex-row sm:justify-end gap-2 pt-2">
+          <button type="button" id="pro-cancel-modal-cancel" class="btn btn-ghost w-full sm:w-auto">Оставить как есть</button>
+          <button type="button" id="pro-cancel-modal-confirm" class="btn w-full sm:w-auto">Отключить автопродление</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- МОДАЛКА КОЛЕСА УДАЧИ -->
+    <div id="wheel-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+      <div class="card max-w-md w-full p-5 sm:p-6 space-y-4">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">🎉 День 7 — Колесо Удачи</p>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 mt-1">Крутите колесо и получите приз!</h2>
+          </div>
+        </div>
+        <p class="text-sm text-slate-600">Поздравляем! Вы заходили в личный кабинет 7 дней подряд. Теперь вы можете прокрутить колесо удачи и получить особенный приз 🎁</p>
+        <div class="wheel-container">
+          <div class="wheel-pointer"></div>
+          <canvas id="wheel-canvas" class="wheel-canvas" width="360" height="360"></canvas>
+          <button id="wheel-spin-btn" class="wheel-center-button">GO!</button>
+        </div>
+        <div id="wheel-result" class="hidden">
+          <div class="soft-card p-4 text-center space-y-2">
+            <div class="text-5xl mb-2" id="wheel-result-icon">🎉</div>
+            <p class="text-lg font-bold text-slate-900" id="wheel-result-title">Поздравляем!</p>
+            <p class="text-sm text-slate-600" id="wheel-result-description">Вы выиграли приз!</p>
+            <button id="wheel-claim-btn" class="btn btn-main w-full mt-3">Закрыть</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- НАСТРОЙКИ ПРОФИЛЯ -->
+    <div id="profile-settings" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-40">
+      <div class="card max-w-md w-full mx-4 p-5 sm:p-6 space-y-4">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-xs font-semibold tracking-[.18em] uppercase text-amber-700">Профиль</p>
+            <h2 class="text-lg sm:text-xl font-semibold text-slate-900">Настройки аккаунта</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Эти данные помогают нам персонализировать ваш опыт.</p>
+          </div>
+          <button id="btn-close-profile" class="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
+        </div>
+        <form id="profile-form" class="space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="profile-first" class="block text-xs font-medium text-slate-600 mb-1">Имя</label>
+              <input id="profile-first" name="firstName" type="text" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Например, Анна"/>
+            </div>
+            <div>
+              <label for="profile-last" class="block text-xs font-medium text-slate-600 mb-1">Фамилия</label>
+              <input id="profile-last" name="lastName" type="text" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Фамилия (или никнейм)"/>
+            </div>
+            <div>
+              <label for="profile-email" class="block text-xs font-medium text-slate-600 mb-1">Email</label>
+              <input id="profile-email" type="email" readonly class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-slate-50 text-slate-500" placeholder="you@example.com"/>
+              <p class="text-[11px] text-slate-500 mt-1">Email редактируется только через поддержку.</p>
+            </div>
+            <!-- СМЕНА ПАРОЛЯ -->
+            <div class="pt-2 border-t border-slate-200/70 col-span-full">
+              <p class="text-xs font-semibold tracking-[.18em] uppercase text-slate-600 mb-2">Сменить пароль</p>
+              <div class="space-y-2">
+                <input id="pw-current" type="password" autocomplete="current-password" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Текущий пароль"/>
+                <input id="pw-new" type="password" autocomplete="new-password" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Новый пароль (минимум 6 символов)"/>
+              </div>
+              <div class="flex flex-col gap-2 mt-2">
+                <button type="button" id="btn-change-password" class="btn btn-ghost w-full">Сменить пароль</button>
+                <button type="button" id="btn-reset-password" class="btn btn-ghost w-full">Не помню пароль</button>
+              </div>
+              <p id="pw-msg" class="text-xs text-slate-500 min-h-[1rem] mt-2"></p>
+            </div>
+          </div>
+
+          <!-- АВАТАРЫ -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Аватар профиля</label>
+            <p class="text-[11px] text-slate-500 mb-2">Выберите один из стандартных аватаров PolyTalky.</p>
+            <div class="flex gap-2" id="avatar-choices-row">
+              <button type="button" class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1 ring-2 ring-amber-400" data-avatar-type="girl">
+                <img src="/assets/avatarf.png" alt="Аватар девочка" class="h-10 w-10 object-cover rounded-lg">
+              </button>
+              <button type="button" class="avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1" data-avatar-type="boy">
+                <img src="/assets/avatar.png" alt="Аватар мальчик" class="h-10 w-10 object-cover rounded-lg">
+              </button>
+            </div>
+            <input type="hidden" id="profile-avatar-type" value="girl">
+          </div>
+
+          <p id="profile-msg" class="text-xs text-slate-500 min-h-[1rem]"></p>
+          <div class="flex items-center justify-end gap-2 pt-2">
+            <button type="button" id="btn-cancel-profile" class="btn btn-ghost text-xs sm:text-sm">Отмена</button>
+            <button type="submit" class="btn btn-main text-xs sm:text-sm">Сохранить изменения</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- МОДАЛКА ПРЕДПРОСМОТРА АВАТАРА -->
+    <div id="avatar-preview-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50">
+      <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 max-w-xs w-full mx-4 text-center">
+        <img id="avatar-preview-img" src="/assets/avatarf.png" alt="Предпросмотр аватара" class="mx-auto h-32 w-32 sm:h-40 sm:w-40 rounded-2xl object-contain mb-3"/>
+        <!-- ✅ ИСПРАВЛЕНО: был мёртвый обработчик, теперь подключён в JS -->
+        <button type="button" id="avatar-preview-close" class="btn btn-ghost text-xs sm:text-sm">Закрыть</button>
+      </div>
+    </div>
+
+    <!-- COIN MODAL -->
+    <div id="coin-modal" class="hidden fixed inset-0 bg-black/40 items-center justify-center z-40">
+      <div class="card max-w-xs w-full mx-6 p-6 text-center space-y-3">
+        <img src="/assets/coin.png" alt="PolyTalky-коин" class="mx-auto mb-2 w-24 h-24">
+        <h3 class="text-lg font-extrabold mb-1">PolyTalky-коины</h3>
+        <p class="text-sm text-[var(--ink-2)]">За ежедневные заходы в личный кабинет вы получаете внутренние коины. Скоро их можно будет обменять на платные курсы, дополнительные аватары и секретные упражнения.</p>
+        <p class="text-xs text-slate-500 mt-1">Текущий баланс: <span id="coin-modal-balance">0</span> коинов.</p>
+        <button id="coin-modal-close" type="button" class="btn btn-ghost px-4 py-2 mt-2">Понятно</button>
+      </div>
+    </div>
+
+    <!-- COOKIE BANNER -->
+    <div id="cookie-banner" class="fixed bottom-3 inset-x-0 flex justify-center z-50 hidden">
+      <div class="soft-card px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-2 text-xs sm:text-sm text-slate-700 max-w-xl mx-4">
+        <p class="flex-1">Мы используем куки, чтобы ваши логины и прогресс по курсам сохранялся. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="/privacy/" class="underline">политикой конфиденциальности</a>.</p>
+        <button id="cookie-accept" class="btn btn-main text-xs sm:text-sm">Хорошо</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="border-t border-slate-200/70 bg-white/80">
+  <div class="wrap px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] sm:text-xs text-slate-500">
+    <p>© PolyTalky. Курсы для начинающих и продвинутых полиглотов.</p>
+    <p class="flex items-center gap-3">
+      <a href="/contacts/" class="hover:text-slate-700">Контакты</a>
+      <span class="hidden sm:inline text-slate-400">•</span>
+      <a href="/legal/" class="hover:text-slate-700">Юридические документы</a>
+    </p>
+  </div>
+</footer>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+  firebase.initializeApp({
+    apiKey:"AIzaSyBAU_uMTePpKwVNZNhqk2pss2PuSitGfQI",
+    authDomain:"polytalky-70999.firebaseapp.com",
+    projectId:"polytalky-70999",
+    storageBucket:"polytalky-70999.firebasestorage.app",
+    messagingSenderId:"62407152289",
+    appId:"1:62407152289:web:b0c0efdb2472f12b10d6e0"
   });
-}
-        if (btnChangePassword) {
-  btnChangePassword.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    if (!user || !user.email) {
-      alert('Сначала войдите в аккаунт.');
-      return;
-    }
+  const auth = firebase.auth();
+  const db   = firebase.firestore();
 
-    const current = (pwCurrent?.value || '').trim();
-    const next = (pwNew?.value || '').trim();
+  // ── COURSE META (все курсы из магазина) ───────────────────────────
+  const COURSE_META = {
+    'english-intro':           { title:'Интенсив по английскому',         href:'/courses/english-intro/',  cover:'/assets/courses/english.jpg' },
+    'afrikaans-a0':            { title:'Африкаанс с нуля',                 href:'/courses/',                cover:'/assets/courses/afrikaans.jpg' },
+    'english-with-harry':      { title:'English with Harry',               href:'/courses/',                cover:'/assets/courses/englishwithharry.jpg', comingSoon:true },
+    'visual-spanish':          { title:'Визуальный испанский',              href:'/courses/',                cover:'/assets/courses/visualspanish.jpg',    comingSoon:true },
+    'italian-songs':           { title:'Итальянский по песням',             href:'/courses/',                cover:'/assets/courses/italiansongs.jpg',      comingSoon:true },
+    'pro-espanol':             { title:'Pro Español (от носителя)',          href:'/courses/',                cover:'/assets/courses/proespanol.jpg',        comingSoon:true },
+    'finnish-travel':          { title:'Финский для путешествий',           href:'/courses/',                cover:'/assets/courses/finishtravel.jpg',      comingSoon:true },
+    'finnish-a2':              { title:'Финский для продолжающих',          href:'/courses/',                cover:'/assets/courses/finisha2.jpg',          comingSoon:true },
+    'german-a2':               { title:'Немецкий для продолжающих',         href:'/courses/',                cover:'/assets/courses/germana2.jpg',          comingSoon:true },
+    'italian-a2':              { title:'Итальянский для продолжающих',      href:'/courses/',                cover:'/assets/courses/italiana2.jpg',         comingSoon:true },
+    'dutch-a2':                { title:'Нидерландский для продолжающих',    href:'/courses/',                cover:'/assets/courses/nederlandsa2.jpg',      comingSoon:true },
+    'swedish-a0':              { title:'Шведский с нуля',                   href:'/courses/',                cover:'/assets/courses/swedish.jpg',           comingSoon:true },
+    'lithuanian-a0':           { title:'Литовский с нуля',                  href:'/courses/',                cover:'/assets/courses/lithuanian.jpg',        comingSoon:true },
+    'romanian-a0':             { title:'Румынский с нуля',                  href:'/courses/',                cover:'/assets/courses/romanian.jpg',          comingSoon:true },
+    'polyglotpack-mchny':      { title:'PolyglotPack MCHNY',                href:'/courses/mchny/',          cover:'/assets/courses/mchny.jpg',             comingSoon:true },
+    'polyglotpack-starter':    { title:'Polyglot Pack. Starter',            href:'/courses/',                cover:'/assets/courses/polyglotpack.jpg',      comingSoon:true },
+    'cook-it':                 { title:'Polyglot Pack. Cook it!',           href:'/courses/',                cover:'/assets/courses/cookit.jpg',            comingSoon:true },
+    '30days-english':          { title:'30 Days of English (Challenge)',     href:'/courses/',                cover:'/assets/courses/30daysofenglish.jpg',   comingSoon:true },
+    'irregular-verbs':         { title:'Irregular Verbs (Challenge)',        href:'/courses/',                cover:'/assets/courses/irregularverbs.jpg',    comingSoon:true },
+    'english-translators':     { title:'Английский для переводчиков',       href:'/courses/',                cover:'/assets/courses/englishtranslate.jpg',  comingSoon:true },
+  };
 
-    if (!current || !next) {
-      if (pwMsg) {
-        pwMsg.textContent = 'Введите текущий и новый пароль.';
-        pwMsg.classList.add('text-red-500');
-      }
-      return;
-    }
-    if (next.length < 6) {
-      if (pwMsg) {
-        pwMsg.textContent = 'Новый пароль должен быть минимум 6 символов.';
-        pwMsg.classList.add('text-red-500');
-      }
-      return;
-    }
+  const FIRST_STEP_BADGE_ID = 'first-step';
 
-    btnChangePassword.disabled = true;
+  const WHEEL_PRIZES = [
+    { id:'coins-5',        label:'5 коинов',         color:'#fbbf24', image:'/assets/coin.png',              coins:5,   weight:40 },
+    { id:'coins-10',       label:'10 коинов',        color:'#f59e0b', image:'/assets/all/coin10.png',        coins:10,  weight:30 },
+    { id:'coins-15',       label:'15 коинов',        color:'#fbbf24', image:'/assets/all/coin15.png',        coins:15,  weight:22 },
+    { id:'coins-25',       label:'25 коинов',        color:'#f59e0b', image:'/assets/all/coin25.png',        coins:25,  weight:14 },
+    { id:'coins-50',       label:'50 коинов',        color:'#fbbf24', image:'/assets/all/coin50.png',        coins:50,  weight:10 },
+    { id:'secret-badge',   label:'Секретный бейдж',  color:'#f59e0b', image:'/assets/badges/badgewheel.png', badge:'badgewheel', weight:6 },
+    { id:'winter-avatar',  label:'Секретный аватар', color:'#fbbf24', image:'/assets/all/avatarwheel.PNG',   avatarId:'wheel-2025-winter', weight:6 },
+    { id:'pro-month',      label:'Месяц PRO',         color:'#f59e0b', image:'/assets/all/pro.png',           proMonth:true, weight:1 },
+    { id:'polyglotpack-mchny', label:'Курс MCHNY',   color:'#fbbf24', image:'/assets/all/mchny.png',         course:'polyglotpack-mchny', weight:1 },
+  ];
 
-    try {
-      const cred = firebase.auth.EmailAuthProvider.credential(user.email, current);
-      await user.reauthenticateWithCredential(cred);
-      await user.updatePassword(next);
+  const AVATAR_CATALOG = {
+    girl:               { id:'girl',               title:'Аватар девочка',       src:'/assets/avatarf.png',        isBase:true },
+    boy:                { id:'boy',                title:'Аватар мальчик',       src:'/assets/avatar.png',         isBase:true },
+    'wheel-2025-winter':{ id:'wheel-2025-winter',  title:'Зимний секретный аватар', src:'/assets/all/avatarwheel.PNG' },
+  };
+</script>
 
-      if (pwMsg) {
-        pwMsg.textContent = 'Пароль успешно изменён ✔️';
-        pwMsg.classList.remove('text-red-500');
-        pwMsg.classList.add('text-emerald-600');
-      }
-      if (pwCurrent) pwCurrent.value = '';
-      if (pwNew) pwNew.value = '';
-    } catch (e) {
-      console.error(e);
-      let msg = 'Не удалось сменить пароль. Попробуйте ещё раз.';
-      if (e.code === 'auth/wrong-password') msg = 'Текущий пароль неверный.';
-      if (e.code === 'auth/too-many-requests') msg = 'Слишком много попыток. Попробуйте позже.';
-      if (e.code === 'auth/requires-recent-login') msg = 'Нужно перелогиниться и повторить попытку.';
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-      if (pwMsg) {
-        pwMsg.textContent = msg;
-        pwMsg.classList.remove('text-emerald-600');
-        pwMsg.classList.add('text-red-500');
-      }
-    } finally {
-      btnChangePassword.disabled = false;
-    }
-  });
-              }
-      auth.onAuthStateChanged((user) => {
-        setAuthState(user || null);
-        loadProStatus(user || null);
-      });
+  // ── DOM refs ───────────────────────────────────────────────────────
+  const authBoxOut       = document.getElementById('auth-when-logged-out');
+  const authBoxIn        = document.getElementById('auth-when-logged-in');
+  const authEmailEl      = document.getElementById('auth-email');
+  const authPassEl       = document.getElementById('auth-pass');
+  const authFirstEl      = document.getElementById('auth-first');
+  const authLastEl       = document.getElementById('auth-last');
+  const honeypotEl       = document.getElementById('auth-website');
+  const authForm         = document.getElementById('auth-form');
+  const authRegister     = document.getElementById('auth-register');
+  const btnLogin         = document.getElementById('btn-login');
+  const authError        = document.getElementById('auth-error');
+  const authForgot       = document.getElementById('auth-forgot');
+  const authLogout       = document.getElementById('auth-logout');
+  const authUserEmail    = document.getElementById('auth-user-email');
+  const authAcceptTerms  = document.getElementById('auth-accept-terms');
+  const authForgotRow    = document.getElementById('auth-forgot-row');
+  const authNamesBlock   = document.getElementById('auth-names-block');
+  const authTermsBlock   = document.getElementById('auth-terms-block');
+
+  const profileAvatarImg   = document.getElementById('profile-avatar-img');
+  const profileName        = document.getElementById('profile-name');
+  const profileSettings    = document.getElementById('profile-settings');
+  const profileForm        = document.getElementById('profile-form');
+  const profileFirst       = document.getElementById('profile-first');
+  const profileLast        = document.getElementById('profile-last');
+  const profileMsg         = document.getElementById('profile-msg');
+  const profileAvatarType  = document.getElementById('profile-avatar-type');
+  const profileEmail       = document.getElementById('profile-email');
+  const proChip            = document.getElementById('pro-chip');
+
+  const pwCurrent          = document.getElementById('pw-current');
+  const pwNew              = document.getElementById('pw-new');
+  const pwMsg              = document.getElementById('pw-msg');
+  const btnChangePassword  = document.getElementById('btn-change-password');
+  const btnResetPassword   = document.getElementById('btn-reset-password');
+
+  const avatarPreviewModal = document.getElementById('avatar-preview-modal');
+  const avatarPreviewImg   = document.getElementById('avatar-preview-img');
+  const avatarPreviewClose = document.getElementById('avatar-preview-close'); // ✅ теперь подключён ниже
+
+  const coursesNeedAuth  = document.getElementById('courses-need-auth');
+  const coursesList      = document.getElementById('courses-list');
+  const coursesEmpty     = document.getElementById('courses-empty');
+  const achievementsList = document.getElementById('achievements-list');
+
+  const badgesModal      = document.getElementById('badges-modal');
+  const badgesModalClose = document.getElementById('badges-modal-close');
+  const badgesModalGrid  = document.getElementById('badges-modal-grid');
+  const badgesModalDetail= document.getElementById('badges-modal-detail');
+
+  const cookieBanner     = document.getElementById('cookie-banner');
+  const cookieAccept     = document.getElementById('cookie-accept');
+
+  const proBannerSuccess = document.getElementById('pro-banner-success');
+  const proBannerError   = document.getElementById('pro-banner-error');
+  const proBannerCancel  = document.getElementById('pro-banner-cancel');
+  const proCancelButton  = document.getElementById('pro-cancel-button');
+  const proCancelButton2 = document.getElementById('pro-cancel-button-2'); // ✅ теперь подключён
+  const proStatusText    = document.getElementById('pro-status-text');
+  const proRenewButton   = document.getElementById('pro-renew-button');
+
+  const coinsCard        = document.getElementById('coins-card');
+  const coinsBalanceEl   = document.getElementById('coins-balance');
+  const coinsTextEl      = document.getElementById('coins-text');
+  const coinsClaimBtn    = document.getElementById('coins-claim-btn');
+
+  const coinModal        = document.getElementById('coin-modal');
+  const coinModalClose   = document.getElementById('coin-modal-close');
+  const coinModalBalance = document.getElementById('coin-modal-balance');
+
+  const wheelModal       = document.getElementById('wheel-modal');
+  const wheelCanvas      = document.getElementById('wheel-canvas');
+  const wheelSpinBtn     = document.getElementById('wheel-spin-btn');
+  const wheelResult      = document.getElementById('wheel-result');
+  const wheelResultIcon  = document.getElementById('wheel-result-icon');
+  const wheelResultTitle = document.getElementById('wheel-result-title');
+  const wheelResultDesc  = document.getElementById('wheel-result-description');
+  const wheelClaimBtn    = document.getElementById('wheel-claim-btn');
+
+  // ── state ──────────────────────────────────────────────────────────
+  let wheelOrder = [];
+  let isSpinning = false;
+  let currentWheelPrize = null;
+  let wheelRotation = 0;
+  let allBadgesCache = [];
+  let coinsState = { balance:0, streak:0, lastDate:null, alreadyClaimedToday:false, mode:null, nextReward:0 };
+
+  // ── helpers ────────────────────────────────────────────────────────
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  function pluralizeCoin(n) {
+    n = Math.abs(n) % 100;
+    const n1 = n % 10;
+    if (n > 10 && n < 20) return 'коинов';
+    if (n1 === 1) return 'коин';
+    if (n1 >= 2 && n1 <= 4) return 'коина';
+    return 'коинов';
+  }
+  function getAvatarSrc(id) {
+    return (AVATAR_CATALOG[id] && AVATAR_CATALOG[id].src) || AVATAR_CATALOG.girl.src;
+  }
+
+  // ── cookie banner ──────────────────────────────────────────────────
+  if (cookieBanner && cookieAccept) {
+    if (!localStorage.getItem('cookieConsent')) cookieBanner.classList.remove('hidden');
+    cookieAccept.addEventListener('click', () => {
+      localStorage.setItem('cookieConsent','true');
+      cookieBanner.classList.add('hidden');
     });
-  </script>
+  }
+
+  // ── АВАТАРЫ ────────────────────────────────────────────────────────
+  function renderAvatarChoices(unlockedIds) {
+    const row = document.getElementById('avatar-choices-row');
+    if (!row) return;
+    const unlockedSet = new Set(Array.isArray(unlockedIds) ? unlockedIds : []);
+    const list = Object.values(AVATAR_CATALOG).filter(a => a.isBase || unlockedSet.has(a.id));
+    row.innerHTML = '';
+    list.forEach(a => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'avatar-choice rounded-xl overflow-hidden border border-slate-200 bg-white p-1';
+      btn.setAttribute('data-avatar-type', a.id);
+      btn.innerHTML = `<img src="${a.src}" alt="${a.title}" class="h-10 w-10 object-cover rounded-lg">`;
+      btn.addEventListener('click', () => {
+        setAvatarChoice(a.id);
+        if (avatarPreviewModal && avatarPreviewImg) {
+          avatarPreviewImg.src = a.src;
+          avatarPreviewModal.classList.remove('hidden');
+          avatarPreviewModal.classList.add('flex');
+        }
+      });
+      row.appendChild(btn);
+    });
+  }
+
+  function setAvatarChoice(type) {
+    if (!profileAvatarType) return;
+    const t = type || 'girl';
+    profileAvatarType.value = t;
+    document.querySelectorAll('.avatar-choice').forEach(btn => {
+      btn.classList.toggle('ring-2', btn.getAttribute('data-avatar-type') === t);
+      btn.classList.toggle('ring-amber-400', btn.getAttribute('data-avatar-type') === t);
+    });
+    if (profileAvatarImg) profileAvatarImg.src = getAvatarSrc(t);
+  }
+
+  // ✅ ИСПРАВЛЕНО: avatarPreviewClose теперь подключён
+  if (avatarPreviewClose) {
+    avatarPreviewClose.addEventListener('click', () => {
+      avatarPreviewModal.classList.add('hidden');
+      avatarPreviewModal.classList.remove('flex');
+    });
+  }
+  if (avatarPreviewModal) {
+    avatarPreviewModal.addEventListener('click', e => {
+      if (e.target === avatarPreviewModal) {
+        avatarPreviewModal.classList.add('hidden');
+        avatarPreviewModal.classList.remove('flex');
+      }
+    });
+  }
+
+  // ── ПРОФИЛЬ МОДАЛКА ────────────────────────────────────────────────
+  function openProfileModal()  { profileSettings.classList.remove('hidden'); profileSettings.classList.add('flex'); }
+  function closeProfileModal() { profileSettings.classList.add('hidden'); profileSettings.classList.remove('flex'); }
+
+  document.getElementById('btn-open-profile')?.addEventListener('click', openProfileModal);
+  document.getElementById('btn-close-profile')?.addEventListener('click', closeProfileModal);
+  document.getElementById('btn-cancel-profile')?.addEventListener('click', e => { e.preventDefault(); closeProfileModal(); });
+  profileSettings?.addEventListener('click', e => { if (e.target === profileSettings) closeProfileModal(); });
+
+  profileForm?.addEventListener('submit', async e => {
+    e.preventDefault();
+    profileMsg.textContent = '';
+    const user = auth.currentUser;
+    if (!user) { profileMsg.textContent = 'Сначала войдите в аккаунт.'; return; }
+    try {
+      const email      = user.email;
+      const first      = profileFirst.value.trim();
+      const last       = profileLast.value.trim();
+      const avatarType = profileAvatarType ? (profileAvatarType.value || 'girl') : 'girl';
+      profileAvatarImg.src = getAvatarSrc(avatarType);
+      await db.collection('users').doc(email).set({ firstName:first, lastName:last, avatarType }, { merge:true });
+      profileMsg.textContent = 'Профиль обновлён ✔️';
+      if (auth.currentUser) await loadUserProfile(auth.currentUser);
+      closeProfileModal();
+    } catch(err) {
+      console.error(err);
+      profileMsg.textContent = 'Не удалось сохранить профиль. Проверьте соединение.';
+    }
+  });
+
+  // ── СМЕНА ПАРОЛЯ ──────────────────────────────────────────────────
+  if (btnChangePassword) {
+    btnChangePassword.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (!user || !user.email) { alert('Сначала войдите в аккаунт.'); return; }
+      const current = (pwCurrent?.value || '').trim();
+      const next    = (pwNew?.value || '').trim();
+      if (!current || !next) { pwMsg.textContent = 'Введите текущий и новый пароль.'; pwMsg.classList.add('text-red-500'); return; }
+      if (next.length < 6)   { pwMsg.textContent = 'Новый пароль должен быть минимум 6 символов.'; pwMsg.classList.add('text-red-500'); return; }
+      btnChangePassword.disabled = true;
+      try {
+        const cred = firebase.auth.EmailAuthProvider.credential(user.email, current);
+        await user.reauthenticateWithCredential(cred);
+        await user.updatePassword(next);
+        pwMsg.textContent = 'Пароль успешно изменён ✔️';
+        pwMsg.classList.remove('text-red-500'); pwMsg.classList.add('text-emerald-600');
+        if (pwCurrent) pwCurrent.value = '';
+        if (pwNew)     pwNew.value = '';
+      } catch(e) {
+        let msg = 'Не удалось сменить пароль. Попробуйте ещё раз.';
+        if (e.code === 'auth/wrong-password')       msg = 'Текущий пароль неверный.';
+        if (e.code === 'auth/too-many-requests')     msg = 'Слишком много попыток. Попробуйте позже.';
+        if (e.code === 'auth/requires-recent-login') msg = 'Нужно перелогиниться и повторить попытку.';
+        pwMsg.textContent = msg;
+        pwMsg.classList.remove('text-emerald-600'); pwMsg.classList.add('text-red-500');
+      } finally {
+        btnChangePassword.disabled = false;
+      }
+    });
+  }
+
+  if (btnResetPassword) {
+    btnResetPassword.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (!user || !user.email) { alert('Сначала войдите в аккаунт.'); return; }
+      try {
+        await auth.sendPasswordResetEmail(user.email);
+        pwMsg.textContent = 'Письмо отправлено. Проверьте почту и папку «Спам».';
+        pwMsg.classList.remove('text-red-500'); pwMsg.classList.add('text-emerald-600');
+      } catch(e) {
+        pwMsg.textContent = 'Не удалось отправить письмо. Попробуйте ещё раз.';
+        pwMsg.classList.remove('text-emerald-600'); pwMsg.classList.add('text-red-500');
+      }
+    });
+  }
+
+  // ── АВТОРИЗАЦИЯ ────────────────────────────────────────────────────
+  function showAuthError(code) {
+    const map = {
+      'auth/user-not-found':     'Пользователь с таким email не найден.',
+      'auth/wrong-password':     'Неверный пароль.',
+      'auth/email-already-in-use':'Этот email уже зарегистрирован. Попробуйте войти.',
+      'auth/weak-password':      'Пароль слишком простой. Добавьте ещё символов.',
+    };
+    authError.textContent = map[code] || 'Что-то пошло не так. Попробуйте ещё раз.';
+  }
+
+  let registerMode = false;
+  function setAuthMode(isRegister) {
+    registerMode = isRegister;
+    authNamesBlock?.classList.toggle('hidden', !isRegister);
+    authTermsBlock?.classList.toggle('hidden', !isRegister);
+    authForgotRow?.classList.toggle('hidden', isRegister);
+    if (authPassEl) authPassEl.placeholder = isRegister ? 'Минимум 6 символов' : 'Пароль';
+    if (authAcceptTerms) { authAcceptTerms.required = isRegister; if (!isRegister) authAcceptTerms.checked = false; }
+    btnLogin?.classList.toggle('btn-main', !isRegister);
+    btnLogin?.classList.toggle('btn-ghost', isRegister);
+    authRegister?.classList.toggle('btn-main', isRegister);
+    authRegister?.classList.toggle('btn-ghost', !isRegister);
+  }
+  setAuthMode(false);
+
+  async function handleLogin() {
+    if (honeypotEl?.value?.trim()) { authError.textContent = 'Обновите страницу и попробуйте ещё раз.'; return; }
+    try {
+      await auth.signInWithEmailAndPassword(authEmailEl.value.trim(), authPassEl.value.trim());
+    } catch(err) { showAuthError(err.code); }
+  }
+
+  async function handleRegister() {
+    if (honeypotEl?.value?.trim()) { authError.textContent = 'Обновите страницу и попробуйте ещё раз.'; return; }
+    if (!authAcceptTerms?.checked) { authError.textContent = 'Подтвердите согласие с условиями и политиками.'; return; }
+    const email = authEmailEl.value.trim();
+    const pass  = authPassEl.value.trim();
+    if (!email || !pass) { authError.textContent = 'Введите email и пароль.'; return; }
+    try {
+      const cred = await auth.createUserWithEmailAndPassword(email, pass);
+      if (cred.user) {
+        await db.collection('users').doc(email).set({
+          email,
+          firstName: authFirstEl?.value.trim() || null,
+          lastName:  authLastEl?.value.trim()  || null,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge:true });
+      }
+    } catch(err) { showAuthError(err.code); }
+  }
+
+  authForm?.addEventListener('submit', async e => {
+    e.preventDefault(); authError.textContent = '';
+    registerMode ? await handleRegister() : await handleLogin();
+  });
+
+  btnLogin?.addEventListener('click', async () => {
+    authError.textContent = '';
+    if (registerMode) { setAuthMode(false); return; }
+    await handleLogin();
+  });
+
+  authRegister?.addEventListener('click', async () => {
+    authError.textContent = '';
+    if (!registerMode) { setAuthMode(true); return; }
+    await handleRegister();
+  });
+
+  authForgot?.addEventListener('click', async () => {
+    authError.textContent = '';
+    const email = (authEmailEl.value || '').trim();
+    if (!email) { authError.textContent = 'Введите email в поле выше и нажмите «Забыли пароль?» ещё раз.'; return; }
+    try {
+      await auth.sendPasswordResetEmail(email);
+      authError.textContent = 'Мы отправили письмо для сброса пароля. Проверьте почту и папку «Спам».';
+      authError.classList.remove('text-red-500'); authError.classList.add('text-emerald-600');
+    } catch(err) {
+      const msg = err.code === 'auth/user-not-found' ? 'Пользователь с таким email не найден.'
+                : err.code === 'auth/invalid-email'  ? 'Некорректный email.'
+                : 'Не удалось отправить письмо. Попробуйте ещё раз.';
+      authError.textContent = msg;
+      authError.classList.remove('text-emerald-600'); authError.classList.add('text-red-500');
+    }
+  });
+
+  authLogout?.addEventListener('click', () => auth.signOut());
+
+  // ── МЕДАЛИ ────────────────────────────────────────────────────────
+  function openBadgesModal(initialId) {
+    if (!badgesModal) return;
+    badgesModal.classList.remove('hidden'); badgesModal.classList.add('flex');
+    if (initialId && allBadgesCache.length) {
+      const b = allBadgesCache.find(x => x.id === initialId);
+      if (b) { showBadgeDetail(b); highlightSelectedBadge(b.id); }
+    }
+  }
+  function closeBadgesModal() {
+    badgesModal?.classList.add('hidden'); badgesModal?.classList.remove('flex');
+  }
+  badgesModalClose?.addEventListener('click', closeBadgesModal);
+  badgesModal?.addEventListener('click', e => { if (e.target === badgesModal) closeBadgesModal(); });
+
+  function showBadgeDetail(badge) {
+    if (!badgesModalDetail) return;
+    const earned = badge.earned;
+    const imgSrc = earned ? `/assets/badges/${badge.id}.png` : '/assets/badges/medalunknown.png';
+    badgesModalDetail.innerHTML = `
+      <div class="flex items-center gap-3 mb-2">
+        <div class="h-24 w-24 sm:h-28 sm:w-28 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center">
+          <img src="${imgSrc}" alt="${badge.title}" class="h-full w-full object-contain"/>
+        </div>
+        <div class="min-w-0">
+          <p class="text-sm sm:text-base font-semibold text-slate-900 mb-0.5">${earned ? badge.title : 'Эта медаль ещё не получена'}</p>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full ${earned ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-slate-50 border-slate-200 text-slate-500'} border text-[10px] font-semibold">${earned ? 'Получено' : 'Ещё не открыто'}</span>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-700">${earned ? (badge.desc || 'Вы уже получили эту медаль.') : '???'}</p>`;
+  }
+
+  function highlightSelectedBadge(id) {
+    badgesModalGrid?.querySelectorAll('button[data-badge-id]').forEach(btn => {
+      btn.classList.toggle('ring-2', btn.dataset.badgeId === id);
+      btn.classList.toggle('ring-slate-300', btn.dataset.badgeId === id);
+    });
+  }
+
+  function renderBadgesModalGrid(badges) {
+    if (!badgesModalGrid) return;
+    badgesModalGrid.innerHTML = '';
+    badges.forEach(badge => {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.dataset.badgeId = badge.id;
+      btn.className = `flex items-center justify-center p-1 rounded-lg bg-white/80 hover:shadow-sm transition ${badge.earned ? '' : 'opacity-70'}`;
+      const imgSrc = badge.earned ? `/assets/badges/${badge.id}.png` : '/assets/badges/medalunknown.png';
+      btn.innerHTML = `<div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center"><img src="${imgSrc}" alt="${badge.title}" class="h-full w-full object-contain"/></div>`;
+      const select = () => { highlightSelectedBadge(badge.id); showBadgeDetail(badge); };
+      btn.addEventListener('click', select);
+      btn.addEventListener('mouseenter', select);
+      badgesModalGrid.appendChild(btn);
+    });
+    const first = badges.find(b => b.earned);
+    if (first) { showBadgeDetail(first); highlightSelectedBadge(first.id); }
+  }
+
+  function renderEarnedBadgesStrip(badges) {
+    if (!achievementsList) return;
+    const earned = badges.filter(b => b.earned);
+    achievementsList.innerHTML = `
+      <div class="soft-card p-3 sm:p-4 space-y-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <div id="earned-badges-grid" class="flex flex-wrap gap-2 flex-1"></div>
+          <button type="button" id="open-badges-modal-desktop" class="hidden sm:inline-flex btn btn-ghost text-[11px] sm:text-xs px-3 py-1 ml-auto">Открыть коллекцию</button>
+        </div>
+        <button type="button" id="open-badges-modal-mobile" class="sm:hidden w-full btn btn-ghost text-xs mt-1">Открыть полную коллекцию</button>
+      </div>`;
+    const grid = document.getElementById('earned-badges-grid');
+    if (!earned.length) {
+      grid.innerHTML = `<p class="text-xs sm:text-sm text-slate-500">У вас пока нет полученных медалей. Проходите уроки — первые награды появятся очень скоро.</p>`;
+    } else {
+      earned.forEach(badge => {
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.dataset.badgeId = badge.id;
+        btn.className = 'relative h-12 w-12 sm:h-14 sm:w-14 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center hover:shadow-md transition';
+        btn.innerHTML = `<img src="/assets/badges/${badge.id}.png" alt="${badge.title}" class="h-full w-full object-contain"/>`;
+        btn.addEventListener('click', () => openBadgesModal(badge.id));
+        grid.appendChild(btn);
+      });
+    }
+    document.getElementById('open-badges-modal-desktop')?.addEventListener('click', () => openBadgesModal());
+    document.getElementById('open-badges-modal-mobile')?.addEventListener('click',  () => openBadgesModal());
+  }
+
+  async function loadAndRenderBadges(userBadgeIds) {
+    try {
+      const earnedIds = Array.isArray(userBadgeIds) ? userBadgeIds : [];
+      const snap = await db.collection('badges').get();
+      const badges = [];
+      snap.forEach(doc => {
+        const d = doc.data() || {};
+        badges.push({ id:doc.id, title:d.title||d.name||'Медаль', desc:d.description||d.desc||'', earned:earnedIds.includes(doc.id) });
+      });
+      allBadgesCache = badges;
+      if (!badges.length) {
+        achievementsList.innerHTML = `<div class="soft-card p-4 text-xs sm:text-sm text-slate-600">Как только вы начнёте проходить уроки, здесь появятся первые бейджи и медали.</div>`;
+        return;
+      }
+      renderEarnedBadgesStrip(badges);
+      renderBadgesModalGrid(badges);
+    } catch(err) {
+      console.error('Ошибка загрузки медалей:', err);
+      achievementsList.innerHTML = `<div class="soft-card p-4 text-xs sm:text-sm text-slate-600">Не удалось загрузить коллекцию медалей.</div>`;
+    }
+  }
+
+  // ── КУРСЫ ─────────────────────────────────────────────────────────
+  function renderCourses(courses) {
+    coursesList.innerHTML = '';
+    if (!courses?.length) { coursesEmpty.classList.remove('hidden'); return; }
+    coursesEmpty.classList.add('hidden');
+    courses.forEach(c => {
+      const meta = COURSE_META[c.id] || { title:'Курс PolyTalky', href:'#', cover:'/assets/courses/placeholder.jpg' };
+      const prog = c.progress || {};
+      const pct  = typeof prog.percent === 'number' ? Math.max(0, Math.min(100, prog.percent)) : 0;
+      const isFree = !!c.isFree;
+      const badgeLabel = isFree ? 'Бесплатный курс' : 'Оплаченный курс';
+      const badgeClass = isFree ? 'border-emerald-300 bg-emerald-50 text-emerald-700' : 'border-amber-300 bg-amber-50 text-amber-700';
+      let statusLabel = pct > 0 ? `Прогресс: ${pct}%` : (c.isPaid ? 'Курс оплачен, можно начинать.' : 'Курс открыт, можно начинать.');
+      if (meta.comingSoon) statusLabel = 'Доступ открыт. Курс скоро запустится!';
+
+      const card = document.createElement('a');
+      card.href = meta.href;
+      card.className = 'soft-card p-3 sm:p-4 flex flex-col gap-2 hover:shadow-md transition-shadow group';
+      card.innerHTML = `
+        <div class="flex gap-3 items-center">
+          <div class="h-14 w-14 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0">
+            <img src="${meta.cover}" alt="" class="h-full w-full object-cover group-hover:scale-105 transition-transform"/>
+          </div>
+          <div class="flex-1 min-w-0 space-y-1">
+            <span class="badge text-[10px] ${badgeClass}">${badgeLabel}</span>
+            <p class="text-sm font-semibold text-slate-900 truncate">${meta.title}</p>
+            <p class="text-[11px] text-slate-500">${statusLabel}</p>
+          </div>
+        </div>
+        <div class="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+          <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500" style="width:${pct}%"></div>
+        </div>`;
+      coursesList.appendChild(card);
+    });
+  }
+
+  // ── ЗАГРУЗКА ПРОФИЛЯ ──────────────────────────────────────────────
+  async function loadUserProfile(user) {
+    try {
+      const email = user.email;
+      if (!email) return;
+      const snap = await db.collection('users').doc(email).get();
+      const data = snap.exists ? (snap.data() || {}) : {};
+      data.email = data.email || email;
+
+      const unlockedAvatars = Array.isArray(data.unlockedAvatars) ? data.unlockedAvatars : [];
+      renderAvatarChoices(unlockedAvatars);
+
+      const avatarType = data.avatarType || 'girl';
+      const allowed = new Set(['girl','boy']);
+      unlockedAvatars.forEach(id => { if (AVATAR_CATALOG[id]) allowed.add(id); });
+      setAvatarChoice(allowed.has(avatarType) ? avatarType : 'girl');
+
+      const first = data.firstName || '';
+      const last  = data.lastName  || '';
+      profileName.textContent      = (first||last) ? (first+' '+(last||'')).trim() : email;
+      authUserEmail.textContent    = email;
+      if (profileEmail)  profileEmail.value = email;
+      if (profileFirst)  profileFirst.value = first;
+      if (profileLast)   profileLast.value  = last;
+      profileMsg.textContent = '';
+
+      updateCoinsUI(data);
+
+      try { await db.collection('users').doc(email).set({ email }, { merge:true }); } catch(e) {}
+    } catch(err) { console.error('Ошибка профиля:', err); }
+  }
+
+  // ── ЗАГРУЗКА КУРСОВ ───────────────────────────────────────────────
+  async function loadUserEnrollments(user) {
+    coursesList.innerHTML = '';
+    coursesEmpty.classList.add('hidden');
+    try {
+      const email = user.email;
+      if (!email) { coursesEmpty.classList.remove('hidden'); await loadAndRenderBadges([]); return; }
+
+      const snap = await db.collection('users').doc(email).get();
+      const data = snap.exists ? (snap.data() || {}) : null;
+      if (!data) { coursesEmpty.classList.remove('hidden'); await loadAndRenderBadges([]); return; }
+
+      const paidIds    = Array.isArray(data.courses)     ? data.courses     : [];
+      const freeIds    = Array.isArray(data.freeCourses)  ? data.freeCourses  : [];
+      const badgeIds   = Array.isArray(data.badges)       ? data.badges       : [];
+      const progress   = data.progress || {};
+
+      const progressIds = Object.keys(progress);
+      const mergedPaid  = [...new Set(paidIds)];
+      const mergedFree  = [...new Set([...freeIds, ...progressIds.filter(id => !mergedPaid.includes(id))])];
+      let   mergedBadges= [...new Set(badgeIds)];
+
+      const hasAnyCourse = mergedPaid.length > 0 || mergedFree.length > 0;
+      if (hasAnyCourse && !mergedBadges.includes(FIRST_STEP_BADGE_ID)) {
+        mergedBadges.push(FIRST_STEP_BADGE_ID);
+        try { await db.collection('users').doc(email).set({ badges: firebase.firestore.FieldValue.arrayUnion(FIRST_STEP_BADGE_ID) }, { merge:true }); } catch(e) {}
+      }
+
+      const courses = [
+        ...mergedPaid.map(id => ({ id, isPaid:true,  isFree:false, progress:progress[id]||null })),
+        ...mergedFree.map(id => ({ id, isPaid:false, isFree:true,  progress:progress[id]||null })),
+      ];
+
+      renderCourses(courses);
+      await loadAndRenderBadges(mergedBadges);
+    } catch(err) {
+      console.error('Ошибка загрузки курсов:', err);
+      renderCourses([]);
+      await loadAndRenderBadges([]);
+    }
+  }
+
+  // ── PRO STATUS ────────────────────────────────────────────────────
+  async function loadProStatus(user) {
+    if (!user) {
+      proBannerSuccess && (proBannerSuccess.style.display = 'none');
+      proCancelButton?.classList.add('hidden');
+      proRenewButton?.classList.add('hidden');
+      return;
+    }
+    const email = user.email;
+    const uid   = user.uid;
+    const [emailSnap, uidSnap] = await Promise.all([
+      email ? db.collection('users').doc(email).get() : Promise.resolve(null),
+      uid   ? db.collection('users').doc(uid).get()   : Promise.resolve(null),
+    ]);
+    const eData = emailSnap?.exists ? (emailSnap.data()||{}) : {};
+    const uData = uidSnap?.exists   ? (uidSnap.data()||{})   : {};
+    const proGlobal = eData.proGlobal || uData.proGlobal || false;
+    const proValidUntil = eData.proValidUntil || uData.proValidUntil || null;
+
+    if (!proGlobal) {
+      proBannerSuccess && (proBannerSuccess.style.display = 'none');
+      proCancelButton?.classList.add('hidden');
+      proRenewButton?.classList.add('hidden');
+      return;
+    }
+
+    let hasStripeSub = false;
+    try {
+      const snap = await db.collection('enrollments')
+        .where('userId','==',uid).where('tier','==','pro-global-monthly')
+        .where('status','in',['active','cancel_at_period_end']).limit(1).get();
+      if (!snap.empty) hasStripeSub = !!(snap.docs[0].data()?.subscriptionId);
+    } catch(e) {}
+
+    let daysLeft = null, validUntilText = '';
+    if (proValidUntil?.toDate) {
+      const end = proValidUntil.toDate();
+      validUntilText = end.toLocaleDateString('ru-RU');
+      daysLeft = Math.ceil((end - new Date()) / 86400000);
+      window.currentProValidUntilText = validUntilText;
+    }
+    updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText });
+  }
+
+  function updateProUi({ proGlobal, hasStripeSub, daysLeft, validUntilText }) {
+    window.currentProHasStripe       = !!hasStripeSub;
+    window.currentProValidUntilText  = validUntilText || '';
+    if (!proGlobal) {
+      proChip?.classList.add('hidden');
+      proCancelButton?.classList.add('hidden');
+      proRenewButton?.classList.add('hidden');
+      if (proStatusText) proStatusText.textContent = '';
+      return;
+    }
+    proChip?.classList.remove('hidden');
+    let text = 'У вас активна подписка PRO.';
+    if (hasStripeSub) {
+      text = daysLeft != null && validUntilText
+        ? `Подписка PRO активна. Следующее списание через ${daysLeft} дн. (до ${validUntilText}).`
+        : 'Подписка PRO активна. Автопродление включено.';
+      proCancelButton?.classList.remove('hidden');
+      proRenewButton?.classList.add('hidden');
+    } else {
+      text = daysLeft != null && validUntilText
+        ? `Подписка PRO активна ещё ${daysLeft} дн., до ${validUntilText}. Автопродления нет.`
+        : 'Подписка PRO активна. Автопродления нет.';
+      proCancelButton?.classList.add('hidden');
+      if (proRenewButton) proRenewButton.classList.toggle('hidden', !(daysLeft != null && daysLeft <= 3 && daysLeft >= 1));
+    }
+    if (proStatusText) proStatusText.textContent = text;
+    if (proBannerSuccess) proBannerSuccess.style.display = 'flex';
+  }
+
+  // PRO параметр из URL
+  (function handleProParam() {
+    const params = new URLSearchParams(window.location.search);
+    const pro = params.get('pro');
+    if (!pro) return;
+    if (pro === 'success' && proBannerSuccess) proBannerSuccess.style.display = 'flex';
+    if (pro === 'error'   && proBannerError)   proBannerError.style.display   = 'flex';
+    if (pro === 'cancel'  && proBannerCancel)  proBannerCancel.style.display  = 'flex';
+    if (proRenewButton) {
+      proRenewButton.addEventListener('click', async () => {
+        const user = auth.currentUser;
+        if (!user) { alert('Сначала войдите в личный кабинет.'); return; }
+        try {
+          const resp = await fetch('/api/yookassa/create-pro-payment', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email:user.email||'', userId:user.uid }),
+          });
+          const data = await resp.json();
+          if (!resp.ok || !data.confirmationUrl) { alert('Не удалось создать платёж.'); return; }
+          window.location.href = data.confirmationUrl;
+        } catch(e) { alert('Ошибка при создании платежа.'); }
+      });
+    }
+    params.delete('pro');
+    const newSearch = params.toString();
+    window.history.replaceState({}, '', window.location.pathname + (newSearch ? '?'+newSearch : '') + window.location.hash);
+  })();
+
+  // PRO CANCEL MODAL
+  const proCancelModal       = document.getElementById('pro-cancel-modal');
+  const proCancelModalClose  = document.getElementById('pro-cancel-modal-close');
+  const proCancelModalCancel = document.getElementById('pro-cancel-modal-cancel');
+  const proCancelModalConfirm= document.getElementById('pro-cancel-modal-confirm');
+  const proCancelModalText   = document.getElementById('pro-cancel-modal-text');
+
+  function openProCancelModal(validUntilText) {
+    proCancelModalText.textContent = validUntilText
+      ? `Мы отключим автопродление подписки PRO. Доступ останется активным до ${validUntilText}.`
+      : 'Мы отключим автопродление подписки PRO. Доступ останется активным до конца оплаченного периода.';
+    proCancelModal.classList.remove('hidden'); proCancelModal.classList.add('flex');
+  }
+  function closeProCancelModal() { proCancelModal.classList.add('hidden'); proCancelModal.classList.remove('flex'); }
+
+  // ✅ ИСПРАВЛЕНО: pro-cancel-button-2 теперь подключён
+  proCancelButton?.addEventListener('click',  () => openProCancelModal(window.currentProValidUntilText||''));
+  proCancelButton2?.addEventListener('click', () => openProCancelModal(window.currentProValidUntilText||''));
+
+  [proCancelModalClose, proCancelModalCancel].forEach(btn => btn?.addEventListener('click', closeProCancelModal));
+
+  proCancelModalConfirm?.addEventListener('click', async () => {
+    proCancelModalConfirm.disabled = true;
+    proCancelModalConfirm.textContent = 'Отменяем...';
+    try {
+      const user = auth.currentUser;
+      if (!user) { alert('Сначала войдите в личный кабинет.'); return; }
+      const token = await user.getIdToken();
+      const resp  = await fetch('/api/pro/cancel-subscription', {
+        method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
+        body: JSON.stringify({}),
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) { alert(data.error || 'Не удалось отменить подписку.'); }
+      else { alert('Автопродление отключено. Доступ к PRO останется до конца оплаченного периода.'); closeProCancelModal(); }
+    } catch(e) { alert('Произошла ошибка при отмене.'); }
+    finally { proCancelModalConfirm.disabled = false; proCancelModalConfirm.textContent = 'Отключить автопродление'; }
+  });
+
+  proChip?.addEventListener('click', () => {
+    if (window.currentProHasStripe) { openProCancelModal(window.currentProValidUntilText||''); return; }
+    const validText = window.currentProValidUntilText||'';
+    alert(validText ? `Подписка PRO активна до ${validText}. Автосписания нет.` : 'Подписка PRO активна. Автосписания нет.');
+  });
+
+  // ── COIN MODAL ────────────────────────────────────────────────────
+  (function setupCoinModal() {
+    const coinImgSmall = document.querySelector('#coins-card img');
+    if (!coinImgSmall || !coinModal || !coinModalClose) return;
+    coinImgSmall.classList.add('transition-transform','duration-200','cursor-pointer');
+    const open  = () => { if (coinModalBalance) coinModalBalance.textContent = coinsState.balance; coinModal.classList.remove('hidden'); coinModal.classList.add('flex'); };
+    const close = () => { coinModal.classList.add('hidden'); coinModal.classList.remove('flex'); };
+    coinImgSmall.addEventListener('click', open);
+    coinModalClose.addEventListener('click', close);
+    coinModal.addEventListener('click', e => { if (e.target === coinModal) close(); });
+  })();
+
+  // ── КОИНЫ UI ──────────────────────────────────────────────────────
+  function updateCoinsUI(userData) {
+    if (!coinsCard) return;
+    const balance = typeof userData.coinsBalance === 'number' ? userData.coinsBalance : 0;
+    let   streak  = typeof userData.coinStreak   === 'number' ? userData.coinStreak   : 0;
+    const last    = userData.lastCoinDate || null;
+    const today   = todayStr();
+    let   already = false;
+
+    if (last) {
+      if (last === today) { already = true; }
+      else {
+        try {
+          const diff = Math.floor((new Date(today+'T00:00:00') - new Date(last+'T00:00:00')) / 86400000);
+          if (diff > 1) streak = 0;
+        } catch(e) { streak = 0; }
+      }
+    }
+
+    coinsState = { balance, streak, lastDate:last, alreadyClaimedToday:already, mode:null, nextReward:0 };
+    coinsCard.classList.remove('hidden');
+    coinsBalanceEl.textContent = balance;
+    if (coinModalBalance) coinModalBalance.textContent = balance;
+
+    coinsClaimBtn.disabled = false;
+    coinsClaimBtn.classList.remove('opacity-60','cursor-default');
+
+    if (already) {
+      coinsTextEl.textContent  = 'Бонус за сегодня уже получен, приходите завтра 💛';
+      coinsClaimBtn.textContent= 'Бонус уже забран';
+      coinsClaimBtn.disabled   = true;
+      coinsClaimBtn.classList.add('opacity-60','cursor-default');
+      return;
+    }
+
+    if (streak >= 6) {
+      coinsTextEl.textContent  = 'Сегодня 7-й день подряд! Раскрутите колесо удачи 🎡';
+      coinsClaimBtn.textContent= 'Крутить колесо';
+      coinsState.mode = 'wheel';
+    } else {
+      const reward = Math.min(streak + 1, 6);
+      coinsState.mode = 'daily'; coinsState.nextReward = reward;
+      coinsTextEl.textContent  = `Сегодня вы можете забрать ${reward} ${pluralizeCoin(reward)} за ежедневный вход.`;
+      coinsClaimBtn.textContent= `Забрать ${reward} ${pluralizeCoin(reward)}`;
+    }
+  }
+
+  coinsClaimBtn?.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) { alert('Сначала войдите в аккаунт.'); return; }
+    if (coinsState.alreadyClaimedToday || !coinsState.mode) return;
+
+    if (coinsState.mode === 'wheel') {
+      wheelModal.classList.remove('hidden'); wheelModal.classList.add('flex');
+      wheelResult.classList.add('hidden');
+      isSpinning = false; currentWheelPrize = null;
+      wheelRotation = 0; wheelCanvas.style.transform = 'rotate(0deg)';
+      initWheelOrder(); loadWheelImagesOnce(wheelOrder).then(drawWheel);
+      return;
+    }
+
+    const email  = user.email;
+    const today  = todayStr();
+    const reward = coinsState.nextReward || 1;
+    coinsClaimBtn.disabled = true; coinsClaimBtn.textContent = 'Подождите...'; coinsClaimBtn.classList.add('opacity-60','cursor-default');
+    try {
+      const newBalance = coinsState.balance + reward;
+      const newStreak  = Math.min(coinsState.streak + 1, 6);
+      await db.collection('users').doc(email).set({ coinsBalance:newBalance, coinStreak:newStreak, lastCoinDate:today }, { merge:true });
+      coinsState.balance = newBalance; coinsState.streak = newStreak; coinsState.alreadyClaimedToday = true;
+      updateCoinsUI({ coinsBalance:newBalance, coinStreak:newStreak, lastCoinDate:today });
+      coinsTextEl.textContent = `Вы получили ${reward} ${pluralizeCoin(reward)} за сегодняшний вход 💛`;
+    } catch(err) {
+      coinsTextEl.textContent = 'Не удалось выдать бонус. Проверьте соединение.';
+      coinsClaimBtn.disabled = false; coinsClaimBtn.classList.remove('opacity-60','cursor-default'); coinsClaimBtn.textContent = 'Повторить';
+    }
+  });
+
+  // ── КОЛЕСО УДАЧИ ──────────────────────────────────────────────────
+  const wheelImgCache = new Map();
+
+  function loadWheelImagesOnce(list) {
+    return Promise.all(list.map(p => new Promise(res => {
+      if (!p.image || wheelImgCache.has(p.image)) return res();
+      const img = new Image();
+      img.onload = () => { wheelImgCache.set(p.image, img); res(); };
+      img.onerror = () => res();
+      img.src = p.image;
+    })));
+  }
+
+  function shuffle(arr) {
+    for (let i = arr.length-1; i > 0; i--) {
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  function initWheelOrder() { wheelOrder = shuffle([...WHEEL_PRIZES]); }
+
+  function pickWeightedIndex(list) {
+    const total = list.reduce((s,p) => s+(Number(p.weight)||1), 0);
+    let r = Math.random()*total;
+    for (let i=0; i<list.length; i++) { r -= (Number(list[i].weight)||1); if (r<=0) return i; }
+    return list.length-1;
+  }
+
+  function drawWheel() {
+    if (!wheelCanvas) return;
+    const ctx = wheelCanvas.getContext('2d');
+    const w=wheelCanvas.width, h=wheelCanvas.height, cx=w/2, cy=h/2, r=w/2;
+    ctx.clearRect(0,0,w,h);
+    const list = wheelOrder.length ? wheelOrder : WHEEL_PRIZES;
+    const slice = (2*Math.PI)/list.length;
+    list.forEach((prize,i) => {
+      const a0=i*slice, a1=a0+slice;
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r-4,a0,a1); ctx.closePath();
+      ctx.fillStyle = i%2===0 ? '#f59e0b' : '#fbbf24'; ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.85)'; ctx.lineWidth=2; ctx.stroke();
+      const mid=a0+slice/2, ir=r*0.74;
+      const img = prize.image ? wheelImgCache.get(prize.image) : null;
+      if (img) {
+        const ICON=68, HALF=ICON/2;
+        const ix=cx+Math.cos(mid)*ir, iy=cy+Math.sin(mid)*ir;
+        ctx.save(); ctx.translate(ix,iy); ctx.rotate(mid+Math.PI/2);
+        ctx.drawImage(img,-HALF,-HALF,ICON,ICON);
+        ctx.restore();
+      }
+    });
+  }
+
+  function spinWheel() {
+    if (isSpinning) return;
+    isSpinning = true; wheelModal.classList.add('spinning');
+    const list = wheelOrder.length ? wheelOrder : WHEEL_PRIZES;
+    const prizeIndex = pickWeightedIndex(list);
+    currentWheelPrize = list[prizeIndex];
+    const sliceAngle = 360/list.length;
+    const prizeAngle = prizeIndex*sliceAngle + sliceAngle/2;
+    let align = ((270 - prizeAngle) % 360 + 360) % 360;
+    const fullSpins = 5 + Math.floor(Math.random()*3);
+    const jitter = (Math.random()-0.5)*(sliceAngle*0.25);
+    const targetRotation = 360*fullSpins + align + jitter;
+    const duration = 5000, startTime = Date.now(), startRotation = wheelRotation;
+    wheelSpinBtn.textContent = '...';
+
+    function animate() {
+      const elapsed = Date.now()-startTime;
+      const progress = Math.min(elapsed/duration, 1);
+      wheelRotation = startRotation + targetRotation*(1-Math.pow(1-progress,4));
+      wheelCanvas.style.transform = `rotate(${wheelRotation}deg)`;
+      if (progress < 1) { requestAnimationFrame(animate); return; }
+
+      wheelModal.classList.remove('spinning');
+      showWheelResult(currentWheelPrize);
+      wheelSpinBtn.textContent = '...'; wheelSpinBtn.disabled = true;
+      if (wheelClaimBtn) { wheelClaimBtn.disabled = true; wheelClaimBtn.textContent = 'Начисляем...'; wheelClaimBtn.classList.add('opacity-60','cursor-default'); wheelClaimBtn.onclick = null; }
+
+      claimWheelPrize()
+        .catch(() => {
+          if (wheelClaimBtn) { wheelClaimBtn.disabled=false; wheelClaimBtn.textContent='Забрать приз'; wheelClaimBtn.classList.remove('opacity-60','cursor-default'); }
+        })
+        .finally(() => { isSpinning = false; });
+    }
+    animate();
+  }
+
+  function showWheelResult(prize) {
+    wheelResultIcon.innerHTML = `<img src="${prize.image}" alt="" class="mx-auto w-16 h-16 object-contain">`;
+    wheelResultTitle.textContent = `Вы выиграли: ${prize.label}!`;
+    let desc = '';
+    if (prize.coins)   desc = `${prize.coins} ${pluralizeCoin(prize.coins)} уже добавлены на ваш счёт.`;
+    if (prize.badge)   desc = 'Секретный бейдж добавлен в вашу коллекцию!';
+    if (prize.avatarId)desc = 'Секретный аватар разблокирован в настройках профиля!';
+    if (prize.proMonth)desc = 'Месяц подписки PRO активирован!';
+    if (prize.course)  desc = 'Курс добавлен в ваш аккаунт!';
+    wheelResultDesc.textContent = desc;
+    wheelResult.classList.remove('hidden');
+  }
+
+  async function claimWheelPrize() {
+    const user = auth.currentUser;
+    if (!user || !currentWheelPrize) return;
+    const email = user.email; if (!email) return;
+    const docRef = db.collection('users').doc(email);
+    const today  = todayStr();
+    const updates = { lastCoinDate:today, coinStreak:0 };
+
+    if (currentWheelPrize.coins) { const nb = coinsState.balance+currentWheelPrize.coins; updates.coinsBalance=nb; coinsState.balance=nb; }
+    if (currentWheelPrize.badge)   updates.badges           = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.badge);
+    if (currentWheelPrize.avatarId)updates.unlockedAvatars  = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.avatarId);
+    if (currentWheelPrize.course)  updates.courses          = firebase.firestore.FieldValue.arrayUnion(currentWheelPrize.course);
+
+    if (currentWheelPrize.proMonth) {
+      let base = new Date();
+      try {
+        const snap = await docRef.get();
+        const prev = snap.exists ? (snap.data()||{}) : {};
+        if (prev.proValidUntil?.toDate) { const e=prev.proValidUntil.toDate(); if (e>base) base=e; }
+      } catch(e) {}
+      const until = new Date(base);
+      const day = until.getDate(); until.setMonth(until.getMonth()+1); if (until.getDate()<day) until.setDate(0);
+      updates.proGlobal=true; updates.proValidUntil=firebase.firestore.Timestamp.fromDate(until);
+    }
+
+    await docRef.set(updates, { merge:true });
+    coinsState.streak=0; coinsState.lastDate=today; coinsState.alreadyClaimedToday=true;
+    updateCoinsUI({ coinsBalance:coinsState.balance, coinStreak:0, lastCoinDate:today });
+    currentWheelPrize = null;
+
+    const u = auth.currentUser;
+    if (u) { await loadUserProfile(u); await loadUserEnrollments(u); await loadProStatus(u); }
+
+    if (wheelClaimBtn) {
+      wheelClaimBtn.disabled=false; wheelClaimBtn.textContent='Закрыть'; wheelClaimBtn.classList.remove('opacity-60','cursor-default');
+      wheelClaimBtn.onclick = () => { wheelModal.classList.add('hidden'); wheelModal.classList.remove('flex'); };
+    }
+  }
+
+  wheelSpinBtn?.addEventListener('click', () => { if (!isSpinning) spinWheel(); });
+  wheelModal?.addEventListener('click', e => {
+    if (e.target===wheelModal && !isSpinning && !currentWheelPrize) {
+      wheelModal.classList.add('hidden'); wheelModal.classList.remove('flex');
+    }
+  });
+
+  if (wheelCanvas) { initWheelOrder(); loadWheelImagesOnce(wheelOrder).then(drawWheel); }
+
+  // ── AUTH STATE ────────────────────────────────────────────────────
+  async function setAuthState(user) {
+    if (user) {
+      localStorage.setItem('pt_uid', user.uid||'');
+      if (user.email) localStorage.setItem('pt_email', user.email);
+      authBoxOut.classList.add('hidden'); authBoxIn.classList.remove('hidden');
+      coursesNeedAuth.classList.add('hidden'); authUserEmail.textContent = user.email||'';
+      await loadUserProfile(user);
+      await loadUserEnrollments(user);
+    } else {
+      localStorage.removeItem('pt_uid'); localStorage.removeItem('pt_email');
+      authBoxOut.classList.remove('hidden'); authBoxIn.classList.add('hidden');
+      coursesNeedAuth.classList.remove('hidden'); authUserEmail.textContent=''; profileName.textContent='';
+      profileAvatarImg.src='/assets/avatarf.png'; if (profileAvatarType) profileAvatarType.value='girl'; setAvatarChoice('girl');
+      coursesList.innerHTML=''; coursesEmpty.classList.add('hidden');
+      achievementsList.innerHTML=`<div class="soft-card p-4 text-xs sm:text-sm text-slate-600">Войдите в аккаунт, чтобы увидеть свои медали и достижения.</div>`;
+      coinsCard?.classList.add('hidden');
+    }
+  }
+
+  auth.onAuthStateChanged(user => {
+    setAuthState(user||null);
+    loadProStatus(user||null);
+  });
+
+}); // DOMContentLoaded
+</script>
 </body>
 </html>
-​​​​​​​​​​​​​​​​
